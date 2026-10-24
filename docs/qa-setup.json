@@ -1,0 +1,163 @@
+{
+  "date": "2026-10-24",
+  "version": "1.8.0",
+  "environment": "Linux x64; .NET SDK 8.0.426; Node 24.22.1; Chrome Headless Shell 156.0.8078.47",
+  "full_run_steps": 29,
+  "full_run_passed": true,
+  "steps": [
+    {
+      "name": "Web-Programm erstellen",
+      "exit_code": 0,
+      "seconds": 0.04
+    },
+    {
+      "name": "Windows-Programm kompilieren",
+      "exit_code": 0,
+      "seconds": 2.48
+    },
+    {
+      "name": "Entwicklungsregressionen",
+      "exit_code": 0,
+      "seconds": 0.24
+    },
+    {
+      "name": "domain-storage",
+      "exit_code": 0,
+      "seconds": 1.02
+    },
+    {
+      "name": "transfers",
+      "exit_code": 0,
+      "seconds": 0.1
+    },
+    {
+      "name": "ui",
+      "exit_code": 0,
+      "seconds": 3.67
+    },
+    {
+      "name": "new-features",
+      "exit_code": 0,
+      "seconds": 1.51
+    },
+    {
+      "name": "v140",
+      "exit_code": 0,
+      "seconds": 4.61
+    },
+    {
+      "name": "v150",
+      "exit_code": 0,
+      "seconds": 4.85
+    },
+    {
+      "name": "v160",
+      "exit_code": 0,
+      "seconds": 1.56
+    },
+    {
+      "name": "v170",
+      "exit_code": 0,
+      "seconds": 2.36
+    },
+    {
+      "name": "v180",
+      "exit_code": 0,
+      "seconds": 3.54
+    },
+    {
+      "name": "Nativen Testhost erstellen",
+      "exit_code": 0,
+      "seconds": 1.48
+    },
+    {
+      "name": "view-storage",
+      "exit_code": 0,
+      "seconds": 1.31
+    },
+    {
+      "name": "v150-storage",
+      "exit_code": 0,
+      "seconds": 2.11
+    },
+    {
+      "name": "v160-storage",
+      "exit_code": 0,
+      "seconds": 2.35
+    },
+    {
+      "name": "v170-storage",
+      "exit_code": 0,
+      "seconds": 2.0
+    },
+    {
+      "name": "v180-storage",
+      "exit_code": 0,
+      "seconds": 2.28
+    },
+    {
+      "name": "workflow",
+      "exit_code": 0,
+      "seconds": 5.84
+    },
+    {
+      "name": "Großer Datenbestand",
+      "exit_code": 0,
+      "seconds": 47.95
+    },
+    {
+      "name": "Produktiven Assembly-Lader prüfen",
+      "exit_code": 0,
+      "seconds": 7.83
+    },
+    {
+      "name": "browser",
+      "exit_code": 0,
+      "seconds": 55.48
+    },
+    {
+      "name": "v170-browser",
+      "exit_code": 0,
+      "seconds": 10.36
+    },
+    {
+      "name": "v180-browser",
+      "exit_code": 0,
+      "seconds": 18.98
+    },
+    {
+      "name": "Web-Programm erstellen",
+      "exit_code": 0,
+      "seconds": 0.05
+    },
+    {
+      "name": "Windows-Programm kompilieren",
+      "exit_code": 0,
+      "seconds": 2.42
+    },
+    {
+      "name": "Assembly-Lader nach Wiederholungsbuild",
+      "exit_code": 0,
+      "seconds": 2.5
+    },
+    {
+      "name": "ZIP-Archive vollständig erstellen",
+      "exit_code": 0,
+      "seconds": 2.24
+    },
+    {
+      "name": "Entpackte Auslieferung starten",
+      "exit_code": 0,
+      "seconds": 0.92
+    }
+  ],
+  "additional_infrastructure_tests": 13,
+  "fresh_checkout_infrastructure_tests": 13,
+  "github_repository": "sappelmueller/Notenblick",
+  "repository_id": 1432518047,
+  "private": true,
+  "github_actions_enabled": false,
+  "github_actions_minutes": 0,
+  "windows_gui_tested": false,
+  "nvda_tested": false
+}

@@ -1,0 +1,30 @@
+{
+  "version": "8.0.426",
+  "metadata_source": "https://dotnetcli.blob.core.windows.net/dotnet/release-metadata/8.0/releases.json",
+  "files": {
+    "linux-x64": {
+      "name": "dotnet-sdk-linux-x64.tar.gz",
+      "rid": "linux-x64",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.426/dotnet-sdk-8.0.426-linux-x64.tar.gz",
+      "hash": "8141d01bdc53f604aed3bb661b604707a64209f8a947cd81bf95b4f518951593d77864069191f54ea5e84362a409da6b0f69074bf893b283d7e0cf93e2bf20a8"
+    },
+    "linux-arm64": {
+      "name": "dotnet-sdk-linux-arm64.tar.gz",
+      "rid": "linux-arm64",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.426/dotnet-sdk-8.0.426-linux-arm64.tar.gz",
+      "hash": "8a49694501bb67f35be0d345fec4ec660b7e311e6d31cde48e2699cc94cbd901d71dc5aef61a42bc35883e0175883cc2599f7f6ff4af3525381b7d7b8342bef5"
+    },
+    "win-x64": {
+      "name": "dotnet-sdk-win-x64.zip",
+      "rid": "win-x64",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.426/dotnet-sdk-8.0.426-win-x64.zip",
+      "hash": "10261657109f1c62126f106a9ac966739b025b5f6b4a9f88ab7c6e73cacce9aec771895daa3267b8da933a83c32ee91bf458dc6704e1ddcd9bcf0d5edd036abb"
+    },
+    "win-arm64": {
+      "name": "dotnet-sdk-win-arm64.zip",
+      "rid": "win-arm64",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.426/dotnet-sdk-8.0.426-win-arm64.zip",
+      "hash": "1384efbcb158c12afbc949839f360b5556d90ad5a9a0edfb89e594f89b3c199d14bd45d7c8de48d6d464fa2ac2ff026546bf2dfb4275596d548c3219480ce5ca"
+    }
+  }
+}

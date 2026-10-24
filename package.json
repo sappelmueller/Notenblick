@@ -9,7 +9,14 @@
     "playwright": "1.62.1"
   },
   "scripts": {
-    "test": "node tests/domain-storage.cjs && node tests/transfers.cjs && node tests/ui.cjs && node tests/new-features.cjs && node tests/v140.cjs && node tests/v150.cjs && node tests/v160.cjs && node tests/v170.cjs && node tests/v180.cjs",
-    "test:browser": "node tests/browser.cjs && node tests/v170-browser.cjs && node tests/v180-browser.cjs"
+    "setup": "python3 dev/manage.py setup",
+    "test": "python3 dev/manage.py test quick",
+    "test:full": "python3 dev/manage.py test full",
+    "test:browser": "python3 dev/manage.py test browser",
+    "build": "python3 dev/manage.py build",
+    "release": "python3 dev/manage.py release"
+  },
+  "engines": {
+    "node": ">=22 <25"
   }
 }

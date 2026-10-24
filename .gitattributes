@@ -1,0 +1,12 @@
+* text=auto eol=lf
+# Retain original application and pinned vendor bytes on Windows as well.
+src/** -text
+native/** -text
+dev/webview2/** -text
+dev/newtonsoft.json/** -text
+dev/microsoft.netframework.referenceassemblies.net48/** -text
+*.sh text eol=lf
+*.py text eol=lf
+*.dll binary
+*.exe binary
+*.ico binary

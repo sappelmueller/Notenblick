@@ -1,0 +1,8 @@
+{
+  "version": "156.0.8078.47",
+  "platform": "linux64",
+  "url": "https://storage.googleapis.com/chrome-for-testing-public/156.0.8078.47/linux64/chrome-headless-shell-linux64.zip",
+  "sha256": "0d5acc62c3e213f8c87d3c298d66ffcf9a236d12ea4b9f85318bf85dbc279daa",
+  "executable": "chrome-headless-shell-linux64/chrome-headless-shell",
+  "metadata_source": "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json"
+}
