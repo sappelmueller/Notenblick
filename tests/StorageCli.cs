@@ -1,0 +1,2 @@
+using System;using Newtonsoft.Json.Linq;using Notenblick.Native;
+public static class StorageCli{public static void Main(string[] args){var store=new Storage(args[0]);string line;while((line=Console.ReadLine())!=null){try{var request=JObject.Parse(line);Console.WriteLine(store.Handle(request).ToString(Newtonsoft.Json.Formatting.None));}catch(Exception e){Console.WriteLine(new JObject{{"ok",false},{"error",e.Message}}.ToString(Newtonsoft.Json.Formatting.None));}}}}

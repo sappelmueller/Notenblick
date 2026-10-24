@@ -1,0 +1,15 @@
+{
+  "name": "notenblick",
+  "version": "1.8.0",
+  "private": true,
+  "description": "Lokaler Windows-Notenrechner; Node-Abhängigkeiten ausschließlich für Entwicklungstests",
+  "devDependencies": {
+    "jsdom": "26.1.0",
+    "axe-core": "4.14.0",
+    "playwright": "1.62.1"
+  },
+  "scripts": {
+    "test": "node tests/domain-storage.cjs && node tests/transfers.cjs && node tests/ui.cjs && node tests/new-features.cjs && node tests/v140.cjs && node tests/v150.cjs && node tests/v160.cjs && node tests/v170.cjs && node tests/v180.cjs",
+    "test:browser": "node tests/browser.cjs && node tests/v170-browser.cjs && node tests/v180-browser.cjs"
+  }
+}
