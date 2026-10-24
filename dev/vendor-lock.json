@@ -1,0 +1,20 @@
+{
+  "dev/webview2/LICENSE.txt": "0af8f1b807512aae39c2ac1aa4d0cae65cabecb6fd554b8439a5162a0d6eca55",
+  "dev/webview2/Microsoft.Web.WebView2.nuspec": "1cf4a86fa0c4105891308c5ee6510b0a04808a3bca97e0275191664f75ff9d1a",
+  "dev/webview2/lib/net462/Microsoft.Web.WebView2.Core.dll": "88a3b62f45225a811cdb85df6dfd95c2bff9a0e43e3b04f813b125eaca56cc9f",
+  "dev/webview2/lib/net462/Microsoft.Web.WebView2.WinForms.dll": "29fc954c3fde1749817d158f3dd5ebe9efd3b3ce9708d86092fb1e9f023a1cb0",
+  "dev/webview2/build/native/x86/WebView2Loader.dll": "6f59ad578fde1f65c44b6935dab0901f014b5268e056b930fb34c0919f1bf4b9",
+  "dev/webview2/build/native/arm64/WebView2Loader.dll": "cb561ae4537e39bba5dd8af1f648f189d9562b1003fd110a9e889ace527fb4e8",
+  "dev/webview2/build/native/x64/WebView2Loader.dll": "462b36fd1be6ca9f7563466a89e57c41ef4a4def3e0a84fa885d203aea4a3aaf",
+  "dev/newtonsoft.json/LICENSE.md": "b98a397897ff55f76cddc380041507a95a896b2946e0188703bf0496793d6516",
+  "dev/newtonsoft.json/Newtonsoft.Json.nuspec": "64aeffca22289eeb3bd32cbe72722ac878d2eadcee9f8885f17daa2e8357c518",
+  "dev/newtonsoft.json/lib/net6.0/Newtonsoft.Json.dll": "22c649f75fce5be7c7ccda8880473b634ef69ecf33f5d1ab8ad892caf47d5a07",
+  "dev/newtonsoft.json/lib/net45/Newtonsoft.Json.dll": "e1e27af7b07eeedf5ce71a9255f0422816a6fc5849a483c6714e1b472044fa9d",
+  "dev/microsoft.netframework.referenceassemblies.net48/Microsoft.NETFramework.ReferenceAssemblies.net48.nuspec": "11b529552084c0d72e9ab1b20945cda82a6f6fd5a5123def11c1d109913ce0fd",
+  "dev/microsoft.netframework.referenceassemblies.net48/build/.NETFramework/v4.8/System.Core.dll": "94a1fc97eb0d36f13acd209bb7207da504c8be10caf7e5096b2c46e671dc6fe2",
+  "dev/microsoft.netframework.referenceassemblies.net48/build/.NETFramework/v4.8/System.dll": "2fe343569f794f2ca92ee14a41875571a9f21bf92637b8f8ee86306534209cca",
+  "dev/microsoft.netframework.referenceassemblies.net48/build/.NETFramework/v4.8/System.Windows.Forms.dll": "0b0bc1f2ebfefe0cf827b2e2a0caa3fb8c772d84df26ab8e40abe98e0f2eb300",
+  "dev/microsoft.netframework.referenceassemblies.net48/build/.NETFramework/v4.8/mscorlib.dll": "6b35530467b914b0b195146ca1d1485ddd219afaad6461103f16f54e952f75a9",
+  "dev/microsoft.netframework.referenceassemblies.net48/build/.NETFramework/v4.8/System.IO.Compression.dll": "c251b0f18d96251db2326f67cba338903d04dbae2838dd72f537576e84007d8c",
+  "dev/microsoft.netframework.referenceassemblies.net48/build/.NETFramework/v4.8/System.Drawing.dll": "65a42d3e5bd4508e3c75133cd1967301a84b5dae6698f300cd831ff79c54b611"
+}

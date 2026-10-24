@@ -11,7 +11,7 @@ names=['Newtonsoft.Json','Microsoft.Web.WebView2.Core','Microsoft.Web.WebView2.W
 checks=[]
 with tempfile.TemporaryDirectory(prefix='notenblick-loader-') as temp:
     temp=Path(temp); probe=temp/'LoaderProbe.exe'
-    subprocess.run(compiler()+['-nologo','-nostdlib+','-target:exe','-out:'+str(probe)]+['-r:'+str(refs/(name+'.dll')) for name in ['mscorlib','System','System.Core']]+[str(root/'native/ProgramLibraries.cs'),str(root/'native/ReleaseLibraries.g.cs'),str(root/'native/ReleaseFiles.g.cs'),str(root/'tests/LoaderProbe.cs')],check=True)
+    subprocess.run(compiler()+['-nologo','-nostdlib+','-target:exe','-out:'+str(probe)]+['-r:'+str(refs/(name+'.dll')) for name in ['mscorlib','System','System.Core']]+[str(root/'native/ProgramLibraries.cs'),str(root/'.build/generated/ReleaseLibraries.g.cs'),str(root/'.build/generated/ReleaseFiles.g.cs'),str(root/'tests/LoaderProbe.cs')],check=True)
     (temp/'LoaderProbe.runtimeconfig.json').write_text(json.dumps({'runtimeOptions':{'tfm':'net8.0','framework':{'name':'Microsoft.NETCore.App','version':'8.0.15'}}}))
     def run(mode,folder,label):
         result=subprocess.run([str(dotnet),str(probe),mode,str(folder)],capture_output=True,text=True)
