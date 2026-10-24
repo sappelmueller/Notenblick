@@ -81,4 +81,16 @@ class Infrastructure(unittest.TestCase):
         self.assertNotEqual(result.returncode,0)
         self.assertIn('Optimierung',result.stderr)
 
+    def test_github_export_preserves_tree_and_binary_bytes(self):
+        import base64
+        def export(*args):return subprocess.check_output([sys.executable,str(ROOT/'dev/github-export.py'),*args],text=True)
+        plan=json.loads(export('plan','HEAD'))
+        expected=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD^{tree}'],text=True).strip()
+        self.assertEqual(plan['tree'],expected)
+        entry=next(e for e in plan['entries'] if e['path']=='native/Notenblick.ico')
+        self.assertEqual(base64.b64decode(export('blob',entry['sha'],'0','63')),(ROOT/entry['path']).read_bytes()[:63])
+        first=json.loads(export('texts','HEAD','0','1'))[0]
+        exact=subprocess.check_output(['git','-C',str(ROOT),'show','HEAD:'+first['path']])
+        self.assertEqual(first['content'].encode('utf-8'),exact)
+
 if __name__=='__main__':unittest.main(verbosity=2)

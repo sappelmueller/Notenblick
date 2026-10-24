@@ -151,7 +151,7 @@
       "seconds": 0.92
     }
   ],
-  "additional_infrastructure_tests": 13,
+  "additional_infrastructure_tests": 14,
   "fresh_checkout_infrastructure_tests": 13,
   "github_repository": "sappelmueller/Notenblick",
   "repository_id": 1432518047,
@@ -159,5 +159,10 @@
   "github_actions_enabled": false,
   "github_actions_minutes": 0,
   "windows_gui_tested": false,
-  "nvda_tested": false
+  "nvda_tested": false,
+  "source_archive_roundtrip": {
+    "files_verified": 145,
+    "all_bytes_identical": true,
+    "commit": "2a22a6604534ca0267ad16aeece3c530dc3c94cb"
+  }
 }

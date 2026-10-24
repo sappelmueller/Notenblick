@@ -11,6 +11,8 @@ python3 dev/manage.py setup
 python3 dev/manage.py test quick
 ```
 
+Falls die Git-CLI hier keine Anmeldung besitzt, beschreibt [docs/GITHUB-ANBINDUNG.md](docs/GITHUB-ANBINDUNG.md) den bereits geprüften Abruf und die Sicherung über die verbundene GitHub-Anbindung.
+
 Die Einrichtung lädt das festgelegte .NET SDK und die gesperrten Testabhängigkeiten. Bereits vorhandene passende Werkzeuge werden wiederverwendet. Nach einem vollständigen Zurücksetzen müssen die Werkzeuge erneut heruntergeladen werden; Quellcode, Konfiguration, Tests und Anleitungen bleiben im Repository erhalten.
 
 Benötigt: Python ab 3.12, Git und Node.js (getestet mit der Version in `.node-version`). Python benötigt keine externen Pakete. SDK, Compiler und Linux-Testbrowser werden projektspezifisch eingerichtet. Bibliotheksdateien für den Windows-Build sind inklusive SHA-256-Prüfsummen enthalten. Es wird kein globales System umkonfiguriert.
