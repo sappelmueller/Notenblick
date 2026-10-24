@@ -1,3 +1,24 @@
+# Notenblick 1.9.0
+
+1. Start bleibt bei Weiterarbeiten, Meine Fächer und Offene Noteneingaben. Kompaktere Bereiche, gleichmäßige Fachflächen und klar getrennte Leistungsbezeichnung/Erfassungsstand. Historische Weiterarbeitsfächer zeigen ihr tatsächliches Schuljahr und öffnen ihre letzte Fachansicht.
+2. Mündliche Erfassung heißt einheitlich Klassenübersicht | Einzelnoten. Unter H2 Mündliche Noten steht nur die zur Ansicht passende Hauptaktion: Noten für Klasse erfassen beziehungsweise Einzelnote eintragen. Andere Bereiche behalten Mündliche Note eintragen.
+3. Ansicht anpassen bündelt seltene Optionen und ist zunächst geschlossen. Klassenübersicht behält Notentabelle/Leistungsliste, Schüler-/Leistungssuche und Export. Einzelnoten behalten ihre sichtbare Suche; Schülerfilter und Sortierung stehen in den Zusatzoptionen.
+4. Einzelnotensuche umfasst Vorname, Nachname, vollständigen Namen und Leistungsbezeichnung. Die Tabelle besitzt sechs Spalten: Datum, Schüler, Bezeichnung, Note, Bemerkung, Aktion. Höchstens 50 Einträge je Seite; Schülernamen führen mit Rückweg zur Schüleransicht.
+5. Neue Einzelnoten heißen standardmäßig Mündliche Note; vorhandene Bezeichnungen bleiben erhalten. Ein über den Filter bekannter Schüler ist vorausgewählt, der Fokus steht auf Note. Allgemeine Aufrufe beginnen bei Schüler. Speichern und nächste und Schutz vor doppelter Speicherung bleiben erhalten.
+6. Neue Klassen-/Gruppenrunden öffnen unmittelbar die bestehende individuelle Noteneingabe. Ein alter Eingabesuchbegriff verdeckt die neue Runde nicht. Eingabe schließen führt zurück; Dialoge erhalten Tabellenposition, Fokus und Scrollposition.
+7. Mündliche Darstellung und Klassensuchen beeinflussen andere Leistungsarten nicht mehr. Sämtliche Ansichtszustände stehen ausschließlich in Ansicht.json; Navigation schreibt keine Notendaten um.
+8. Dauerhafte Zuordnungshinweise und Zuordnung prüfen sind von Start und Mündlich entfernt. Mehrdeutige historische Datensätze bleiben unverändert lesbar. Eine ausdrückliche Klärung steht bei Bedarf unter Sicherung → Wiederherstellen → Mündliche Altbestände; vorher wird weiterhin vollständig und geprüft gesichert.
+9. Berechnungskern, Gewichtung, Teilnahme, Status, GFS, Zeugnisnoten, portable Ablage, automatische Speicherung, Sicherung, TXT/CSV und Verwaltung bleiben erhalten. Der produktive C#-Speicherkern und die Berechnungsmodule sind gegenüber 1.8.0 bytegleich.
+10. Lokale Prüfungen um 1.9-Abläufe, Update-/Speichertests und Chromium-Prüfungen mit 40, 100 und 250 Einzelnoten, 60 Schülern, historischen Schuljahren, langen Texten und hohem Browserzoom erweitert. Tatsächliche Windows-/NVDA-Prüfungen bleiben ausdrücklich gesondert.
+
+## Update auf 1.9.0
+
+Notenblick schließen. Ausschließlich Notenblick.exe und den vollständigen Ordner Programm ersetzen. Den vorhandenen Ordner Daten unverändert behalten. Das Programmarchiv enthält keine Nutzerdaten; bei einer Neuinstallation entsteht Daten beim ersten Start.
+
+Die Auslieferung ist ein lokal unter Linux und Chromium geprüfter Windows-Build-Kandidat. Tatsächlicher Windows-Programmstart, WebView2/UI Automation, Windows-Skalierung und gesprochene NVDA-Ausgaben sind hier nicht live geprüft. Einzelheiten stehen in PRUEFBERICHT.md.
+
+---
+
 # Notenblick 1.8.0
 
 1. Neue Startseite mit Weiterarbeiten, gemeinsamen Fach-Schnellzugriffen und höchstens fünf tatsächlich offenen Noteneingaben. Fünf echte Hauptlinks: Start, Noten, Verwaltung, Sicherung, Einstellungen.

@@ -1,6 +1,6 @@
 # Arbeit über die verbundene GitHub-Anbindung
 
-Ziel ausschließlich `sappelmueller/Notenblick`, private Repository-ID `1432518047`. `main` ist der aktuelle Stand; `baseline-1.8.0` bewahrt den vollständigen ursprünglichen Quellstand. Die aktuelle Hauptversion und der Ausgangsstand besitzen dieselben vollständigen Quellbäume wie die lokal geprüften Versionen.
+Ziel ausschließlich `sappelmueller/Notenblick`, private Repository-ID `1432518047`. `main` ist der aktuelle Stand; `baseline-1.8.0` bewahrt den vollständigen ursprünglichen Quellstand. Neue Versionen werden als Folgecommits auf main gesichert; vor dem Aktualisieren muss der vollständige entfernte Quellbaum mit dem lokal geprüften Baum übereinstimmen.
 
 Die Git-CLI dieser Ausführungsumgebung hat keine eigenen GitHub-Anmeldedaten. Die bereits verbundene GitHub-Anbindung kann Quellcode lesen und schreiben; die Browser-Anmeldung wird für Repository-Verwaltung und gegebenenfalls den vollständigen Abruf benötigt. Es werden keine zusätzlichen Schlüssel erzeugt oder Passwörter im Projekt gespeichert.
 

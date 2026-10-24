@@ -13,3 +13,12 @@ Ein Linux-Build ersetzt diese Prüfung nicht. Unter Windows 11 zunächst die ZIP
 - Nach Möglichkeit getrennt auf Windows x64 und Windows ARM64 prüfen. Vorhandene Loaderdateien allein belegen keine ausgeführte ARM64-Prüfung.
 
 Prüfdatum, Windows-Version/Architektur, WebView2-Version, NVDA-Version und die Ergebnisse dokumentieren. Offene Punkte bleiben offen; keine automatische Umwandlung in eine Freigabe. Falls der Linux-Build künftig scheitert: dieselben mitgelieferten Python-Buildskripte mit dem gesperrten SDK auf einem vorhandenen Windows-Rechner verwenden. Keine kostenpflichtigen Dienste und keine GitHub Actions einschalten.
+
+## Ergänzung für 1.9.0
+
+- Start → Weiterarbeiten nach Besuch eines früheren Schuljahrs: korrekte Jahresangabe und Rückkehr zur tatsächlichen Fachansicht.
+- Mündlich: Klassenübersicht/Einzelnoten per Auswahlfeld, jeweils genau eine Hauptaktion; Ansicht anpassen mit Eingabe/Leertaste öffnen und mit Escape schließen.
+- Einzelnoten: sechs Spalten, kurze Bearbeiten-/Löschen-Ansagen, Bezeichnungssuche, kombinierter Schülerfilter; Rückkehr aus Dialog und Schüleransicht zur ursprünglichen Position.
+- Neue Einzelnote: bekannter Schüler fokussiert Note, allgemeiner Aufruf Schüler; Mündliche Note und heutiges Datum vorbelegt; Speichern und nächste mehrfach prüfen.
+- Neue Bewertungsrunde für ganze Klasse und ausgewählte Gruppe: individuelle Noten, direkte Eingabe, Eingabe schließen mit nachvollziehbarem Fokus.
+- 40, 100 und 250 synthetische Einzelnoten bei 100/150/200 Prozent Windows-Skalierung prüfen. Browserzoom und Pixelratio sind keine tatsächliche Windows-Skalierungsprüfung.

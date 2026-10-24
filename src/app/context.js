@@ -20,7 +20,7 @@ Notenblick.defaults = () => ({
   entrySearch: '',
   matrixPages: {},
   assessmentWorkOpen: false,
-  oralView:'classes',oralSearch:'',oralStudent:'all',oralSort:'date',oralPage:0,oralFocusId:'',
+  oralView:'classes',oralAreaView:Notenblick.prefs.areaView,oralClassSearch:'',oralListSearch:'',oralSearch:'',oralStudent:'all',oralSort:'date',oralPage:0,oralFocusId:'',
   pupil: ''
 });
 const calculations = new WeakMap();

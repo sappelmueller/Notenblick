@@ -41,13 +41,13 @@ document.addEventListener('input', e => {
     return;
   }
   if (el.dataset.filter === 'search') {
-    Notenblick.W().search = el.value;
+    Notenblick.W()[el.dataset.scope==='oral'?'oralClassSearch':'search'] = el.value;
     Notenblick.remember();
     Notenblick.refreshTable(el.dataset.kind);
   }
   if(el.dataset.entrySearch){if(!Notenblick.canLeave()){el.value=Notenblick.W().entrySearch;return;}const kind=el.dataset.entrySearch;Notenblick.W().entrySearch=el.value;const a=Notenblick.data.assessments.find(x=>x.id===Notenblick.W().selected[kind]);Notenblick.$('#entryBody-'+kind).innerHTML=Notenblick.entryRows(a,kind);Notenblick.remember();return;}
   if(el.id==='oral-search'){Notenblick.W().oralSearch=el.value;Notenblick.W().oralPage=0;Notenblick.refreshOralTable();Notenblick.remember();return;}
-  if(el.id==='assessmentSearch'){Notenblick.W().assessmentSearch=el.value;Notenblick.refreshAssessmentList();Notenblick.remember();return;}
+  if(el.id==='assessmentSearch'){Notenblick.W()[el.dataset.scope==='oral'?'oralListSearch':'assessmentSearch']=el.value;Notenblick.refreshAssessmentList();Notenblick.remember();return;}
   if (el.id === 'adminSearch') {
     Notenblick.ui.adminSearch = el.value;Notenblick.remember();
     Notenblick.$('#adminStudentsTable').innerHTML = Notenblick.studentsTable(Notenblick.adminClass());
@@ -59,6 +59,7 @@ document.addEventListener('change', e => {
   try {
     if(el.dataset.setting){const key=el.dataset.setting,value=key==='visibleKinds'?[...document.querySelectorAll('[data-setting=visibleKinds]:checked')].map(x=>x.value):el.value;if(!Notenblick.setPreference(key,value)){if(key==='visibleKinds')el.checked=Notenblick.prefs.visibleKinds.includes(el.value);else el.value=String(Notenblick.prefs[key]);}return;}
     if(el.dataset.entryPupil){if(!Notenblick.canLeave())return;const kind=el.dataset.entryPupil,a=Notenblick.data.assessments.find(x=>x.id===Notenblick.W().selected[kind]);Notenblick.W().studentIndex=Notenblick.entryList(a).findIndex(s=>s.id===el.value);Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.$('#entryPupil-'+kind).focus();return;}
+    if(el.id==='oralAreaView'){const w=Notenblick.W();if(!Notenblick.canLeave()){el.value=w.oralAreaView;return;}w.oralAreaView=el.value;w.assessmentWorkOpen=false;Notenblick.renderAssessments(Notenblick.kinds.includes(w.view)?w.view:'');Notenblick.$('#oralSettings').open=true;Notenblick.$('#oralAreaView').focus();Notenblick.remember();return;}
     if(el.id==='oralView'){if(Notenblick.canLeave()){Notenblick.showOral(el.value);Notenblick.$('#oralView').focus();}else el.value=Notenblick.W().oralView;return;}
     if(['oralStudentFilter','oralSort'].includes(el.id)){Notenblick.W()[el.id==='oralSort'?'oralSort':'oralStudent']=el.value;Notenblick.W().oralPage=0;Notenblick.refreshOralTable();Notenblick.remember();return;}
     if (el.dataset.entry) {
@@ -103,7 +104,7 @@ document.addEventListener('change', e => {
 document.addEventListener('keydown', e => {
   const el = e.target;
   if(e.defaultPrevented)return;
-  if(e.key==='Escape'){const details=el.closest('details[open]');if(details&&(details.id==='pupilHistory'||details.classList.contains('result-note'))){details.open=false;details.querySelector('summary').focus();e.preventDefault();return;}}
+  if(e.key==='Escape'){const details=el.closest('details[open]');if(details&&(details.id==='oralSettings'||details.id==='pupilHistory'||details.classList.contains('result-note'))){details.open=false;details.querySelector('summary').focus();e.preventDefault();return;}}
   if (e.key === 'Enter' && el.dataset.entry === 'grade') {
     e.preventDefault();
     Notenblick.entryChange(el);

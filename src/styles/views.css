@@ -430,7 +430,32 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 @media print{.weight-actions,.conversion-choice,.copy-confirm{display:none}.changed-average td:nth-child(3){border:1px solid #666}}
 #weightPreviewTable thead th{white-space:normal}#weightPreviewTable td:last-child{white-space:normal;min-width:95px}#weightPreviewTable tbody th{overflow-wrap:anywhere}#weightPreview{margin-top:24px}
 /* 1.8: compact start page, oral rows and shared responsive modal sizes. */
-.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.home-grid>.panel{margin:0;padding:22px}.home-pending{grid-column:1/-1}.continue-course{font-size:1.2rem;font-weight:650}.work-list{list-style:none;margin:0;padding:0}.work-list li{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 0;border-top:1px solid var(--line)}.work-list li:first-child{border-top:0;padding-top:0}.work-list li p{margin:6px 0 0;color:var(--muted)}.work-list a{flex-shrink:0}.home-grid .quick-links{margin-bottom:16px}.oral-filters .field{flex:1 1 210px;max-width:360px}.oral-note-summary{padding:12px 20px;margin:0;color:var(--muted)}.oral-notes-table th,.oral-notes-table td{white-space:normal}.oral-notes-table th:nth-child(2){min-width:160px}.oral-notes-table td:first-child{min-width:150px;max-width:260px}.oral-notes-table .secondary{max-width:240px;overflow-wrap:anywhere}.oral-notes-table .actions{flex-wrap:wrap;gap:12px}.oral-notes-table td:nth-child(4){max-width:22rem}.oral-review-notice{margin-bottom:20px}.oral-review-notice p{margin-bottom:10px}.weight-display h3{font-size:1rem;margin:20px 0 14px}
+.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.home-grid>.panel{margin:0;padding:22px}.home-pending{grid-column:1/-1}.continue-course{font-size:1.2rem;font-weight:650}.work-list{list-style:none;margin:0;padding:0}.work-list li{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 0;border-top:1px solid var(--line)}.work-list li:first-child{border-top:0;padding-top:0}.work-list li p{margin:6px 0 0;color:var(--muted)}.work-list a{flex-shrink:0}.home-grid .quick-links{margin-bottom:16px}.weight-display h3{font-size:1rem;margin:20px 0 14px}
 dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medium]{width:min(740px,calc(100% - 24px))}dialog[data-size=wide]{width:min(1120px,calc(100% - 24px))}dialog{max-height:90vh;max-height:90dvh;overflow:hidden}#dialogForm{display:flex;flex-direction:column;max-height:90vh;max-height:90dvh;overflow:hidden;min-height:0}.dialog-header,.dialog-actions{flex-shrink:0}#dialogContent{overflow:auto;min-height:0;padding:3px;overscroll-behavior:contain}#dialogError{flex-shrink:0;max-height:18vh;overflow:auto}.dialog-actions{margin-top:20px}#weightPreviewTable thead th{white-space:normal}
-@media(max-width:740px){.home-grid{grid-template-columns:1fr}.home-pending{grid-column:auto}.work-list li{align-items:flex-start;flex-direction:column;gap:10px}.home-grid>.panel{padding:18px}.oral-filters .field{max-width:none}.dialog-actions{flex-wrap:wrap}}
+@media(max-width:740px){.home-grid{grid-template-columns:1fr}.home-pending{grid-column:auto}.work-list li{align-items:flex-start;flex-direction:column;gap:10px}.home-grid>.panel{padding:18px}.dialog-actions{flex-wrap:wrap}}
 @media(max-height:480px){dialog{max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);overflow:auto}#dialogForm{display:block;max-height:none;overflow:visible}#dialogContent{overflow:visible}#dialogError{max-height:none}}
+
+/* 1.9: compact work areas and a six-column oral register. */
+.home-grid>.panel{padding:18px 20px;min-width:0}
+.home-grid h2{margin-bottom:14px}
+.continue-course{border-left:3px solid var(--accent);padding-left:13px;margin:0 0 18px;line-height:1.5;overflow-wrap:anywhere}
+.continue-year{display:block;font-size:.9rem;font-weight:400;color:var(--muted);margin-top:3px}
+.home-grid .quick-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.5rem,1fr));gap:8px;margin-bottom:14px}
+.home-grid .quick-links li{min-width:0}.home-grid .quick-links a{height:100%;padding:8px 10px;min-height:40px}
+.work-list li>div{min-width:0;overflow-wrap:anywhere}.work-list .pending-title{color:var(--ink);font-weight:600;margin-top:5px}.work-list .pending-progress{font-size:.86rem;margin-top:3px}
+.oral-view-controls{display:flex;flex-wrap:wrap;gap:12px 20px;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.oral-view-controls .field{width:16rem;max-width:100%;min-width:0}
+.oral-work-tools{display:grid;grid-template-columns:minmax(0,1fr);min-width:0;gap:14px;margin-bottom:18px}.oral-work-tools .search-field{width:28rem;max-width:100%;min-width:0}
+.oral-settings{min-width:0;width:100%;max-width:40rem}.oral-settings:not([open])>.oral-options{display:none}.oral-settings>summary{width:fit-content;cursor:pointer;color:var(--accent);font-weight:600;padding:6px 0}
+.oral-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(15rem,100%),1fr));gap:16px;border:1px solid var(--line);border-radius:7px;padding:16px;margin-top:8px;background:var(--soft)}.oral-options .field{min-width:0}
+.oral-note-summary{padding:12px 20px;margin:0;color:var(--muted)}
+.oral-notes-table{min-width:760px}.oral-notes-table th,.oral-notes-table td{white-space:normal;overflow-wrap:anywhere}
+.oral-notes-table td:first-child{min-width:7.5rem;white-space:nowrap}
+.oral-notes-table th:nth-child(2){min-width:10rem;max-width:15rem}
+.oral-notes-table .person{overflow-wrap:anywhere;white-space:normal}
+.oral-notes-table .oral-title{min-width:10rem;max-width:24rem}
+.oral-notes-table td:nth-child(4){min-width:5rem}.oral-notes-table td:nth-child(5){min-width:7rem;max-width:16rem}
+.oral-notes-table td:last-child{width:7rem}.oral-notes-table .actions{gap:6px 12px}.oral-notes-table .secondary{max-width:14rem}
+.oral-notes-table .result-note{margin:0}.oral-notes-table .result-note p{max-width:24rem}
+@media(max-width:740px){.home-grid>.panel{padding:16px}.oral-view-controls{gap:12px}.oral-view-controls .field{flex:1 1 12rem}.oral-work-tools .button-row{gap:10px}.oral-options{padding:12px}}
+@media(forced-colors:active){.continue-course{border-color:Highlight}.oral-settings>summary{color:LinkText}}

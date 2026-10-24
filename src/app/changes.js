@@ -25,7 +25,7 @@ Notenblick.mark = function mark() {
   } else Notenblick.status(Notenblick.mode === 'demo' ? 'Beispieldaten' : 'Im Browser aufbewahrt');
 };
 Notenblick.workspacePromise=Promise.resolve();
-Notenblick.getWorkspace=()=>({main:Notenblick.ui.main,workingYear:Notenblick.ui.workingYear,historicalYear:Notenblick.ui.historicalYear,year:Notenblick.ui.year,class:Notenblick.ui.class,course:Notenblick.ui.course,weightClass:Notenblick.ui.weightClass,weightCourse:Notenblick.ui.weightCourse,adminYear:Notenblick.ui.adminYear,adminClass:Notenblick.ui.adminClass,adminView:Notenblick.ui.adminView,adminSearch:Notenblick.ui.adminSearch,showExitedAdmin:Notenblick.ui.showExitedAdmin,showArchived:Notenblick.ui.showArchived,nameOrder:Notenblick.ui.nameOrder,selections:Notenblick.N.clone(Notenblick.ui.selections||{}),scrolls:Notenblick.N.clone(Notenblick.scrolls),settings:Notenblick.N.clone(Notenblick.prefs),settingsView:Notenblick.ui.settingsView,workspaces:Notenblick.N.clone(Notenblick.ui.workspaces)});
+Notenblick.getWorkspace=()=>({main:Notenblick.ui.main,lastNotesCourse:Notenblick.ui.lastNotesCourse,workingYear:Notenblick.ui.workingYear,historicalYear:Notenblick.ui.historicalYear,year:Notenblick.ui.year,class:Notenblick.ui.class,course:Notenblick.ui.course,weightClass:Notenblick.ui.weightClass,weightCourse:Notenblick.ui.weightCourse,adminYear:Notenblick.ui.adminYear,adminClass:Notenblick.ui.adminClass,adminView:Notenblick.ui.adminView,adminSearch:Notenblick.ui.adminSearch,showExitedAdmin:Notenblick.ui.showExitedAdmin,showArchived:Notenblick.ui.showArchived,nameOrder:Notenblick.ui.nameOrder,selections:Notenblick.N.clone(Notenblick.ui.selections||{}),scrolls:Notenblick.N.clone(Notenblick.scrolls),settings:Notenblick.N.clone(Notenblick.prefs),settingsView:Notenblick.ui.settingsView,workspaces:Notenblick.N.clone(Notenblick.ui.workspaces)});
 Notenblick.remember=function(){
  if(Notenblick.starting||Notenblick.fatalStart)return;
  const workspace=Notenblick.getWorkspace(),store=Notenblick.store;Notenblick.workspace=workspace;
@@ -36,6 +36,7 @@ Notenblick.restoreWorkspace = function restoreWorkspace(source=Notenblick.worksp
   Notenblick.workspace=source;
   Notenblick.ui.workingYear=typeof a.workingYear==='string'?a.workingYear:a.year||'';
   Notenblick.ui.historicalYear=typeof a.historicalYear==='string'?a.historicalYear:'';
+  Notenblick.ui.lastNotesCourse=typeof a.lastNotesCourse==='string'?a.lastNotesCourse:a.course||'';
   Notenblick.ui.selections=a.selections&&typeof a.selections==='object'?Notenblick.N.clone(a.selections):{};
   Notenblick.scrolls=a.scrolls&&typeof a.scrolls==='object'?Notenblick.N.clone(a.scrolls):{};
   Notenblick.ui.adminSearch=typeof a.adminSearch==='string'?a.adminSearch.slice(0,100):'';
@@ -55,6 +56,7 @@ Notenblick.restoreWorkspace = function restoreWorkspace(source=Notenblick.worksp
     x.entrySearch=typeof w.entrySearch==='string'?w.entrySearch.slice(0,100):'';
     x.matrixPages=Object.fromEntries(Notenblick.kinds.filter(k=>Number.isSafeInteger(w.matrixPages?.[k])&&w.matrixPages[k]>=0).map(k=>[k,w.matrixPages[k]]));
     x.assessmentWorkOpen=w.assessmentWorkOpen===true;
+    x.oralAreaView=['matrix','list'].includes(w.oralAreaView)?w.oralAreaView:Notenblick.prefs.areaView;x.oralClassSearch=typeof w.oralClassSearch==='string'?w.oralClassSearch.slice(0,100):(typeof w.search==='string'?w.search.slice(0,100):'');x.oralListSearch=typeof w.oralListSearch==='string'?w.oralListSearch.slice(0,100):(typeof w.assessmentSearch==='string'?w.assessmentSearch.slice(0,100):'');
     x.oralView=w.oralView==='individual'?'individual':'classes';x.oralSearch=typeof w.oralSearch==='string'?w.oralSearch.slice(0,100):'';x.oralStudent=typeof w.oralStudent==='string'?w.oralStudent:'all';x.oralSort=w.oralSort==='student'?'student':'date';x.oralPage=Number.isSafeInteger(w.oralPage)?Math.max(0,w.oralPage):0;x.oralFocusId=typeof w.oralFocusId==='string'?w.oralFocusId:'';
     x.pupil=typeof w.pupil==='string'?w.pupil:'';
     if (Notenblick.extraKeys.includes(w.extra)) x.extra = w.extra;
@@ -77,7 +79,7 @@ Notenblick.mutate = function mutate(fn, {
   if (Notenblick.mode === 'none') Notenblick.mode = 'working';
   const next = Notenblick.N.clone(Notenblick.data);
   fn(next);
-  if(next.courses.some(c=>c.calculationMode==='direct')||next.assessments.some(a=>a.participantIds||a.oralEntry))next.appVersion='1.8.0';
+  if(next.courses.some(c=>c.calculationMode==='direct')||next.assessments.some(a=>a.participantIds||a.oralEntry))next.appVersion='1.9.0';
   try{Notenblick.N.validate(next);}catch(e){throw Error(e.message.replace(/^Ungültige Datendatei: /,''));}
   if (record) {
     Notenblick.undo.push(Notenblick.N.clone(Notenblick.data));

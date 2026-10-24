@@ -5,9 +5,9 @@ from guard import check_root, check_paths, git
 from bootstrap import setup, dotnet_path
 
 ROOT=Path(__file__).resolve().parents[1]
-QUICK=['domain-storage','transfers','ui','new-features','v140','v150','v160','v170','v180']
-STORAGE=['view-storage','v150-storage','v160-storage','v170-storage','v180-storage','workflow']
-BROWSER=['browser','v170-browser','v180-browser']
+QUICK=['domain-storage','transfers','ui','new-features','v140','v150','v160','v170','v180','v190']
+STORAGE=['view-storage','v150-storage','v160-storage','v170-storage','v180-storage','v190-storage','workflow']
+BROWSER=['browser','v170-browser','v180-browser','v190-browser']
 ENV=os.environ.copy()
 ENV.update({'NOTENBLICK_DOTNET':str(dotnet_path()),'PLAYWRIGHT_BROWSERS_PATH':str(ROOT/'.tools/browsers'),
             'DOTNET_CLI_TELEMETRY_OPTOUT':'1','DOTNET_NOLOGO':'1','NOTENBLICK_OUTPUT':str(ROOT/'artifacts')})

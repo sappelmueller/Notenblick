@@ -1,6 +1,6 @@
 # Notenblick
 
-Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Ausgangsstand: **1.8.0**. Diese Einrichtung verändert keine Programmfunktionen, Berechnungen oder Datenformate.
+Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.9.0**. Kompakte Startseite, verständliche mündliche Erfassung und getrennte Ansichtszustände; Berechnungslogik und Datenformat bleiben erhalten.
 
 ## Sofort weiterarbeiten
 
@@ -38,8 +38,8 @@ Berichte, Ausgaben und vollständige Testprotokolle stehen unter `reports/<Zeitp
 
 ## Architektur und Ablage
 
-- `src`: unveränderte Anwendungs-, Berechnungs- und Oberflächenmodule.
-- `native`: unveränderter Windows-Starter, WebView2-Fenster und C#-Speicherung.
+- `src`: modulare Anwendung mit zentraler Berechnung und gemeinsamen Oberflächenkomponenten.
+- `native`: Windows-Starter, WebView2-Fenster und C#-Speicherung.
 - `tests`: bestehende Tests und zusätzliche Entwicklungsregressionen; ausschließlich synthetische Testdaten.
 - `dev`: Build-, Einrichtungs- und Paketwerkzeuge sowie benötigte Bibliotheken und Versions-/Prüfsummensperren.
 - `.githooks`: lokale Prüfungen vor Commit und Push; werden von `setup` im aktuellen Repository aktiviert.

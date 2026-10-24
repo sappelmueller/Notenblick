@@ -39,6 +39,7 @@ Notenblick.ui = {
   workingYear:'',historicalYear:'',selections:{},
   class: '',
   course: '',
+  lastNotesCourse: '',
   adminYear: '',
   adminClass: '',
   adminView: 'years',
