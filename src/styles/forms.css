@@ -1,0 +1,161 @@
+/* Notenblick – forms */
+button,input,select,textarea {
+  font:inherit
+}
+.selection {
+  display:flex;
+  align-items:end;
+  gap:16px;
+  border-bottom:1px solid var(--line);
+  padding-bottom:25px;
+  margin-bottom:26px
+}
+.selection .field {
+  min-width:160px;
+  max-width:245px;
+  flex:1
+}
+.selection .button {
+  min-width:110px
+}
+.field {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-width:0
+}
+.field label {
+  font-size:.8rem;
+  font-weight:650
+}
+.field small {
+  font-size:.76rem;
+  color:var(--muted)
+}
+input,select,textarea {
+  min-height:44px;
+  border:1px solid #7b8d7f;
+  border-radius:6px;
+  color:var(--ink);
+  background:#fff;
+  padding:9px 12px;
+  max-width:100%
+}
+textarea {
+  resize:vertical;
+  min-height:92px
+}
+input[aria-invalid=true],select[aria-invalid=true] {
+  border:2px solid var(--red)
+}
+input[type=checkbox] {
+  min-height:0;
+  width:18px;
+  height:18px;
+  accent-color:var(--accent)
+}
+.check-list {
+  display:grid;
+  gap:12px;
+  margin-bottom:20px
+}
+.check {
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  font-size:.87rem
+}
+.check input {
+  flex-shrink:0;
+  margin-top:3px
+}
+.entry-top .field {
+  max-width:520px;
+  flex:1
+}
+.single .field {
+  margin-bottom:18px
+}
+.form-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px
+}
+fieldset {
+  border:1px solid var(--line);
+  border-radius:7px;
+  padding:18px;
+  margin:20px 0;
+  min-width:0
+}
+legend {
+  font-size:.88rem;
+  font-weight:650;
+  padding:0 7px
+}
+.weight-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(135px,1fr));
+  gap:14px
+}
+.weight-sum {
+  font-size:.83rem;
+  margin:15px 0 0
+}
+.field-error {
+  color:var(--red);
+  font-size:.88rem;
+  margin:15px 0
+}
+.admin-actions .field {
+  min-width:200px;
+  max-width:300px;
+  flex:1
+}
+dialog {
+  padding:0;
+  border:1px solid var(--line);
+  border-radius:12px;
+  width:min(650px,calc(100% - 28px));
+  max-height:90vh;
+  color:var(--ink);
+  box-shadow:0 20px 70px #1b342b33
+}
+dialog::backdrop {
+  background:#1f302b77
+}
+#dialogForm {
+  padding:27px
+}
+.dialog-header {
+  display:flex;
+  gap:16px;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:24px
+}
+.dialog-header h2 {
+  font-size:1.35rem;
+  margin:0
+}
+.close {
+  border:0;
+  background:#eef2eb;
+  color:var(--ink);
+  border-radius:6px;
+  width:38px;
+  min-height:38px;
+  font-size:1.5rem
+}
+.dialog-actions {
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+  border-top:1px solid var(--line);
+  padding-top:20px;
+  margin-top:25px
+}
+.dialog-intro {
+  font-size:.87rem;
+  color:var(--muted)
+}

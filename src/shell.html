@@ -1,0 +1,27 @@
+<!doctype html><html lang="de-DE"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file: 'unsafe-inline'; style-src 'self' file: 'unsafe-inline'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'"><title>Notenblick</title><link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/navigation.css">
+<link rel="stylesheet" href="css/forms.css">
+<link rel="stylesheet" href="css/tables.css">
+<link rel="stylesheet" href="css/views.css">
+<link rel="stylesheet" href="css/responsive.css"></head><body>
+<a href="#main" class="skip">Zum Inhalt springen</a>
+<div class="header"><nav class="header-inner" aria-label="Hauptnavigation"><div class="brand"><span aria-hidden="true" class="brand-icon">n</span><span>Notenblick</span></div><ul id="mainTabs" class="tabs main-tabs"><li><a id="tab-home" href="#home" data-key="home">Start</a></li><li><a id="tab-notes" href="#notes" data-key="notes">Noten</a></li><li><a id="tab-admin" href="#admin" data-key="admin">Verwaltung</a></li><li><a id="tab-backup" href="#backup" data-key="backup">Sicherung</a></li><li><a id="tab-settings" href="#settings" data-key="settings">Einstellungen</a></li></ul><div class="header-end"><button type="button" data-action="help" class="text-button">Hilfe</button></div></nav></div>
+<main id="main" tabindex="-1">
+<div id="error" class="error" role="alert" hidden></div><div id="modeNotice" class="mode-notice" hidden></div>
+<p id="bootNotice">Notenblick wird geöffnet …</p><p id="bootError" class="error" role="alert" hidden></p><noscript><p>Bitte öffne Notenblick.exe, um das Programm zu verwenden.</p></noscript>
+ <div id="home" class="main-panel" hidden></div>
+ <div id="notes" class="main-panel"><div id="notesStart"></div><div id="notesWork" hidden>
+  <div role="region" aria-label="Auswahl" id="selection" class="selection-area"><div id="quickSelection" hidden></div><details id="allSelection" open><summary id="allSelectionSummary" class="button small" hidden>Alle Klassen und Fächer</summary><div class="selection"><div class="field"><label for="class">Klasse</label><select id="class"></select></div><div class="field"><label for="course">Fach</label><select id="course"></select></div></div></details></div>
+  <div class="page-heading"><div><h1 id="subjectTitle">Noten</h1><p id="subjectYear" class="subtle"></p><div id="historicalAction"></div></div></div>
+  <div id="legacyNotice"></div>
+  <div class="notes-navigation"><ul id="noteTabs" class="tabs area-tabs"></ul><button type="button" class="button small weight-action" data-action="weights">Notengewichtung</button></div>
+  <div id="overview" class="area-panel"></div><div id="assessments" class="area-panel"></div><div id="pupil" class="area-panel"></div><div id="notes-exam" class="area-panel" hidden></div><div id="notes-test" class="area-panel" hidden></div><div id="notes-oral" class="area-panel" hidden></div><div id="notes-homework" class="area-panel" hidden></div><div id="notes-notebook" class="area-panel" hidden></div>
+ </div></div>
+ <div id="admin" class="main-panel" hidden><div class="page-heading"><div><h1>Verwaltung</h1></div></div><ul id="adminTabs" class="tabs area-tabs"><li><a id="tab-years" href="#years" data-key="years">Schuljahre</a></li><li><a id="tab-classes" href="#classes" data-key="classes">Klassen</a></li><li><a id="tab-students" href="#students" data-key="students">Schüler</a></li><li><a id="tab-subjects" href="#subjects" data-key="subjects">Fächer</a></li></ul><div id="adminSelection"></div><div id="years"></div><div id="classes"></div><div id="students"></div><div id="subjects"></div></div>
+ <div id="backup" class="main-panel" hidden></div>
+ <div id="settings" class="main-panel" hidden><div class="page-heading"><h1>Einstellungen</h1></div><ul id="settingsTabs" class="tabs area-tabs"><li><a id="tab-settings-general" href="#settings-general" data-key="general">Allgemein</a></li><li><a id="tab-settings-display" href="#settings-display" data-key="display">Darstellung</a></li><li><a id="tab-settings-calculation" href="#settings-calculation" data-key="calculation">Notenberechnung</a></li></ul><div id="settings-general" hidden></div><div id="settings-display"></div><div id="settings-calculation" hidden></div></div>
+</main>
+<dialog id="dialog" aria-labelledby="dialogTitle"><form role="none" id="dialogForm" novalidate><div class="dialog-header"><h2 id="dialogTitle"></h2><button class="close" type="button" data-action="close" aria-label="Schließen">×</button></div><div id="dialogContent"></div><p id="dialogError" role="alert" class="field-error" hidden></p><div class="dialog-actions"><button type="button" class="button" data-action="close">Abbrechen</button><button type="submit" class="button primary" id="dialogSave">Speichern</button><button type="button" class="button" id="dialogNext" data-action="oral-save-next" hidden>Speichern und nächste</button></div></form></dialog>
+<input id="importFile" type="file" accept=".json,application/json" hidden><div id="announcement" role="status" aria-live="polite" class="sr-only"></div>
+<!-- SCRIPTS -->
+</body></html>

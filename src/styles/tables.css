@@ -1,0 +1,116 @@
+/* Notenblick – tables */
+.table-panel {
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:9px;
+  overflow:hidden;
+  margin-bottom:18px
+}
+.table-header {
+  padding:18px 21px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px
+}
+.table-header h2,.table-header h3,.table-header h4,.table-header p {
+  margin:0
+}
+.table-header .subtle {
+  font-size:.79rem
+}
+.table-wrap {
+  overflow:auto;
+  max-width:100%
+}
+table {
+  border-collapse:collapse;
+  width:100%;
+  font-size:.89rem
+}
+th,td {
+  padding:13px 15px;
+  text-align:left;
+  border-bottom:1px solid #e6ece4;
+  vertical-align:middle;
+  white-space:nowrap
+}
+thead th {
+  background:#f8faf6;
+  font-size:.76rem;
+  color:#526457;
+  font-weight:600
+}
+tbody th {
+  font-weight:500
+}
+tbody tr:last-child>* {
+  border-bottom:0
+}
+tfoot th,tfoot td {
+  background:#edf3ec;
+  border-top:2px solid #cad7cb;
+  border-bottom:0;
+  font-weight:600
+}
+tbody th:first-child {
+  min-width:155px;
+  max-width:240px;
+  white-space:normal
+}
+.person {
+  color:var(--ink);
+  font-weight:600;
+  border:0;
+  background:transparent;
+  text-align:left;
+  padding:3px 0;
+  font-size:inherit
+}
+.person:hover {
+  text-decoration:underline
+}
+.grade {
+  font-variant-numeric:tabular-nums;
+  font-weight:600
+}
+.total {
+  display:inline-block;
+  color:#204a33;
+  background:var(--soft);
+  border-radius:5px;
+  min-width:51px;
+  text-align:center;
+  padding:4px 8px
+}
+.secondary {
+  display:block;
+  white-space:normal;
+  font-size:.73rem;
+  color:var(--muted);
+  font-weight:400;
+  max-width:170px
+}
+.empty-cell {
+  white-space:normal;
+  padding:28px
+}
+.entry-table .grade-field {
+  width:92px
+}
+.entry-table .status-field {
+  width:190px
+}
+.entry-table .note-field {
+  width:100%;
+  min-width:200px
+}
+.entry-table tbody th {
+  min-width:190px
+}
+h1,h2,h3,.error,.mode-notice,.secondary {
+  overflow-wrap:anywhere
+}
+/* Contain offscreen accessible text within horizontally scrolling tables. */
+.table-wrap{position:relative}

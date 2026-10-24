@@ -1,0 +1,15 @@
+{
+ "source":"https://www.bildungsplaene-bw.de/,Lde/30914844",
+ "checked":"2026-10-23",
+ "subjects":[
+  {"code":"D","names":["Deutsch"]},{"code":"G","names":["Geschichte"]},
+  {"code":"WBS","names":["WBS","Wirtschaft / Berufs- und Studienorientierung","Wirtschaft, Berufs- und Studienorientierung","Wirtschaft/Berufs- und Studienorientierung"]},
+  {"code":"M","names":["Mathematik"]},{"code":"E","names":["Englisch"]},
+  {"code":"F","names":["Französisch"]},{"code":"BK","names":["Bildende Kunst"]},
+  {"code":"BIO","names":["Biologie"]},{"code":"CH","names":["Chemie"]},
+  {"code":"GEO","names":["Geographie"]},{"code":"GK","names":["Gemeinschaftskunde"]},
+  {"code":"MUS","names":["Musik"]},{"code":"PH","names":["Physik"]},
+  {"code":"SPO","names":["Sport"]},{"code":"ETH","names":["Ethik"]},
+  {"code":"REV","names":["Evangelische Religionslehre"]},{"code":"RRK","names":["Katholische Religionslehre"]}
+ ]
+}
