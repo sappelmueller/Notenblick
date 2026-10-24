@@ -3,7 +3,7 @@
 'use strict';
 Notenblick.download = function download(name, text, type = 'text/plain;charset=utf-8') {
   if (window.NRDesktop.available) {
-    return window.NRDesktop.call('download',{name,text}).then(saved=>{if(saved!==false)Notenblick.announce('Die Datei wurde gespeichert.');}).catch(e=>{if(e.name==='AbortError')return false;e.storageError=true;throw e;});
+    return window.NRDesktop.call('download',{name,text}).then(saved=>{if(saved!==false)Notenblick.announce('Die Datei wurde gespeichert.');return saved;}).catch(e=>{if(e.name==='AbortError')return false;e.storageError=true;throw e;});
   }
   const url = URL.createObjectURL(new Blob([text], {
       type

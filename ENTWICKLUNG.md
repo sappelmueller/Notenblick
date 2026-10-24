@@ -1,10 +1,10 @@
-# Notenblick 1.8.0 – Projekt und Erstellung
+# Notenblick 1.9.0 – Projekt und Erstellung
 
 ## Aufbau und zentrale Funktionen
 
 `src/domain` enthält Validierung, exakte rationale Berechnung, Namensimport, Übernahmen, Altbestandsmigration und TXT-Export. `src/app` enthält gemeinsame Navigation, Ansichten, Fokus, Datumseingabe, Speicherung und Komponenten. `src/views` und `src/dialogs` verwenden diese Funktionen. `native` enthält den Windows-Starter, WebView2-Fenster, atomare Speicherung, Sperren und kontrollierte Migration. Es gibt weiterhin nur eine Leistungsverwaltung und einen Berechnungskern.
 
-Das Format bleibt `notenraum`, Version 1. Vorhandene Kennungen, Schüler, Klassen, Fächer, Leistungen, Noten, Faktoren, Status und manuelle Zeugnisnoten bleiben erhalten. `NR.ACTIVE_VERSIONS` erkennt 1.3.0 bis 1.8.0; ein Update aus 1.7.0 braucht keine fachliche Migration. Ein reiner Programmstart schreibt vorhandene Noten nicht um.
+Das Format bleibt `notenraum`, Version 1. Vorhandene Kennungen, Schüler, Klassen, Fächer, Leistungen, Noten, Faktoren, Status und manuelle Zeugnisnoten bleiben erhalten. `NR.ACTIVE_VERSIONS` erkennt 1.3.0 bis 1.9.0; ein Update aus 1.8.0 braucht keine fachliche Migration. Ein reiner Programmstart schreibt vorhandene Noten nicht um.
 
 `NR.calculateCore()` führt beide Berechnungsarten mit rationalen Zahlen aus. Fehlt `calculationMode`, gilt unverändert `grouped`. Dann entstehen zunächst Schriftlich aus Klassenarbeiten/Tests und anschließend der Gesamtdurchschnitt aus den Gesamtanteilen. Bei `direct` stehen die fünf Leistungsarten direkt in `weights.overall`. `weights.written` bleibt als historische Einstellung vorhanden. Standard ist weiterhin 50:50 mit 80:20 innerhalb Schriftlich. Fehlende Arten und Anteile 0 werden nicht als Nullnoten berücksichtigt. Nur die Anzeige wird gerundet/gekürzt. Manuelle Zeugnisnoten bleiben unabhängig.
 
@@ -20,9 +20,13 @@ Die optionale Eigenschaft `oralEntry` eines mündlichen Leistungsdatensatzes hat
 
 `domain/oral.js` enthält Erkennungs-/Validierungshilfen, ausdrückliche Zuordnung und gemeinsamen Erfassungsstand. `views/oral.js` erzeugt die Einzelnoten-Zeilen direkt aus denselben Bewertungen. Klassenmatrix und Einzelnotenansicht teilen die bisherigen Ansichts- und Navigationskomponenten. Die Klassenmatrix zeigt keine expliziten Einzelnotenspalten; ihr mündlicher Durchschnitt berücksichtigt weiterhin sämtliche Noten dieser Art. Die Berechnungsformeln wurden nicht verändert.
 
-`dialogs/oral-review.js` erlaubt nur ausdrücklich ausgewählte Zuordnungen. Individuell kann ein Altbestand nur zugeordnet werden, wenn seine vorhandenen Teilnehmer und Einträge sicher einem Schüler zugeordnet werden können. Vorher erzeugt `FolderStore.protect` eine vollständige geprüfte JSON-Schutzkopie einschließlich Ansichtseinstellungen in Sicherungen. Fehlgeschlagene Sicherung blockiert jede Übernahme. Die Schutzkopie ist in der normalen Wiederherstellung erreichbar und von der automatischen Bereinigung ausgenommen. Beim zusätzlichen Browser-Testbetrieb wird zuvor im vorhandenen Sitzungszustand gesichert und eine vollständige JSON-Datei angeboten. Originalnoten und Faktoren bleiben erhalten.
+Die alltägliche mündliche Oberfläche enthält keine Altbestandshinweise. Bei unklaren älteren Einträgen bietet ausschließlich Sicherung → Wiederherstellen → Mündliche Altbestände eine gezielte Prüfung je Fach. `dialogs/oral-review.js` erlaubt nur ausdrücklich ausgewählte Zuordnungen. Individuell kann ein Altbestand nur zugeordnet werden, wenn seine vorhandenen Teilnehmer und Einträge sicher einem Schüler zugeordnet werden können. Vorher erzeugt `FolderStore.protect` eine vollständige geprüfte JSON-Schutzkopie einschließlich Ansichtseinstellungen in Sicherungen. Fehlgeschlagene Sicherung blockiert jede Übernahme. Die Schutzkopie ist in der normalen Wiederherstellung erreichbar und von der automatischen Bereinigung ausgenommen. Beim zusätzlichen Browser-Testbetrieb wird zuvor im vorhandenen Sitzungszustand gesichert und eine vollständige JSON-Datei angeboten. Originalnoten und Faktoren bleiben erhalten.
 
 `settings.startupView` ist `last` (Standard) oder `home`. Mündliche Ansicht, Suche, Schülerfilter, Sortierung, Seite und Fokuskennung stehen in den vorhandenen fachbezogenen Workspaces in Ansicht.json. Es gibt keine zweite globale Einstellung zur mündlichen Ansicht. Die Datenbank und die zentrale Notendatei werden nicht aufgeteilt.
+
+Die Auswahl „Ansicht: Klassenübersicht | Einzelnoten“ steht unter H2 „Mündliche Noten“. Jeweils eine Hauptaktion gehört zur aktiven Fläche. „Ansicht anpassen“ ist zunächst geschlossen; in der Klassenübersicht enthält es Notentabelle/Leistungsliste, bei Einzelnoten Schülerfilter und Sortierung. Die Einzelnotensuche berücksichtigt Vorname, Nachname, beide Namensdarstellungen und Leistungsbezeichnung. Sechs Spalten trennen Datum und Bezeichnung. Umfangreiche Bemerkungen bleiben über details vollständig erreichbar.
+
+Die fachbezogenen Workspace-Felder `oralAreaView`, `oralClassSearch` und `oralListSearch` trennen mündliche Darstellung und Klassensuchen von `settings.areaView`, `search` und `assessmentSearch`. Vorhandene Einstellungen werden beim Lesen in Ansicht.json sinnvoll übernommen, ohne Noten umzuschreiben. `oralView`, `oralSearch`, `oralStudent`, `oralSort`, `oralPage` und `oralFocusId` bleiben die bisherige einzige Steuerung der Einzelnoten. Es gibt keine neue globale Standardansicht. `lastNotesCourse` hält das zuletzt tatsächlich unter Noten geöffnete Fach fest; Weiterarbeiten kennzeichnet historische Schuljahre und nutzt die vorhandene Fachnavigation.
 
 Der gemeinsame Dialog unterstützt `small`, `medium` und `wide`. Sein Inhalt scrollt vertikal, Kopf und Aktionen bleiben erreichbar. Bei sehr geringer Fensterhöhe scrollt der gesamte Dialog. Ein zusätzlicher Fokusstop wird nur bei tatsächlich scrollbarem Inhalt ohne erreichbare Steuerelemente gesetzt. Nachkommastellen und Verfahren stehen unmittelbar im gemeinsamen Gewichtungseditor; interne Kennung `truncate` und exakte Berechnung bleiben unverändert.
 
@@ -63,7 +67,7 @@ Temporäre Dateien werden geschrieben, geflusht und geprüft; erst danach wird a
 
 Frühere Ablagen `Datensicherung/Daten/notenverwaltung.json` und flache Altordner werden weiter erkannt. Vor einer notwendigen Migration entsteht ein vollständiges geprüftes ZIP mit Prüfsummen; Kopieren und Aktivieren sind kontrolliert, Ursprungsdateien bleiben erhalten. Mehrdeutige Bestände verlangen eine Auswahl. Alte „Sonstige Leistungen“ bleiben ausschließlich im gesicherten Altbestand, niemals als neue aktive Leistungsart. Ihre ausdrücklich bestätigte Übernahme bleibt nachvollziehbar; in abgeschlossenen Schuljahren ist nur die Archivansicht erreichbar.
 
-1.7.0-Daten bleiben unverändert nutzbar. Die Quellen des alten 1.5.0-Validators unter `tests/compat150` dienen nur dem Regressionstest: Er lehnt direkte Gewichte sicher ab. Diese Testquellen gehören nicht zur Programmausgabe.
+1.8.0-Daten und frühere unterstützte Stände bleiben unverändert nutzbar. Die Quellen des alten 1.5.0-Validators unter `tests/compat150` dienen nur dem Regressionstest: Er lehnt direkte Gewichte sicher ab. Diese Testquellen gehören nicht zur Programmausgabe.
 
 ## Build und Prüfungen
 
@@ -87,6 +91,8 @@ node tests/v150-storage.cjs
 node tests/v160-storage.cjs
 node tests/v170-storage.cjs
 node tests/v180-storage.cjs
+node tests/v190.cjs
+node tests/v190-storage.cjs
 node tests/workflow.cjs
 node --max-old-space-size=4096 tests/large.cjs
 python tests/loader.py

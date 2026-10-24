@@ -10,4 +10,4 @@
 8. Direkt vor entfernten Schreibvorgängen `python3 dev/guard.py --remote` ausführen (authentifiziertes gh oder vorhandenes Token nötig). Vollständigen Namen, gespeicherte Repository-ID, private Sichtbarkeit und Actions `enabled: false` bestätigen. Bei Connector-Schreibvorgängen dieselben Einstellungen prüfen. Anschließend Branch/Tag ausschließlich im Zielrepository sichern. Keine Actions auslösen.
 9. Portables ZIP und kurze verständliche Änderungen bereitstellen. GitHub dient dem Quellcode einschließlich Bibliotheken, Konfiguration und Versionsgeschichte; Build-ZIPs und Daten nicht in Git einchecken.
 
-Die ausgeführten Tests erzeugen Linux-/Chromium-Berichte. Ihre historischen Ausgaben sind keine neue Prüfung. Der archivierte ursprüngliche Bericht zur Version 1.8.0 bleibt unter PRUEFBERICHT.md erhalten; die Einrichtung wird unter docs/EINRICHTUNGSBERICHT.md dokumentiert.
+Die ausgeführten Tests erzeugen Linux-/Chromium-Berichte. Ihre historischen Ausgaben sind keine neue Prüfung. Der archivierte ursprüngliche Bericht zur Version 1.8.0 bleibt unter docs/PRUEFBERICHT-1.8.0.md erhalten; die Einrichtung wird unter docs/EINRICHTUNGSBERICHT.md dokumentiert.

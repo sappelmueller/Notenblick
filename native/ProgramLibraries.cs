@@ -30,8 +30,8 @@ namespace Notenblick.Native
         public void ValidateProgramFiles(){
             var root=Directory.GetParent(folder).FullName;
             var expected=new HashSet<string>(ReleaseFiles.Files.Select(x=>x.Path),StringComparer.OrdinalIgnoreCase);
-            foreach(var path in AllFiles(root))if(!expected.Contains(path.Substring(root.Length+1).Replace(System.IO.Path.DirectorySeparatorChar,'/')))throw new InvalidDataException("Im Ordner Programm liegen Dateien einer anderen Ausgabe. Bitte ersetze den vollständigen Ordner Programm durch Version 1.8.0.");
-            foreach(var spec in ReleaseFiles.Files){var path=System.IO.Path.Combine(root,spec.Path.Replace('/',System.IO.Path.DirectorySeparatorChar));if(!File.Exists(path))throw new FileNotFoundException("Eine Programmdatei fehlt: "+spec.Path+". Bitte entpacke Version 1.8.0 vollständig.");string actual;using(var stream=File.OpenRead(path))using(var sha=SHA256.Create())actual=BitConverter.ToString(sha.ComputeHash(stream)).Replace("-","");if(!String.Equals(actual,spec.Sha256,StringComparison.OrdinalIgnoreCase))throw new InvalidDataException("Programmdateien unterschiedlicher Versionen oder beschädigte Dateien wurden erkannt: "+spec.Path+". Bitte ersetze Notenblick.exe und den vollständigen Ordner Programm durch dieselbe Version 1.8.0.");}
+            foreach(var path in AllFiles(root))if(!expected.Contains(path.Substring(root.Length+1).Replace(System.IO.Path.DirectorySeparatorChar,'/')))throw new InvalidDataException("Im Ordner Programm liegen Dateien einer anderen Ausgabe. Bitte ersetze den vollständigen Ordner Programm durch Version 1.9.0.");
+            foreach(var spec in ReleaseFiles.Files){var path=System.IO.Path.Combine(root,spec.Path.Replace('/',System.IO.Path.DirectorySeparatorChar));if(!File.Exists(path))throw new FileNotFoundException("Eine Programmdatei fehlt: "+spec.Path+". Bitte entpacke Version 1.9.0 vollständig.");string actual;using(var stream=File.OpenRead(path))using(var sha=SHA256.Create())actual=BitConverter.ToString(sha.ComputeHash(stream)).Replace("-","");if(!String.Equals(actual,spec.Sha256,StringComparison.OrdinalIgnoreCase))throw new InvalidDataException("Programmdateien unterschiedlicher Versionen oder beschädigte Dateien wurden erkannt: "+spec.Path+". Bitte ersetze Notenblick.exe und den vollständigen Ordner Programm durch dieselbe Version 1.9.0.");}
         }
         static IEnumerable<string> AllFiles(string root){if((File.GetAttributes(root)&FileAttributes.ReparsePoint)!=0)throw new IOException("Der Programmordner darf keine Verknüpfung sein.");foreach(var file in Directory.EnumerateFiles(root)){if((File.GetAttributes(file)&FileAttributes.ReparsePoint)!=0)throw new IOException("Verknüpfte Programmdateien werden nicht geladen.");yield return file;}foreach(var child in Directory.EnumerateDirectories(root))foreach(var file in AllFiles(child))yield return file;}
 
@@ -46,7 +46,7 @@ namespace Notenblick.Native
                 // download-zone marker. Limited to the verified release set.
                 var assembly = Assembly.UnsafeLoadFrom(FilePath(spec));
                 if (!String.Equals(assembly.GetName().Name, spec.Name, StringComparison.OrdinalIgnoreCase))
-                    throw new InvalidDataException("Eine Programmdatei gehört nicht zu dieser Notenblick-Version. Bitte entpacke Version 1.8.0 erneut.");
+                    throw new InvalidDataException("Eine Programmdatei gehört nicht zu dieser Notenblick-Version. Bitte entpacke Version 1.9.0 erneut.");
                 loaded.Add(spec.Name, assembly);
             }
         }
@@ -57,13 +57,13 @@ namespace Notenblick.Native
         {
             var file = FilePath(spec);
             if (!File.Exists(file))
-                throw new FileNotFoundException("Die Programmdatei „" + spec.Name + ".dll“ fehlt. Bitte entpacke den vollständigen Ordner der Version 1.8.0 erneut.");
+                throw new FileNotFoundException("Die Programmdatei „" + spec.Name + ".dll“ fehlt. Bitte entpacke den vollständigen Ordner der Version 1.9.0 erneut.");
             string actual;
             using (var stream = File.OpenRead(file))
             using (var sha = SHA256.Create())
                 actual = BitConverter.ToString(sha.ComputeHash(stream)).Replace("-", "");
             if (!String.Equals(actual, spec.Sha256, StringComparison.OrdinalIgnoreCase))
-                throw new InvalidDataException("Die Programmdatei „" + spec.Name + ".dll“ ist beschädigt oder gehört zu einer anderen Version. Bitte entpacke Version 1.8.0 erneut.");
+                throw new InvalidDataException("Die Programmdatei „" + spec.Name + ".dll“ ist beschädigt oder gehört zu einer anderen Version. Bitte entpacke Version 1.9.0 erneut.");
         }
 
         public Assembly Get(string name)

@@ -7,11 +7,14 @@ sys.path.insert(0,str(ROOT/'dev'))
 import guard,manage
 
 class Infrastructure(unittest.TestCase):
-    def test_original_application_is_unchanged(self):
+    def test_calculation_and_native_storage_contract_unchanged(self):
+        # The setup-only whole-application freeze is replaced for the authorized
+        # 1.9 feature work. These mathematical/storage modules remain byte-identical.
         baseline=json.loads((ROOT/'dev/baseline-source.sha256.json').read_text())
-        self.assertEqual(set(baseline),{p.relative_to(ROOT).as_posix() for folder in ['src','native'] for p in (ROOT/folder).rglob('*') if p.is_file()})
-        for name,sha in baseline.items():
-            self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),sha,name)
+        names=['src/domain/'+name+'.js' for name in ['arithmetic','records','migrations','oral','weighting','evaluation','transfers','text-lists']]
+        names+=['native/Storage.cs','native/Migration.cs','native/Window.cs']
+        for name in names:
+            self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),baseline[name],name)
 
     def test_exact_repository_urls_only(self):
         for url in ['https://github.com/sappelmueller/Notenblick.git','git@github.com:sappelmueller/Notenblick.git']:

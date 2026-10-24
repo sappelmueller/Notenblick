@@ -8,6 +8,7 @@
     Notenblick.fillSelection();
     const c = Notenblick.getCourse(),
       cl = Notenblick.getClass();
+    if(c)Notenblick.ui.lastNotesCourse=c.id;
     Notenblick.$('#subjectTitle').textContent = c ? c.name + ' – Klasse ' + cl.name : 'Noten';
     const year=Notenblick.getYear();Notenblick.$('#subjectYear').textContent=year?(Notenblick.schoolYear(year)+(year.archived?' · Abgeschlossen':'')):'';
     Notenblick.$('#historicalAction').innerHTML=Notenblick.ui.historicalYear?Notenblick.b('current-year','Zum Arbeitsjahr','','text-button'):'';
@@ -24,9 +25,9 @@
     else Notenblick.renderPupil();
   };
 
-  Notenblick.studentList = function studentList() {
+  Notenblick.studentList = function studentList(kind='') {
     const w = Notenblick.W(),
-      term = w.search.toLocaleLowerCase('de');
+      term = (kind==='oral'?w.oralClassSearch:w.search).toLocaleLowerCase('de');
     return Notenblick.sorted(Notenblick.N.activeStudents(Notenblick.data, Notenblick.getCourse(), w.showExited), w.sortBy, w.sortDir).filter(s => Notenblick.matchesStudent(s,term));
   };
   Notenblick.sortTools=function(prefix,viewOptions=false){const A=Notenblick,w=A.W();return `<div class="toolbar"><div class="field search-field"><label for="${prefix}-search">Schüler suchen</label><input id="${prefix}-search" type="search" data-filter="search" data-kind="${prefix}" value="${A.esc(w.search)}" placeholder="Vor- oder Nachname"></div><div class="right button-row">${viewOptions?`<details id="viewDetails"><summary class="button small" id="viewSummary">Ansicht anpassen</summary><form role="none" id="viewForm" class="pop">${A.sortFields(prefix)}<fieldset><legend>Spalten</legend><div class="check-list">${['written',...A.kinds].map(k=>`<label class="check"><input name="column" type="checkbox" value="${k}"${w.columns.includes(k)?' checked':''}>${A.N.KINDS[k]||A.N.OVERALL[k]}</label>`).join('')}</div></fieldset><label class="check"><input name="showExited" type="checkbox"${w.showExited?' checked':''}>Ausgeschiedene Schüler anzeigen</label><button class="button primary small" type="submit">Ansicht speichern</button></form></details>`:''}${A.b('output','Notenliste exportieren',`data-kind="${prefix}"`,'button small')}</div></div>`;};

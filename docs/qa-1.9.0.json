@@ -1,0 +1,384 @@
+{
+  "version": "1.9.0",
+  "date": "2026-10-24",
+  "repository": "sappelmueller/Notenblick",
+  "base_commit": "c42c7390540d6b6a56756dd221abae9f292b3791",
+  "release_status": "passed",
+  "all_steps_passed": true,
+  "steps": [
+    {
+      "name": "Web-Programm erstellen",
+      "exit_code": 0,
+      "seconds": 0.03
+    },
+    {
+      "name": "Windows-Programm kompilieren",
+      "exit_code": 0,
+      "seconds": 1.8
+    },
+    {
+      "name": "Entwicklungsregressionen",
+      "exit_code": 0,
+      "seconds": 1.01
+    },
+    {
+      "name": "domain-storage",
+      "exit_code": 0,
+      "seconds": 0.79
+    },
+    {
+      "name": "transfers",
+      "exit_code": 0,
+      "seconds": 0.1
+    },
+    {
+      "name": "ui",
+      "exit_code": 0,
+      "seconds": 2.58
+    },
+    {
+      "name": "new-features",
+      "exit_code": 0,
+      "seconds": 1.0
+    },
+    {
+      "name": "v140",
+      "exit_code": 0,
+      "seconds": 3.31
+    },
+    {
+      "name": "v150",
+      "exit_code": 0,
+      "seconds": 3.58
+    },
+    {
+      "name": "v160",
+      "exit_code": 0,
+      "seconds": 1.13
+    },
+    {
+      "name": "v170",
+      "exit_code": 0,
+      "seconds": 1.69
+    },
+    {
+      "name": "v180",
+      "exit_code": 0,
+      "seconds": 1.81
+    },
+    {
+      "name": "v190",
+      "exit_code": 0,
+      "seconds": 2.16
+    },
+    {
+      "name": "Nativen Testhost erstellen",
+      "exit_code": 0,
+      "seconds": 0.61
+    },
+    {
+      "name": "view-storage",
+      "exit_code": 0,
+      "seconds": 0.86
+    },
+    {
+      "name": "v150-storage",
+      "exit_code": 0,
+      "seconds": 1.4
+    },
+    {
+      "name": "v160-storage",
+      "exit_code": 0,
+      "seconds": 1.4
+    },
+    {
+      "name": "v170-storage",
+      "exit_code": 0,
+      "seconds": 1.46
+    },
+    {
+      "name": "v180-storage",
+      "exit_code": 0,
+      "seconds": 1.57
+    },
+    {
+      "name": "v190-storage",
+      "exit_code": 0,
+      "seconds": 2.17
+    },
+    {
+      "name": "workflow",
+      "exit_code": 0,
+      "seconds": 3.61
+    },
+    {
+      "name": "Großer Datenbestand",
+      "exit_code": 0,
+      "seconds": 31.64
+    },
+    {
+      "name": "Produktiven Assembly-Lader prüfen",
+      "exit_code": 0,
+      "seconds": 1.81
+    },
+    {
+      "name": "browser",
+      "exit_code": 0,
+      "seconds": 28.71
+    },
+    {
+      "name": "v170-browser",
+      "exit_code": 0,
+      "seconds": 7.46
+    },
+    {
+      "name": "v180-browser",
+      "exit_code": 0,
+      "seconds": 13.87
+    },
+    {
+      "name": "v190-browser",
+      "exit_code": 0,
+      "seconds": 17.89
+    },
+    {
+      "name": "Web-Programm erstellen",
+      "exit_code": 0,
+      "seconds": 0.03
+    },
+    {
+      "name": "Windows-Programm kompilieren",
+      "exit_code": 0,
+      "seconds": 1.83
+    },
+    {
+      "name": "Assembly-Lader nach Wiederholungsbuild",
+      "exit_code": 0,
+      "seconds": 1.84
+    },
+    {
+      "name": "ZIP-Archive vollständig erstellen",
+      "exit_code": 0,
+      "seconds": 2.01
+    },
+    {
+      "name": "Entpackte Auslieferung starten",
+      "exit_code": 0,
+      "seconds": 0.72
+    }
+  ],
+  "results": {
+    "browser-results.json": {
+      "passed_groups": null,
+      "checks": 91,
+      "violations": 0,
+      "errors": null
+    },
+    "large-results.json": {
+      "passed_groups": 10,
+      "checks": null,
+      "violations": null,
+      "errors": null
+    },
+    "loader-results.json": {
+      "passed_groups": 17,
+      "checks": 17,
+      "violations": null,
+      "errors": null
+    },
+    "new-feature-results.json": {
+      "passed_groups": 13,
+      "checks": 13,
+      "violations": null,
+      "errors": null
+    },
+    "results.json": {
+      "passed_groups": 16148,
+      "checks": null,
+      "violations": null,
+      "errors": null
+    },
+    "transfer-results.json": {
+      "passed_groups": 13,
+      "checks": 13,
+      "violations": null,
+      "errors": null
+    },
+    "ui-results.json": {
+      "passed_groups": 44,
+      "checks": 44,
+      "violations": null,
+      "errors": null
+    },
+    "v140-results.json": {
+      "passed_groups": 14,
+      "checks": 14,
+      "violations": null,
+      "errors": null
+    },
+    "v150-results.json": {
+      "passed_groups": 15,
+      "checks": 15,
+      "violations": null,
+      "errors": null
+    },
+    "v150-storage-results.json": {
+      "passed_groups": 5,
+      "checks": 5,
+      "violations": null,
+      "errors": null
+    },
+    "v160-results.json": {
+      "passed_groups": 16,
+      "checks": 16,
+      "violations": null,
+      "errors": null
+    },
+    "v160-storage-results.json": {
+      "passed_groups": 6,
+      "checks": 6,
+      "violations": null,
+      "errors": null
+    },
+    "v170-browser-results.json": {
+      "passed_groups": null,
+      "checks": 30,
+      "violations": 0,
+      "errors": 0
+    },
+    "v170-results.json": {
+      "passed_groups": 13,
+      "checks": 13,
+      "violations": null,
+      "errors": null
+    },
+    "v170-storage-results.json": {
+      "passed_groups": 6,
+      "checks": 6,
+      "violations": null,
+      "errors": null
+    },
+    "v180-browser-results.json": {
+      "passed_groups": null,
+      "checks": 38,
+      "violations": 0,
+      "errors": 0
+    },
+    "v180-results.json": {
+      "passed_groups": 18,
+      "checks": 18,
+      "violations": null,
+      "errors": null
+    },
+    "v180-storage-results.json": {
+      "passed_groups": 7,
+      "checks": 7,
+      "violations": null,
+      "errors": null
+    },
+    "v190-browser-results.json": {
+      "passed_groups": null,
+      "checks": 30,
+      "violations": 0,
+      "errors": 0
+    },
+    "v190-results.json": {
+      "passed_groups": 11,
+      "checks": 11,
+      "violations": null,
+      "errors": null
+    },
+    "v190-storage-results.json": {
+      "passed_groups": 5,
+      "checks": 5,
+      "violations": null,
+      "errors": null
+    },
+    "view-storage-results.json": {
+      "passed_groups": 5,
+      "checks": 5,
+      "violations": null,
+      "errors": null
+    },
+    "workflow-results.json": {
+      "passed_groups": 19,
+      "checks": null,
+      "violations": null,
+      "errors": null
+    }
+  },
+  "deterministic_program_files": {
+    "byte_identical": true,
+    "files": {
+      "Notenblick.exe": "2ada8f0befcaab6c5828dfd101ec80dd2d877fdc30bc9514783a8687d83ec7c3",
+      "Programm/Notenblick.html": "466a332598bb5c8f527f9efb6096befe8fca50aced1ea92bddc926428bfcaed8",
+      "Programm/js/storage.js": "7f3f0ef0e8ae132441fa23a53aef4a5db4c132cb67f2fa086b7ad97eca8f9e80",
+      "Programm/js/boot-guard.js": "0bb90e7a42e9dff12176688c582f191f13e8923b3baa14d58c0d2177ec03e4e7",
+      "Programm/js/state.js": "6cd3cb4946aa43dadee06106ac06e89f785c215e68c469c249613ac2f9286b42",
+      "Programm/js/events.js": "4277735299be623715c689f29dd85f176cf823174f8f636167cf738bfe1bd00e",
+      "Programm/js/session.js": "67e1da362a2541a08f9685261e5862f130e281c546f808f01bd8cb05c0df2db6",
+      "Programm/js/desktop.js": "fcd0a6bdb7aa9fbd05ed36747ae38dfcedda2500371491be77e0c7fa51635bba",
+      "Programm/js/tabs.js": "8ea93172a1b72ae288e8a0352f4a83843e01e44beabab5544c22abcae97d3674",
+      "Programm/js/subject-catalog.js": "5463442bbf775c33f7b7fd8d79a793b255bba1555d940101d0ad4720d76ac619",
+      "Programm/css/base.css": "796f511ddc311861386b3928094fa07c68941ac17de485699051dc7b0bd4fe01",
+      "Programm/css/navigation.css": "8ef60862285475d8fb4621cedac3dcac68f4fa8864b3232c056b97f30758e3a6",
+      "Programm/css/responsive.css": "a98483d1323c33946200f9cd13dc501c53003d1d382dabe63e875f4e8f0f7ff2",
+      "Programm/css/forms.css": "61244093b0a299cfb4c60c576ef6d6d855cfdfdc644f223e09a1a40fdf1190f8",
+      "Programm/css/views.css": "c02b82aca3e58b77b4dfd3ded4a4370d0bdf8f085d49ba077b048a47dabad0fc",
+      "Programm/css/tables.css": "36e0e5721952055d898a87d88b28460720515c61a70d5783a096ce4f5113bd25",
+      "Programm/Windows/Microsoft.Web.WebView2.Core.dll": "88a3b62f45225a811cdb85df6dfd95c2bff9a0e43e3b04f813b125eaca56cc9f",
+      "Programm/Windows/Notenblick.Speicherung.dll": "fe3b89bd0e912ecb4f22c22e7a88ba1b5fff69ad37c7d938f691e09dd6aa43d3",
+      "Programm/Windows/Microsoft.Web.WebView2.WinForms.dll": "29fc954c3fde1749817d158f3dd5ebe9efd3b3ce9708d86092fb1e9f023a1cb0",
+      "Programm/Windows/Newtonsoft.Json.dll": "e1e27af7b07eeedf5ce71a9255f0422816a6fc5849a483c6714e1b472044fa9d",
+      "Programm/Windows/Notenblick.Fenster.dll": "803bab065f042db9002735f5c1e2511b902fe48f6564c70aea1821fb9d4e790a",
+      "Programm/js/views/assessments.js": "7a6137ccc22575daaa59559b9b4b0aa3b09e72cd3accb083b6263f35899566c3",
+      "Programm/js/views/grades.js": "fe28e81928501a01157cdd2d7ec1b86613b97f9af63bd04572a73f9494326997",
+      "Programm/js/views/oral.js": "0d2c5faf57b33990e8b03440e8a96c7af09c56f25b1e910b294bf46310ca6aa7",
+      "Programm/js/views/pupil.js": "b57d65ef890c6412110d5449bf892b68ae24f02511d6f1f7c2a386acb5cd070e",
+      "Programm/js/views/home.js": "1bf1d79a283b62cce937320d44c0e380e5ae2a391ef1c65daa9dacf97e091b15",
+      "Programm/js/views/help.js": "3ec3d04b51b9e4e63b45826a4cb9da9555777d59e3cf071114667505e3fc99a3",
+      "Programm/js/views/administration.js": "0117b5dc7d493f4587a3d7a0c748ed6fbbad55989462d7362891c591e096907f",
+      "Programm/js/views/settings.js": "ba59505262ea41a6fe8e2e70c44416dcaf32eee2bd046d5181c2e42da23f1e3a",
+      "Programm/js/views/backups.js": "64ba47956a92955d7582544eae39229075c71b05aaf74fb87e422591bb36115a",
+      "Programm/js/app/dates.js": "5d52ab99256d0792f66816a6e20887c4c35da8f9a48f0ee3192825ffd2d8381f",
+      "Programm/js/app/entry.js": "b658e7a679d8bb52f39671da889bdd2a9120b89904be0c28c89037e3db22d8d5",
+      "Programm/js/app/context.js": "a4cf26d05f81693576f48d239f39df35beab5f6e1f178e1a7dedad39bbe78031",
+      "Programm/js/app/navigation.js": "6b0ea091d23044ff0d7524cc4050b6e051863f1843f87dcfcab5ff14925dbab7",
+      "Programm/js/app/actions.js": "599d5c54c7d8fdf3097a3a6d859a6d2eb59e332b6e7bfa6dabe4a5dce57c5a61",
+      "Programm/js/app/weight-editor.js": "9e4b56c63e59168f87cca9433d16554ea812213fb3bde4c9eb591892f70b3b0d",
+      "Programm/js/app/preferences.js": "2963786d88237c954327406a2e96df0f00512d3dfba4213e745a1b5e3a67996e",
+      "Programm/js/app/migration.js": "a5973a773db877f17d08a67560731ce7c4f284f0cebbe0ed6e6b4264fa47b142",
+      "Programm/js/app/startup.js": "c72d97f1b14a4eb1f383b965ebbc74556a634ce09ac5ea12412f35f39b4569d3",
+      "Programm/js/app/components.js": "8a2a2eb56936c78515acb7993470e645e6c4dc7e47bbe58a1e6b46e275bb72cd",
+      "Programm/js/app/changes.js": "0fd76077ab49402df7c9ae1af93955f3fa6ea30044d68b8eef5a938ce2c77f5a",
+      "Programm/js/app/files.js": "f4d90c6745bb15876242483357eb4ed648487a82d73ec214abc323609bb01237",
+      "Programm/js/domain/evaluation.js": "1b9f6ecd16358c392bc06b6399ef8313c5e37bf2d74d21d31c50dbf618600777",
+      "Programm/js/domain/names.js": "61a2b7bc7ae7820b4e5ccb3a714772544c5792cfead1d5aa30358f66609961c0",
+      "Programm/js/domain/records.js": "379751b0a514b66bf370ca18f4f51c505a16e73a57555dd501c78de6f151e134",
+      "Programm/js/domain/arithmetic.js": "41d05c429ed7fdd94b83b18eb6fff5eb79ecea34b0089dd49405ac96a10665d6",
+      "Programm/js/domain/migrations.js": "bcaa5a20b2f0882341c06b5270730b853cf341749cb931d7d0aac25d4d748a1a",
+      "Programm/js/domain/text-lists.js": "445dac6d03ebc7423bc241668dad35e2310a408312992f5dc88789390eaf7124",
+      "Programm/js/domain/oral.js": "d0ec150e5d769fabddd424aa3adae00383ab80da49b9d3e2e8dec86446cf7f93",
+      "Programm/js/domain/transfers.js": "5c8291aa33531ee656f5f9db6db545521039285654a7f66ce806806bd134000b",
+      "Programm/js/domain/constants.js": "e9605b1682425570cdfb87045cd44586afdd8e58c222449ca639cb2e6680d11f",
+      "Programm/js/domain/weighting.js": "432fa0f9817ae279e6051787f340d807a4009f52f887bef91c10d96521a55a3b",
+      "Programm/js/dialogs/names.js": "16365cdd135175d1bba9effef9e4c1846a2b6ebc85d8d4218eda9e6099126c8d",
+      "Programm/js/dialogs/weights.js": "80bd8eec7577a33a03515d37746721cb8537a14223606e4bc0b15e839a8d6a14",
+      "Programm/js/dialogs/oral-review.js": "210f989ce82272e1f149f82385bbd07be201a66a064422204590a5138765ac5e",
+      "Programm/js/dialogs/grades.js": "8234880ecab9c890c347285f207c8b9e1629af43179b2aef590ae754db325166",
+      "Programm/js/dialogs/window.js": "bb73828c5f2d625d937f9db1a79e1cd42a25e22f75a2290e9edf6d21897e6960",
+      "Programm/js/dialogs/transfers.js": "f6b60bf33a81935226cf393bcfe045d8f77fe4740980b9f7f81aafaab794cf40",
+      "Programm/js/dialogs/administration.js": "ca555ee0ecaa6bdd52b8f6cfb984eddb57b6d916c8fc15fd07add6dde9a648ac",
+      "Programm/Windows/arm64/WebView2Loader.dll": "cb561ae4537e39bba5dd8af1f648f189d9562b1003fd110a9e889ace527fb4e8",
+      "Programm/Windows/x86/WebView2Loader.dll": "6f59ad578fde1f65c44b6935dab0901f014b5268e056b930fb34c0919f1bf4b9",
+      "Programm/Windows/x64/WebView2Loader.dll": "462b36fd1be6ca9f7563466a89e57c41ef4a4def3e0a84fa885d203aea4a3aaf",
+      "Programm/Windows/Lizenzen/Microsoft-WebView2.txt": "0af8f1b807512aae39c2ac1aa4d0cae65cabecb6fd554b8439a5162a0d6eca55",
+      "Programm/Windows/Lizenzen/Newtonsoft-Json.md": "b98a397897ff55f76cddc380041507a95a896b2946e0188703bf0496793d6516"
+    }
+  },
+  "syntax_files_checked": 77,
+  "windows_gui_tested": false,
+  "nvda_tested": false,
+  "real_windows_scaling_tested": false,
+  "github_actions_used": false
+}

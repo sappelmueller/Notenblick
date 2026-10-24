@@ -1,63 +1,48 @@
-# Prüfbericht – Notenblick 1.8.0
+# Prüfbericht – Notenblick 1.9.0
 
-Stand: 24. Oktober 2026. Grundlage ist das separat entpackte finale Quellcodearchiv 1.7.0, SHA-256 `f7adf07a57cd9dac06ff504ed15ef4a6682988172f8b7f5955da2b7cd624a80e`. Bestehende Module, Speichermechanismen und rationale Berechnungen wurden fortgeführt.
+Stand: 24. Oktober 2026. Grundlage ausschließlich `sappelmueller/Notenblick`, `main`, Commit `c42c7390540d6b6a56756dd221abae9f292b3791`, Quellbaum `eb187f9ff4b526387575b743dcfe8a284fbe30c2`. Alle 147 Quelldateien wurden beim Abruf anhand ihrer Git-Blob-Prüfsummen bestätigt. Wiederverwendete lokale Bibliotheken waren bytegleich. Der ursprüngliche 1.8.0-Prüfbericht bleibt unter `docs/PRUEFBERICHT-1.8.0.md` erhalten.
 
-## Tatsächlich ausgeführte automatisierte Prüfungen
+## Automatisierte Prüfungen
 
-| Bereich | Ergebnis |
+Der Ausgangsstand bestand zunächst die schnelle Standardprüfung. Die vorhandenen lokalen Werkzeuge und gesperrten Abhängigkeiten wurden wiederverwendet. Der verbindliche Abschlusslauf ist `python3 dev/manage.py release`: alle Testgruppen, sauberer Wiederholungsbuild mit bytegleichen Programmdateien, erneute Laderprüfung, ZIP-Integrität und Start der frisch entpackten Ausgabe im Testhost. Kleine versionsbezogene Nachweise stehen unter `docs/qa-1.9.0.json`; vollständige Laufprotokolle werden unter `reports` erzeugt.
+
+| Bereich | Geprüfter Umfang |
 | --- | --- |
-| Berechnung, Validierung, Speicherung | 16.160 Prüfungen bestanden |
-| Übernahmen, Herkunft und Versetzungen | 13 bestanden |
-| Bisherige Oberfläche | 44 Abläufe bestanden |
-| Bestehende Bedienfunktionen | 13 Abläufe bestanden |
-| Darstellung 1.4 | 14 Prüfgruppen; alle 32 Kombinationen von Namen, Sortierung, Gliederung und Auswahl |
-| Leistungsverwaltung 1.5 | 15 Prüfgruppen; alle 32 Teilmengen sichtbarer Arten und 1.003 Leistungen |
-| Funktionen 1.6 | 16 Prüfgruppen; 992 direkte Gewichtungskombinationen gegen unabhängige rationale Referenz |
-| Gewichtungen 1.7 | 13 Prüfgruppen; 441 exakte und 5.151 inverse Umrechnungsfälle, vollständiger Vergleich mit 1.006 Schülern |
-| Neue Funktionen 1.8 | 18 Prüfgruppen bestanden; 40, 100 und 250 Einzelnoten sowie mehr als 120 Noten im vollständigen Bedienablauf |
-| Bestehende Speicherung/Ansichten/Updates | 5 + 5 + 6 + 6 + 19 Integrationsabläufe bestanden |
-| Update 1.7 auf 1.8 und neue Erfassungsart | 7 Integrationsprüfgruppen bestanden |
-| Produktionsloader und vollständige Dateiprüfung | 17 Prüfungen bestanden |
-| Großer Datenbestand | 10 Prüfgruppen: 10 Schuljahre, 3.000 Schüler, 6.000 Leistungen, 180.000 Einzelbewertungen |
-| Bestehender tatsächlicher Chromium | 91 Prüfschritte, 63 axe-Prüfungen, keine erkannten Verstöße |
-| Gewichtungsabläufe im tatsächlichen Chromium | 30 Prüfschritte, 22 axe-Prüfungen, keine erkannten Verstöße |
-| Neue tatsächliche Chromium-Abläufe | 38 Prüfschritte, 29 axe-Prüfungen, keine erkannten Verstöße |
-| JavaScript-Syntax | 73 Quellmodule und Testdateien geprüft |
+| Entwicklungsschutz | 14 Infrastrukturregressionen; festes Zielrepository, private Dateipfade, keine Actions-Dateien, Testfehler stoppen den Ablauf |
+| Berechnung/Validierung/Speicherung | 16.160 bestehende Prüfgruppen |
+| Übernahmen, bisherige Oberfläche und Bedienung | 13 + 44 + 13 Abläufe |
+| Ansichten 1.4/1.5 | 14 + 15 Prüfgruppen, einschließlich 32 Teilmengen sichtbarer Leistungsarten |
+| Direkte Gewichtung 1.6 | 16 Prüfgruppen, 992 exakte unabhängige Referenzfälle |
+| Gewichtung 1.7 | 13 Prüfgruppen, 441 exakte Referenzfälle sowie bestehende inverse Umrechnungsprüfungen |
+| Mündliche Funktionen 1.8 | 18 Prüfgruppen, einschließlich Sicherungsschutz, Speichern und nächste, Bearbeiten, Löschen und Rückweg |
+| Neue Oberfläche 1.9 | 11 Prüfgruppen; sechs Spalten, beide Gliederungen, Suche, kombinierter Filter, unabhängige Zustände, Doppelspeicherschutz, Gruppenrunde, historische Fortsetzung |
+| Produktiver C#-Speicherkern | 5 + 5 + 6 + 6 + 7 + 5 + 19 Integrationsgruppen; neue 1.9-Tests mit ursprünglichen 1.8-Dateien und 250 Einzelnoten/60 Schülern |
+| Großer Datenbestand | 10 Schuljahre, 3.000 Schüler, 6.000 Bewertungen, 180.000 Noteneinträge; atomare Speicherung, Export, Wiederherstellung |
+| Produktiver Assembly-Lader | 17 Prüfungen; vollständige Dateiliste und Bibliotheksintegrität |
+| Chromium | 91 + 30 + 38 + 30 Prüfschritte; 63 + 22 + 29 + 23 axe-Zustände ohne erkannte Verstöße |
+| JavaScript-Syntax | 77 Quell- und Testdateien separat mit Node geprüft |
 
-Chromium-Version: 156.0.8078.47. Die Prüfungen umfassen echte automatisierte Tastaturereignisse, DOM und Accessibility-Baum. Es gab keine JavaScript-Seitenfehler. Die vorhandenen Tests wurden erneut ausgeführt. Geänderte Oberflächenerwartungen betreffen die fünf Hauptlinks, drei Einstellungstabs, passende mündliche Regionsnamen und die aktuelle Versionsnummer. Mathematische, Import-, Daten- und Speicherprüfungen wurden nicht abgeschwächt. Ausführbare Tests und maschinenlesbare Ergebnisse sind enthalten.
+Diese Zahlen beschreiben unterschiedliche Prüfgranularitäten und werden nicht künstlich addiert. Anpassungen alter Tests betreffen die beauftragten Beschriftungen, die Bezeichnungsspalte, den nach Sicherung verschobenen Zugang und die aktuelle Ausgabeversion. Ein alter Nichtteilnahmetest prüft jetzt die konkrete Datensatzaktion statt eines zufälligen Titelvorkommens im allgemeinen Schaltertext. Mathematische Referenzwerte und Speicheranforderungen wurden nicht gelockert.
 
-## Neue Prüfungen und Befunde
+Die einmalige Einrichtungssperre für sämtliche Anwendungsdateien wurde für den autorisierten Entwicklungsauftrag gezielt ersetzt: Die ursprünglichen SHA-256-Werte bleiben erhalten. Berechnungs-, Bewertungs-, Gewichtungs-, Übernahme-, Export- und mündliche Datenmodule sowie nativer Speicher, Migration und Fensterhost müssen weiterhin bytegleich zu 1.8.0 sein. Nur Version, Oberfläche und Ansichtszustände wurden angepasst.
 
-Die Startseite zeigt genau die drei angeforderten Bereiche. Schnellzugriffe verwenden dieselbe Auswahl und Reihenfolge wie die Notenansicht. Offene Aufgaben sind auf fünf begrenzt und beachten wirkliche Teilnahme, aktive Schüler und ausdrückliche Statusangaben. Individuelle mündliche Noten erzeugen keine falschen offenen Klassenaufgaben. Nicht zugeordnete Altbestände werden nicht geraten und sind über einen kurzen Hinweis sowie die Klassenansicht erreichbar. Startseite und letzte Ansicht wurden durch tatsächliches erneutes Laden mit Chromium/IndexedDB und mit dem C#-Speicherkern geprüft.
+## Wesentliche Nachweise und Korrekturen
 
-Die mündliche Klassenmatrix enthält höchstens acht gemeinsame Leistungsspalten. Neue eindeutige Einzelnoten erscheinen ausschließlich als Zeilen in der Einzelnotenansicht; in der kompakten Gesamtleistungsliste bleiben sie ebenfalls erreichbar. Eine Klassenleistung mit einem Teilnehmer bleibt Klassenleistung. Die Schüleransicht und sämtliche Berechnungen verwenden dieselben Datensätze, ohne doppelte Erfassung.
-
-40, 100 und 250 mündliche Einzelnoten wurden auf vollständige Verfügbarkeit und Seitenbegrenzung geprüft. Im realen Browser wurden 125 gleichartig beziehungsweise gleichnamig bezeichnete Einzelnoten, vollständige Bemerkungen, Suche, Schülerfilter, Datum-/Namenssortierung, Bearbeiten, Speichern und nächste sowie Rückkehr aus der Schüleransicht geprüft. Zeilen haben korrekte Tabellenüberschriften und kurze Aktionen. Faktoren, GFS, Status und manuelle Zeugnisnoten bleiben erhalten. 15 Tabellenaufbereitungen mit über 120 Leistungen benötigten im jsdom-Lauf etwa 8 ms; dies ist keine Windows-Leistungszusage.
-
-Ein vollständiger repräsentativer 1.7.0-Bestand bleibt beim Start, beim Ändern der Ansichten und über mehrere Neustarts bytegleich. Einstellungen stehen ausschließlich in Ansicht.json. Es entstehen keine vollständigen Notensicherungen durch reine Navigation. Neue Noten speichern die optionale Erfassungsart `oralEntry` sowie die bisherige Teilnahme. Bestehende Kennungen, Noten, Faktoren und Fächer bleiben unverändert.
-
-Mehrdeutige alte mündliche Leistungen werden erst nach ausdrücklich bestätigter Zuordnung verändert. Eine fehlgeschlagene vollständige Schutzsicherung blockiert die Übernahme. Die geprüfte Schutzkopie enthält den gesamten Datenbestand und die Ansichtseinstellungen. Die bestätigte Zuordnung erhält Rohnoten, Status, GFS, Faktoren und exakte Durchschnitte. Schutzstände sind in der normalen Wiederherstellung erreichbar und gekennzeichnet. Vollständiger Export und Wiederherstellung wurden einschließlich neuer Einstellungen und Metadaten geprüft.
-
-Der neue Startseiten-Einstieg deckte einen Fokusfehler auf: Beim Schließen einer von dort fortgesetzten Eingabe ging der Fokus verloren. Der Rückweg führt jetzt zur betreffenden Leistung. Ein weiterer realer Browserbefund betraf ausschließlich lesbare lange Dialoge ohne erreichbares Steuerelement im Inhalt: Sie erhalten nur bei wirklichem Scrollbedarf einen zusätzlichen Fokusstop, damit der Inhalt per Tastatur scrollbar bleibt.
-
-## Unveränderte Berechnungen und Sicherheit
-
-Die zentralen rationalen Notenformeln bleiben erhalten. Standard sind schriftlich/mündlich 50:50 und innerhalb Schriftlich Klassenarbeiten/Tests 80:20. Individuelle und direkte Prozentwerte, Faktoren, fehlende Bereiche, Statusangaben, Runden und Kürzen sowie getrennte manuelle Zeugnisnoten wurden weiterhin geprüft. Die neue Erfassungsart beeinflusst keine Notenformel. Ansicht und bestätigte Zuordnung erzeugen keine zusätzlichen Noten.
-
-Atomare Speicherung, Prüfung, Konfliktschutz, Sperre des Datenordners, Wiederherstellungsschutz, Übernahme alter Datenordner und Aufbewahrung automatischer Speicherstände bleiben bestehen. Die vorhandenen Fehlerprüfungen umfassen beschädigte beziehungsweise unterbrochene Schreibvorgänge und konkurrierende Änderungen. Vollständige JSON-Sicherungen sowie TXT-/CSV-Ausgaben bleiben erhalten. Persönliche Daten werden ausschließlich lokal verarbeitet; keine neue Laufzeitabhängigkeit und keine zusätzliche Datenbank wurden eingeführt.
-
-Der große Datenbestand umfasst 37.001.727 Bytes und 6.200 TXT-Dateien. Unter Linux: Start etwa 2,1 s, vollständige automatische Speicherung einschließlich TXT etwa 12,2 s, inkrementelle Speicherung etwa 6,8 s. Diese Werte stammen aus dem tatsächlichen Testlauf und sind keine Zusage für Windows oder andere Rechner.
+- Start besitzt genau drei benannte Regionen und maximal fünf echte offene Klassen-/Gruppenleistungen. Statusangaben und individuelle mündliche Noten erzeugen keine falschen Aufgaben. Historische Fortsetzungsfächer tragen ihr eigenes Schuljahr; aktuelle offene Einträge übernehmen keine historische Jahresbeschriftung.
+- Jeweils eine passende Hauptaktion; Ansicht anpassen ist zunächst geschlossen. Enter/Leertaste, Escape und Fokusrückgabe werden im Chromium tatsächlich automatisiert bedient. Einzelnotensuche bleibt sichtbar und kombiniert Namen/Bezeichnung mit dem Schülerfilter.
+- Mündliche Darstellung und beide Klassensuchen beeinflussen andere Leistungsarten nicht. Alle Zustände stehen ausschließlich in Ansicht.json. Beschädigte alte Suchwerte werden sicher verworfen.
+- 40, 100 und 250 Einzelnoten bleiben im Browser vollständig verfügbar. 250 Einträge mit 60 Schülern werden außerdem über alle fünf Seiten auf Eindeutigkeit geprüft. Gleicher Schüler, gleiches Datum und gleiche Bezeichnung behalten getrennte Kennungen. Lange Bezeichnungen und vollständige mehrzeilige Bemerkungen bleiben zugänglich.
+- Ein bekannter Schüler führt direkt zur Note, ein allgemeiner Aufruf zur Schülerauswahl. Gleichzeitiges Speichern erzeugt nur einen Datensatz. Bereits gespeicherte Bezeichnung, Teilnahme, Faktor und GFS bleiben erhalten. Eine alte Eingabesuche verdeckt die neue Bewertungsrunde nicht.
+- Bearbeiten erhält Tabellenfokus und Fensterposition. Schüleransicht und Eingabe schließen besitzen den vorhandenen Rückweg. Ein bei 320 Pixeln reproduzierter Überlauf im neuen Bedienraster wurde korrigiert und erneut geprüft.
+- Ein originaler 1.8.0-Datenstand bleibt beim Öffnen, Filtern, Sortieren und Navigieren bytegleich. Neue Noten schreiben 1.9.0; vorhandene historische Datensätze bleiben unverändert. Vollständige Sicherung und Wiederherstellung einschließlich TXT-Ausgabe sind mit dem produktiven C#-Speicherkern geprüft.
+- Altbestände werden nicht automatisch umklassifiziert. Gezielte Klärung steht unter Sicherung bereit; eine erfolglose vollständige Schutzsicherung blockiert die Übernahme.
 
 ## Darstellung und Prüfgrenzen
 
-Gerenderte Startseite, mündliche Zeilentabelle, Gewichtungsdialog und schmale Darstellungen wurden tatsächlich visuell angesehen. Automatische Layoutprüfungen umfassen 1440, 1280, 800, 640 und 320 Pixel Breite, geringe Fensterhöhen, lange Namen, viele Fächer, beide Notengliederungen, drei Dialoggrößen und vollständige Gewichtungsvergleiche. Bestehende Prüfungen berücksichtigen Druckansichten, Kontrastmodus sowie emulierte 200/400-Prozent-Skalierung. Horizontal überlaufende Tabellen bleiben per Tastatur erreichbar. Die Inhalte scrollen innerhalb des Dialogs; dessen Aktionen bleiben erreichbar.
+Chromium 156.0.8078.47 unter Linux. Geprüft wurden unter anderem 1440, 1024, 800, 640 und 320 CSS-Pixel Fensterbreite, geringe Fensterhöhe, Pixelratio 2, bestehende DPI-Emulation und CSS-Browserzoom 200 Prozent. Die erzeugten Ansichten von Start und mündlicher Verwaltung wurden zusätzlich visuell gesichtet. Sämtliche Testdaten sind synthetisch.
 
-Axe prüft seine verfügbaren WCAG-2/2.1-AA- und Best-Practice-Regeln und beweist keine vollständige Barrierefreiheit. Chromium-Automation ist kein manueller NVDA-Test. Die tatsächlichen C#-Quellen wurden unter .NET 8/Linux für Speicher- und Loaderprüfungen ausgeführt. Die Windows-EXE wurde gegen .NET Framework 4.8 kompiliert und ihre vollständige SHA-256-Dateiliste geprüft; dies ist kein ausgeführter Windows-Programmstart.
+Nicht ausgeführt: tatsächlicher Windows-Programmstart, Windows-Sicherheitszonen/SmartScreen, WebView2/UI Automation unter Windows, reale Windows-Skalierung, gesprochene NVDA-Ausgaben und Windows ARM64. Browser-/ARIA-Prüfungen ersetzen keine NVDA-Freigabe und belegen keine Freiheit von gesprochenen Doppelansagen. Der ergänzte manuelle Prüfplan steht unter `docs/WINDOWS-PRUEFUNG.md`.
 
-Nicht durchgeführt: interaktiver Windows-Start nach Entpacken, reale Windows-Skalierung, tatsächlich gesprochene NVDA-/JAWS-Ausgabe und manuelle Bedienung mit Windows-Hilfstechniken. Diese Prüfungen bleiben separat erforderlich. Es sind keine weiteren reproduzierten Fehler aus den durchgeführten Prüfungen offen. Wie bisher sind .NET Framework 4.8 und die installierte WebView2-Laufzeit erforderlich. Die Anwendung ist nicht codesigniert; Windows-/SmartScreen-Schutz wird nicht umgangen.
+Die Ausgabe ist deshalb ein unter Linux und Chromium geprüfter Windows-Build-Kandidat 1.9.0. Er benötigt weiterhin .NET Framework 4.8 und eine installierte WebView2-Laufzeit. Kein Codesignierungszertifikat ist vorhanden; Windows-Schutzmechanismen werden nicht umgangen.
 
-## Auslieferungsprüfung
-
-Programmarchiv: nur Notenblick.exe und Programm, keine vorbereiteten Nutzerdaten. Neuinstallationen erstellen Daten automatisch. Updates ersetzen ausschließlich EXE und den vollständigen Programmordner. Der vorhandene Ordner Daten bleibt bestehen.
-
-Quellcodearchiv: vollständige Module, Tests, Ergebnisse, Dokumentation, Buildskripte und benötigte Referenz-/Programmbibliotheken. Keine persönlichen Daten und keine Bildschirmaufnahmen. Beide Archive wurden kontrolliert entpackt und auf ZIP-Integrität geprüft. Die entpackte Oberfläche bestand Start, Navigation, erste Einrichtung mit neuen Vorgaben, Startseite, Allgemein und mündliche Einzelnoteneingabe. Der entpackte Quellcode wurde ohne Paketdownload neu gebaut; alle 53 HTML-/JavaScript-/CSS-Dateien stimmen bytegleich mit der Auslieferung überein. Diese Linux-Prüfungen sind kein Windows-EXE-Start. Einzelheiten stehen in tests/package-results.json.
+GitHub Actions bleiben deaktiviert. Keine Runner, Workflows oder kostenpflichtigen CI-Dienste wurden benutzt. Keine echten Schülerdaten, privaten Sicherungen oder Zugangsdaten werden ins Repository oder die Archive übernommen. Beim Update ausschließlich Notenblick.exe und den vollständigen Ordner Programm ersetzen; Daten bleibt unangetastet.

@@ -31,7 +31,7 @@ A.setPreference=function(key,value){
  for(const el of document.querySelectorAll('[data-setting="'+key+'"]')){if(key==='visibleKinds')el.checked=p.visibleKinds.includes(el.value);else el.value=String(p[key]);}
  if(['defaultPrecision','defaultRounding'].includes(key)&&A.$('#defaultWeightEditor')?.isConnected){A.settingsWeights.load(A.newCourseConfig());A.settingsWeights.saved();}
  A.updateSettingsVisibility?.();
- if(key==='areaView'&&A.ui.main==='notes'){A.W().assessmentWorkOpen=false;A.renderAssessments(A.kinds.includes(A.W().view)?A.W().view:'');document.getElementById('areaView')?.focus();}
+ if(key==='areaView'&&A.ui.main==='notes'){const w=A.W(),kind=A.kinds.includes(w.view)?w.view:w.assessmentFilter;if(kind!=='oral'){w.assessmentWorkOpen=false;A.renderAssessments(A.kinds.includes(w.view)?w.view:'');document.getElementById('areaView')?.focus();}}
  if(['pupilOrder','pupilEntries'].includes(key)&&A.ui.main==='notes'&&A.W().view==='pupil'){const id=document.activeElement?.id;A.renderPupil();document.getElementById(id)?.focus();}
  if(['sortBy','sortDir','nameFormat'].includes(key)){
   if(A.ui.main==='notes'){if(A.W().view==='overview')A.refreshTable('overview');else A.renderNotes();}

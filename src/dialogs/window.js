@@ -16,7 +16,10 @@ Notenblick.setDialogSize=size=>{Notenblick.$('#dialog').dataset.size=['small','m
 Notenblick.modal = function modal(title, content, fn, label = 'Speichern', options = {}) {
   Notenblick.opener = {
     element: document.activeElement,
-    key: Notenblick.origin(document.activeElement)
+    key: Notenblick.origin(document.activeElement),
+    course:Notenblick.ui.course,main:Notenblick.ui.main,windowX:window.scrollX,windowY:window.scrollY,
+    details:[...document.querySelectorAll('#oralSettings[open]')].map(el=>el.id),
+    wraps:[...document.querySelectorAll('.table-wrap')].filter(el=>el.id&&!el.closest('[hidden]')).map(el=>({id:el.id,x:el.scrollLeft,y:el.scrollTop}))
   };
   Notenblick.setDialogSize(options.size||'medium');
   Notenblick.$('#dialogNext').hidden=true;Notenblick.oralDraft=null;Notenblick.afterClose=null;
@@ -45,10 +48,12 @@ Notenblick.closeModal = function closeModal() {
       target = [...document.querySelectorAll(`[data-action="${k.action}"]`)].find(el => (!k.item || el.dataset.id === k.item) && (!k.kind || el.dataset.kind === k.kind) && !el.closest('[hidden]'));
     }
   }
-  if (target && !target.closest('[hidden]')) target.focus();else {
+  if(previous?.main===Notenblick.ui.main&&previous?.course===Notenblick.ui.course)for(const id of previous.details||[]){const el=document.getElementById(id);if(el)el.open=true;}
+  if (target && !target.closest('[hidden]')) target.focus({preventScroll:true});else {
     const tab = document.querySelector('#' + (Notenblick.ui.main === 'notes' ? 'noteTabs' : Notenblick.ui.main === 'admin' && Notenblick.ui.adminClass ? 'adminTabs' : 'mainTabs') + ' [aria-selected=true]');
     (tab || document.querySelector('#mainTabs [aria-current=page]'))?.focus();
   }
+  if(previous?.main===Notenblick.ui.main&&previous?.course===Notenblick.ui.course){for(const pos of previous.wraps||[]){const el=document.getElementById(pos.id);if(el){el.scrollLeft=pos.x;el.scrollTop=pos.y;}}window.scrollTo?.(previous.windowX,previous.windowY);}
   Notenblick.oralDraft=null;Notenblick.legacyPreview=null;if(cancel)cancel();
   const next=Notenblick.afterClose; Notenblick.afterClose=null; if(next)next();
 };

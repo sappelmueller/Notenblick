@@ -97,7 +97,7 @@
           current = null;
         }
         if (!replace && (this.base ? !current || current.id !== this.base.id || current.commitId !== this.base.commitId : !!current)) throw Error('Die Noten wurden in einem anderen Fenster geändert. Erstelle hier zuerst eine Sicherung und öffne deine Noten anschließend erneut.');
-        const next = N.upgrade(input);next.appVersion='1.8.0';
+        const next = N.upgrade(input);next.appVersion='1.9.0';
         delete next.workspace;delete next.preferences;
         next.revision = Math.max(current?.revision || 0, next.revision) + 1;
         next.commitId = N.id();
