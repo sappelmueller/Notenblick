@@ -27,7 +27,7 @@ Der Originalstand 1.8.0 und die eingerichtete Entwicklungsbasis werden als aufei
 
 ## Tatsächlich ausgeführte Gesamtprüfung
 
-Der vollständige lokale Ablauf `python3 dev/manage.py release` war erfolgreich; **29 Prozessschritte**, sämtlich mit Rückgabewert 0. Dauer des damaligen Gesamtlaufs rund drei Minuten. Im Gesamtlauf liefen elf neue Infrastrukturregressionen; die anschließend ergänzte Prüfung des tatsächlich vorgemerkten Commit-Inhalts und des Optimierungsschutzes brachte die Sammlung auf 13 ebenfalls erfolgreich ausgeführte Infrastrukturregressionen.
+Der vollständige lokale Ablauf `python3 dev/manage.py release` war erfolgreich; **29 Prozessschritte**, sämtlich mit Rückgabewert 0. Dauer des damaligen Gesamtlaufs rund drei Minuten. Im Gesamtlauf liefen elf neue Infrastrukturregressionen; die anschließend ergänzte Prüfung des tatsächlich vorgemerkten Commit-Inhalts und des Optimierungsschutzes brachte die Sammlung auf 13 ebenfalls erfolgreich ausgeführte Infrastrukturregressionen. Die anschließend dauerhaft ergänzte GitHub-Exportprüfung wurde ebenfalls ausgeführt; damit stehen nun 14 Infrastrukturregressionen bereit.
 
 | Prüfbereich | Ergebnis |
 | --- | --- |
@@ -43,6 +43,8 @@ Der vollständige lokale Ablauf `python3 dev/manage.py release` war erfolgreich;
 | Vollständige ZIP-Dateien | Programm und Quellcode erzeugt; Dateibestand und Prüfsummen geprüft |
 | Frisch entpackte Ausgabe | Start im Testhost, Einrichtung, Navigation und mündliche Note erfolgreich |
 | Neue Schutzmechanismen | falsches Pushziel, fremde effektive Push-URL, private Dateipfade, Actions-Dateien, fehlende Repository-ID und fehlgeschlagene Tests werden abgewiesen |
+
+Der aktuelle Quellstand wurde außerdem direkt aus dem privaten GitHub-Repository erneut heruntergeladen; sämtliche 145 Dateien dieses ersten eingerichteten Stands waren bytegleich. Der vollständige Abruf einschließlich der binären Bibliotheken ist damit tatsächlich geprüft. Der wiederverwendbare Export und der genaue Ablauf sind zusätzlich unter dev/github-export.py und docs/GITHUB-ANBINDUNG.md hinterlegt.
 
 Die Angaben sind unterschiedliche Prüfgranularitäten und werden nicht zu einer künstlichen Gesamtzahl addiert. Das vollständige maschinenlesbare Protokoll liegt im Sicherungspaket unter `Pruefung`.
 
