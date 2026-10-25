@@ -104,7 +104,7 @@ document.addEventListener('change', e => {
 document.addEventListener('keydown', e => {
   const el = e.target;
   if(e.defaultPrevented)return;
-  if(e.key==='Escape'){const details=el.closest('details[open]');if(details&&(details.id==='oralSettings'||details.id==='pupilHistory'||details.classList.contains('result-note'))){details.open=false;details.querySelector('summary').focus();e.preventDefault();return;}}
+  if(e.key==='Escape'){const details=el.closest('details[open]');if(details&&(details.hasAttribute('data-view-options')||details.id==='oralSettings'||details.id==='pupilHistory'||details.classList.contains('result-note'))){details.open=false;details.querySelector('summary').focus();e.preventDefault();return;}}
   if (e.key === 'Enter' && el.dataset.entry === 'grade') {
     e.preventDefault();
     Notenblick.entryChange(el);

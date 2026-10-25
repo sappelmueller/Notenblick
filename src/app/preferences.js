@@ -31,8 +31,8 @@ A.setPreference=function(key,value){
  for(const el of document.querySelectorAll('[data-setting="'+key+'"]')){if(key==='visibleKinds')el.checked=p.visibleKinds.includes(el.value);else el.value=String(p[key]);}
  if(['defaultPrecision','defaultRounding'].includes(key)&&A.$('#defaultWeightEditor')?.isConnected){A.settingsWeights.load(A.newCourseConfig());A.settingsWeights.saved();}
  A.updateSettingsVisibility?.();
- if(key==='areaView'&&A.ui.main==='notes'){const w=A.W(),kind=A.kinds.includes(w.view)?w.view:w.assessmentFilter;if(kind!=='oral'){w.assessmentWorkOpen=false;A.renderAssessments(A.kinds.includes(w.view)?w.view:'');document.getElementById('areaView')?.focus();}}
- if(['pupilOrder','pupilEntries'].includes(key)&&A.ui.main==='notes'&&A.W().view==='pupil'){const id=document.activeElement?.id;A.renderPupil();document.getElementById(id)?.focus();}
+ if(key==='areaView'&&A.ui.main==='notes'){const w=A.W(),kind=A.kinds.includes(w.view)?w.view:w.assessmentFilter;if(kind!=='oral'){w.assessmentWorkOpen=false;A.renderAssessments(A.kinds.includes(w.view)?w.view:'');const details=document.getElementById('areaViewDetails');if(details)details.open=true;document.getElementById('areaView')?.focus();}}
+ if(['pupilOrder','pupilEntries'].includes(key)&&A.ui.main==='notes'&&A.W().view==='pupil'){const id=document.activeElement?.id;A.renderPupil();const details=document.getElementById("pupilViewDetails");if(details)details.open=true;document.getElementById(id)?.focus();}
  if(['sortBy','sortDir','nameFormat'].includes(key)){
   if(A.ui.main==='notes'){if(A.W().view==='overview')A.refreshTable('overview');else A.renderNotes();}
   if(A.ui.main==='admin'&&A.ui.adminView==='students')A.$('#adminStudentsTable').innerHTML=A.studentsTable(A.adminClass());

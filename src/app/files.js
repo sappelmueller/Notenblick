@@ -3,7 +3,8 @@
 'use strict';
 Notenblick.download = function download(name, text, type = 'text/plain;charset=utf-8') {
   if (window.NRDesktop.available) {
-    return window.NRDesktop.call('download',{name,text}).then(saved=>{if(saved!==false)Notenblick.announce('Die Datei wurde gespeichert.');return saved;}).catch(e=>{if(e.name==='AbortError')return false;e.storageError=true;throw e;});
+    const bytes=typeof text==='string'?null:new Uint8Array(text.buffer||text,text.byteOffset||0,text.byteLength);if(bytes&&bytes.length>64*1024*1024)throw Error('Die Exportdatei ist zu groß. Bitte schränke die Auswahl ein.');let dataBase64;if(bytes){const parts=[];for(let i=0;i<bytes.length;i+=32768)parts.push(String.fromCharCode(...bytes.subarray(i,i+32768)));dataBase64=btoa(parts.join(''));}
+    return window.NRDesktop.call('download',{name,...(bytes?{dataBase64}:{text}),mime:type}).then(saved=>{if(saved!==false)Notenblick.announce('Die Datei wurde gespeichert.');return saved;}).catch(e=>{if(e.name==='AbortError')return false;e.storageError=true;throw e;});
   }
   const url = URL.createObjectURL(new Blob([text], {
       type
@@ -53,55 +54,5 @@ Notenblick.restorePoint = async function restorePoint() {
     const entry=versions[Number(Notenblick.val('restorePoint'))],d=Notenblick.N.validate(JSON.parse((await(await entry.handle.getFile()).text()).replace(/^\ufeff/,'')));
     Notenblick.afterClose=()=>Notenblick.confirm('Aktuellen Stand ersetzen','Der Stand vom '+new Date(d.updatedAt).toLocaleString('de-DE')+' mit '+d.students.length+' Schülern und '+d.assessments.length+' Leistungen ersetzt deine aktuellen Daten. Dein aktueller Stand wird vorher zusätzlich gesichert.',()=>Notenblick.restoreData(d),'Wiederherstellen');
   },'Weiter');
-};
-Notenblick.output = function output(kind) {
-  Notenblick.modal('Notenliste exportieren', `<p>Welche Ausgabe möchtest du erstellen?</p><div class="button-row">${Notenblick.b('print-list', 'Drucken', `data-kind="${kind}"`)}${Notenblick.b('export-text', 'Als Text speichern', `data-kind="${kind}"`)}${Notenblick.b('export-table', 'Für Tabellenprogramm speichern', `data-kind="${kind}"`)}</div>`, null);
-};
-Notenblick.printList=function(kind){
-  const rows=Notenblick.exportRows(kind),c=Notenblick.getCourse();
-  let el=Notenblick.$('#printOutput');if(el)el.remove();el=document.createElement('div');el.id='printOutput';el.className='print-output';
-  el.innerHTML=`<h1>${Notenblick.esc(c.name+' – Klasse '+Notenblick.getClass().name)}</h1><p>${Notenblick.esc(Notenblick.schoolYear(Notenblick.getYear()))}</p><h2 id="printTitle">Notenübersicht</h2><table aria-labelledby="printTitle"><thead><tr>${rows[0].map(v=>`<th scope="col">${Notenblick.esc(v)}</th>`).join('')}</tr></thead><tbody>${rows.slice(1).map(row=>`<tr>${row.map((v,i)=>i?`<td>${Notenblick.esc(v)}</td>`:`<th scope="row">${Notenblick.esc(v)}</th>`).join('')}</tr>`).join('')}</tbody></table>`;
-  document.body.append(el);document.body.classList.add('printing-list');window.print();document.body.classList.remove('printing-list');el.remove();
-};
-Notenblick.exportRows = function exportRows(kind) {
-  const c = Notenblick.getCourse(),
-    w = Notenblick.W(),
-    list = Notenblick.studentList(),
-    assess = Notenblick.N.assessments(Notenblick.data, c.id, 'all').filter(a => a.kind === kind),
-    rows = [];
-  if (kind === 'overview') {
-    rows.push(['Schüler', ...w.columns.map(k => Notenblick.N.KINDS[k] || Notenblick.N.OVERALL[k]), 'Gesamtschnitt', 'Zeugnisnote']);
-    for (const s of list) {
-      const calc = Notenblick.calculation(c, s.id),
-        f = Notenblick.data.finals.find(f => f.courseId === c.id && f.studentId === s.id && f.period === 'all');
-      rows.push([Notenblick.studentName(s), ...w.columns.map(k => Notenblick.showAverage(calc.categories[k], c)), Notenblick.showAverage(calc.total, c), f?.grade?.replace('.', ',') || '']);
-    }
-  } else {
-    rows.push(['Schüler', 'Durchschnitt', ...assess.map(a => a.title)]);
-    for (const s of list) rows.push([Notenblick.studentName(s), Notenblick.showAverage(Notenblick.calculation(c, s.id).categories[kind], c), ...assess.map(a => a.results[s.id]?.status === 'graded' ? a.results[s.id].grade.replace('.', ',') : a.participantIds&&!a.participantIds.includes(s.id)?'Nicht beteiligt':Notenblick.N.STATUS[a.results[s.id]?.status || 'open'])]);
-  }
-  return rows;
-};
-Notenblick.tableExport = function(kind,text=false){
-  const c=Notenblick.getCourse(),rows=Notenblick.exportRows(kind);
-  const name = Notenblick.N.safePart(Notenblick.getClass().name + ' - ' + c.name + ' - ' + (Notenblick.N.KINDS[kind] || 'Notenübersicht'));
-  if (text) {
-    const lines = [c.name + ' – Klasse ' + Notenblick.getClass().name + ' – ' + Notenblick.schoolYear(Notenblick.getYear()), ''];
-    for (const row of rows.slice(1)) {
-      lines.push(row[0]);
-      row.slice(1).forEach((value, i) => {
-        if (value) lines.push(rows[0][i + 1] + ': ' + value);
-      });
-      lines.push('');
-    }
-    return Notenblick.download(name + '.txt', '\ufeff' + lines.join('\r\n'));
-  } else {
-    const cell = v => {
-      let s = String(v ?? '');
-      if (/^\s*[=+@-]/.test(s) || /^[\t\r\n]/.test(s)) s = "'" + s;
-      return '"' + s.replace(/"/g, '""') + '"';
-    };
-    return Notenblick.download(name + '.csv', '\ufeff' + rows.map(r => r.map(cell).join(';')).join('\r\n'), 'text/csv;charset=utf-8');
-  }
 };
 })(globalThis.Notenblick = globalThis.Notenblick || {});

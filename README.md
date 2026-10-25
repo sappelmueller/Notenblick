@@ -1,6 +1,6 @@
 # Notenblick
 
-Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.9.0**. Kompakte Startseite, verständliche mündliche Erfassung und getrennte Ansichtszustände; Berechnungslogik und Datenformat bleiben erhalten.
+Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.10.0**. Einheitliche Notenansichten und gemeinsame Offline-Berichte für Druck, PDF, Word, Excel, Text und CSV. Berechnungslogik und Datenformat bleiben erhalten.
 
 ## Sofort weiterarbeiten
 
@@ -15,7 +15,7 @@ Falls die Git-CLI hier keine Anmeldung besitzt, beschreibt [docs/GITHUB-ANBINDUN
 
 Die Einrichtung lädt das festgelegte .NET SDK und die gesperrten Testabhängigkeiten. Bereits vorhandene passende Werkzeuge werden wiederverwendet. Nach einem vollständigen Zurücksetzen müssen die Werkzeuge erneut heruntergeladen werden; Quellcode, Konfiguration, Tests und Anleitungen bleiben im Repository erhalten.
 
-Benötigt: Python ab 3.12, Git und Node.js (getestet mit der Version in `.node-version`). Python benötigt keine externen Pakete. SDK, Compiler und Linux-Testbrowser werden projektspezifisch eingerichtet. Bibliotheksdateien für den Windows-Build sind inklusive SHA-256-Prüfsummen enthalten. Es wird kein globales System umkonfiguriert.
+Benötigt: Python ab 3.12, Git und Node.js (getestet mit der Version in `.node-version`). Für vollständige Exportprüfungen werden zusätzlich die in `dev/export-qa-requirements.txt` gesperrten Python-Pakete, Java und veraPDF 1.30.3 benötigt; siehe [docs/EXPORT-PRUEFUNG.md](docs/EXPORT-PRUEFUNG.md). SDK, Compiler und Linux-Testbrowser werden projektspezifisch eingerichtet. Bibliotheksdateien für den Windows-Build sind inklusive SHA-256-Prüfsummen enthalten. Es wird kein globales System umkonfiguriert.
 
 ## Befehle
 

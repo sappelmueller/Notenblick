@@ -1,3 +1,21 @@
+# Notenblick 1.10.0
+
+- Einheitliche H2-Überschriften und gemeinsame responsive Aktionsleisten in allen Notenansichten; Hauptaktion links, Exportieren rechts. Suche bleibt sichtbar, seltene Optionen unter Ansicht anpassen.
+- Dezente Versionsanzeige unten auf Start. Anwendung, Starter und Paketmetadaten beziehen die Version aus package.json.
+- Ein kontextbezogener Exportdialog für Notenübersicht, Leistungsarten, mündliche Klassenübersicht/Einzelnoten, allgemeine Leistungsliste und einzelne Schüler. Aktuelle Auswahl oder alle Einträge über sämtliche Bildschirmseiten; Bemerkungen optional.
+- Echte Offline-Dateien für PDF, Word und Excel zusätzlich zu Druck, TXT und CSV. Gemeinsames grünes Notenblick-Layout, semantische Word-Überschriften, strukturierte PDF-Tabellen und typisierte Excel-Zellen. Schülerberichte trennen berechnete Durchschnitte von manuellen Zeugnisnoten.
+- Vollständige breite Tabellen in Spaltengruppen für Druck, Word und PDF. Lange Bemerkungen als zugeordnete Absätze. Druckinhalt bleibt bis zum Abschluss des Druckvorgangs erhalten.
+- Binärdateien werden unverändert über den Windows-Speicherdialog atomar geschrieben; Abbruch erhält die Auswahl. CSV-Injection-Schutz erweitert, sichere begrenzte Dateinamen.
+- Berechnungen und Datenformat unverändert; keine Migration, keine doppelten Noten. Automatische TXT-Notenlisten bleiben erhalten.
+
+## Update auf 1.10.0
+
+Notenblick schließen. Nur Notenblick.exe und den vollständigen Ordner Programm ersetzen. Den vorhandenen Ordner Daten einschließlich Noten, Ansicht.json, Sicherungen und Notenlisten unverändert behalten. Keine Office-Installation oder Netzwerkverbindung zur Dateierstellung erforderlich.
+
+Automatisierte und tatsächliche manuelle Prüfungen sowie offene Windows-/NVDA-Abnahme stehen in docs/PRUEFBERICHT-1.10.0.md und docs/EXPORT-PRUEFUNG.md. Bis zur Windows-/NVDA-Abnahme Entwicklungskandidat.
+
+---
+
 # Notenblick 1.9.0
 
 1. Start bleibt bei Weiterarbeiten, Meine Fächer und Offene Noteneingaben. Kompaktere Bereiche, gleichmäßige Fachflächen und klar getrennte Leistungsbezeichnung/Erfassungsstand. Historische Weiterarbeitsfächer zeigen ihr tatsächliches Schuljahr und öffnen ihre letzte Fachansicht.
