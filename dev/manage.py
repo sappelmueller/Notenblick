@@ -5,9 +5,9 @@ from guard import check_root, check_paths, git
 from bootstrap import setup, dotnet_path
 
 ROOT=Path(__file__).resolve().parents[1]
-QUICK=['domain-storage','transfers','ui','new-features','v140','v150','v160','v170','v180','v190']
+QUICK=['domain-storage','transfers','ui','new-features','v140','v150','v160','v170','v180','v190','v1100']
 STORAGE=['view-storage','v150-storage','v160-storage','v170-storage','v180-storage','v190-storage','workflow']
-BROWSER=['browser','v170-browser','v180-browser','v190-browser']
+BROWSER=['browser','v170-browser','v180-browser','v190-browser','v1100-browser']
 ENV=os.environ.copy()
 ENV.update({'NOTENBLICK_DOTNET':str(dotnet_path()),'PLAYWRIGHT_BROWSERS_PATH':str(ROOT/'.tools/browsers'),
             'DOTNET_CLI_TELEMETRY_OPTOUT':'1','DOTNET_NOLOGO':'1','NOTENBLICK_OUTPUT':str(ROOT/'artifacts')})
@@ -55,6 +55,9 @@ def save_report():
 
 def verify_vendor():
     expected=json.loads((ROOT/'dev/vendor-lock.json').read_text())
+    export_lock=json.loads((ROOT/'dev/export-assets-lock.json').read_text())
+    for name,sha in export_lock['files'].items():
+        assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==sha, 'Exportbibliotheksprüfsumme: '+name
     actual={p.relative_to(ROOT).as_posix() for folder in ['webview2','newtonsoft.json','microsoft.netframework.referenceassemblies.net48'] for p in (ROOT/'dev'/folder).rglob('*') if p.is_file()}
     assert set(expected)==actual, 'Bibliotheksbestand ist unvollständig oder enthält fremde Dateien'
     for name,sha in expected.items():
@@ -83,6 +86,7 @@ def tests(profile):
         run('Großer Datenbestand',['node','--max-old-space-size=4096','tests/large.cjs'],timeout=900)
     if profile=='full':py('Produktiven Assembly-Lader prüfen','tests/loader.py')
     if profile in {'browser','full'}:js(BROWSER)
+    if profile=='full':py('Exportdateien und PDF/UA prüfen','tests/export-files.py')
 
 def hashes():
     return {p.relative_to(ROOT/'dist').as_posix():hashlib.sha256(p.read_bytes()).hexdigest()

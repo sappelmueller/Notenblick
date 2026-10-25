@@ -38,7 +38,7 @@ def check_paths(paths, staged=False):
         if not p.is_file():
             continue
         assert not p.is_symlink(), 'Verknüpfung nicht erlaubt: '+name
-        if p.suffix not in {'.dll','.ico'}:
+        if p.suffix not in {'.dll','.ico','.ttf'}:
             text = subprocess.check_output(['git','-C',str(ROOT),'show',':'+name]).decode('utf-8',errors='replace') if staged else p.read_text(encoding='utf-8', errors='replace')
             assert not re.search(r'(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)', text), 'Mögliches Geheimnis: '+name
 

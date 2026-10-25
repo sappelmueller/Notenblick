@@ -1,7 +1,7 @@
 /* Notenblick – domain/constants.js. Shared application API: NR. */
 (function (NR) {
 'use strict';
-NR.ACTIVE_VERSIONS = ['1.3.0','1.4.0','1.5.0','1.6.0','1.7.0','1.8.0','1.9.0'];
+NR.ACTIVE_VERSIONS = ['1.3.0','1.4.0','1.5.0','1.6.0','1.7.0','1.8.0','1.9.0','1.10.0'];
 NR.isCurrentData = d => !!d && NR.ACTIVE_VERSIONS.includes(d.appVersion);
 NR.KINDS = {
   exam: 'Klassenarbeiten',

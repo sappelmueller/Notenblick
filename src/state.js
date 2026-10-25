@@ -2,6 +2,7 @@
 (function (Notenblick) {
 'use strict';
 Notenblick.N = window.NR;
+Notenblick.version = globalThis.NRVersion;
 Notenblick.S = window.NRStorage;
 Notenblick.$ = s => document.querySelector(s);
 Notenblick.esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({

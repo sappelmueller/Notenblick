@@ -16,7 +16,7 @@ else:
  for line in git('ls-tree','-r','-z',rev).split(b'\0'):
   if not line:continue
   head,path=line.split(b'\t',1);mode,kind,sha=head.decode().split();path=path.decode()
-  entries.append({'path':path,'mode':mode,'type':kind,'sha':sha,'size':len(git('cat-file','blob',sha)),'binary':Path(path).suffix in ['.dll','.ico']})
+  entries.append({'path':path,'mode':mode,'type':kind,'sha':sha,'size':len(git('cat-file','blob',sha)),'binary':Path(path).suffix in ['.dll','.ico','.ttf']})
  if action=='plan':print(json.dumps({'rev':rev,'tree':git('rev-parse',rev+'^{tree}').decode().strip(),'entries':entries}))
  elif action=='texts':
   text_entries=[e for e in entries if not e['binary']]

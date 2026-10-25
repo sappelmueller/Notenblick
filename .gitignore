@@ -26,3 +26,5 @@ notenverwaltung.json
 *.p12
 *.key
 *.pem
+
+tests/exports/

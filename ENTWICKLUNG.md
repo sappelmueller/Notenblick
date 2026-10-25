@@ -1,10 +1,10 @@
-# Notenblick 1.9.0 – Projekt und Erstellung
+# Notenblick 1.10.0 – Projekt und Erstellung
 
 ## Aufbau und zentrale Funktionen
 
 `src/domain` enthält Validierung, exakte rationale Berechnung, Namensimport, Übernahmen, Altbestandsmigration und TXT-Export. `src/app` enthält gemeinsame Navigation, Ansichten, Fokus, Datumseingabe, Speicherung und Komponenten. `src/views` und `src/dialogs` verwenden diese Funktionen. `native` enthält den Windows-Starter, WebView2-Fenster, atomare Speicherung, Sperren und kontrollierte Migration. Es gibt weiterhin nur eine Leistungsverwaltung und einen Berechnungskern.
 
-Das Format bleibt `notenraum`, Version 1. Vorhandene Kennungen, Schüler, Klassen, Fächer, Leistungen, Noten, Faktoren, Status und manuelle Zeugnisnoten bleiben erhalten. `NR.ACTIVE_VERSIONS` erkennt 1.3.0 bis 1.9.0; ein Update aus 1.8.0 braucht keine fachliche Migration. Ein reiner Programmstart schreibt vorhandene Noten nicht um.
+Das Format bleibt `notenraum`, Version 1. Vorhandene Kennungen, Schüler, Klassen, Fächer, Leistungen, Noten, Faktoren, Status und manuelle Zeugnisnoten bleiben erhalten. `NR.ACTIVE_VERSIONS` erkennt 1.3.0 bis 1.10.0; ein Update aus 1.9.0 braucht keine fachliche Migration. Ein reiner Programmstart schreibt vorhandene Noten nicht um.
 
 `NR.calculateCore()` führt beide Berechnungsarten mit rationalen Zahlen aus. Fehlt `calculationMode`, gilt unverändert `grouped`. Dann entstehen zunächst Schriftlich aus Klassenarbeiten/Tests und anschließend der Gesamtdurchschnitt aus den Gesamtanteilen. Bei `direct` stehen die fünf Leistungsarten direkt in `weights.overall`. `weights.written` bleibt als historische Einstellung vorhanden. Standard ist weiterhin 50:50 mit 80:20 innerhalb Schriftlich. Fehlende Arten und Anteile 0 werden nicht als Nullnoten berücksichtigt. Nur die Anzeige wird gerundet/gekürzt. Manuelle Zeugnisnoten bleiben unabhängig.
 
@@ -106,3 +106,9 @@ Den nativen Testhost nicht während laufender Speichertests neu erstellen. Ergeb
 Wie bisher werden .NET Framework 4.8 und eine installierte Microsoft-WebView2-Laufzeit benötigt. Verwaltete Bibliotheken sowie WebView2-Loader für x86, x64 und arm64 sind enthalten. Die Anwendung arbeitet lokal ohne Server oder Internet; Host und Content-Security-Policy blockieren externe Ressourcen. Der Enginecache unter LocalAppData ist keine maßgebliche Datenablage.
 
 Es liegt kein Codesignierungszertifikat vor. SmartScreen und Windows-Sicherheitsmechanismen werden nicht umgangen. Linux-.NET-, Chromium-, ARIA- und axe-Prüfungen ersetzen keinen ausgeführten Windows-Start und keinen tatsächlichen NVDA-Livetest.
+
+## Gemeinsame Berichte und Version
+
+`package.json` ist die verbindliche Programmversion. Der Build erzeugt daraus `version.js`, Starter-/Bibliotheksattribute und Windows-Manifest. `src/exports/report.js` erzeugt unveränderliche Berichtszellen aus denselben Daten und zentralen NR-Berechnungen wie die Oberfläche. Text/CSV, semantisches Druck-HTML, DOCX, XLSX und strukturierte PDF verwenden diese Grundlage. Filter werden aus einer Kopie der aktuellen Ansicht gelesen; Bildschirmpaginierung beschränkt den Export nicht. Lange Bemerkungen erhalten in Dokumenten Absätze mit Bezug zu Datum, Schüler und Leistung. Breite Matrizen teilen Druck, Word und PDF in Spaltengruppen mit wiederholten Namen. Excel bewahrt die breite Tabelle mit fixierter Namensspalte.
+
+PDFKit 0.20.2 (MIT) und DejaVu-Schriften werden lokal mitgeliefert und über `dev/export-assets-lock.json` gesperrt. Es gibt keine neuen Laufzeitprozesse, Office-Abhängigkeiten oder Netzwerkdienste. DOCX/XLSX entstehen mit einem kleinen zentralen OOXML-/ZIP-Schreiber. `native/ExportFiles.cs` verarbeitet Binärdaten, prüft Format und Größe und schreibt atomar nach bestätigtem Windows-Speicherdialog. Bestehende JSON-/TXT-Sicherungswege bleiben erhalten.

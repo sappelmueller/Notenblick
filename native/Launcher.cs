@@ -6,9 +6,9 @@ using System.Windows.Forms;
 
 [assembly: AssemblyTitle("Notenblick")]
 [assembly: AssemblyProduct("Notenblick")]
-[assembly: AssemblyVersion("1.9.0.0")]
-[assembly: AssemblyFileVersion("1.9.0.0")]
-[assembly: AssemblyInformationalVersion("1.9.0")]
+[assembly: AssemblyVersion("@ASSEMBLY_VERSION@")]
+[assembly: AssemblyFileVersion("@ASSEMBLY_VERSION@")]
+[assembly: AssemblyInformationalVersion("@VERSION@")]
 
 public static class Launcher
 {
@@ -36,7 +36,7 @@ public static class Launcher
                 ? "arm64" : Environment.Is64BitProcess ? "x64" : "x86";
             var nativeFolder = Path.Combine(root, "Programm", "Windows", arch);
             if (!File.Exists(Path.Combine(nativeFolder, "WebView2Loader.dll")))
-                throw new FileNotFoundException("Eine benötigte Programmdatei fehlt. Bitte entpacke den vollständigen Ordner der Version 1.9.0 erneut.");
+                throw new FileNotFoundException("Eine benötigte Programmdatei fehlt. Bitte entpacke den vollständigen Ordner der Version @VERSION@ erneut.");
             if (!SetDllDirectory(nativeFolder))
                 throw new IOException("Die Programmdateien konnten nicht geöffnet werden.");
 
@@ -48,8 +48,8 @@ public static class Launcher
         catch (Exception error)
         {
             while (error.InnerException != null) error = error.InnerException;
-            MessageBox.Show("Notenblick 1.9.0 konnte nicht geöffnet werden.\n\n" + error.Message,
-                "Notenblick 1.9.0", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Notenblick @VERSION@ konnte nicht geöffnet werden.\n\n" + error.Message,
+                "Notenblick @VERSION@", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
