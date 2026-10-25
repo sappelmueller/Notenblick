@@ -54,7 +54,7 @@
         Notenblick.help();
         break;
       case 'close':
-        if(!Notenblick.dialogBusy)Notenblick.closeModal();
+        if(!Notenblick.dialogBusy||Notenblick.dialogCancellable)Notenblick.closeModal();
         break;
       case 'folder':
         await Notenblick.folder();

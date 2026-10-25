@@ -1,0 +1,17 @@
+{
+  "DocumentFormat.OpenXml": {
+    "version": "3.3.0",
+    "url": "https://api.nuget.org/v3-flatcontainer/documentformat.openxml/3.3.0/documentformat.openxml.3.3.0.nupkg",
+    "sha256": "53a74167552d886f0e312540db12c86a6133a83bd698795f3be6e25fc091b9e7"
+  },
+  "DocumentFormat.OpenXml.Framework": {
+    "version": "3.3.0",
+    "url": "https://api.nuget.org/v3-flatcontainer/documentformat.openxml.framework/3.3.0/documentformat.openxml.framework.3.3.0.nupkg",
+    "sha256": "5f539f1602b642198ec6ed3ec567eac3fff62309f6ec65e28db2751a488ec30d"
+  },
+  "System.IO.Packaging": {
+    "version": "8.0.1",
+    "url": "https://api.nuget.org/v3-flatcontainer/system.io.packaging/8.0.1/system.io.packaging.8.0.1.nupkg",
+    "sha256": "c5fd0101fa90bc84e89a906cbdfa7188bb6cffab11404cdd8cd0377ffabfbd8e"
+  }
+}

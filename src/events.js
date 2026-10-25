@@ -19,7 +19,7 @@ Notenblick.$('#dialogForm').addEventListener('submit', async e => {
 });
 Notenblick.$('#dialog').addEventListener('cancel', e => {
   e.preventDefault();
-  if(!Notenblick.dialogBusy)Notenblick.closeModal();
+  if(!Notenblick.dialogBusy||Notenblick.dialogCancellable)Notenblick.closeModal();
 });
 document.addEventListener('submit', e => {
   if(e.target.id==='adminViewForm'){e.preventDefault();Notenblick.$('#adminViewDetails').open=false;Notenblick.$('#adminViewSummary').focus();Notenblick.remember();return;}
