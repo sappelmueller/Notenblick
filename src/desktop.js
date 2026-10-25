@@ -15,6 +15,7 @@
     if (msg.ok) task.resolve(msg.result);else {
       const error = Error(msg.error || 'Die Datei konnte nicht geöffnet werden.');
       error.name = msg.name || 'Error';
+      if(typeof msg.code==='string'&&msg.code.startsWith('export-'))error.code=msg.code;
       task.reject(error);
     }
   });
@@ -22,7 +23,8 @@
     if (!channel) return Promise.reject(Error('Bitte starte Notenblick.exe.'));
     const id = session + '-' + (++sequence);
     return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => {
+      // The user may need more than two minutes in a native save dialog.
+      const timer = op==='download'?null:setTimeout(() => {
         pending.delete(id);
         reject(Error('Das Speichern dauert länger als erwartet. Deine Eingaben bleiben geöffnet.'));
       }, op.startsWith('migration') ? 300000 : 120000);

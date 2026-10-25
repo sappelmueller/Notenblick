@@ -1,3 +1,22 @@
+# Notenblick 1.11.0
+
+- Word erzwingt beim Öffnen keine globale Feldaktualisierung mehr. Lokale PAGE-/NUMPAGES-Felder bleiben erhalten; keine externen Beziehungen. Fehlerhafte OOXML-Reihenfolgen und fehlende Pflichtattribute korrigiert, vollständige SDK-Schemavalidierung ergänzt.
+- Gemeinsame inhaltsabhängige Seiten- und Spaltenplanung für Word, PDF und Druck: zuerst lesbares Hochformat, dann Querformat, 10 beziehungsweise mindestens 9 Punkt. Übliche sieben bis zehn Spalten bleiben zusammen; erst tatsächlicher Platzmangel erzeugt eindeutig bezeichnete Teile mit wiederholten Schülernamen. Excel und CSV behalten sämtliche zusammengehörigen Spalten.
+- Kompaktere Word-Zeilen ohne überflüssige Abschlussabsätze; keine dadurch verursachte leere Schlussseite. Lange Bemerkungen bleiben vollständig und eindeutig zugeordnet.
+- Exportumfang heißt einheitlich „Mit aktuellen Filtern“ oder „Alle Einträge“. Dynamische Erklärung nennt die tatsächlichen Schüler, Leistungen oder Einzelnoten unabhängig von der Bildschirmseite. Druck, PDF und Word zeigen das automatisch bestimmte A4-Seitenformat.
+- Erstellen, Speichern und nicht erreichbare Speicherorte erhalten unterschiedliche sichere Fehlermeldungen. Bewusster Abbruch ist fehlerfrei; ein abgebrochener Export erzeugt keinen verspäteten Download und beeinflusst keinen späteren Dialog. Native Speicherdialoge besitzen keinen zweiminütigen Bedienungs-Timeout.
+- Native Office-Dateiprüfung untersucht ZIP-Inhalt, CRC, XML und lokale Paketbeziehungen vor atomarer Speicherung. Keine zusätzlichen Laufzeitprogramme, keine Office-Installation und kein Internet für Exporte erforderlich.
+- Versionszeile unverändert dezent. Der einmalig gemeldete Effekt darunter war unter Chromium nicht reproduzierbar. Bei extremer Vergrößerung wurde ein unabhängig gefundener Überlauf des Programmkopfs korrigiert.
+- Berechnungs- und Speicherkern unverändert; keine Migration. Update von 1.10.0, Sicherung und Wiederherstellung werden mit synthetischen Daten geprüft.
+
+## Update auf 1.11.0
+
+Notenblick schließen. Nur Notenblick.exe und den vollständigen Ordner Programm ersetzen. Daten mit Noten, Ansicht.json, Sicherungen und Notenlisten vollständig erhalten.
+
+Prüfergebnisse und offene tatsächliche Windows-/Word-/NVDA-Abnahme: docs/PRUEFBERICHT-1.11.0.md. Bis zu dieser Abnahme Entwicklungskandidat.
+
+---
+
 # Notenblick 1.10.0
 
 - Einheitliche H2-Überschriften und gemeinsame responsive Aktionsleisten in allen Notenansichten; Hauptaktion links, Exportieren rechts. Suche bleibt sichtbar, seltene Optionen unter Ansicht anpassen.

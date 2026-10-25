@@ -26,7 +26,7 @@ A.buildReport=function(ctx,options={}){
  const pupil=s=>text(name(s)+(s.archived||(c.inactiveStudentIds||[]).includes(s.id)?' (ausgeschieden)':''));
  const result=(a,sid)=>a.participantIds&&!a.participantIds.includes(sid)?text('Nicht beteiligt'):a.results[sid]?.status==='graded'?A.reportGrade(a.results[sid].grade):text(A.N.STATUS[a.results[sid]?.status||'open']);
  const column=(label,type='text')=>({label,type});
- const report={type:ctx.type,kind:ctx.kind,title:A.reportTitle(ctx),year:A.schoolYear(year),className:cl.name,subject:c.name,created:A.today(),scope:ctx.type==='pupil'?(options.entries==='entered'?'Nur Leistungen mit Eintrag':'Alle Leistungen des Schülers'):all?'Alle Einträge':'Aktuelle Auswahl',sections:[],recordIds:[],studentIds:[],remarks,precision:c.precision};
+ const report={type:ctx.type,kind:ctx.kind,title:A.reportTitle(ctx),year:A.schoolYear(year),className:cl.name,subject:c.name,created:A.today(),scope:ctx.type==='pupil'?(options.entries==='entered'?'Nur Leistungen mit Eintrag':'Alle Leistungen des Schülers'):all?'Alle Einträge':'Mit aktuellen Filtern',sections:[],recordIds:[],studentIds:[],remarks,precision:c.precision};
  const add=(title,headers,rows,extra={})=>report.sections.push({title,columns:headers.map(x=>typeof x==='string'?column(x):x),rows,...extra});
  let students=sorted(A.N.activeStudents(d,c,all||w.showExited));
  if(!all){const term=(ctx.type!=='overview'&&ctx.kind==='oral'?w.oralClassSearch:w.search).toLocaleLowerCase('de');students=students.filter(s=>[name(s),A.N.name(s,'first-last'),A.N.name(s,'last-first')].some(t=>t.toLocaleLowerCase('de').includes(term)));}
@@ -46,7 +46,7 @@ A.buildReport=function(ctx,options={}){
   add('',['Bezeichnung',column('Datum','date'),'Leistungsart','Erfasst',column('Durchschnitt','average'),'Teilnahme','Gewichtung'],list.map(a=>{const p=A.N.assessmentProgress(d,c,a),members=A.N.assessmentStudents(d,c,a);return[text(a.title),A.reportDate(a.date),text(A.N.KINDS[a.kind]+(A.N.isOralIndividual(a)?' – Einzelnote':'')),text(p.captured+' von '+p.total),average(p.average),text(a.participantIds?sorted(members).map(name).join(', '):'Ganze Klasse'),text(flags(a))];}));
   if(remarks){const listRows=[];for(const a of list)for(const s of sorted(A.N.assessmentStudents(d,c,a)))if(a.results[s.id]?.note)listRows.push([text(a.title+', '+A.date(a.date)),pupil(s),text(a.results[s.id].note)]);if(listRows.length)add('Bemerkungen',['Leistung','Schüler','Bemerkung'],listRows);}
  }else if(ctx.type==='overview'){
-  report.studentIds=students.map(s=>s.id);add('', ['Schüler',...w.columns.map(k=>column(A.N.KINDS[k]||A.N.OVERALL[k],'average')),column('Gesamtdurchschnitt (berechnet)','average'),column('Zeugnisnote (manuell)','grade')],students.map(s=>{const r=calc(s.id),f=d.finals.find(f=>f.courseId===c.id&&f.studentId===s.id&&f.period==='all');return[pupil(s),...w.columns.map(k=>average(r.categories[k])),average(r.total),A.reportGrade(f?.grade)];}),{matrix:true,fixed:1});
+  report.studentIds=students.map(s=>s.id);add('', ['Schüler',...w.columns.map(k=>column(A.N.KINDS[k]||A.N.OVERALL[k],'average')),column('Gesamtdurchschnitt','average'),column('Zeugnisnote','grade')],students.map(s=>{const r=calc(s.id),f=d.finals.find(f=>f.courseId===c.id&&f.studentId===s.id&&f.period==='all');return[pupil(s),...w.columns.map(k=>average(r.categories[k])),average(r.total),A.reportGrade(f?.grade)];}),{matrix:true,fixed:1,description:'Gesamtdurchschnitt: berechnet. Zeugnisnote: manuell festgelegt.'});
   if(remarks){const rows=students.map(s=>({s,f:d.finals.find(f=>f.courseId===c.id&&f.studentId===s.id&&f.period==='all')})).filter(x=>x.f?.note).map(({s,f})=>[pupil(s),text(f.note)]);if(rows.length)add('Bemerkungen zur Zeugnisnote',['Schüler','Bemerkung'],rows);}
  }else{
   const list=A.N.assessments(d,c.id).filter(a=>a.kind===ctx.kind&&(ctx.kind!=='oral'||!A.N.isOralIndividual(a))).sort((a,b)=>a.date.localeCompare(b.date)||a.title.localeCompare(b.title,'de')||a.id.localeCompare(b.id));report.recordIds=list.map(a=>a.id);report.studentIds=students.map(s=>s.id);
@@ -54,9 +54,77 @@ A.buildReport=function(ctx,options={}){
   if(remarks){const rows=[];for(const s of students)for(const a of list)if((!a.participantIds||a.participantIds.includes(s.id))&&a.results[s.id]?.note)rows.push([pupil(s),text(a.title+', '+A.date(a.date)),text(a.results[s.id].note)]);if(rows.length)add('Bemerkungen',['Schüler','Leistung','Bemerkung'],rows);}
  }
  if(!report.sections.length)add('Einzelnoten',['Bezeichnung'],[]);
- report.landscape=report.sections.some(s=>s.columns.length>5||(ctx.type!=='pupil'&&s.columns.length>=4&&s.rows.some(row=>row.reduce((n,c)=>n+c.text.length,0)>140)));return report;
+ report.landscape=A.reportLayout(report).landscape;return report;
 };
-A.reportColumnWeights=s=>s.columns.map(c=>c.type==='date'?1.25:c.label==='Schüler'?1.7:c.label==='Bezeichnung'?3:c.label==='Bemerkung'?3:c.label==='Gewichtung'?1.2:c.type==='grade'||c.type==='average'?.9:2);
-A.reportTables=function(report,maxColumns=6){const sections=[];for(const original of report.sections){let section=original;const remark=section.columns.findIndex(c=>c.label==='Bemerkung');if(remark>=0&&section.rows.some(row=>row[remark].text.length>300)){section={...section,columns:section.columns.filter((c,i)=>i!==remark),rows:section.rows.map(row=>row.filter((c,i)=>i!==remark)),paragraphs:[...(section.paragraphs||[]),...section.rows.filter(row=>row[remark].text).map(row=>'Bemerkung – '+row.slice(0,Math.min(3,remark)).map(c=>c.text).join(', ')+': '+row[remark].text)]};}if(section.matrix&&section.columns.length>maxColumns){const fixed=section.fixed||1,step=maxColumns-fixed,count=Math.ceil((section.columns.length-fixed)/step);for(let start=fixed,index=1;start<section.columns.length;start+=step,index++){const indices=[...Array(fixed).keys(),...Array.from({length:Math.min(step,section.columns.length-start)},(_,i)=>start+i)];sections.push({...section,title:(section.title||report.title)+' – Spaltengruppe '+index+' von '+count,columns:indices.map(i=>section.columns[i]),rows:section.rows.map(row=>indices.map(i=>row[i]))});}}else sections.push(section);}return sections;};
+// Deterministic typographic estimates in points. Layout never recalculates grades.
+const extent=(value,size)=>Array.from(String(value)).reduce((n,ch)=>n+(/[ilI.,:;!'|]/u.test(ch)?.28:/[MW@%]/u.test(ch)?.88:/[A-ZÄÖÜ]/u.test(ch)?.66:.55)*size,0);
+const quantile=values=>values.length?values.sort((a,b)=>a-b)[Math.floor((values.length-1)*.75)]:0;
+function profiles(section,size){
+ return section.columns.map((c,i)=>{
+  const contents=section.rows.map(row=>String(row[i]?.text||'')),typical=quantile(contents.filter(Boolean).map(v=>Math.max(...v.split(/\r?\n/).map(t=>extent(t,size))))),maximum=contents.reduce((n,v)=>Math.max(n,extent(v,size)),0),heading=extent(c.label,size),words=c.label.split(/[\s,–]+/u),longest=Math.max(...words.map(t=>extent(t,size)),0),scale=size/10;
+  let floor=48,cap=210;
+  if(c.label==='Schüler'){floor=108;cap=185;}
+  else if(c.type==='date'){floor=68;cap=80;}
+  else if(c.type==='grade'||c.type==='average'){floor=c.type==='average'?48:37;cap=92;}
+  else if(c.label==='Bezeichnung'){floor=105;cap=265;}
+  else if(c.label==='Bemerkung'){floor=125;cap=300;}
+  else if(c.label==='Gewichtung'){floor=65;cap=100;}
+  const minimum=Math.max(floor*scale,Math.min(longest*1.28+12,92*scale),Math.min(heading/5.5+12,170*scale));
+  const desired=Math.max(minimum,Math.min(cap*scale,Math.max(heading/2.8+12,typical+12,Math.min(maximum+12,typical*1.25+24))));
+  return {minimum,desired};
+ });
+}
+function distribute(profile,width){
+ const result=profile.map(p=>p.minimum);let remaining=width-result.reduce((a,b)=>a+b,0);
+ if(remaining<-.01)throw Error('Die Tabelle ist für dieses Seitenformat zu breit.');
+ const wants=profile.map((p,i)=>Math.max(0,p.desired-result[i])),total=wants.reduce((a,b)=>a+b,0);
+ if(total){const amount=Math.min(total,remaining);for(let i=0;i<result.length;i++)result[i]+=amount*wants[i]/total;remaining-=amount;}
+ if(remaining>0){const sum=profile.reduce((n,p)=>n+p.desired,0);for(let i=0;i<result.length;i++)result[i]+=remaining*profile[i].desired/sum;}
+ return result;
+}
+function documentSections(report){
+ return report.sections.map(original=>{
+  const index=original.columns.findIndex(c=>c.label==='Bemerkung');
+  if(index<0||!original.rows.some(row=>row[index].text.length>300))return original;
+  return {...original,columns:original.columns.filter((c,i)=>i!==index),rows:original.rows.map(row=>row.filter((c,i)=>i!==index)),paragraphs:[...(original.paragraphs||[]),...original.rows.filter(row=>row[index].text).map(row=>'Bemerkung – '+row.slice(0,Math.min(3,index)).map(c=>c.text).join(', ')+': '+row[index].text)]};
+ });
+}
+A.reportLayout=function(report){
+ const sections=documentSections(report),portrait=510,landscape=756;
+ // Prefer a comfortable portrait table; pupil reports retain their section layout.
+ const portraitFits=sections.every(s=>{const p=profiles(s,10);return p.reduce((n,c)=>n+(report.type==='pupil'?c.minimum:c.desired),0)<=portrait;});
+ const width=portraitFits?portrait:landscape,parts=[];
+ for(const section of sections){
+  let size=10,profile=profiles(section,size);
+  if(profile.reduce((n,c)=>n+c.minimum,0)>width){size=9;profile=profiles(section,size);}
+  if(profile.reduce((n,c)=>n+c.minimum,0)<=width+.01){parts.push({...section,fontSize:size,widths:distribute(profile,width),sourceIndices:section.columns.map((c,i)=>i)});continue;}
+  // Only real width pressure splits a matrix. Names/averages repeat; each
+  // performance column appears once, in its original order, at readable size.
+  const fixed=section.matrix?(section.fixed||1):1,groups=[];let start=fixed;
+  while(start<section.columns.length){
+   const indices=Array.from({length:fixed},(_,i)=>i);let used=indices.reduce((n,i)=>n+profile[i].minimum,0);
+   while(start<section.columns.length&&(used+profile[start].minimum<=width+.01||indices.length===fixed)){indices.push(start);used+=profile[start++].minimum;}
+   if(used>width+.01)throw Error('Die Tabelle enthält eine zu breite Spalte.');groups.push(indices);
+  }
+  for(let i=0;i<groups.length;i++){
+   const indices=groups[i],p=indices.map(n=>profile[n]);
+   parts.push({...section,breakBefore:i>0,title:(section.title||report.title)+' – Teil '+(i+1)+' von '+groups.length,columns:indices.map(n=>section.columns[n]),rows:section.rows.map(row=>indices.map(n=>row[n])),fontSize:size,widths:distribute(p,width),sourceIndices:indices,paragraphs:i===groups.length-1?section.paragraphs:[]});
+  }
+ }
+ return {landscape:!portraitFits,width,sections:parts};
+};
+A.reportTables=report=>A.reportLayout(report).sections;
+A.reportColumnWeights=s=>s.widths||profiles(s,s.fontSize||10).map(p=>p.desired);
+A.reportScopeDescription=function(report){
+ const all=report.scope==='Alle Einträge',n=report.type==='overview'||report.type==='matrix'?report.studentIds.length:report.recordIds.length,verb=n===1?'Es wird':'Es werden';
+ if(!n)return 'Es sind keine passenden '+(report.type==='oral-individual'?'Einzelnoten':report.type==='overview'||report.type==='matrix'?'Schüler':'Leistungen')+' vorhanden.';
+ if(report.type==='oral-individual')return verb+' '+(all&&n>1?'alle ':'')+n+' '+(n===1?'Einzelnote':'Einzelnoten')+' exportiert.';
+ if(report.type==='pupil')return verb+' '+n+' '+(n===1?'Leistung':'Leistungen')+(report.scope==='Nur Leistungen mit Eintrag'?' mit Eintrag':' für diesen Schüler')+' exportiert.';
+ if(report.type==='assessments')return verb+' '+(all&&n>1?'alle ':'')+n+' '+(!all&&n>1?'gefundene ':'')+(n===1?'Leistung':'Leistungen')+' exportiert.';
+ const prefix=verb+' '+(all&&n>1?'alle ':'')+n+' Schüler';
+ if(report.type==='overview'){const count=report.sections[0].columns.length-1;return prefix+' mit allen '+count+' Notenspalten exportiert.';}
+ const count=report.recordIds.length,labels={exam:['Klassenarbeit','Klassenarbeiten'],test:['Test','Tests'],oral:['mündlichen Bewertungsrunde','mündlichen Bewertungsrunden'],homework:['Hausaufgabe','Hausaufgaben'],notebook:['Heftbewertung','Heftbewertungen']},label=labels[report.kind]||['Leistung','Leistungen'];
+ return prefix+(count?' mit '+(count>1?'allen ':'')+count+' '+label[count===1?0:1]:' ohne '+label[1])+' exportiert.';
+};
 A.reportFilename=function(report,extension){const part=s=>String(s).normalize('NFKC').replace(/[^\p{L}\p{N}\p{M}_. -]/gu,'-').replace(/[<>:"/\\|?*\u0000-\u001f\u007f]/g,'-').replace(/[\s.]+$/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').slice(0,60)||'Bericht';return 'Notenblick_'+[report.year.replace(/^Schuljahr\s+/i,'').replace('/','-'),report.className,report.subject,report.student||report.title].map(part).join('_').slice(0,210).replace(/[. ]+$/,'')+'.'+extension;};
 })(globalThis.Notenblick);

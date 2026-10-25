@@ -1,6 +1,6 @@
 """Pinned, checksum-verified project-local SDK and locked test dependencies."""
 from pathlib import Path
-import hashlib, json, os, platform, shutil, subprocess, tarfile, urllib.request, zipfile
+import hashlib, json, os, platform, shutil, subprocess, sys, tarfile, urllib.request, zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT/'.tools'
@@ -72,6 +72,7 @@ def setup():
     if os.name != 'nt':
         for p in (ROOT/'.githooks').iterdir():
             p.chmod(0o755)
+    subprocess.run([sys.executable,str(ROOT/'dev/openxml-check.py'),'setup'],cwd=ROOT,env=env,check=True)
     print('Einrichtung vollständig. SDK, npm-Lockdatei und Chromium bereit.')
 
 if __name__ == '__main__':

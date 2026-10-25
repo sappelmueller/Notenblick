@@ -1,0 +1,563 @@
+{
+  "version": "1.11.0",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "status": "passed",
+  "all_steps_passed": true,
+  "windows_gui_tested": false,
+  "nvda_tested": false,
+  "github_actions_used": false,
+  "run": "20261025T210837108494Z",
+  "steps": [
+    {
+      "name": "Web-Programm erstellen",
+      "exit_code": 0,
+      "seconds": 0.03
+    },
+    {
+      "name": "Windows-Programm kompilieren",
+      "exit_code": 0,
+      "seconds": 2.11
+    },
+    {
+      "name": "Entwicklungsregressionen",
+      "exit_code": 0,
+      "seconds": 1.39
+    },
+    {
+      "name": "domain-storage",
+      "exit_code": 0,
+      "seconds": 0.82
+    },
+    {
+      "name": "transfers",
+      "exit_code": 0,
+      "seconds": 0.1
+    },
+    {
+      "name": "ui",
+      "exit_code": 0,
+      "seconds": 2.68
+    },
+    {
+      "name": "new-features",
+      "exit_code": 0,
+      "seconds": 1.13
+    },
+    {
+      "name": "v140",
+      "exit_code": 0,
+      "seconds": 3.35
+    },
+    {
+      "name": "v150",
+      "exit_code": 0,
+      "seconds": 3.92
+    },
+    {
+      "name": "v160",
+      "exit_code": 0,
+      "seconds": 1.29
+    },
+    {
+      "name": "v170",
+      "exit_code": 0,
+      "seconds": 1.83
+    },
+    {
+      "name": "v180",
+      "exit_code": 0,
+      "seconds": 1.92
+    },
+    {
+      "name": "v190",
+      "exit_code": 0,
+      "seconds": 2.34
+    },
+    {
+      "name": "v1100",
+      "exit_code": 0,
+      "seconds": 2.69
+    },
+    {
+      "name": "v1110",
+      "exit_code": 0,
+      "seconds": 1.43
+    },
+    {
+      "name": "Nativen Testhost erstellen",
+      "exit_code": 0,
+      "seconds": 1.92
+    },
+    {
+      "name": "view-storage",
+      "exit_code": 0,
+      "seconds": 0.98
+    },
+    {
+      "name": "v150-storage",
+      "exit_code": 0,
+      "seconds": 1.54
+    },
+    {
+      "name": "v160-storage",
+      "exit_code": 0,
+      "seconds": 1.63
+    },
+    {
+      "name": "v170-storage",
+      "exit_code": 0,
+      "seconds": 1.72
+    },
+    {
+      "name": "v180-storage",
+      "exit_code": 0,
+      "seconds": 1.91
+    },
+    {
+      "name": "v190-storage",
+      "exit_code": 0,
+      "seconds": 2.42
+    },
+    {
+      "name": "v1110-storage",
+      "exit_code": 0,
+      "seconds": 1.66
+    },
+    {
+      "name": "workflow",
+      "exit_code": 0,
+      "seconds": 4.16
+    },
+    {
+      "name": "Großer Datenbestand",
+      "exit_code": 0,
+      "seconds": 31.03
+    },
+    {
+      "name": "Produktiven Assembly-Lader prüfen",
+      "exit_code": 0,
+      "seconds": 1.92
+    },
+    {
+      "name": "browser",
+      "exit_code": 0,
+      "seconds": 28.7
+    },
+    {
+      "name": "v170-browser",
+      "exit_code": 0,
+      "seconds": 7.66
+    },
+    {
+      "name": "v180-browser",
+      "exit_code": 0,
+      "seconds": 14.62
+    },
+    {
+      "name": "v190-browser",
+      "exit_code": 0,
+      "seconds": 18.8
+    },
+    {
+      "name": "v1100-browser",
+      "exit_code": 0,
+      "seconds": 22.22
+    },
+    {
+      "name": "v1110-browser",
+      "exit_code": 0,
+      "seconds": 6.09
+    },
+    {
+      "name": "Exportdateien und PDF/UA prüfen",
+      "exit_code": 0,
+      "seconds": 20.23
+    },
+    {
+      "name": "Vollständige Office-Schemata prüfen",
+      "exit_code": 0,
+      "seconds": 4.63
+    },
+    {
+      "name": "Web-Programm erstellen",
+      "exit_code": 0,
+      "seconds": 0.03
+    },
+    {
+      "name": "Windows-Programm kompilieren",
+      "exit_code": 0,
+      "seconds": 1.88
+    },
+    {
+      "name": "Assembly-Lader nach Wiederholungsbuild",
+      "exit_code": 0,
+      "seconds": 2.0
+    },
+    {
+      "name": "ZIP-Archive vollständig erstellen",
+      "exit_code": 0,
+      "seconds": 2.46
+    },
+    {
+      "name": "Entpackte Auslieferung starten",
+      "exit_code": 0,
+      "seconds": 0.7
+    }
+  ],
+  "checks": {
+    "office-schema-results": {
+      "checks": [
+        "Open XML SDK 3.3.0: vollständige Office-2010-Schema- und semantische Paketvalidierung, 57 DOCX/XLSX, null Fehler",
+        "ZIP-Integrität, alle XML-Teile/Beziehungen, keine externen Ziele, lokale PAGE/NUMPAGES ohne Öffnungsaktualisierung, Raster/Zeilen/Abschnitte geprüft",
+        "Drei absichtlich beschädigte Tabellen-/Zeileneigenschaften werden vom vollständigen SDK-Validator abgewiesen"
+      ],
+      "sdk": {
+        "sdk": "3.3.0",
+        "format": "Office2010",
+        "results": [
+          {
+            "file": "assessments.docx",
+            "errors": []
+          },
+          {
+            "file": "assessments.xlsx",
+            "errors": []
+          },
+          {
+            "file": "browser-oral.docx",
+            "errors": []
+          },
+          {
+            "file": "browser-oral.xlsx",
+            "errors": []
+          },
+          {
+            "file": "exam.docx",
+            "errors": []
+          },
+          {
+            "file": "exam.xlsx",
+            "errors": []
+          },
+          {
+            "file": "historical.docx",
+            "errors": []
+          },
+          {
+            "file": "historical.xlsx",
+            "errors": []
+          },
+          {
+            "file": "homework.docx",
+            "errors": []
+          },
+          {
+            "file": "homework.xlsx",
+            "errors": []
+          },
+          {
+            "file": "metadata-special.docx",
+            "errors": []
+          },
+          {
+            "file": "metadata-special.xlsx",
+            "errors": []
+          },
+          {
+            "file": "notebook.docx",
+            "errors": []
+          },
+          {
+            "file": "notebook.xlsx",
+            "errors": []
+          },
+          {
+            "file": "oral-250.docx",
+            "errors": []
+          },
+          {
+            "file": "oral-250.xlsx",
+            "errors": []
+          },
+          {
+            "file": "oral.docx",
+            "errors": []
+          },
+          {
+            "file": "oral.xlsx",
+            "errors": []
+          },
+          {
+            "file": "overview.docx",
+            "errors": []
+          },
+          {
+            "file": "overview.xlsx",
+            "errors": []
+          },
+          {
+            "file": "pupil.docx",
+            "errors": []
+          },
+          {
+            "file": "pupil.xlsx",
+            "errors": []
+          },
+          {
+            "file": "schema-fixed.docx",
+            "errors": []
+          },
+          {
+            "file": "test.docx",
+            "errors": []
+          },
+          {
+            "file": "test.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-browser-overview.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-browser-overview.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-10.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-10.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-12.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-12.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-15.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-15.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-20.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-20.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-24.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-24.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-4.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-4.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-5.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-5.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-6.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-6.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-7.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-7.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-8.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-8.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-9.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-columns-9.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-long-8.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-long-8.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-narrow-15.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-narrow-15.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-pupil-date.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-pupil-date.xlsx",
+            "errors": []
+          },
+          {
+            "file": "v1110-remarks.docx",
+            "errors": []
+          },
+          {
+            "file": "v1110-remarks.xlsx",
+            "errors": []
+          }
+        ]
+      },
+      "wordLive": false,
+      "nvdaLive": false
+    },
+    "v1110-results": {
+      "checks": [
+        "4–24 Spalten: 7–10 gewöhnliche Spalten bleiben vollständig; jede Leistung einmal in Reihenfolge, mindestens 9 Punkt und unveränderte Daten",
+        "Inhaltsabhängigkeit: 15 kurze Spalten passen, acht sehr lange benötigen eine geeignete Teilung; keine starre Spaltenzahl",
+        "Umfangreiche Bemerkungen werden eindeutig zugeordnet und ohne doppelte Absätze ausgelagert",
+        "Dynamische Beschreibungen stimmen für gefilterte, vollständige und leere Berichte mit ihren tatsächlichen Anzahlen überein",
+        "Erstellen, Speichern, fehlender Speicherort und bewusstes Abbrechen werden getrennt und ohne interne Daten gemeldet",
+        "Nativer Speicherdialog besitzt keinen zweiminütigen Bedienungs-Timeout und überträgt sichere Fehlercodes",
+        "Alle Berichtstypen, Formatierungen und Fehlerfälle erhalten gespeicherte Noten und Ansichtseinstellungen"
+      ],
+      "syntheticOnly": true,
+      "windowsLive": false,
+      "wordLive": false,
+      "nvdaLive": false
+    },
+    "v1110-storage-results": {
+      "checks": [
+        "1.10.0 mit 250 Einzelnoten, 60 Schülern und historischen Bewertungen wird ohne Datenmigration bytegleich geöffnet",
+        "Gefilterte und vollständige Exporte aus Bildschirmseite fünf verändern weder alte Notendatei noch Gewichtungen, Status oder Teilnahme",
+        "Sicherung, Schutzstand vor Wiederherstellung und automatische TXT-Notenlisten erhalten alle historischen und aktuellen Datensätze"
+      ],
+      "platform": "Produktiver C#-Speicherkern unter .NET 8/Linux; kein Windows-Livetest"
+    },
+    "export-files-results": {
+      "checks": [
+        "assessments: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "exam: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "historical: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "homework: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "metadata-special: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "notebook: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "oral-250: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "oral: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "overview: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "pupil: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "test: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-columns-10: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-columns-12: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-columns-15: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-columns-20: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-columns-24: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-columns-4: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-columns-5: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-columns-6: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-columns-7: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-columns-8: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-columns-9: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-long-8: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-narrow-15: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-pupil-date: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "v1110-remarks: TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text",
+        "Tatsächlich gerenderte lange Einzelnotenliste im A4-Querformat",
+        "Tatsächlich gerenderter Chromium-Druck mit 7/8/10/20 Spalten: A4 quer und vollständiger Text, keine Bildschirmbegrenzung",
+        "veraPDF PDF/UA-1: 28 Dateien, keine verletzten maschinellen Regeln",
+        "Zentrale Buildversion stimmt mit Anwendung, Paketmetadaten, Starter und README überein"
+      ],
+      "verapdf": {
+        "releaseDetails": [
+          {
+            "id": "core",
+            "version": "1.30.3",
+            "buildDate": 1791381720000
+          },
+          {
+            "id": "validation-model",
+            "version": "1.30.3",
+            "buildDate": 1791395040000
+          },
+          {
+            "id": "apps",
+            "version": "1.30.3",
+            "buildDate": 1791395520000
+          }
+        ]
+      },
+      "windows": false,
+      "office": false,
+      "nvda": false,
+      "humanPdfUaCertification": false
+    },
+    "v1110-browser-results": {
+      "checks": [
+        "Erster leerer Start und Wiederöffnung: Versionszeile enthält genau einen Textknoten, keine nachfolgenden Zeichen oder Pseudoelemente",
+        "Acht Spalten, echte Word-/Excel-/PDF-Downloads, korrekte Schülerzahlen, Kontext und formatabhängiges Seitenformat",
+        "Acht zusammenhängende Druckspalten im tatsächlichen A4-Render; Inhalt bleibt bis afterprint bestehen und Fokus kehrt zurück",
+        "Tatsächlich gerenderter A4-Druck mit sieben, zehn und zwanzig Spalten enthält alle notwendigen Tabellenköpfe und Teile",
+        "Leistungssuche, Schülerfilter, leere Treffer und 250 Einzelnoten über alle Bildschirmseiten werden exakt beschrieben",
+        "Speichern-Abbruch bleibt fehlerfrei und fokussiert den Hauptschalter; Speicherortfehler enthält keine internen Daten",
+        "Escape während der Dateierstellung verhindert nachträgliche Downloads und beeinflusst keinen später geöffneten Dialog",
+        "Druckabbruch vor fertigen Schriften entfernt den temporären Inhalt und öffnet später keine Druckvorschau",
+        "Startseite mit vorhandenen synthetischen Daten bei 100/125/150/200 Prozent CSS-Zoom und drei Fensterbreiten: Effekt nicht reproduziert; kein Windows-Skalierungs- oder WebView2-Livetest",
+        "Historische Exporte, responsive Dialoge und axe ohne Verstöße; sämtliche gespeicherten Noten unverändert"
+      ],
+      "errors": [],
+      "violations": [],
+      "chromium": "156.0.8078.47",
+      "windowsLive": false,
+      "wordLive": false,
+      "nvdaLive": false,
+      "homeArtifactReproduced": false
+    }
+  },
+  "renderReview": {
+    "wordAndPdfPages": 57,
+    "chromiumPrintPages": 11,
+    "viewer": "LibreOffice / Poppler / actual Chromium print",
+    "wordLive": false,
+    "windowsLive": false,
+    "nvdaLive": false,
+    "physicalPrint": false
+  },
+  "sourceBaseCommit": "8c79c0f57392907ef37cf2d6b9b95810781cdac9"
+}

@@ -1,6 +1,6 @@
 # Notenblick
 
-Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.10.0**. Einheitliche Notenansichten und gemeinsame Offline-Berichte für Druck, PDF, Word, Excel, Text und CSV. Berechnungslogik und Datenformat bleiben erhalten.
+Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.11.0**. Verbesserte Word-Kompatibilität, inhaltsabhängige Dokumentlayouts und verständlicher Exportumfang. Einheitliche Notenansichten und gemeinsame Offline-Berichte für Druck, PDF, Word, Excel, Text und CSV. Berechnungslogik und Datenformat bleiben erhalten.
 
 ## Sofort weiterarbeiten
 

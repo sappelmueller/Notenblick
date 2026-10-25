@@ -1,9 +1,11 @@
-using System;using System.IO;using Newtonsoft.Json.Linq;using Notenblick.Native;
+using System;using System.IO;using System.IO.Compression;using System.Text;using Newtonsoft.Json.Linq;using Notenblick.Native;
 public static class ExportFilesProbe {
+ static byte[] ChangePart(byte[] original,string name,string value){using(var output=new MemoryStream()){using(var zip=new ZipArchive(output,ZipArchiveMode.Create,true))using(var input=new ZipArchive(new MemoryStream(original),ZipArchiveMode.Read)){foreach(var e in input.Entries){var entry=zip.CreateEntry(e.FullName);using(var target=entry.Open()){if(e.FullName==name){var data=Encoding.UTF8.GetBytes(value);target.Write(data,0,data.Length);}else using(var source=e.Open())source.CopyTo(target);}}}return output.ToArray();}}
+ static void Reject(byte[] bytes,string extension){bool rejected=false;try{ExportFiles.Decode(new JObject{{"dataBase64",Convert.ToBase64String(bytes)}},"Notenblick."+extension);}catch(InvalidDataException){rejected=true;}if(!rejected)throw new Exception("Damaged Office package accepted");}
  public static void Main(string[] args){
   int checks=0;var folder=args[0];Directory.CreateDirectory(folder);
   foreach(var ext in new[]{"txt","csv","json","pdf","docx","xlsx"}){
-   var bytes=ext=="pdf"?System.Text.Encoding.ASCII.GetBytes("%PDF-synthetic"):ext=="docx"||ext=="xlsx"?new byte[]{80,75,3,4,0,255,128,1}:System.Text.Encoding.UTF8.GetBytes("Synthetisch äöü\n");
+   var bytes=ext=="pdf"?System.Text.Encoding.ASCII.GetBytes("%PDF-synthetic"):ext=="docx"||ext=="xlsx"?File.ReadAllBytes(Path.Combine(args[1],"synthetic-export."+ext)):System.Text.Encoding.UTF8.GetBytes("Synthetisch äöü\n");
    var name=ExportFiles.FileName("Notenblick_Test."+ext);var decoded=ExportFiles.Decode(new JObject{{"dataBase64",Convert.ToBase64String(bytes)}},name);
    var path=Path.Combine(folder,name);ExportFiles.Write(path,decoded);ExportFiles.Write(path,decoded);
    if(Convert.ToBase64String(File.ReadAllBytes(path))!=Convert.ToBase64String(bytes))throw new Exception("Binary roundtrip");
@@ -11,6 +13,14 @@ public static class ExportFilesProbe {
   }
   foreach(var name in new[]{"../escape.pdf","bad.exe","bad/name.txt","bad\\name.txt","bad:filename.txt"}){bool rejected=false;try{ExportFiles.FileName(name);}catch{rejected=true;}if(!rejected)throw new Exception("Unsafe name accepted");checks++;}
   foreach(var ext in new[]{"pdf","docx","xlsx"}){bool rejected=false;try{ExportFiles.Decode(new JObject{{"dataBase64","YWJj"}},"Notenblick."+ext);}catch{rejected=true;}if(!rejected)throw new Exception("Invalid signature accepted");checks++;}
+  var office=File.ReadAllBytes(Path.Combine(args[1],"synthetic-export.docx"));var corrupt=(byte[])office.Clone();corrupt[55]^=1;Reject(corrupt,"docx");checks++;
+  Reject(new byte[]{80,75,3,4,0,255,128,1},"docx");checks++;
+  Reject(ChangePart(office,"word/document.xml","<broken>"),"docx");checks++;
+  Reject(ChangePart(office,"_rels/.rels","<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"remote\" Type=\"external\" Target=\"https://example.invalid/test\" TargetMode=\"External\"/></Relationships>"),"docx");checks++;
+  Reject(File.ReadAllBytes(Path.Combine(args[1],"synthetic-export.xlsx")),"docx");checks++;
+  var trailing=new byte[office.Length+1];Array.Copy(office,trailing,office.Length);Reject(trailing,"docx");checks++;
+  foreach(var e in new Exception[]{new DirectoryNotFoundException(),new DriveNotFoundException()}){if(ExportFiles.ErrorCode(e)!="export-location-unavailable")throw new Exception("Wrong location code");checks++;}
+  if(ExportFiles.ErrorCode(new UnauthorizedAccessException())!="export-permission")throw new Exception("Wrong permission code");checks++;
   // Existing full JSON backups must retain the storage core's 256 MiB limit.
   var large=ExportFiles.Decode(new JObject{{"text",new string('x',65*1024*1024)}},"Notenblick.json");if(large.Length!=65*1024*1024)throw new Exception("Legacy backup limit changed");checks++;
   foreach(var name in new[]{"notenverwaltung.json","Ansicht.json","wrong.pdf"}){bool rejected=false;try{ExportFiles.CheckDestination(Path.Combine(folder,name),"Notenblick.json",folder);}catch{rejected=true;}if(!rejected)throw new Exception("Protected destination accepted");checks++;}

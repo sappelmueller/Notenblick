@@ -28,3 +28,5 @@ notenverwaltung.json
 *.pem
 
 tests/exports/
+dev/openxml-validator/obj/
+dev/openxml-validator/bin/

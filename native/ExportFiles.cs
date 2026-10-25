@@ -30,8 +30,9 @@ namespace Notenblick.Native {
    else {var text=(string)request["text"];if(text==null)throw new InvalidDataException("Es wurden keine Dateiinhalte übergeben.");bytes=new UTF8Encoding(false,true).GetBytes(text);}
    if(bytes.Length==0||bytes.Length>MaximumBytes)throw new InvalidDataException("Ungültige Exportdateigröße.");
    var ext=Path.GetExtension(name).ToLowerInvariant();if(ext==".pdf"&&(bytes.Length<5||Encoding.ASCII.GetString(bytes,0,5)!="%PDF-"))throw new InvalidDataException("Ungültige PDF-Datei.");
-   if((ext==".docx"||ext==".xlsx")&&(bytes.Length<4||bytes[0]!=80||bytes[1]!=75||bytes[2]!=3||bytes[3]!=4))throw new InvalidDataException("Ungültige Office-Datei.");return bytes;
+   if(ext==".docx"||ext==".xlsx")OfficePackage.Validate(bytes,ext);return bytes;
   }
+  public static string ErrorCode(Exception error){return error is DirectoryNotFoundException||error is DriveNotFoundException?"export-location-unavailable":error is UnauthorizedAccessException||error is System.Security.SecurityException?"export-permission":"export-save-failed";}
   public static void Write(string destination,byte[] bytes){
    var path=Path.GetFullPath(destination);var directory=Path.GetDirectoryName(path);if(!Directory.Exists(directory))throw new DirectoryNotFoundException("Der Zielordner ist nicht verfügbar.");
    var temporary=Path.Combine(directory,".Notenblick-Export-"+Guid.NewGuid().ToString("N")+".tmp");

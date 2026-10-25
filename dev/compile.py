@@ -7,13 +7,13 @@ version=json.loads((r/'package.json').read_text())['version']
 for name in ['Launcher.cs','ProgramLibraries.cs','app.manifest']:
  (generated_root/name).write_text((r/'native'/name).read_text().replace('@ASSEMBLY_VERSION@',version+'.0').replace('@VERSION@',version))
 compiler=resolve_compiler()+['-nologo','-noconfig','-nostdlib+','-deterministic+','-optimize+','-langversion:latest','-pathmap:'+str(r)+'=/notenblick']
-ref=['-r:'+str(refs/(x+'.dll')) for x in ['mscorlib','System','System.Core','System.Drawing','System.Windows.Forms','System.IO.Compression']]
+ref=['-r:'+str(refs/(x+'.dll')) for x in ['mscorlib','System','System.Core','System.Drawing','System.Windows.Forms','System.IO.Compression','System.Xml']]
 newton=dev/'newtonsoft.json/lib/net45/Newtonsoft.Json.dll'
 def compile(name,files,extra=[],exe=False):
  dest=(r/'dist'/name) if exe else dll/name
  args=compiler+ref+['-target:'+('winexe' if exe else 'library'),'-out:'+str(dest)]+(['-win32manifest:'+str(generated_root/'app.manifest'),'-win32icon:'+str(r/'native/Notenblick.ico'),'-platform:anycpu'] if exe else [])+extra+[str((generated_root if x.startswith('Release') or x in ['Launcher.cs','ProgramLibraries.cs'] else r/'native')/x) for x in files]
  subprocess.run(args,check=True)
-compile('Notenblick.Speicherung.dll',['Storage.cs','Migration.cs','ExportFiles.cs'],['-r:'+str(newton)])
+compile('Notenblick.Speicherung.dll',['Storage.cs','Migration.cs','ExportFiles.cs','OfficePackage.cs'],['-r:'+str(newton)])
 compile('Notenblick.Fenster.dll',['Window.cs'],['-r:'+str(newton),'-r:'+str(dll/'Notenblick.Speicherung.dll')]+['-r:'+str(wv/'lib/net462'/x) for x in ['Microsoft.Web.WebView2.Core.dll','Microsoft.Web.WebView2.WinForms.dll']])
 names=['Newtonsoft.Json','Microsoft.Web.WebView2.Core','Microsoft.Web.WebView2.WinForms','Notenblick.Speicherung','Notenblick.Fenster']
 for f in [newton,wv/'lib/net462/Microsoft.Web.WebView2.Core.dll',wv/'lib/net462/Microsoft.Web.WebView2.WinForms.dll']:shutil.copy2(f,dll/f.name)

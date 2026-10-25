@@ -1,4 +1,4 @@
-# Exportentwicklung und Prüfgrenzen – 1.10.0
+# Exportentwicklung und Prüfgrenzen – 1.11.0
 
 Alle Ausgaben werden im Programm lokal erzeugt. Für die Dateierstellung braucht Windows weder Python, Java, Office noch einen PDF-Drucker. Mitgeliefert werden PDFKit 0.20.2 (MIT) und DejaVu Sans einschließlich Lizenzen und ergänzenden Drittbibliotheks-Hinweisen. Die unveränderten Bibliotheksdateien und Schriftdateien sind in `dev/export-assets-lock.json` mit SHA-256 gesperrt.
 
@@ -12,9 +12,19 @@ Alle Ausgaben werden im Programm lokal erzeugt. Für die Dateierstellung braucht
 
 `tests/v1100.cjs` erstellt ausschließlich synthetische Berichte und echte Dateien unter dem ignorierten Ordner `tests/exports`. `tests/v1100-browser.cjs` prüft tatsächliche Chromium-Downloads, Dialoge, Fokus, Abbruch, responsive Darstellung und Druck-HTML. `tests/export-files.py` öffnet DOCX/XLSX/PDF mit unabhängigen Lesern, vergleicht Inhalte mit dem Berichtsmodell, prüft CSV-Struktur und führt veraPDF für alle Berichtstypen aus. Die nativen Exporttests kompilieren den produktiven C#-Helfer und prüfen Binärdaten, Formatfilter, abgewiesene Dateinamen und atomaren Ersatz.
 
+## Word- und Paketvalidierung
+
+`setup` richtet zusätzlich Microsoft Open XML SDK 3.3.0 als reines Entwicklungsprüfwerkzeug ein. Die drei offiziellen NuGet-Pakete sind mit Versionen, NuGet-Abhängigkeitssperre und SHA-256 der Archive unter `dev/openxml-validator` festgelegt. Der Compiler und die .NET-Referenzen stammen aus dem bestehenden gesperrten SDK. `python3 dev/openxml-check.py setup` darf die Pakete einmalig laden; spätere Validierungen laufen aus dem geprüften lokalen Cache offline. Open XML SDK und System.IO.Packaging stehen unter MIT (Projektquellen: https://github.com/dotnet/Open-XML-SDK und https://github.com/dotnet/runtime). Das Werkzeug und seine Abhängigkeiten werden nicht mit der Windows-Anwendung ausgeliefert.
+
+`tests/office-schema.py` verwendet `OpenXmlValidator` für sämtliche erzeugten DOCX-/XLSX-Pakete und alle Teile, einschließlich semantischer Beziehungen. Zusätzliche unabhängige XML-/ZIP-Prüfungen kontrollieren CRC, interne Ziele, Tabellenraster, Zeileneigenschaften, Sprache, A4-Abschnitte und ausschließlich lokale PAGE-/NUMPAGES-Felder ohne `updateFields`. Absichtlich fehlerhafte Pakete müssen abgewiesen werden. Die Anwendung selbst prüft Office-Pakete vor Speicherung auf vollständige ZIP-/CRC-/XML-Integrität und lokale Beziehungen, benötigt dabei keine zusätzlichen Office-Bibliotheken.
+
+`tests/v1110.cjs` ergänzt 4/5/6/7/8/9/10/12/15/20/24 Spalten, sehr kurze und sehr lange Inhalte, mindestens 9 Punkt sowie fehlerfreie unveränderte Daten. `tests/v1110-browser.cjs` prüft echte Downloads, dynamische Anzahlen, alle sechs Formate, Abbruch während der Erstellung, Seitenformat und Startseiten-DOM bei neuen/vorhandenen synthetischen Daten und verschiedenen CSS-Zoomstufen. `tests/v1110-storage.cjs` prüft das bytegleiche Öffnen von 1.10.0 sowie Exporte, Sicherung und Wiederherstellung.
+
+Eine vollständige SDK-Validierung ist kein Microsoft-Word-Livetest. LibreOffice-Render und lokale Feldberechnung bestätigen die Darstellung in LibreOffice; die Abwesenheit einer Word-Warnmeldung muss zusätzlich unter echtem Word geprüft werden. Die frühere Zeileneigenschaftsreihenfolge wird vom SDK akzeptiert; die Ausgabe verwendet nun konsistent `cantSplit` vor `tblHeader` und prüft beide Funktionen ausdrücklich.
+
 ## PDF-Details
 
-PDFs enthalten eingebettete Schriften, ToUnicode-Zuordnung, Titel, deutsche Dokumentsprache, H1/H2, Table/TR/TH/TD, Spalten-/Zeilenbezug und als Artefakte ausgezeichnete Linien, wiederholte Köpfe und Seitenfüße. Text bleibt auswählbar. Lesereihenfolge folgt dem Berichtsmodell. Sehr breite Matrizen werden in Spaltengruppen aufgeteilt; lange Bemerkungen erscheinen in zugeordneten Absätzen.
+PDFs enthalten eingebettete Schriften, ToUnicode-Zuordnung, Titel, deutsche Dokumentsprache, H1/H2, Table/TR/TH/TD, Spalten-/Zeilenbezug und als Artefakte ausgezeichnete Linien, wiederholte Köpfe und Seitenfüße. Text bleibt auswählbar. Lesereihenfolge folgt dem Berichtsmodell. Die zentrale Layoutplanung schätzt Mindest- und Wunschbreiten anhand von Spaltenart, Überschrift und typischen/tatsächlichen Zellinhalten. Hochformat wird vor Querformat geprüft; 10 beziehungsweise mindestens 9 Punkt. Erst tatsächlicher Platzmangel teilt Matrizen in verständlich benannte Teile mit wiederholten Namen und Durchschnitten; lange Bemerkungen erscheinen in zugeordneten Absätzen.
 
 Der PDF/UA-Preset von PDFKit 0.20.2 erzeugt eine unvollständige optionale CIDSet-Angabe. Der Export lässt diese nach PDF/UA-1 zulässigerweise weg und verwendet die öffentliche XMP-Schnittstelle für die UA-Identifikation. Zusätzlich maskiert ein schmaler Adapter die vom Bibliotheksserializer unmaskiert interpolierten Metadaten. Die Bibliotheksdatei selbst bleibt unverändert. Regressionen prüfen Sonderzeichen sowie veraPDF PDF/UA-1.
 

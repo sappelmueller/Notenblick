@@ -20,7 +20,11 @@
  #printOutput h2{font-size:13pt;color:#235b47;margin:7mm 0 3mm;break-after:avoid}
  #printOutput .report-meta{font-size:11pt;margin:0 0 2mm}#printOutput .report-date{font-size:9pt;color:#444;margin:0 0 6mm}
  #printOutput table{width:100%;border-collapse:collapse;table-layout:fixed;margin-bottom:5mm;font-size:10pt}
- #printOutput th,#printOutput td{white-space:pre-wrap;overflow-wrap:anywhere;max-width:none;min-width:0;padding:2.5mm;border:1px solid #aebcb3;vertical-align:top}
- #printOutput thead th{background:#e9f1ec;color:#111;font-weight:700;font-size:9.5pt}#printOutput tbody th{font-weight:600}
- #printOutput thead{display:table-header-group}#printOutput tr{break-inside:avoid}#printOutput table+h2{break-before:auto}
+ #printOutput th,#printOutput td{white-space:pre-wrap;overflow-wrap:anywhere;max-width:none;min-width:0;padding:1.8mm 1.5mm;line-height:1.3;border:1px solid #aebcb3;vertical-align:top}
+ #printOutput thead th{background:#e9f1ec;color:#111;font-weight:700;font-size:inherit}#printOutput tbody th{font-weight:600}
+ #printOutput thead{display:table-header-group}#printOutput tr{break-inside:avoid}#printOutput table+h2{break-before:auto}#printOutput h2.report-part{break-before:page}
 }
+
+@media print{#printOutput .report-description{font-size:9pt;margin:0 0 3mm;break-after:avoid}#printOutput .report-note{white-space:pre-wrap;orphans:2;widows:2}}
+
+.export-page{margin:0;display:flex;flex-wrap:wrap;gap:5px 14px;font-size:.9rem}.export-page strong{font-weight:600}.export-page[hidden]{display:none}
