@@ -1,0 +1,289 @@
+{
+  "version": "1.13.0",
+  "utc": "2026-10-26T20:10:03.558476+00:00",
+  "repository": {
+    "full_name": "sappelmueller/Notenblick",
+    "id": 1432518047,
+    "private": true,
+    "branch": "main",
+    "base_commit": "7e928f6580e13496047a8334bbf825fa648cb188",
+    "base_tree": "48149adb20321080c741f20890fda5410196f171",
+    "actions_enabled": false
+  },
+  "release": {
+    "command": "python3 dev/manage.py release",
+    "status": "passed",
+    "steps": [
+      {
+        "name": "Web-Programm erstellen",
+        "exit_code": 0,
+        "seconds": 0.05
+      },
+      {
+        "name": "Windows-Programm kompilieren",
+        "exit_code": 0,
+        "seconds": 2.18
+      },
+      {
+        "name": "Entwicklungsregressionen",
+        "exit_code": 0,
+        "seconds": 1.45
+      },
+      {
+        "name": "domain-storage",
+        "exit_code": 0,
+        "seconds": 0.98
+      },
+      {
+        "name": "transfers",
+        "exit_code": 0,
+        "seconds": 0.09
+      },
+      {
+        "name": "ui",
+        "exit_code": 0,
+        "seconds": 3.33
+      },
+      {
+        "name": "new-features",
+        "exit_code": 0,
+        "seconds": 1.17
+      },
+      {
+        "name": "v140",
+        "exit_code": 0,
+        "seconds": 3.68
+      },
+      {
+        "name": "v150",
+        "exit_code": 0,
+        "seconds": 4.16
+      },
+      {
+        "name": "v160",
+        "exit_code": 0,
+        "seconds": 1.44
+      },
+      {
+        "name": "v170",
+        "exit_code": 0,
+        "seconds": 2.07
+      },
+      {
+        "name": "v180",
+        "exit_code": 0,
+        "seconds": 2.12
+      },
+      {
+        "name": "v190",
+        "exit_code": 0,
+        "seconds": 2.73
+      },
+      {
+        "name": "v1100",
+        "exit_code": 0,
+        "seconds": 2.94
+      },
+      {
+        "name": "v1110",
+        "exit_code": 0,
+        "seconds": 1.75
+      },
+      {
+        "name": "v1120",
+        "exit_code": 0,
+        "seconds": 21.48
+      },
+      {
+        "name": "v1130",
+        "exit_code": 0,
+        "seconds": 2.57
+      },
+      {
+        "name": "Nativen Testhost erstellen",
+        "exit_code": 0,
+        "seconds": 2.19
+      },
+      {
+        "name": "view-storage",
+        "exit_code": 0,
+        "seconds": 1.08
+      },
+      {
+        "name": "v150-storage",
+        "exit_code": 0,
+        "seconds": 1.71
+      },
+      {
+        "name": "v160-storage",
+        "exit_code": 0,
+        "seconds": 1.77
+      },
+      {
+        "name": "v170-storage",
+        "exit_code": 0,
+        "seconds": 1.78
+      },
+      {
+        "name": "v180-storage",
+        "exit_code": 0,
+        "seconds": 1.98
+      },
+      {
+        "name": "v190-storage",
+        "exit_code": 0,
+        "seconds": 2.81
+      },
+      {
+        "name": "v1110-storage",
+        "exit_code": 0,
+        "seconds": 1.72
+      },
+      {
+        "name": "v1120-storage",
+        "exit_code": 0,
+        "seconds": 2.26
+      },
+      {
+        "name": "v1130-storage",
+        "exit_code": 0,
+        "seconds": 2.41
+      },
+      {
+        "name": "workflow",
+        "exit_code": 0,
+        "seconds": 4.39
+      },
+      {
+        "name": "Großer Datenbestand",
+        "exit_code": 0,
+        "seconds": 47.24
+      },
+      {
+        "name": "Produktiven Assembly-Lader prüfen",
+        "exit_code": 0,
+        "seconds": 3.01
+      },
+      {
+        "name": "browser",
+        "exit_code": 0,
+        "seconds": 35.85
+      },
+      {
+        "name": "v170-browser",
+        "exit_code": 0,
+        "seconds": 9.52
+      },
+      {
+        "name": "v180-browser",
+        "exit_code": 0,
+        "seconds": 16.07
+      },
+      {
+        "name": "v190-browser",
+        "exit_code": 0,
+        "seconds": 23.38
+      },
+      {
+        "name": "v1100-browser",
+        "exit_code": 0,
+        "seconds": 26.36
+      },
+      {
+        "name": "v1110-browser",
+        "exit_code": 0,
+        "seconds": 6.95
+      },
+      {
+        "name": "v1120-browser",
+        "exit_code": 0,
+        "seconds": 7.75
+      },
+      {
+        "name": "v1130-browser",
+        "exit_code": 0,
+        "seconds": 5.76
+      },
+      {
+        "name": "Exportdateien und PDF/UA prüfen",
+        "exit_code": 0,
+        "seconds": 21.7
+      },
+      {
+        "name": "Vollständige Office-Schemata prüfen",
+        "exit_code": 0,
+        "seconds": 5.09
+      },
+      {
+        "name": "Sammelexporte und gerenderte Fortsetzungsseiten prüfen",
+        "exit_code": 0,
+        "seconds": 60.95
+      },
+      {
+        "name": "Klassendurchschnitte und Druckseiten unabhängig lesen",
+        "exit_code": 0,
+        "seconds": 10.05
+      },
+      {
+        "name": "Web-Programm erstellen",
+        "exit_code": 0,
+        "seconds": 0.03
+      },
+      {
+        "name": "Windows-Programm kompilieren",
+        "exit_code": 0,
+        "seconds": 2.04
+      },
+      {
+        "name": "Assembly-Lader nach Wiederholungsbuild",
+        "exit_code": 0,
+        "seconds": 2.22
+      },
+      {
+        "name": "ZIP-Archive vollständig erstellen",
+        "exit_code": 0,
+        "seconds": 2.72
+      },
+      {
+        "name": "Entpackte Auslieferung starten",
+        "exit_code": 0,
+        "seconds": 0.78
+      }
+    ],
+    "byte_identical_rebuild": true,
+    "extracted_package_linux_testhost_passed": true
+  },
+  "exports": {
+    "new_report_cases": 23,
+    "new_rendered_pages": 128,
+    "new_table_continuations": 59,
+    "render_matrix_pages": 886,
+    "render_matrix_table_continuations": 703,
+    "office_schema_valid_files": 498,
+    "pdf_ua_machine_valid_files": 268,
+    "independently_read_batch_reports": 905,
+    "batch_archives": 26,
+    "new_file_checks": [
+      "23 Berichte in allen sechs Formen: unabhängige Werteprüfung, Klassenbasis, genau eine Ergebniszeile je Tabelle, echte Excel-Zahlen/Drucktitel und eine CSV-Kopfzeile",
+      "128 echte PDF-/Chromium-/LibreOffice-Seiten, 59 Tabellenfortsetzungen: vollständige Köpfe, Hoch/Quer, Seitenzahlen, Ergebniswerte und Textgrenzen",
+      "Open XML SDK 3.3.0: 46 vollständige DOCX/XLSX-Pakete, null Schemafehler; Word-Felder/Beziehungen und wiederholte Köpfe zusätzlich geprüft",
+      "veraPDF 1.30.3 PDF/UA-1: 23 native PDFs ohne verletzte maschinelle Regeln; Ergebniszeile als TH/TD im bestehenden Tabellenbaum"
+    ]
+  },
+  "limits": {
+    "windows_live_tested": false,
+    "webview2_print_dialog_live_tested": false,
+    "microsoft_office_live_tested": false,
+    "nvda_live_tested": false,
+    "physical_print_tested": false,
+    "showprintui_accepts_printsettings": false,
+    "human_pdf_ua_certification": false,
+    "release_status": "development_candidate"
+  },
+  "data": {
+    "synthetic_only": true,
+    "frozen_calculation_and_storage_modules_unchanged": true,
+    "existing_1120_file_unchanged_after_exports": true,
+    "runtime_archive_includes_user_data": false
+  }
+}

@@ -1,3 +1,11 @@
+# Notenblick 1.13.0
+
+- Schülerexport: beide Ausgabeoptionen haben eine sichtbare, dynamisch zugeordnete Erklärung. Die tatsächliche ZIP-Berichtszahl bleibt erhalten; kein zusätzlicher Live-Bereich oder Fokuswechsel.
+- Drucken: vorhandene A4-Ausrichtung aus der gemeinsamen Seitenplanung, ausdrücklicher Aufruf der WebView2-Browser-Druckvorschau, Fallback für ältere Laufzeiten und kurze Empfehlung im Exportdialog. Druckvorschau und Druckerauswahl bleiben erhalten; keine stille Ausgabe. ShowPrintUI kann keine PrintSettings entgegennehmen, deshalb bleibt die tatsächliche Windows-Vorbelegung manuell zu prüfen.
+- Klassendurchschnitt als dezente letzte Ergebniszeile in passenden Klassen-Notenübersichten in Word, PDF, Druck, Excel, CSV und Text. Gemeinsame zentrale Grundlage mit der Bildschirmansicht: alle aktiven Fachteilnehmer, unabhängig von Suche und Exportumfang; fehlende Noten bleiben fehlend, Zeugnisnote bleibt „–“. Grundlage wird erklärt; Excel enthält echte Zahlen, CSV weiterhin genau eine Kopfzeile.
+- Ergebniszeile bleibt nach Möglichkeit beim letzten Schüler; wiederholte Tabellenköpfe und statische Fortsetzungsköpfe bleiben erhalten. Unveränderte sichere PAGE-/NUMPAGES-Felder, keine globale Word-Feldaktualisierung oder externen Verknüpfungen.
+- Gezielte Regressions-, Update-, Accessibility-, Schema-, PDF/UA- und Renderprüfungen ergänzt. Keine Änderung am Notendatenformat, den mathematischen Domänenmodulen oder der produktiven Datenspeicherung. Windows/WebView2/Office/NVDA und physischer Druck bleiben gesonderte manuelle Abnahmen.
+
 # Notenblick 1.12.0
 
 - Schüleransicht: ausgewählten Schüler oder alle aktiven Schüler einzeln exportieren. PDF, Word, Excel, Text oder CSV werden pro Schüler als eigene Datei in einem ZIP gespeichert. Ausgeschiedene Schüler nur auf Wunsch; historische Fachzuordnungen bleiben erhalten.

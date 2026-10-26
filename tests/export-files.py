@@ -14,7 +14,7 @@ for model in reports:
     text=stem.with_suffix('.txt').read_text(encoding='utf-8-sig')
     assert report['title'] in text and report['year'] in text
     with stem.with_suffix('.csv').open(encoding='utf-8-sig',newline='') as f: rows=list(csv.reader(f,delimiter=';'))
-    assert len(rows)==1+sum(len(s['rows']) for s in report['sections'])
+    assert len(rows)==1+sum(len(s['rows'])+bool(s.get('footer')) for s in report['sections'])
     assert all(len(row)==len(rows[0]) for row in rows)
     doc=Document(stem.with_suffix('.docx'))
     assert any(p.style.name=='Heading 1' and p.text==report['title'] for p in doc.paragraphs)

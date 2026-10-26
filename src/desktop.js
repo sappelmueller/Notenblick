@@ -23,8 +23,8 @@
     if (!channel) return Promise.reject(Error('Bitte starte Notenblick.exe.'));
     const id = session + '-' + (++sequence);
     return new Promise((resolve, reject) => {
-      // The user may need more than two minutes in a native save dialog.
-      const timer = op==='download'?null:setTimeout(() => {
+      // Native save/print UI may remain open for more than two minutes.
+      const timer = op==='download'||op==='print-preview'?null:setTimeout(() => {
         pending.delete(id);
         reject(Error('Das Speichern dauert länger als erwartet. Deine Eingaben bleiben geöffnet.'));
       }, op.startsWith('migration') ? 300000 : 120000);
