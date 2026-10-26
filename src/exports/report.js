@@ -17,6 +17,17 @@ A.exportContext=function(requested){
  return {type,kind:chosen,courseId:A.ui.course,studentId:w.pupil,w,prefs:A.N.clone(A.prefs)};
 };
 A.reportTitle=ctx=>ctx.type==='overview'?'Notenübersicht':ctx.type==='pupil'?'Schülernoten':ctx.type==='oral-individual'?'Mündliche Einzelnoten':ctx.kind==='oral'?'Mündliche Klassenübersicht':ctx.type==='assessments'&&ctx.kind==='all'?'Leistungen':A.N.KINDS[ctx.kind]||'Leistungen';
+A.reportOrientation=r=>'Notenblick · '+r.subject+' · '+r.className+' · '+r.year.replace(/^Schuljahr\s+/i,'');
+A.reportGroupingDescription=grouping=>grouping==='date'?'Alle Einzelnoten werden gemeinsam nach Datum sortiert, neueste zuerst.':'Die Einzelnoten werden nach Leistungsarten gruppiert, innerhalb der Gruppen neueste zuerst.';
+A.batchStudents=function(ctx,includeExited=false){
+ const course=A.data.courses.find(c=>c.id===ctx.courseId);if(!course)throw Error('Das gewählte Fach ist nicht mehr vorhanden.');
+ return A.N.sorted(A.N.activeStudents(A.data,course,includeExited),ctx.prefs.sortBy,ctx.prefs.sortDir);
+};
+A.batchEntryName=function(student,extension,used){
+ let base=(student.first+'_'+student.last).normalize('NFKC').replace(/[<>:"/\\|?*\u0000-\u001f\u007f]/g,'_').replace(/[\s.]+/g,'_').replace(/^_+|_+$/g,'').slice(0,100)||'Schueler';
+ if(/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(base))base='Schueler_'+base;
+ let name=base+'.'+extension,n=1;while(used.has(name.toLocaleLowerCase('de')))name=base+'_'+(++n)+'.'+extension;used.add(name.toLocaleLowerCase('de'));return name;
+};
 A.buildReport=function(ctx,options={}){
  const d=A.data,c=d.courses.find(c=>c.id===ctx.courseId);if(!c)throw Error('Das gewählte Fach ist nicht mehr vorhanden.');
  const cl=d.classes.find(x=>x.id===c.classId),year=d.years.find(y=>y.id===cl.yearId),w=ctx.w,prefs=ctx.prefs,all=options.scope==='all',remarks=options.remarks??ctx.type==='pupil',grouping=options.grouping||prefs.pupilOrder||'kind',name=s=>A.N.name(s,prefs.nameFormat),sorted=list=>A.N.sorted(list,prefs.sortBy,prefs.sortDir),cache=new Map();
@@ -64,7 +75,7 @@ function profiles(section,size){
   const contents=section.rows.map(row=>String(row[i]?.text||'')),typical=quantile(contents.filter(Boolean).map(v=>Math.max(...v.split(/\r?\n/).map(t=>extent(t,size))))),maximum=contents.reduce((n,v)=>Math.max(n,extent(v,size)),0),heading=extent(c.label,size),words=c.label.split(/[\s,–]+/u),longest=Math.max(...words.map(t=>extent(t,size)),0),scale=size/10;
   let floor=48,cap=210;
   if(c.label==='Schüler'){floor=108;cap=185;}
-  else if(c.type==='date'){floor=68;cap=80;}
+  else if(c.type==='date'){floor=72;cap=84;}
   else if(c.type==='grade'||c.type==='average'){floor=c.type==='average'?48:37;cap=92;}
   else if(c.label==='Bezeichnung'){floor=105;cap=265;}
   else if(c.label==='Bemerkung'){floor=125;cap=300;}

@@ -1,4 +1,4 @@
-# Exportentwicklung und Prüfgrenzen – 1.11.0
+# Exportentwicklung und Prüfgrenzen – 1.12.0
 
 Alle Ausgaben werden im Programm lokal erzeugt. Für die Dateierstellung braucht Windows weder Python, Java, Office noch einen PDF-Drucker. Mitgeliefert werden PDFKit 0.20.2 (MIT) und DejaVu Sans einschließlich Lizenzen und ergänzenden Drittbibliotheks-Hinweisen. Die unveränderten Bibliotheksdateien und Schriftdateien sind in `dev/export-assets-lock.json` mit SHA-256 gesperrt.
 
@@ -33,3 +33,13 @@ Ein anfänglicher Metadatenfehler trat im jsdom-Testhost durch einen fremden Typ
 ## Weiterhin erforderliche manuelle Abnahme
 
 Automatische PDF/UA-Regeln ersetzen keine menschliche Prüfung von Tabellenverständlichkeit, Lesereihenfolge und NVDA-Navigation. Tatsächliche Windows-x64-/ARM64-Starts, WebView2-Speicherdialoge einschließlich Überschreiben/Abbruch, NVDA mit Word/Excel/Adobe Reader und physische A4-/Schwarz-Weiß-Drucke müssen unter Windows abgenommen werden. Linux-/Chromium- und LibreOffice-Renderprüfungen sind keine solchen Livetests. Die Auslieferung ist bis zu dieser Abnahme ein Entwicklungskandidat.
+
+## Ergänzungen 1.12.0
+
+`tests/v1120.cjs` erzeugt Sammelexporte für 1/10/28/40/100 Schüler in allen fünf Dateiformaten sowie 38 mehrseitige Word-/PDF-Testfälle. `tests/v1120-browser.cjs` prüft echte ZIP-Downloads, Auswahl, Abbruch während der Erstellung, Fokus, axe, Dialogskalierung und gerenderte Druckseiten. `tests/v1120-files.py` liest jede Archivdatei unabhängig, führt vollständige Open-XML- und veraPDF-Prüfungen aus und kontrolliert jede tatsächlich gerenderte Tabellen-Fortsetzungsseite in PDF, Chromium-Druck und LibreOffice. Die Prüfmatrix umfasst 10/20/28/40/60 Schüler, 3/7/8/10/15/24 Spalten und umfangreiche Schülerberichte in acht Optionskombinationen. Kein Test zählt nur CSS beziehungsweise `tblHeader` als Rendernachweis.
+
+Der Seitenprüflauf benötigt LibreOffice. `NOTENBLICK_LIBREOFFICE` kann auf das lokale `soffice` zeigen; in der primären Codex-Laufzeit wird deren gebündelter Renderer automatisch verwendet. Die Prüfung verwendet isolierte Profile und beschreibbare HOME-/XDG-Verzeichnisse. Die Renderer und Prüfabhängigkeiten sind ausschließlich Entwicklungswerkzeuge und werden nicht in die Windows-Anwendung aufgenommen.
+
+Die gemeinsame ZIP-Komponente wird auch für OOXML weiterverwendet. Sammelexporte behalten binäre Einträge als Chunks bis zur Blob-Erstellung; es wird keine zweite vollständige JavaScript-Archivkopie angelegt. Der native Kanal verarbeitet maximal 64 MiB für ZIP (bestehende JSON-Sicherungsgrenze weiterhin 256 MiB). Vor dem Speichern werden Archivverzeichnis, CRC, Dateinamen, einheitliches Format und die enthaltenen Office-Pakete einzeln geprüft. Native Übergabe und atomare Speicherung benötigen keine neuen temporären Schülerdateien.
+
+Word-Kopfzeilen enthalten ausschließlich statischen Text. Die erste Kopfzeile bleibt leer; der vollständige Berichtskopf steht weiterhin im Dokument. Fortsetzungsseiten tragen die kurze Orientierung. Erste und folgende Fußzeilen verwenden dieselben bisherigen PAGE-/NUMPAGES-Felder, ohne globale Feldaktualisierung oder externe Beziehungen. PDF-Wiederholungen und Seitendekoration sind Artefakte; die eigentlichen Spaltenköpfe bleiben semantische TH-Zellen. Druck verwendet wiederholtes `thead` und Chromium-Seitenränder. Excel-Drucktitel und genau eine CSV-Kopfzeile bleiben unverändert.

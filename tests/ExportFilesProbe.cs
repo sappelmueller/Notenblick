@@ -4,8 +4,8 @@ public static class ExportFilesProbe {
  static void Reject(byte[] bytes,string extension){bool rejected=false;try{ExportFiles.Decode(new JObject{{"dataBase64",Convert.ToBase64String(bytes)}},"Notenblick."+extension);}catch(InvalidDataException){rejected=true;}if(!rejected)throw new Exception("Damaged Office package accepted");}
  public static void Main(string[] args){
   int checks=0;var folder=args[0];Directory.CreateDirectory(folder);
-  foreach(var ext in new[]{"txt","csv","json","pdf","docx","xlsx"}){
-   var bytes=ext=="pdf"?System.Text.Encoding.ASCII.GetBytes("%PDF-synthetic"):ext=="docx"||ext=="xlsx"?File.ReadAllBytes(Path.Combine(args[1],"synthetic-export."+ext)):System.Text.Encoding.UTF8.GetBytes("Synthetisch äöü\n");
+  foreach(var ext in new[]{"txt","csv","json","pdf","docx","xlsx","zip"}){
+   var bytes=ext=="pdf"?System.Text.Encoding.ASCII.GetBytes("%PDF-synthetic"):ext=="docx"||ext=="xlsx"||ext=="zip"?File.ReadAllBytes(Path.Combine(args[1],"synthetic-export."+ext)):System.Text.Encoding.UTF8.GetBytes("Synthetisch äöü\n");
    var name=ExportFiles.FileName("Notenblick_Test."+ext);var decoded=ExportFiles.Decode(new JObject{{"dataBase64",Convert.ToBase64String(bytes)}},name);
    var path=Path.Combine(folder,name);ExportFiles.Write(path,decoded);ExportFiles.Write(path,decoded);
    if(Convert.ToBase64String(File.ReadAllBytes(path))!=Convert.ToBase64String(bytes))throw new Exception("Binary roundtrip");
@@ -21,6 +21,10 @@ public static class ExportFilesProbe {
   var trailing=new byte[office.Length+1];Array.Copy(office,trailing,office.Length);Reject(trailing,"docx");checks++;
   foreach(var e in new Exception[]{new DirectoryNotFoundException(),new DriveNotFoundException()}){if(ExportFiles.ErrorCode(e)!="export-location-unavailable")throw new Exception("Wrong location code");checks++;}
   if(ExportFiles.ErrorCode(new UnauthorizedAccessException())!="export-permission")throw new Exception("Wrong permission code");checks++;
+  var batch=File.ReadAllBytes(Path.Combine(args[1],"synthetic-export.zip"));var brokenBatch=(byte[])batch.Clone();brokenBatch[55]^=1;Reject(brokenBatch,"zip");checks++;
+  foreach(var name in new[]{"../escape.txt","CON.txt","subdir/report.txt","report.json"}){
+   using(var data=new MemoryStream()){using(var zip=new ZipArchive(data,ZipArchiveMode.Create,true)){var entry=zip.CreateEntry(name);using(var source=entry.Open()){var bytes=Encoding.UTF8.GetBytes("synthetic");source.Write(bytes,0,bytes.Length);}}Reject(data.ToArray(),"zip");checks++;}
+  }
   // Existing full JSON backups must retain the storage core's 256 MiB limit.
   var large=ExportFiles.Decode(new JObject{{"text",new string('x',65*1024*1024)}},"Notenblick.json");if(large.Length!=65*1024*1024)throw new Exception("Legacy backup limit changed");checks++;
   foreach(var name in new[]{"notenverwaltung.json","Ansicht.json","wrong.pdf"}){bool rejected=false;try{ExportFiles.CheckDestination(Path.Combine(folder,name),"Notenblick.json",folder);}catch{rejected=true;}if(!rejected)throw new Exception("Protected destination accepted");checks++;}

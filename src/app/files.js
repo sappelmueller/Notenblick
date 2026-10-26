@@ -1,9 +1,11 @@
 /* Notenblick – app/files.js. Shared application API: Notenblick. */
 (function (Notenblick) {
 'use strict';
-Notenblick.download = function download(name, text, type = 'text/plain;charset=utf-8') {
+Notenblick.download = async function download(name, text, type = 'text/plain;charset=utf-8', stillRequested = () => true) {
+  if(!stillRequested())return false;
   if (window.NRDesktop.available) {
-    const bytes=typeof text==='string'?null:new Uint8Array(text.buffer||text,text.byteOffset||0,text.byteLength);if(bytes&&bytes.length>64*1024*1024)throw Error('Die Exportdatei ist zu groß. Bitte schränke die Auswahl ein.');let dataBase64;if(bytes){const parts=[];for(let i=0;i<bytes.length;i+=32768)parts.push(String.fromCharCode(...bytes.subarray(i,i+32768)));dataBase64=btoa(parts.join(''));}
+    const blob=text instanceof Blob;if(blob&&text.size>64*1024*1024)throw Error('Die Exportdatei ist zu groß. Bitte schränke die Auswahl ein.');
+    const bytes=typeof text==='string'?null:blob?new Uint8Array(await text.arrayBuffer()):new Uint8Array(text.buffer||text,text.byteOffset||0,text.byteLength);if(!stillRequested())return false;if(bytes&&bytes.length>64*1024*1024)throw Error('Die Exportdatei ist zu groß. Bitte schränke die Auswahl ein.');let dataBase64;if(bytes){const parts=[];for(let i=0;i<bytes.length;i+=24576)parts.push(btoa(String.fromCharCode(...bytes.subarray(i,i+24576))));dataBase64=parts.join('');}
     return window.NRDesktop.call('download',{name,...(bytes?{dataBase64}:{text}),mime:type}).then(saved=>{if(saved!==false)Notenblick.announce('Die Datei wurde gespeichert.');return saved;}).catch(e=>{if(e.name==='AbortError')return false;e.storageError=true;throw e;});
   }
   const url = URL.createObjectURL(new Blob([text], {
