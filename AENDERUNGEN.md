@@ -1,3 +1,11 @@
+# Notenblick 1.12.0
+
+- Schüleransicht: ausgewählten Schüler oder alle aktiven Schüler einzeln exportieren. PDF, Word, Excel, Text oder CSV werden pro Schüler als eigene Datei in einem ZIP gespeichert. Ausgeschiedene Schüler nur auf Wunsch; historische Fachzuordnungen bleiben erhalten.
+- Exportdialog: einheitliche Reihenfolge, dynamische Erklärung der Anordnung, tatsächliche Berichtszahl, gedrosselter Fortschritt und sicherer Abbruch. Die sechs bisherigen Einzelexporte bleiben erhalten.
+- Dokumente: dezente Fortsetzungsköpfe mit Fach, Klasse und Schuljahr, sichere lokale Seitenzahlen sowie etwas deutlicheres Gesamtergebnis. Wiederholte Tabellenköpfe mit tatsächlich gerenderten Fortsetzungsseiten geprüft.
+- ZIP-Erstellung und native Speicherung: eindeutige Windows-Dateinamen, CRC-/Inhaltsprüfung jedes Eintrags, ein Format pro Archiv, 64-MiB-Grenze, atomare Speicherung und Bereinigung temporärer Dateien. Keine Änderung an Notenberechnung oder Datenformat.
+- Vollständige Open-XML-, PDF/UA-, Browser-, Speicher- und Regressionstests erweitert. Microsoft-Office-, Windows-, NVDA- und physische Druckabnahme bleiben gesondert erforderlich.
+
 # Notenblick 1.11.0
 
 - Word erzwingt beim Öffnen keine globale Feldaktualisierung mehr. Lokale PAGE-/NUMPAGES-Felder bleiben erhalten; keine externen Beziehungen. Fehlerhafte OOXML-Reihenfolgen und fehlende Pflichtattribute korrigiert, vollständige SDK-Schemavalidierung ergänzt.

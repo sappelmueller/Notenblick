@@ -9,9 +9,10 @@ namespace Notenblick.Native {
   public static string FileName(string proposed){
    if(String.IsNullOrWhiteSpace(proposed)||proposed!=Path.GetFileName(proposed)||proposed.Length>240||proposed.IndexOfAny(Path.GetInvalidFileNameChars())>=0||proposed.IndexOfAny(new[]{'<','>',':','"','|','?','*'})>=0||proposed.Contains("/")||proposed.Contains("\\"))throw new InvalidDataException("Ungültiger Exportdateiname.");
    var extension=Path.GetExtension(proposed).ToLowerInvariant();
-   if(Array.IndexOf(new[]{".json",".txt",".csv",".pdf",".docx",".xlsx"},extension)<0)throw new InvalidDataException("Dieses Dateiformat wird nicht unterstützt.");return proposed;
+   if(Array.IndexOf(new[]{".json",".txt",".csv",".pdf",".docx",".xlsx",".zip"},extension)<0)throw new InvalidDataException("Dieses Dateiformat wird nicht unterstützt.");return proposed;
   }
   public static string Filter(string name){switch(Path.GetExtension(name).ToLowerInvariant()){
+   case ".zip":return "Schülerberichte (*.zip)|*.zip";
    case ".json":return "Notenblick-Sicherung (*.json)|*.json";
    case ".pdf":return "PDF-Dokument (*.pdf)|*.pdf";
    case ".docx":return "Word-Dokument (*.docx)|*.docx";
@@ -25,12 +26,16 @@ namespace Notenblick.Native {
    foreach(var reserved in new[]{"notenverwaltung.json","Ansicht.json"})if(String.Equals(path,Path.GetFullPath(Path.Combine(dataRoot,reserved)),StringComparison.OrdinalIgnoreCase))throw new InvalidDataException("Die Programmdatei darf nicht durch einen Export ersetzt werden.");
   }
   public static byte[] Decode(JObject request,string name){
+   var limit=Path.GetExtension(name).Equals(".zip",StringComparison.OrdinalIgnoreCase)?64*1024*1024:MaximumBytes;
    var encoded=(string)request["dataBase64"];byte[] bytes;
-   if(encoded!=null){if(encoded.Length>(MaximumBytes/3+1)*4)throw new InvalidDataException("Die Exportdatei ist zu groß.");try{bytes=Convert.FromBase64String(encoded);}catch{throw new InvalidDataException("Die Exportdatei ist beschädigt.");}}
+   if(encoded!=null){if(encoded.Length>(limit/3+1)*4)throw new InvalidDataException("Die Exportdatei ist zu groß.");try{bytes=Convert.FromBase64String(encoded);}catch{throw new InvalidDataException("Die Exportdatei ist beschädigt.");}}
    else {var text=(string)request["text"];if(text==null)throw new InvalidDataException("Es wurden keine Dateiinhalte übergeben.");bytes=new UTF8Encoding(false,true).GetBytes(text);}
-   if(bytes.Length==0||bytes.Length>MaximumBytes)throw new InvalidDataException("Ungültige Exportdateigröße.");
+   if(bytes.Length==0||bytes.Length>limit)throw new InvalidDataException("Ungültige Exportdateigröße.");
+   ValidateContent(bytes,name);return bytes;
+  }
+  public static void ValidateContent(byte[] bytes,string name){
    var ext=Path.GetExtension(name).ToLowerInvariant();if(ext==".pdf"&&(bytes.Length<5||Encoding.ASCII.GetString(bytes,0,5)!="%PDF-"))throw new InvalidDataException("Ungültige PDF-Datei.");
-   if(ext==".docx"||ext==".xlsx")OfficePackage.Validate(bytes,ext);return bytes;
+   if(ext==".docx"||ext==".xlsx")OfficePackage.Validate(bytes,ext);if(ext==".zip")OfficePackage.ValidateBatch(bytes);
   }
   public static string ErrorCode(Exception error){return error is DirectoryNotFoundException||error is DriveNotFoundException?"export-location-unavailable":error is UnauthorizedAccessException||error is System.Security.SecurityException?"export-permission":"export-save-failed";}
   public static void Write(string destination,byte[] bytes){

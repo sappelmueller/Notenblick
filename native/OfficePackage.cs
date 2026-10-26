@@ -60,5 +60,27 @@ namespace Notenblick.Native {
     Require(mainContent&&mainRelation);
    }catch{throw new InvalidDataException("Ungültige Office-Datei.");}
   }
+  public static void ValidateBatch(byte[] bytes){
+   try{
+    var expected=DirectoryCrc(bytes);long total=0;string format=null;
+    using(var stream=new MemoryStream(bytes,false))using(var zip=new ZipArchive(stream,ZipArchiveMode.Read)){
+     Require(zip.Entries.Count==expected.Count);
+     foreach(var entry in zip.Entries){
+      var name=ExportFiles.FileName(entry.FullName);var ext=Path.GetExtension(name).ToLowerInvariant();
+      Require(name.Length<=120&&!name.EndsWith(".")&&!name.EndsWith(" ")&&name.IndexOf('/')<0&&name.IndexOf('\\')<0);
+      Require(!System.Text.RegularExpressions.Regex.IsMatch(name,@"^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)",System.Text.RegularExpressions.RegexOptions.IgnoreCase));
+      Require(Array.IndexOf(new[]{".pdf",".docx",".xlsx",".txt",".csv"},ext)>=0);if(format==null)format=ext;Require(format==ext);
+      total+=entry.Length;Require(entry.Length>0&&total<=64*1024*1024&&expected.ContainsKey(name));
+      using(var source=entry.Open())using(var data=new MemoryStream()){
+       var buffer=new byte[32768];int read;uint crc=0xffffffff;long length=0;
+       while((read=source.Read(buffer,0,buffer.Length))>0){length+=read;Require(length<=entry.Length);for(int i=0;i<read;i++)crc=CrcTable[(crc^buffer[i])&255]^(crc>>8);data.Write(buffer,0,read);}
+       Require(length==entry.Length&&(crc^0xffffffff)==expected[name]);
+       // Validate one document at a time, before any save dialog or disk write.
+       var content=data.ToArray();if(ext==".txt"||ext==".csv")Utf8.GetString(content);else ExportFiles.ValidateContent(content,name);
+      }
+     }
+    }
+   }catch{throw new InvalidDataException("Ungültiges Schülerarchiv.");}
+  }
  }
 }

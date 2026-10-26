@@ -1,6 +1,6 @@
 # Notenblick
 
-Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.11.0**. Verbesserte Word-Kompatibilität, inhaltsabhängige Dokumentlayouts und verständlicher Exportumfang. Einheitliche Notenansichten und gemeinsame Offline-Berichte für Druck, PDF, Word, Excel, Text und CSV. Berechnungslogik und Datenformat bleiben erhalten.
+Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.12.0**. Einzelne Schülerberichte gemeinsam als ZIP exportieren, verständlicher Exportdialog und geprüfte Tabellenköpfe auf Fortsetzungsseiten. Einheitliche Notenansichten und gemeinsame Offline-Berichte für Druck, PDF, Word, Excel, Text und CSV. Berechnungslogik und Datenformat bleiben erhalten.
 
 ## Sofort weiterarbeiten
 
@@ -53,6 +53,8 @@ Details zur unveränderten Facharchitektur: [ENTWICKLUNG.md](ENTWICKLUNG.md). Ak
 TrainScope ist ein anderes Projekt. Die Prüfung vor Commit/Push akzeptiert ausschließlich `sappelmueller/Notenblick`. Effektive Fetch- und Push-URLs werden geprüft; private Datenordner, Sicherungen, Notenlisten, bekannte Geheimnisse und Actions-Workflows werden abgewiesen. Die Schutzskripte sind eine Unfallbarriere; sie ersetzen keine inhaltliche Prüfung neuer Dateien. Echte Schülerdaten dürfen auch nicht unter anderen Dateinamen oder in Beispielen abgelegt werden.
 
 Vor einem Git-Push verlangt die Prüfung eine live bestätigte private Repository-ID und deaktivierte Actions. Dafür wird ein bereits angemeldetes `gh` oder ein vorhandenes `GH_TOKEN`/`GITHUB_TOKEN` benötigt; Zugangsdaten werden nicht im Projekt gespeichert. Bei Verwendung der GitHub-Anbindung dieselben Prüfungen unmittelbar vor dem Schreiben durchführen. Keine erzwungenen Pushes, keine Änderungen an TrainScope und keine globalen Kontoeinstellungen.
+
+Aktueller Funktions- und Prüfbericht: [Notenblick 1.12.0](docs/PRUEFBERICHT-1.12.0.md).
 
 ## Windows-Auslieferung
 
