@@ -37,6 +37,7 @@ A.buildReport=function(ctx,options={}){
  const pupil=s=>text(name(s)+(s.archived||(c.inactiveStudentIds||[]).includes(s.id)?' (ausgeschieden)':''));
  const result=(a,sid)=>a.participantIds&&!a.participantIds.includes(sid)?text('Nicht beteiligt'):a.results[sid]?.status==='graded'?A.reportGrade(a.results[sid].grade):text(A.N.STATUS[a.results[sid]?.status||'open']);
  const column=(label,type='text')=>({label,type});
+ const classNote='Klassendurchschnitt: alle aktiven Schüler des Fachs, unabhängig von Suche und Umfang.';
  const report={type:ctx.type,kind:ctx.kind,title:A.reportTitle(ctx),year:A.schoolYear(year),className:cl.name,subject:c.name,created:A.today(),scope:ctx.type==='pupil'?(options.entries==='entered'?'Nur Leistungen mit Eintrag':'Alle Leistungen des Schülers'):all?'Alle Einträge':'Mit aktuellen Filtern',sections:[],recordIds:[],studentIds:[],remarks,precision:c.precision};
  const add=(title,headers,rows,extra={})=>report.sections.push({title,columns:headers.map(x=>typeof x==='string'?column(x):x),rows,...extra});
  let students=sorted(A.N.activeStudents(d,c,all||w.showExited));
@@ -57,11 +58,11 @@ A.buildReport=function(ctx,options={}){
   add('',['Bezeichnung',column('Datum','date'),'Leistungsart','Erfasst',column('Durchschnitt','average'),'Teilnahme','Gewichtung'],list.map(a=>{const p=A.N.assessmentProgress(d,c,a),members=A.N.assessmentStudents(d,c,a);return[text(a.title),A.reportDate(a.date),text(A.N.KINDS[a.kind]+(A.N.isOralIndividual(a)?' – Einzelnote':'')),text(p.captured+' von '+p.total),average(p.average),text(a.participantIds?sorted(members).map(name).join(', '):'Ganze Klasse'),text(flags(a))];}));
   if(remarks){const listRows=[];for(const a of list)for(const s of sorted(A.N.assessmentStudents(d,c,a)))if(a.results[s.id]?.note)listRows.push([text(a.title+', '+A.date(a.date)),pupil(s),text(a.results[s.id].note)]);if(listRows.length)add('Bemerkungen',['Leistung','Schüler','Bemerkung'],listRows);}
  }else if(ctx.type==='overview'){
-  report.studentIds=students.map(s=>s.id);add('', ['Schüler',...w.columns.map(k=>column(A.N.KINDS[k]||A.N.OVERALL[k],'average')),column('Gesamtdurchschnitt','average'),column('Zeugnisnote','grade')],students.map(s=>{const r=calc(s.id),f=d.finals.find(f=>f.courseId===c.id&&f.studentId===s.id&&f.period==='all');return[pupil(s),...w.columns.map(k=>average(r.categories[k])),average(r.total),A.reportGrade(f?.grade)];}),{matrix:true,fixed:1,description:'Gesamtdurchschnitt: berechnet. Zeugnisnote: manuell festgelegt.'});
+  const means=A.classAverages(c);report.studentIds=students.map(s=>s.id);add('', ['Schüler',...w.columns.map(k=>column(A.N.KINDS[k]||A.N.OVERALL[k],'average')),column('Gesamtdurchschnitt','average'),column('Zeugnisnote','grade')],students.map(s=>{const r=calc(s.id),f=d.finals.find(f=>f.courseId===c.id&&f.studentId===s.id&&f.period==='all');return[pupil(s),...w.columns.map(k=>average(r.categories[k])),average(r.total),A.reportGrade(f?.grade)];}),{matrix:true,fixed:1,description:'Gesamtdurchschnitt: berechnet. Zeugnisnote: manuell festgelegt. '+classNote,footer:[text('Klassendurchschnitt'),...w.columns.map(k=>average(means.categories[k])),average(means.total),text('–')]});
   if(remarks){const rows=students.map(s=>({s,f:d.finals.find(f=>f.courseId===c.id&&f.studentId===s.id&&f.period==='all')})).filter(x=>x.f?.note).map(({s,f})=>[pupil(s),text(f.note)]);if(rows.length)add('Bemerkungen zur Zeugnisnote',['Schüler','Bemerkung'],rows);}
  }else{
   const list=A.N.assessments(d,c.id).filter(a=>a.kind===ctx.kind&&(ctx.kind!=='oral'||!A.N.isOralIndividual(a))).sort((a,b)=>a.date.localeCompare(b.date)||a.title.localeCompare(b.title,'de')||a.id.localeCompare(b.id));report.recordIds=list.map(a=>a.id);report.studentIds=students.map(s=>s.id);
-  add('', ['Schüler',column('Durchschnitt','average'),...list.map(a=>column(a.title+', '+A.date(a.date)+(flags(a)?' ('+flags(a)+')':''),'grade'))],students.map(s=>[pupil(s),average(calc(s.id).categories[ctx.kind]),...list.map(a=>result(a,s.id))]),{matrix:true,fixed:2});
+  add('', ['Schüler',column('Durchschnitt','average'),...list.map(a=>column(a.title+', '+A.date(a.date)+(flags(a)?' ('+flags(a)+')':''),'grade'))],students.map(s=>[pupil(s),average(calc(s.id).categories[ctx.kind]),...list.map(a=>result(a,s.id))]),{matrix:true,fixed:2,description:classNote,footer:[text('Klassendurchschnitt'),average(A.classAverages(c).categories[ctx.kind]),...list.map(a=>average(A.assessmentStats(a,c).average))]});
   if(remarks){const rows=[];for(const s of students)for(const a of list)if((!a.participantIds||a.participantIds.includes(s.id))&&a.results[s.id]?.note)rows.push([pupil(s),text(a.title+', '+A.date(a.date)),text(a.results[s.id].note)]);if(rows.length)add('Bemerkungen',['Schüler','Leistung','Bemerkung'],rows);}
  }
  if(!report.sections.length)add('Einzelnoten',['Bezeichnung'],[]);
@@ -119,7 +120,7 @@ A.reportLayout=function(report){
   }
   for(let i=0;i<groups.length;i++){
    const indices=groups[i],p=indices.map(n=>profile[n]);
-   parts.push({...section,breakBefore:i>0,title:(section.title||report.title)+' – Teil '+(i+1)+' von '+groups.length,columns:indices.map(n=>section.columns[n]),rows:section.rows.map(row=>indices.map(n=>row[n])),fontSize:size,widths:distribute(p,width),sourceIndices:indices,paragraphs:i===groups.length-1?section.paragraphs:[]});
+   parts.push({...section,breakBefore:i>0,title:(section.title||report.title)+' – Teil '+(i+1)+' von '+groups.length,columns:indices.map(n=>section.columns[n]),rows:section.rows.map(row=>indices.map(n=>row[n])),footer:section.footer&&indices.map(n=>section.footer[n]),fontSize:size,widths:distribute(p,width),sourceIndices:indices,paragraphs:i===groups.length-1?section.paragraphs:[]});
   }
  }
  return {landscape:!portraitFits,width,sections:parts};

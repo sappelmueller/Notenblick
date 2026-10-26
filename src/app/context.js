@@ -31,6 +31,13 @@ Notenblick.calculation = function(c, sid) {
   if (!cache.has(key)) cache.set(key, Notenblick.N.calculate(Notenblick.data, c, sid));
   return cache.get(key);
 };
+// The class result always uses active course members, independently of the
+// displayed search, pagination and inclusion of former pupils. Keep the exact
+// individual results until NR.show applies the course's rounding for display.
+Notenblick.classAverages = function(c) {
+ const A=Notenblick,results=A.N.activeStudents(A.data,c).map(s=>A.calculation(c,s.id));
+ return {categories:Object.fromEntries(['written',...A.kinds].map(k=>[k,A.N.average(results.map(r=>({value:r.categories[k]})))])),total:A.N.average(results.map(r=>({value:r.total})))};
+};
 const assessmentStats = new WeakMap();
 Notenblick.assessmentStats = function(a,c=Notenblick.getCourse()) {
  let cache=assessmentStats.get(Notenblick.data);if(!cache){cache=new Map();assessmentStats.set(Notenblick.data,cache);}

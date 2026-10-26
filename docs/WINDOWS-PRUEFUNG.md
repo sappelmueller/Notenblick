@@ -22,3 +22,12 @@ Prüfdatum, Windows-Version/Architektur, WebView2-Version, NVDA-Version und die 
 - Neue Einzelnote: bekannter Schüler fokussiert Note, allgemeiner Aufruf Schüler; Mündliche Note und heutiges Datum vorbelegt; Speichern und nächste mehrfach prüfen.
 - Neue Bewertungsrunde für ganze Klasse und ausgewählte Gruppe: individuelle Noten, direkte Eingabe, Eingabe schließen mit nachvollziehbarem Fokus.
 - 40, 100 und 250 synthetische Einzelnoten bei 100/150/200 Prozent Windows-Skalierung prüfen. Browserzoom und Pixelratio sind keine tatsächliche Windows-Skalierungsprüfung.
+
+## Ergänzung für 1.13.0
+
+- Schüler → Exportieren: beide Ausgabeoptionen mit NVDA prüfen; Erklärung genau einmal, aktuelle ZIP-Anzahl, kein Fokuswechsel. Alle bisherigen Leistungs-/Anordnungserklärungen und fünf ZIP-Formate kontrollieren.
+- Breite Notenübersicht mit sieben, acht und zehn geeigneten Spalten: Export empfiehlt A4 quer; WebView2-Browser-Druckvorschau öffnen, Drucker wählen, Ausrichtung dort und im Windows-/Druckertreiberdialog vergleichen. Schmale Übersicht entsprechend A4 hoch. Wegen der ShowPrintUI-Schnittstellengrenze erforderlichenfalls empfohlene Ausrichtung bestätigen. Nicht ohne Vorschau drucken.
+- Vorschau länger als zwei Minuten offen lassen, abbrechen, erneut öffnen: keine zweite Vorschau, kein verspäteter Druck, ursprünglicher Exportfokus. Seitenzahl, vollständige Noten und Tabellenköpfe auf jeder tatsächlichen Fortsetzungsseite sowie Schwarz-Weiß-Ausdruck kontrollieren.
+- Klasse mit aktiver Schülersuche und ohne Suche in allen sechs Formen exportieren. Klassendurchschnitt muss jeweils mit dem Bildschirm übereinstimmen und alle aktiven Fachteilnehmer berücksichtigen; ausgeschiedene Schüler nicht einrechnen, Zeugnisnotenspalte „–“.
+- Word-Dokumente tatsächlich unter Microsoft Word öffnen: keine Feldaktualisierungs-/Reparaturabfrage, unveränderte lokale Seitenzahlen, Tabellenköpfe und letzte Ergebniszeile; NVDA-Tabellennavigation. Automatischer LibreOffice-Render und vollständige Open-XML-Validierung ersetzen diese Prüfung nicht.
+- Bestehenden synthetischen 1.12.0-Datenordner beim Update behalten: nur EXE und vollständigen Programmordner ersetzen, alle Daten/Sicherungen/Notenlisten erhalten.

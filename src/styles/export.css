@@ -30,3 +30,8 @@
 .export-page{margin:0;display:flex;flex-wrap:wrap;gap:5px 14px;font-size:.9rem}.export-page strong{font-weight:600}.export-page[hidden]{display:none}
 
 @media print{#printOutput table.report-summary{font-size:11.5pt!important;font-weight:700}#printOutput .report-summary td{color:#235b47}#printOutput h2{break-inside:avoid;page-break-after:avoid}#printOutput thead{break-inside:avoid;page-break-inside:avoid}}
+
+.export-page small{flex-basis:100%;color:var(--muted)}
+@media print{#printOutput tfoot{display:table-row-group}#printOutput tfoot th,#printOutput tfoot td{background:#e9f1ec;color:#111;font-weight:700}}
+
+@media print{#printOutput tbody:has(+tfoot){break-after:avoid;page-break-after:avoid}#printOutput tbody:has(+tfoot) tr:last-child{break-after:avoid;page-break-after:avoid}}
