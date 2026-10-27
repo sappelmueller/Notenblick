@@ -1,3 +1,14 @@
+# Notenblick 1.15.0 – Abschlussnoten einfacher bedienen
+
+- „Halbjahresausgabe festlegen“ mit Klassen-/Jahreskontext und dynamisch zugeordneter Erklärung; Einstellungen und Bestandsnotenschutz bleiben erhalten.
+- Einheitliche Einzel-/Klassendialoge mit kurzen Überschriften, Fach/Klasse/Jahr und Zeitraum; Schülername als H3, Durchschnitt und Vorschlag kompakt nebeneinander, wichtigste Noteneingabe darunter.
+- Viertelnoten ausschließlich numerisch mit zwei Nachkommastellen in Auswahl, Übersicht, Schüleransicht und sämtlichen Exporten/Notenlisten; gespeicherte Werte und exakte Rechnung unverändert.
+- „Offene Vorschläge übernehmen“ schützt gespeicherte und bewusst bearbeitete Eingaben. Klassenstatus ohne häufige Live-Ansagen; Tabelle über „Noten der Klasse“ beschriftet, ohne zusätzliche Region.
+- Kompakte Notenauswahl, breite Namensspalte, dezent hervorgehobene Eingabespalte und fixierte Tabellenköpfe; horizontales und vertikales Scrollen bleiben möglich.
+- Strg+Enter führt nach geschlossener Auswahlliste zum nächsten sichtbaren Schüler, ohne Speicherung. Enter/Pfeile/Maus/Tab behalten ihre native Funktion; kein Fokuswechsel allein durch Wertänderung. Automatische Enter-Navigation ist mangels tatsächlicher Windows-/NVDA-Abnahme nicht aktiviert.
+- Anfangsfokus direkt auf erste offene Note; keine vorangehende Fokussierung eines anderen Notenfelds. Escape/Abbrechen, Fehlerfokus und Rückkehrfokus bleiben erhalten.
+- Neue Struktur-/Browserregressionen und erweiterte unabhängige Export-/Updateprüfungen; keine Migration oder Änderung am produktiven Speicherkern.
+
 # Notenblick 1.14.0 – Abschlussnoten
 
 - Ausgabe zum Halbjahr einmal je Klasse/Schuljahr festlegen: Viertelnoten oder ganze Noten; spätere Änderungen lassen Bestandsnoten unverändert.

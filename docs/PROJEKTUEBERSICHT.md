@@ -1,6 +1,6 @@
 # Notenblick: technischer Einstieg
 
-Programmversion 1.14.0, Windows/.NET Framework 4.8/WinForms/WebView2, vollständig offline. Nur privates `sappelmueller/Notenblick` (ID 1432518047); Actions aus. Echte Schülerdaten, Sicherungen, Schlüssel und generierte Dateien niemals einchecken. Vor Schreiben `python3 dev/guard.py`.
+Programmversion 1.15.0, Windows/.NET Framework 4.8/WinForms/WebView2, vollständig offline. Nur privates `sappelmueller/Notenblick` (ID 1432518047); Actions aus. Echte Schülerdaten, Sicherungen, Schlüssel und generierte Dateien niemals einchecken. Vor Schreiben `python3 dev/guard.py`.
 
 ## Aufbau und kritische Verträge
 
@@ -8,6 +8,7 @@ Programmversion 1.14.0, Windows/.NET Framework 4.8/WinForms/WebView2, vollständ
 - `domain/finals.js`: Datumsabgrenzung und exakte Viertel-/Ganznotenvorschläge. Festgelegte Noten sind unabhängige Schnappschüsse, niemals aus späteren Durchschnitten überschreiben.
 - `domain/records.js`, `migrations.js`, `transfers.js`: Validierung, kompatible Altbestände, Klassenwechsel/Archive. Historische Abschnittsnoten sind keine neuen Halbjahresnoten.
 - `src/storage.js`, `session.js`, `app/changes.js`, `native/Storage.cs`/`Migration.cs`: vorhandene atomare Speicherung, Konfliktschutz, Sicherungen, TXT-Listen und Entwurfstransaktionen. Portable Ablage: EXE / Programm / Daten; beim Update Daten behalten.
+- `dialogs/finals.js`: gemeinsame Abschlussdialoge, numerische Viertelnoten, Status ohne Live-Ansage. Native Enter-Bedienung unverändert; ausdrückliches Strg+Enter wechselt zum nächsten sichtbaren Schüler. `dialogs/window.js` setzt optional direkt den gewünschten Anfangsfokus. Regressionen `v1150`/`v1150-browser`, numerische Exporte zusätzlich in `v1140-files`.
 - `src/state.js`, `app/`, `views/`, `dialogs/`, `tabs.js`/`events.js`: gemeinsame Oberflächen-/Fokuskonzepte. Hauptnavigation als Links, echte manuell aktivierte Tabs, kurze Labels, echte Tabellen, Escape und Rückkehrfokus. Keine unnötigen Regionen oder section-Elemente.
 - `src/exports/report.js`: gemeinsames unveränderliches Berichtsmodell. `text.js`, `office.js`, `pdf.js`, `dialog.js`: TXT/CSV, DOCX/XLSX, PDF/UA und Druck/Sammelexporte. Keine parallele Exportberechnung.
 - `native/Launcher.cs`, `ProgramLibraries.cs`, `Window.cs`: AnyCPU-Starter, vollständige Hashliste, WebView2 und native Datei-/Druckkanäle. Abhängigkeiten unter `dev` gesperrt. Keine Internetressourcen in der Anwendung.

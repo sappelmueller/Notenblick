@@ -44,3 +44,15 @@ Diese Punkte sind ein offener Prüfplan, kein Testnachweis:
 5. 100/125/150/200-Prozent-Windows-Skalierung und kleines Fenster: letzte Zeile, horizontaler Tabelleninhalt, Dialogaktionen und Fehler weiterhin erreichbar. Keine Tastaturfalle oder abgeschnittene fokussierte Eingabe.
 6. Datenträgerfehler/Schreibschutz: Entwurf behalten, erneutes Speichern, Programmneustart, JSON- und TXT-Sicherung/Wiederherstellung prüfen. Spätere Märzleistungen und Gewichtsänderungen verändern keine Festlegung.
 7. Alle Exportformen mit und ohne Bemerkungen unter echtem Microsoft Word/Excel/Adobe Reader und NVDA prüfen; native Druckvorschau, physischer Druck, Leserichtung und Tabellenbezug kontrollieren.
+
+## Ergänzung für 1.15.0 (noch nicht ausgeführt)
+
+- Drei Zeugnisarten einzeln und mit 30/60/300 synthetischen Schülern: Kontext, Zeitraum, H3-Schülername, numerische Viertelnoten/ganze Noten und frühere Informationen prüfen.
+- Halbjahresausgabe ändern: Erklärung einmal, Auswahlfokus unverändert, Bestandsnoten geschützt; keine Ableitung aus dem Klassennamen.
+- Native Auswahl mit Enter öffnen, Pfeilen ändern, Enter bestätigen; kein automatischer Schülerwechsel. Maus, Tab, unveränderte Auswahl und Popup-Escape prüfen.
+- Nach geschlossener Auswahlliste **Strg+Enter**: nächstes sichtbares Notenfeld und kurze Namens-/Wertansage ohne Klassenstatus. Versteckte Zeilen, letzter Schüler und Gedrückthalten prüfen. Keine Speicherung ohne Speichern.
+- NVDA mit Sprache/Braille: Shortcut-Durchleitung im Fokusmodus, kurze Labels, Tabellenkopfzuordnung, keine zusätzliche Abschlussnotenregion. Tab bleibt verfügbar.
+- 100/125/150/200 Prozent Windows-Skalierung, kleine Fenster, lange Namen und Altwerte: vollständige Lesbarkeit, erreichbare Aktionen, beide Scrollrichtungen und sichtbare Tabellenköpfe.
+- Escape nach geschlossener Auswahlliste verwirft den Entwurf; Speichern/Abbrechen gibt Fokus zurück. Speicherfehler erhält Eingaben. Bestehende 1.14.0-Daten und alle Exporte/Sicherungen/Schüler-ZIPs kontrollieren.
+
+Automatische Enter-Navigation bleibt bis zum dokumentierten zuverlässigen Windows-/NVDA-Livetest deaktiviert. Chromium/axe belegt keine tatsächlich gesprochenen NVDA-Ansagen.
