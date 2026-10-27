@@ -1,6 +1,6 @@
 # Notenblick
 
-Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.15.0**. Einheitliche Einzel- und Klassendialoge für Halbjahresinformationen, Halbjahreszeugnisse und Jahreszeugnisnoten. Viertelnoten rein numerisch; Strg+Enter führt zum nächsten sichtbaren Schüler. Exakte Vorschläge, unveränderliche gespeicherte Ergebnisse und dieselben Daten in allen bestehenden Sicherungen und Exportformen. Einzelne Schülerberichte gemeinsam als ZIP exportieren; geprüfte Tabellenköpfe auf Fortsetzungsseiten. Einheitliche Notenansichten und gemeinsame Offline-Berichte für Druck, PDF, Word, Excel, Text und CSV. Berechnungslogik und Datenformat bleiben erhalten.
+Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.16.0**. Vollständige TXT-Notfallübersichten mit separaten Schülerberichten und Prüfung der tatsächlichen Dateiinhalte. Einheitliche Verwaltung und vierstufige Ersteinrichtung für mehrere Klassen, Fächer und Schülerlisten; Veröffentlichung erst nach abschließender Bestätigung. Einheitliche Einzel- und Klassendialoge für Halbjahresinformationen, Halbjahreszeugnisse und Jahreszeugnisnoten. Viertelnoten rein numerisch; Strg+Enter führt zum nächsten sichtbaren Schüler. Exakte Vorschläge, unveränderliche gespeicherte Ergebnisse und dieselben Daten in allen bestehenden Sicherungen und Exportformen. Einzelne Schülerberichte gemeinsam als ZIP exportieren; geprüfte Tabellenköpfe auf Fortsetzungsseiten. Einheitliche Notenansichten und gemeinsame Offline-Berichte für Druck, PDF, Word, Excel, Text und CSV. Berechnungslogik und Datenformat bleiben erhalten.
 
 ## Sofort weiterarbeiten
 
@@ -61,7 +61,7 @@ TrainScope ist ein anderes Projekt. Die Prüfung vor Commit/Push akzeptiert auss
 
 Vor einem Git-Push verlangt die Prüfung eine live bestätigte private Repository-ID und deaktivierte Actions. Dafür wird ein bereits angemeldetes `gh` oder ein vorhandenes `GH_TOKEN`/`GITHUB_TOKEN` benötigt; Zugangsdaten werden nicht im Projekt gespeichert. Bei Verwendung der GitHub-Anbindung dieselben Prüfungen unmittelbar vor dem Schreiben durchführen. Keine erzwungenen Pushes, keine Änderungen an TrainScope und keine globalen Kontoeinstellungen.
 
-Aktueller Funktions- und Prüfbericht: [Notenblick 1.15.0](docs/PRUEFBERICHT-1.15.0.md).
+Aktueller Funktions- und Prüfbericht: [Notenblick 1.16.0](docs/PRUEFBERICHT-1.16.0.md).
 
 ## Windows-Auslieferung
 

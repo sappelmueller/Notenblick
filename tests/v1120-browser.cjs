@@ -5,7 +5,7 @@ const server=http.createServer((req,res)=>{const p=path.resolve(root,'.'+new URL
 (async()=>{
  await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({executablePath:process.env.NOTENBLICK_CHROMIUM||undefined,headless:true,args:['--no-sandbox']});const page=await browser.newPage({locale:'de-DE',viewport:{width:1280,height:900}});page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:'+server.address().port+'/Notenblick.html');await page.waitForSelector('html[data-ready=true]');
  const data=require('./v1120-fixture.cjs')(N,28);data.students[0].archived=true;data.courses[0].inactiveStudentIds=[data.students[1].id];
- await page.evaluate(data=>{const A=Notenblick;A.data=NR.upgrade(data);A.normalizeContext();A.refreshCurrent();A.activateGroup('main','notes');A.activateGroup('notes','pupil');A.W().pupil=A.getCourse().studentIds[2];A.renderPupil();},data);
+ await page.evaluate(data=>{const A=Notenblick;A.data=NR.upgrade(data);A.normalizeContext();A.activateGroup('main','notes');A.refreshCurrent();A.activateGroup('main','notes');A.activateGroup('notes','pupil');A.W().pupil=A.getCourse().studentIds[2];A.renderPupil();},data);
  const raw=await page.evaluate(()=>JSON.stringify(Notenblick.data)),workspace=await page.evaluate(()=>JSON.stringify(Notenblick.getWorkspace()));
  const open=async()=>{await page.locator('#notes [data-action=output]').filter({visible:true}).click();};
  await open();assert.equal(await page.locator('#exportOutput').inputValue(),'single');

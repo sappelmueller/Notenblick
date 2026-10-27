@@ -26,7 +26,7 @@ fs.mkdirSync(out,{recursive:true});
   assert.equal((A.reportHTML(r).match(/<tfoot>/g)||[]).length,1);
   await write('overview-'+(search===''?'unfiltered':search==='P000'?'filtered':'empty')+'-'+scope,r);
  }
- checks.push('Bildschirm/Export exakt gleich: alle aktiven Fachteilnehmer, auch bei Suche, null Treffern und Umfang Alle; ausgeschiedene/archivierte und fehlende Noten korrekt');
+ checks.push('Bildschirm/Export exakt gleich: alle aktiven Fachteilnehmer, auch bei Suche, null Treffern und Umfang Alle; ehemalige/archivierte und fehlende Noten korrekt');
  A.W().search='';A.W().showExited=false;
  for(const kind of A.kinds){
   const ctx={...A.exportContext(kind),type:'matrix',kind},r=A.buildReport(ctx,{scope:'current',remarks:false}),s=r.sections[0],foot=s.footer;
