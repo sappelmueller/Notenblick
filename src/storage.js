@@ -71,6 +71,34 @@
         throw Error('Die Noten konnten nicht geöffnet werden. Bitte öffne eine Sicherung oder wähle einen anderen Speicherort.');
       }
     }
+    async hasDataEvidence(){
+      for await(const [name,h] of this.root.entries()){
+        if(h.kind==='file'&&name!=='Ansicht.json'&&!name.startsWith('.notenblick-'))return true;
+        if(h.kind==='directory'&&['Sicherungen','Notenlisten'].includes(name))for await(const entry of h.entries())return true;
+      }return false;
+    }
+    async refreshTextLists(d,{force=false}={}){if(this.saving)throw Error('Bitte warte, bis die Noten gespeichert sind.');this.saving=true;try{return await this.syncTextLists(N.validate(d),{force});}finally{this.saving=false;}}
+    async syncTextLists(d,{force=false}={}){
+      const manifestPath='Sicherungen/Notenlistenverzeichnis.json',normal=t=>t.replace(/^\ufeff/,''),textPath=p=>this.textPrefix?this.textPrefix+'/'+p:p;
+      let old={};try{old=json(await readAt(this.root,manifestPath))||{};}catch(e){if(!missing(e)&&!(e instanceof SyntaxError))throw e;}
+      const safe=p=>typeof p==='string'&&!p.includes('\\')&&!/[\u0000-\u001f:]/.test(p)&&!p.startsWith('/')&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&p.split('/')[0].toLocaleLowerCase('de')!=='daten'&&(p.split('/').length===3&&p.endsWith('/Schülerliste.txt')||p.split('/').length===4&&p.endsWith('/Notenübersicht.txt')||p.split('/').length===5&&['Schülernoten','Mündliche Noten',...Object.values(N.KINDS)].includes(p.split('/')[3])&&p.endsWith('.txt'));
+      const files=N.exportsTXT(d),previous=[13,14,16].includes(old.version)&&Array.isArray(old.files)?old.files.filter(safe):[],hashes={};
+      // A pending directory can never be mistaken for a complete update.
+      await writeAt(this.root,manifestPath,JSON.stringify({version:N.TEXT_LIST_VERSION,state:'updating',commitId:d.commitId,files:[...new Set([...previous,...Object.keys(files)])],hashes:old.version===N.TEXT_LIST_VERSION?old.hashes||{}:{}}));
+      let written=0;for(const[p,text]of Object.entries(files)){
+        let current;try{current=await readAt(this.root,textPath(p));}catch(e){if(!missing(e))throw e;}
+        if(force||current===undefined||normal(current)!==normal(text)){await writeAt(this.root,textPath(p),text);const verified=await readAt(this.root,textPath(p));if(normal(verified)!==normal(text))throw Error('Die TXT-Datei '+p+' konnte nicht vollständig geprüft werden.');written++;}
+        hashes[p]=await N.textDigest(text);
+      }
+      const parents=new Set(),retained=[];for(const p of previous){if(Object.hasOwn(files,p))continue;let current;try{current=await readAt(this.root,textPath(p));}catch(e){if(missing(e))continue;throw e;}
+        // Legacy or manually edited files have no verified ownership: retain them.
+        if(old.version!==N.TEXT_LIST_VERSION||typeof old.hashes?.[p]!=='string'||await N.textDigest(current)!==old.hashes[p]){retained.push(p);continue;}
+        await removeAt(this.root,textPath(p));let parts=p.split('/').slice(0,-1);while(parts.length){parents.add(parts.join('/'));parts.pop();}
+      }
+      for(const p of [...parents].sort((a,b)=>b.length-a.length)){try{const parts=textPath(p).split('/');let dir=this.root;for(const part of parts.slice(0,-1))dir=await dir.getDirectoryHandle(part);const child=await dir.getDirectoryHandle(parts.at(-1));let empty=true;for await(const entry of child.entries()){empty=false;break;}if(empty)await dir.removeEntry(parts.at(-1));}catch(e){if(!missing(e)&&e.name!=='InvalidModificationError')throw e;}}if(parents.size)writeDirectories.delete(this.root);
+      await writeAt(this.root,manifestPath,JSON.stringify({version:N.TEXT_LIST_VERSION,state:'complete',commitId:d.commitId,files:Object.keys(files),hashes,retained}));
+      this.textCache={commitId:d.commitId,files};this.textWarning=retained.length?retained.length+' ältere oder nachträglich geänderte TXT-Dateien wurden zur Sicherheit beibehalten.':'';return{files:Object.keys(files).length,written,retained};
+    }
     async save(input, {
       replace = false,
       forceTXT = false,
@@ -117,57 +145,7 @@
           revision: next.revision
         };
         let txtError = null;
-        const textPath = p => this.textPrefix ? this.textPrefix + '/' + p : p;
-        try {
-          let manifest = {};
-          try {
-            manifest = json(await readAt(this.root, 'Sicherungen/Notenlistenverzeichnis.json')) || {};
-          } catch (e) {
-            if (!missing(e) && !(e instanceof SyntaxError)) throw e;
-          }
-          const files = N.exportsTXT(next),
-            previous = !forceTXT && current && manifest.commitId === current.commitId && manifest.version === 14 ? (this.textCache?.commitId===current.commitId?this.textCache.files:N.exportsTXT(N.upgrade(current))) : {};
-          for (const [p, t] of Object.entries(files)) if (previous[p] !== t) await writeAt(this.root, textPath(p), t);
-          const parents = new Set();
-          for (const p of [13,14].includes(manifest.version) && Array.isArray(manifest.files) ? manifest.files : []) {
-            if (typeof p !== 'string' || !p.endsWith('.txt') || p.split('/').length < 3 || p.split('/').length > 5 || p.split('/').some(part => !part || part === '.' || part === '..') || p.split('/')[0].toLocaleLowerCase('de') === 'daten' || p.startsWith('/') || p.includes('\\') || Object.hasOwn(files, p)) continue;
-            try {
-              await removeAt(this.root, textPath(p));
-            } catch (e) {
-              if (!missing(e)) throw e;
-            }
-            let parent = p.split('/').slice(0, -1);
-            while (parent.length) {
-              parents.add(parent.join('/'));
-              parent.pop();
-            }
-          }
-          for (const p of [...parents].sort((a, b) => b.length - a.length)) {
-            const all = p.split('/');
-            let dir = this.textPrefix ? await this.root.getDirectoryHandle(this.textPrefix) : this.root;
-            try {
-              for (const part of all.slice(0, -1)) dir = await dir.getDirectoryHandle(part);
-              const child = await dir.getDirectoryHandle(all.at(-1));
-              let empty = true;
-              for await (const entry of child.entries()) {
-                empty = false;
-                break;
-              }
-              if (empty) await dir.removeEntry(all.at(-1));
-            } catch (e) {
-              if (!missing(e) && e.name !== 'InvalidModificationError') throw e;
-            }
-          }
-          if(parents.size)writeDirectories.delete(this.root);
-          await writeAt(this.root, 'Sicherungen/Notenlistenverzeichnis.json', JSON.stringify({
-            version: 14,
-            commitId: next.commitId,
-            files: Object.keys(files)
-          }));
-          this.textCache={commitId:next.commitId,files};
-        } catch (e) {
-          this.textCache=null;txtError = e.message;
-        }
+        try {await this.syncTextLists(next,{force:forceTXT});}catch(e){this.textCache=null;txtError=e.message;}
         try {
           const backup=await this.root.getDirectoryHandle('Sicherungen'), points=[],meta={};
           if(!this.retentionMeta){try{this.retentionMeta=json(await readAt(this.root,'Sicherungen/Aufbewahrung.json'));}catch{this.retentionMeta={};}}

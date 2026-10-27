@@ -155,6 +155,7 @@ Notenblick.save = async function save() {
     Notenblick.savingPromise = null;
   }
 };
+Notenblick.refreshTextLists=async function(force=false){const A=Notenblick;if(!A.store)return;if(A.saving)await A.savingPromise;if(A.dirty){await A.save();if(A.dirty)throw Error('Bitte zuerst die Noten vollständig speichern.');}try{const result=await A.store.refreshTextLists(A.data,{force});A.textPending=false;A.status('TXT-Notenlisten geprüft');A.updateSaveDetails();return result;}catch(e){A.textPending=true;A.status('Notenlisten fehlen noch','failed');A.updateSaveDetails();throw Error('Die JSON-Noten sind unverändert gespeichert. Die TXT-Notenlisten konnten noch nicht vollständig aktualisiert werden. Bitte wähle unter Sicherung erneut TXT-Notenlisten aktualisieren. '+e.message);}};
 Notenblick.activate = function activate(next, d) {
   Notenblick.store = next;
   Notenblick.mode = 'working';
@@ -187,7 +188,7 @@ Notenblick.restoreData = async function restoreData(input) {
       repair: true,
       forceTXT: true,workspace:input.workspace||{},previousWorkspace:Notenblick.getWorkspace()
     });
-    Notenblick.data = result.data;
+    Notenblick.data = result.data;Notenblick.firstRun=false;
     Notenblick.lastSavedAt=result.data.updatedAt;
     Notenblick.dirty = !!result.txtError;
     Notenblick.seq = 1;

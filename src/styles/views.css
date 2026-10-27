@@ -471,3 +471,7 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 .final-value{font-variant-numeric:tabular-nums;min-height:40px}#halfYearReport{white-space:normal}#halfYearWarning{margin-top:16px}
 @media(max-width:520px){.final-summary{grid-template-columns:1fr}.final-meta{grid-template-columns:1fr}.final-meta dd{margin-bottom:10px}.final-tools{align-items:flex-start}}
 @media(max-width:420px){#dialog{overflow:auto}#dialogForm{display:block;max-height:none;overflow:visible;padding:16px}#dialogContent{overflow:visible}#dialogError{max-height:none}#dialog .dialog-header{align-items:flex-start;margin-bottom:16px}#dialogTitle{min-width:0;flex:1;font-size:1.1rem}#dialog .close{flex-shrink:0}#dialog .dialog-actions{justify-content:flex-start}}
+
+/* Shared administration rhythm, matching the existing grade workspace. */
+.admin-heading{margin:4px 0 22px}.admin-heading h2{margin:0 0 18px}.admin-heading .button-row{justify-content:flex-start}.admin-selection{display:flex;flex-wrap:wrap;gap:16px;margin:0 0 20px}.admin-selection .field{flex:0 1 19rem;min-width:0;max-width:100%}.admin-filters{align-items:end;gap:18px;margin:0 0 20px}.admin-filters .check{margin:0 0 10px}#classesDataTable th:first-child{min-width:7rem}#subjectsDataTable .weight-summary{min-width:10rem}.admin-heading+.table-panel{margin-top:20px}
+@media(max-width:640px){.admin-selection .field{flex:1 1 100%}.admin-filters{align-items:flex-start}.admin-heading .button-row{flex-wrap:wrap}}

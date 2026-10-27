@@ -26,7 +26,7 @@
       case 'legacy-archive':Notenblick.legacyArchive(id||Notenblick.ui.course,el.dataset.student);break;
       case 'legacy-review':Notenblick.legacyDialog(id||Notenblick.ui.course);break;
       case 'legacy-preview':Notenblick.legacyPreview?.();break;
-      case 'work-year':{const y=Notenblick.data.years.find(y=>y.id===id);if(!y)throw Error('Dieses Schuljahr ist nicht mehr vorhanden.');Object.assign(Notenblick.ui,{workingYear:id,historicalYear:'',year:id,class:'',course:''});Notenblick.normalizeContext();Notenblick.renderAdmin();Notenblick.remember();break;}
+      case 'work-year':{const y=Notenblick.data.years.find(y=>y.id===id);if(!y)throw Error('Dieses Schuljahr ist nicht mehr vorhanden.');Object.assign(Notenblick.ui,{workingYear:id,historicalYear:'',year:id,class:'',course:''});Notenblick.normalizeContext();Notenblick.renderAdmin();Notenblick.remember();Notenblick.$('[data-menu-key=year-'+id+']')?.focus();break;}
       case 'year-notes':Notenblick.ui.historicalYear=id===Notenblick.ui.workingYear?'':id;Notenblick.ui.year=id;Notenblick.ui.class='';Notenblick.ui.course='';Notenblick.normalizeContext();Notenblick.rendered={};Notenblick.activateGroup('main','notes',false,true);Notenblick.$('#class').focus();break;
       case 'current-year':Notenblick.ui.historicalYear='';Notenblick.ui.year=Notenblick.ui.workingYear;Notenblick.ui.class='';Notenblick.ui.course='';Notenblick.normalizeContext();Notenblick.rendered={};Notenblick.renderNotes();Notenblick.remember();Notenblick.$('#class').focus();break;
       case 'assessment-list': Notenblick.returnToAssessmentList(); break;
@@ -124,7 +124,7 @@
         {
           const s = Notenblick.getStudent(id);
           Notenblick.ensureClassEdit(Notenblick.data.classes.find(c=>c.id===s.classId));
-          Notenblick.confirm(s.archived ? 'Schüler wieder aufnehmen' : 'Teilnahme beenden', Notenblick.studentName(s) + (s.archived ? ' wird wieder in der Schülerliste angezeigt.' : ' wird als ausgeschieden geführt. Bisherige Noten bleiben erhalten.'), () => Notenblick.mutate(d => {
+          Notenblick.confirm(s.archived ? 'Schüler wieder aufnehmen' : 'Teilnahme beenden', Notenblick.studentName(s) + (s.archived ? ' wird wieder in der Schülerliste angezeigt.' : ' wird als ehemalig geführt. Bisherige Noten bleiben erhalten.'), () => Notenblick.mutate(d => {
             d.students.find(x => x.id === id).archived = !s.archived;
           }), s.archived ? 'Wieder aufnehmen' : 'Teilnahme beenden');
           break;
@@ -137,9 +137,9 @@
             x = Notenblick.data[key].find(x => x.id === id),
             archived = !x.archived;
           if(Notenblick.$('#dialog').open)Notenblick.closeModal();
-          Notenblick.confirm(archived ? key === 'years' ? 'Schuljahr abschließen' : 'Ausblenden' : 'Wieder öffnen', 'Alle bisherigen Noten und Namen bleiben erhalten.', () => Notenblick.mutate(d => {
-            d[key].find(x => x.id === id).archived = archived;
-          }));
+          const year=key==='years',title=year?(archived?'Schuljahr abschließen':'Schuljahr wieder öffnen'):(archived?'Ausblenden':'Wieder anzeigen');
+          const text=year?(archived?'Das '+Notenblick.schoolYear(x)+' wird abgeschlossen. Alle Klassen, Schüler und Noten bleiben erhalten, können anschließend aber nicht mehr bearbeitet werden. Du kannst das Schuljahr später wieder öffnen.':'Das '+Notenblick.schoolYear(x)+' wird wieder geöffnet. Klassen, Schüler und Noten bleiben erhalten und können wieder bearbeitet werden.'):(key==='classes'?'Die Klasse ':'Das Fach ')+x.name+(archived?' wird in der Auswahl ausgeblendet. Alle Schülerzuordnungen, Leistungen und Noten bleiben erhalten. Du kannst den Eintrag später wieder anzeigen.':' wird wieder in der Auswahl angezeigt. Alle bisherigen Daten bleiben erhalten.');
+          Notenblick.confirm(title,text,()=>Notenblick.mutate(d=>{d[key].find(x=>x.id===id).archived=archived;}),title);
           break;
         }
       case 'new-assessment':
@@ -211,9 +211,7 @@
           break;
         }
       case 'regenerate':
-        Notenblick.forceText = true;
-        Notenblick.mark();
-        await Notenblick.save();
+        await Notenblick.refreshTextLists(true);
         break;
       case 'undo':
         {

@@ -21,7 +21,7 @@
       try {
         return JSON.parse(localStorage.getItem(key) || 'null');
       } catch {
-        return null;
+        throw Error('Der vorhandene Browser-Datenbestand konnte nicht gelesen werden. Bitte eine Sicherung wiederherstellen.');
       }
     }
     return new Promise((resolve, reject) => {
