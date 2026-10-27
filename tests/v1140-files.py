@@ -5,6 +5,9 @@ from docx import Document
 from openpyxl import load_workbook
 from pypdf import PdfReader
 ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'tests/exports/v1140';names=json.loads((OUT/'manifest.json').read_text())['documents'];checks=[]
+tendency=re.compile(r'[1-6][,.]\d{2}\s*\([1-6][+−-]\)|[1-6][,.]\d{2}\s*[–−-]\s*[1-6]\s+(?:plus|minus)')
+assert tendency.search('2,25 (2−)') and tendency.search('1,75 – 2 plus')
+assert not tendency.search('2,25–20.01.2027'), 'Benachbarte Tabellenzellen sind keine Tendenz'
 compact=lambda s:''.join(unicodedata.normalize('NFKC',s).split())
 lo=os.environ.get('NOTENBLICK_LIBREOFFICE') or str(Path(os.environ.get('CODEX_PRIMARY_RUNTIME_ROOT','/nonexistent'))/'dependencies/bin/override/soffice')
 assert Path(lo).is_file(),'LibreOffice fehlt'
@@ -19,7 +22,7 @@ for name in names:
  text=(OUT/(name+'.txt')).read_text(encoding='utf-8-sig');csvtext=(OUT/(name+'.csv')).read_text(encoding='utf-8-sig')
  doc=Document(OUT/(name+'.docx'));doc_text=''.join(c.text for table in doc.tables for row in table.rows for c in row.cells)+''.join(p.text for p in doc.paragraphs)
  for source in [text,csvtext,doc_text]:
-  assert not re.search(r'\d[,\.]\d{2}\s*(?:\(|[–−]\s*\d)|\d\s+(?:plus|minus)',source),name
+  assert not tendency.search(source),name
   assert ('Halbjahresbemerkung' in source)==remarks
   assert ('Jahresbemerkung' in source)==remarks
   assert 'Zeugnisnote' in source
