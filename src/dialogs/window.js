@@ -32,7 +32,8 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
   Notenblick.$('#dialogError').hidden = true;
   Notenblick.submitDialog = fn;
   Notenblick.$('#dialog').showModal();
-  ([...Notenblick.$('#dialogContent').querySelectorAll('input:not([type=checkbox]):not([type=hidden]):not(:disabled),select:not(:disabled),textarea:not(:disabled)')].find(el=>!el.closest('[hidden]'))||Notenblick.$('#dialog .close')).focus();
+  const initial=options.focus?document.getElementById(options.focus):null;
+  (initial&&!initial.disabled&&!initial.closest('[hidden]')&&Notenblick.$('#dialogContent').contains(initial)?initial:[...Notenblick.$('#dialogContent').querySelectorAll('input:not([type=checkbox]):not([type=hidden]):not(:disabled),select:not(:disabled),textarea:not(:disabled)')].find(el=>!el.closest('[hidden]'))||Notenblick.$('#dialog .close')).focus();
 };
 Notenblick.closeModal = function closeModal() {
   if(!Notenblick.$('#dialog').open)return;

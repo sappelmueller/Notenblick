@@ -1,6 +1,6 @@
 """Independent readers and actual renderer output; no Windows/NVDA live claim."""
 from pathlib import Path
-import csv,io,json,os,subprocess,sys,tempfile,unicodedata,xml.etree.ElementTree as ET
+import csv,io,json,os,re,subprocess,sys,tempfile,unicodedata,xml.etree.ElementTree as ET
 from docx import Document
 from openpyxl import load_workbook
 from pypdf import PdfReader
@@ -19,6 +19,7 @@ for name in names:
  text=(OUT/(name+'.txt')).read_text(encoding='utf-8-sig');csvtext=(OUT/(name+'.csv')).read_text(encoding='utf-8-sig')
  doc=Document(OUT/(name+'.docx'));doc_text=''.join(c.text for table in doc.tables for row in table.rows for c in row.cells)+''.join(p.text for p in doc.paragraphs)
  for source in [text,csvtext,doc_text]:
+  assert not re.search(r'\d[,\.]\d{2}\s*(?:\(|[–−]\s*\d)|\d\s+(?:plus|minus)',source),name
   assert ('Halbjahresbemerkung' in source)==remarks
   assert ('Jahresbemerkung' in source)==remarks
   assert 'Zeugnisnote' in source
@@ -34,13 +35,14 @@ for name in names:
    actual=ws.cell(y,x)
    if 'number' in cell:
     assert actual.data_type=='n' and abs(actual.value-cell['number'])<1e-12
-    if cell.get('finalType')=='information':assert actual.number_format=='0.00" (2+)"',actual.number_format
+    if cell.get('finalType')=='information':assert actual.number_format=='0.00',actual.number_format
    else:assert (actual.value or '')==cell['text']
  for source in [OUT/(name+'.pdf'),OUT/(name+'-print.pdf'),word/(name+'.pdf')]:
   pdf=PdfReader(source);pages+=len(pdf.pages);full=compact(''.join(p.extract_text() for p in pdf.pages));landscape=float(pdf.pages[0].mediabox.width)>float(pdf.pages[0].mediabox.height);assert landscape==model['landscape'],(source,'orientation')
   for section in model['sections']:
    for row in section['rows']:
     for cell in row:assert compact(cell['text']) in full,(source,cell['text'])
+  assert not re.search(r'\d[,\.]\d{2}\s*\([1-6][+−]|[1-6](?:plus|minus)',full),source
   assert ('Halbjahresbemerkung' in full)==remarks
   assert ('Jahresbemerkung' in full)==remarks
   bbox=subprocess.run(['pdftotext','-bbox-layout',str(source),'-'],capture_output=True,text=True,timeout=30);assert bbox.returncode==0
