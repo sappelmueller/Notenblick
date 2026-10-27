@@ -18,7 +18,7 @@
   };
   Notenblick.showNotesPane = function showNotesPane(key) {
     if (!Notenblick.getCourse()) {
-      Notenblick.setContent(Notenblick.notePanel(key), `<div class="blank"><h2>${!Notenblick.data.years.length ? 'Notenverwaltung einrichten' : !Notenblick.getClass() ? 'Klasse anlegen' : 'Fach anlegen'}</h2><p>${!Notenblick.data.years.length ? 'Beginne mit deinem ersten Schuljahr.' : 'Ergänze die Klasse und ihre Fächer in der Verwaltung.'}</p>${!Notenblick.data.years.length ? Notenblick.b('setup','Jetzt einrichten','','button primary') : Notenblick.b('open-admin','Zur Verwaltung','','button primary')}</div>`,'Notenübersicht');return;
+      Notenblick.setContent(Notenblick.notePanel(key), `<div class="blank"><h2>${!Notenblick.data.years.length ? 'Notenverwaltung einrichten' : !Notenblick.getClass() ? 'Klasse anlegen' : 'Fach anlegen'}</h2><p>${!Notenblick.data.years.length ? 'Beginne mit deinem ersten Schuljahr.' : 'Ergänze die Klasse und ihre Fächer in der Verwaltung.'}</p>${!Notenblick.data.years.length ? (Notenblick.firstRun?Notenblick.b('setup','Jetzt einrichten','','button primary'):Notenblick.b('new-year','Schuljahr anlegen','','button primary')) : Notenblick.b('open-admin','Zur Verwaltung','','button primary')}</div>`,'Notenübersicht');return;
     }
     if (key === 'overview') Notenblick.renderOverview();
     else if (key === 'assessments'||Notenblick.kinds.includes(key)) Notenblick.renderAssessments(key==='assessments'?'':key);

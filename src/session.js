@@ -15,19 +15,13 @@
     });
     return opening;
   }
+  function local(){try{return JSON.parse(localStorage.getItem(key)||'null');}catch{throw Error('Der vorhandene Browser-Datenbestand konnte nicht gelesen werden. Bitte eine Sicherung wiederherstellen.');}}
   async function get() {
-    const d = await db();
-    if (!d) {
-      try {
-        return JSON.parse(localStorage.getItem(key) || 'null');
-      } catch {
-        throw Error('Der vorhandene Browser-Datenbestand konnte nicht gelesen werden. Bitte eine Sicherung wiederherstellen.');
-      }
-    }
+    const d=await db();if(!d)return local();
     return new Promise((resolve, reject) => {
       const tx = d.transaction('state', 'readonly'),
         r = tx.objectStore('state').get('current');
-      r.onsuccess = () => resolve(r.result || null);
+      r.onsuccess = () => {try{resolve(r.result||local());}catch(e){reject(e);}};
       r.onerror = () => reject(r.error);
     });
   }
@@ -62,6 +56,7 @@
       ...v,
       data: JSON.parse(JSON.stringify(data))
     })),
+    saveWithWorkspace:(data,workspace)=>g.NRDesktop?.available?Promise.resolve():update(v=>({...v,data:JSON.parse(JSON.stringify(data)),workspace:JSON.parse(JSON.stringify(workspace))})),
     protectOral:snapshot=>update(v=>({...v,oralProtection:JSON.parse(JSON.stringify(snapshot))})),
     saveWorkspace:workspace=>g.NRDesktop?.available?Promise.resolve():update(v=>({...v,workspace:JSON.parse(JSON.stringify(workspace))})),
     remember: handle => update(v => ({

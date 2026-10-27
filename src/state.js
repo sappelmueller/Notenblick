@@ -22,6 +22,7 @@ Notenblick.mode = 'working';
 Notenblick.dirty = false;
 Notenblick.seq = 0;
 Notenblick.savedSeq = 0;
+Notenblick.jsonSavedSeq=0;Notenblick.textPending=false;
 Notenblick.saving = false;
 Notenblick.sessionWrites = 0;
 Notenblick.savingPromise = null;

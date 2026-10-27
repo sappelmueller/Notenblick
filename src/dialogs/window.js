@@ -21,6 +21,7 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
     details:[...document.querySelectorAll('#oralSettings[open]')].map(el=>el.id),
     wraps:[...document.querySelectorAll('.table-wrap')].filter(el=>el.id&&!el.closest('[hidden]')).map(el=>({id:el.id,x:el.scrollLeft,y:el.scrollTop}))
   };
+  Notenblick.dialogOnClose=options.onClose||null;
   Notenblick.dialogCancellable=options.cancelWhileBusy===true;
   Notenblick.setDialogSize(options.size||'medium');
   Notenblick.$('#dialogNext').hidden=true;Notenblick.oralDraft=null;Notenblick.afterClose=null;
@@ -38,6 +39,7 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
 Notenblick.closeModal = function closeModal() {
   if(!Notenblick.$('#dialog').open)return;
   const cancel=Notenblick.migrationCancel;Notenblick.migrationCancel=null;
+  const onClose=Notenblick.dialogOnClose;Notenblick.dialogOnClose=null;
   const previous = Notenblick.opener;
   Notenblick.$('#dialog').close();
   Notenblick.submitDialog = null;
@@ -58,6 +60,7 @@ Notenblick.closeModal = function closeModal() {
   }
   if(previous?.main===Notenblick.ui.main&&previous?.course===Notenblick.ui.course){for(const pos of previous.wraps||[]){const el=document.getElementById(pos.id);if(el){el.scrollLeft=pos.x;el.scrollTop=pos.y;}}window.scrollTo?.(previous.windowX,previous.windowY);}
   Notenblick.oralDraft=null;Notenblick.legacyPreview=null;if(cancel)cancel();
+  if(onClose)onClose();
   const next=Notenblick.afterClose; Notenblick.afterClose=null; if(next)next();
 };
 Notenblick.submitModal=async function(next=false){
