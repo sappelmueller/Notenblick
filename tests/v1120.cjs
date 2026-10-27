@@ -4,7 +4,7 @@ const out=path.join(__dirname,'exports/v1120');fs.mkdirSync(out,{recursive:true}
 (async()=>{
  const ctx=await require('./load.cjs').load({beforeParse:w=>w.Blob=Blob});({w,q:A}=ctx);const N=w.NR;
  const fonts=['DejaVuSans.ttf','DejaVuSans-Bold.ttf'].map(n=>new w.Uint8Array(fs.readFileSync(path.join(__dirname,'../src/fonts',n)))),pdf=A.reportPdf;A.reportPdf=r=>pdf(r,{fonts});
- const install=n=>{A.data=require('./v1120-fixture.cjs')(N,n);A.normalizeContext();A.refreshCurrent();const c=A.exportContext('pupil');c.studentId=A.getCourse().studentIds[0];return c;};
+ const install=n=>{A.data=require('./v1120-fixture.cjs')(N,n);A.normalizeContext();A.activateGroup('main','notes');A.refreshCurrent();const c=A.exportContext('pupil');c.studentId=A.getCourse().studentIds[0];return c;};
  let captured;A.download=async(name,value,mime)=>{captured={name,value,mime};return true;};
  for(const n of [1,10,28,40,100])for(const format of ['pdf','docx','xlsx','txt','csv']){
   const c=install(n),raw=JSON.stringify(A.data),view=JSON.stringify(A.getWorkspace()),progress=[];captured=null;
@@ -14,7 +14,7 @@ const out=path.join(__dirname,'exports/v1120');fs.mkdirSync(out,{recursive:true}
   assert.equal(JSON.stringify(A.data),raw);assert.equal(JSON.stringify(A.getWorkspace()),view);
  }checks.push('1/10/28/40/100 Schüler × fünf echte Dateiformate, je ein Bericht pro Schüler, ohne Veränderung von Noten oder Ansicht');
  let c=install(10),course=A.getCourse();A.data.students[0].archived=true;course.inactiveStudentIds=[course.studentIds[1]];assert.equal(A.batchStudents(c).length,8);assert.equal(A.batchStudents(c,true).length,10);
- await A.exportPupilBatch(c,{includeExited:true,entries:'entered',grouping:'date',remarks:false},'txt');fs.writeFileSync(path.join(out,'batch-exited.zip'),Buffer.from(await captured.value.arrayBuffer()));manifest.batches.push({name:'batch-exited',count:10,format:'txt'});checks.push('Ausgeschiedene/archivierte Schüler nur ausdrücklich zusätzlich; leere Berichte und gleiche Namen erhalten');
+ await A.exportPupilBatch(c,{includeExited:true,entries:'entered',grouping:'date',remarks:false},'txt');fs.writeFileSync(path.join(out,'batch-exited.zip'),Buffer.from(await captured.value.arrayBuffer()));manifest.batches.push({name:'batch-exited',count:10,format:'txt'});checks.push('Ehemalige/archivierte Schüler nur ausdrücklich zusätzlich; leere Berichte und gleiche Namen erhalten');
  c=install(1);const used=new Set();for(const first of ['CON','NUL','COM1','../Pfad','Anna','Anna','anna','Anna_2','Anna.','A'.repeat(250)]){const n=A.batchEntryName({first,last:''},'txt',used);assert.ok(!/[<>:"/\\|?*]/.test(n));assert.ok(n.length<=120);assert.ok(!/^(CON|NUL|COM1)\./i.test(n));}assert.equal(used.size,10);
  for(const name of ['../bad','/bad','bad\\name','a/../b'])assert.throws(()=>A.zipWriter().add(name,new w.Uint8Array([1])));const zip=A.zipWriter();zip.add('A.txt','test');assert.throws(()=>zip.add('a.txt','test'));zip.discard();checks.push('Sichere eindeutige Windows-Namen; reservierte Namen, Pfade und doppelte Einträge abgefangen');
  let saved=0;A.download=async()=>{saved++;return true;};let running=true;

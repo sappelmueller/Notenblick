@@ -4,7 +4,7 @@ let ctx,A,w;const checks=[],out=path.join(__dirname,'exports');fs.mkdirSync(out,
 const plain=x=>JSON.parse(JSON.stringify(x));
 (async()=>{
  ctx=await require('./load.cjs').load();({q:A,w}=ctx);const N=w.NR;assert.deepEqual(ctx.errors,[]);
- A.data=N.upgrade(require('./v190-fixture.cjs')(N));A.normalizeContext();A.refreshCurrent();const course=A.getCourse(),sid=course.studentIds[0];A.data.finals.push({id:'export-final',courseId:course.id,studentId:sid,period:'all',grade:'2',note:'Manuelle Zeugnisbemerkung'});
+ A.data=N.upgrade(require('./v190-fixture.cjs')(N));A.normalizeContext();A.activateGroup('main','notes');A.refreshCurrent();const course=A.getCourse(),sid=course.studentIds[0];A.data.finals.push({id:'export-final',courseId:course.id,studentId:sid,period:'all',grade:'2',note:'Manuelle Zeugnisbemerkung'});
  for(let i=0;i<17;i++)A.data.assessments.push({id:'export-wide-'+i,courseId:course.id,period:'1',kind:'exam',date:'2026-10-25',title:'Gleiche Bezeichnung '+i+' – äöü',weight:i===0?'1.5':'1',isGfs:i===0,...(i===1?{participantIds:[sid]}:{}),results:{[sid]:{status:'graded',grade:'2.75',note:'Vollständige Bemerkung\nZweite Zeile'}}});
  N.validate(A.data);A.data=N.clone(A.data);const raw=JSON.stringify(A.data),state=JSON.stringify(A.getWorkspace());
  const fonts=['DejaVuSans.ttf','DejaVuSans-Bold.ttf'].map(name=>new w.Uint8Array(fs.readFileSync(path.join(__dirname,'../src/fonts',name))));

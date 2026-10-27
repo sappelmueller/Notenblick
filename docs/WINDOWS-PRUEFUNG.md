@@ -56,3 +56,11 @@ Diese Punkte sind ein offener Prüfplan, kein Testnachweis:
 - Escape nach geschlossener Auswahlliste verwirft den Entwurf; Speichern/Abbrechen gibt Fokus zurück. Speicherfehler erhält Eingaben. Bestehende 1.14.0-Daten und alle Exporte/Sicherungen/Schüler-ZIPs kontrollieren.
 
 Automatische Enter-Navigation bleibt bis zum dokumentierten zuverlässigen Windows-/NVDA-Livetest deaktiviert. Chromium/axe belegt keine tatsächlich gesprochenen NVDA-Ansagen.
+
+## Ergänzung 1.16.0 – offen, kein Testnachweis
+
+- Strg+Enter in allen drei Abschlussdialogen mit NVDA Sprache und Braille: nächster sichtbarer Schüler, dessen passender Durchschnitt oder „Noch kein Durchschnitt“ und aktueller Notenwert; keine doppelte Namens-/Statusansage. Native Auswahl, Filter, Tabellenende und Escape erhalten.
+- TXT-Notenlisten mit Windows-Editor/NVDA ohne laufendes Notenblick lesen: eine Übersicht je Fach, genau ein Durchschnitt je Schüler, beide Festlegungen/offene Werte, alle Leistungsdateien, Schülernoten-Unterordner, Bemerkungen und ehemalige Schüler. Gelöschte Datei sowie unterbrochene Aktualisierung erneuern; JSON bleibt sicher.
+- Alle vier Verwaltungsregister mit Tab/Pfeilen/Pos1/Ende/Enter/Escape: Überschriften, Direktverweise, Suche, Filter, Bestätigungen und Rückkehrfokus. Arbeitsjahr bleibt beim Abschließen erhalten.
+- Neue portable Ausgabe ohne Daten: Willkommen, vier Schritte mit mehreren Klassen/Fächern und getrennten Schülerlisten, Vorschau/mehrteiligen Namen/Dubletten/Fachteilnahme, Zurück und Abbruch. Abschließenden Schreibfehler, Wiederholung und Neustart prüfen. Bestehender 1.15.0-Datenordner oder beschädigte Dateien dürfen niemals neu eingerichtet/überschrieben werden.
+- 100/125/150/200 Prozent tatsächliche Windows-Skalierung, kleine Fenster, letzte Zeilen, Dialogaktionen und horizontale Tabellen. Word/Excel/Adobe Reader, native Export-/Druckdialoge und physischer Druck weiterhin gesondert abnehmen.

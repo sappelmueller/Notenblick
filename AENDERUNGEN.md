@@ -1,3 +1,12 @@
+# Notenblick 1.16.0
+
+- TXT-Notfalllisten: Halbjahres- und Zeugnisnote immer sichtbar, offene Werte als „–“, genau ein berechneter Gesamtdurchschnitt pro Schüler. Gewichtungen, Bemerkungen, ehemalige Schüler und historische Noten erhalten; lesbare Übersichten auch ohne Leistungen. Zusätzliche eindeutige Windows-kompatible TXT-Dateien unter „Schülernoten“ für jeden Fachschüler.
+- TXT-Aktualisierung prüft tatsächliche Inhalte und liest geschriebene Dateien zurück. SHA-Verzeichnis unterscheidet vollständig/unterbrochen. Fehlende oder geänderte Listen werden sicher erneuert, alte Dateien erst danach und nur bei nachgewiesen unverändertem eigenen Inhalt bereinigt. TXT-only-Wiederholung verändert gespeicherte JSON-Noten nicht.
+- Verwaltung: einheitliche H2/Aktionen/Auswahl/Tabelle, kompakte Klassen/Fächer mit direkten Verweisen, getrenntes Arbeitsjahr in der Statusspalte, verständliche Bestätigungen und natürliche Teilnahmebegriffe. Bestehende Zuordnungen und interne Statuswerte bleiben erhalten.
+- Ersteinrichtung: Willkommen nur bei wirklich neuen Daten; vier Schritte für beliebig mehrere Klassen, Fächer und Schülerlisten mit Importvorschau, Dublettenprüfung und Fachteilnahme. Zurück/Abbruch ohne Teilspeicherung. Gemeinsame validierte Veröffentlichung mit wiederholbaren Speicherfehlern und initialer Einstellungswiederherstellung.
+- Abschlussnoten: sichtbaren Tastaturhinweis entfernt; Strg+Enter bleibt erhalten und in der Hilfe erklärt. Auswahlfelder nennen zentral Schüler und vorhandenen passenden Durchschnitt, ohne zusätzliche Live-Region. Native Enter-/Pfeiltastenbedienung bleibt erhalten.
+- Versionierte Struktur-, Browser-/axe-, Speicher-/Fehler-/Update-Regressionen ergänzt. Rechenmodule, atomarer C#-Speicherkern, Exporte und portable Struktur bleiben erhalten. Tatsächliche Windows-/NVDA-/Office-Abnahme weiterhin gesondert erforderlich.
+
 # Notenblick 1.15.0 – Abschlussnoten einfacher bedienen
 
 - „Halbjahresausgabe festlegen“ mit Klassen-/Jahreskontext und dynamisch zugeordneter Erklärung; Einstellungen und Bestandsnotenschutz bleiben erhalten.

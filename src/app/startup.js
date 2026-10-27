@@ -22,7 +22,7 @@ Notenblick.boot = async function boot() {
       }
       if(loadError)throw loadError;
       const view=await next.loadWorkspace();
-      Notenblick.workspace=raw?.workspace&&raw.workspace.setupCommitId===raw.commitId?raw.workspace:view||raw?.workspace||Notenblick.preferencesWorkspace(raw)||{};
+      Notenblick.workspace=raw?.workspace&&raw.workspace.setupCommitId===raw.commitId&&view?.setupCommitId!==raw.commitId?raw.workspace:view||raw?.workspace||Notenblick.preferencesWorkspace(raw)||{};
       const empty=!raw;
       if(empty&&await next.hasDataEvidence())throw Error('Im Datenordner liegen bereits Dateien, aber keine lesbare Hauptdatei. Bitte stelle unter Sicherung einen vorhandenen Stand wieder her.');
       Notenblick.firstRun=empty;
