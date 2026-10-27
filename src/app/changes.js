@@ -92,16 +92,16 @@ Notenblick.mutate = function mutate(fn, {
   if (refresh) Notenblick.refreshCurrent();
 };
 // Publish a draft only after the existing storage layer has accepted its JSON.
-Notenblick.commitDraft=async function(fn){
+Notenblick.commitDraft=async function(fn,options={}){
  const A=Notenblick;if(A.starting||A.fatalStart)throw Error('Bitte zuerst deine Noten vollständig öffnen.');
  if(A.saving)await A.savingPromise;if(A.store&&A.dirty){await A.save();if(A.dirty)throw Error('Der bisherige Stand konnte noch nicht vollständig gespeichert werden. Bitte erneut speichern.');}
  const previous=A.data,next=A.N.clone(previous);fn(next);next.appVersion=A.version;A.N.validate(next);
  const controls=[...A.$('#dialogContent').querySelectorAll('input,select,textarea,button')].map(el=>[el,el.disabled]);for(const[el]of controls)el.disabled=true;
  let finish;A.savingPromise=new Promise(r=>finish=r);A.saving=true;clearTimeout(A.saveTimer);
  try{
-  const result=A.store?await A.store.save(next,{workspace:A.getWorkspace()}):A.mode!=='demo'?(await window.NRSession.save(next),null):null;
+  const result=A.store?await A.store.save(next,{workspace:options.workspace||A.getWorkspace(),initialSetup:options.initialSetup===true}):A.mode!=='demo'?(await(options.workspace?window.NRSession.saveWithWorkspace(next,options.workspace):window.NRSession.save(next)),null):null;
   if(A.data!==previous)throw Error('Die Daten wurden inzwischen verändert. Bitte den Dialog erneut öffnen.');
-  A.undo.push(A.N.clone(previous));if(A.undo.length>20)A.undo.shift();A.data=result?.data||next;A.seq++;A.savedSeq=A.store&&!result?.txtError?A.seq:A.seq-1;A.dirty=!!result?.txtError||!A.store;if(A.mode==='none')A.mode='working';A.rendered={};A.cache();A.refreshCurrent();A.lastSavedAt=A.data.updatedAt;
+  A.undo.push(A.N.clone(previous));if(A.undo.length>20)A.undo.shift();A.data=result?.data||next;A.seq++;A.jsonSavedSeq=A.seq;A.textPending=!!result?.txtError;A.savedSeq=A.store&&!result?.txtError?A.seq:A.seq-1;A.dirty=!!result?.txtError||!A.store;if(A.mode==='none')A.mode='working';A.rendered={};A.cache();A.refreshCurrent();A.lastSavedAt=A.data.updatedAt;
   if(result?.txtError){A.status('Notenlisten fehlen noch','failed');throw Error('Die Noten sind gespeichert. Die Textlisten konnten noch nicht aktualisiert werden. Bitte wähle erneut Speichern.');}
   A.status(A.store?'Gespeichert':A.mode==='demo'?'Beispieldaten':'Im Browser aufbewahrt');if(!A.pending.size)A.error();
  }finally{for(const[el,disabled]of controls)if(el.isConnected)el.disabled=disabled;A.saving=false;finish();A.savingPromise=null;}
@@ -109,6 +109,7 @@ Notenblick.commitDraft=async function(fn){
 Notenblick.save = async function save() {
   clearTimeout(Notenblick.saveTimer);
   if (Notenblick.saving) return Notenblick.savingPromise;
+  if(Notenblick.store&&Notenblick.textPending&&Notenblick.dirty&&Notenblick.jsonSavedSeq===Notenblick.seq)return Notenblick.refreshTextLists(true);
   if (!Notenblick.store || !Notenblick.dirty) return;
   let finish;
   Notenblick.savingPromise = new Promise(r => finish = r);
@@ -128,6 +129,7 @@ Notenblick.save = async function save() {
         updatedAt: result.data.updatedAt,
         appVersion: result.data.appVersion
       });
+      Notenblick.jsonSavedSeq=target;Notenblick.textPending=!!result.txtError;
       Notenblick.savedSeq = target;
       Notenblick.dirty = Notenblick.savedSeq < Notenblick.seq;
       if (result.txtError) {
@@ -155,13 +157,18 @@ Notenblick.save = async function save() {
     Notenblick.savingPromise = null;
   }
 };
-Notenblick.refreshTextLists=async function(force=false){const A=Notenblick;if(!A.store)return;if(A.saving)await A.savingPromise;if(A.dirty){await A.save();if(A.dirty)throw Error('Bitte zuerst die Noten vollständig speichern.');}try{const result=await A.store.refreshTextLists(A.data,{force});A.textPending=false;A.status('TXT-Notenlisten geprüft');A.updateSaveDetails();return result;}catch(e){A.textPending=true;A.status('Notenlisten fehlen noch','failed');A.updateSaveDetails();throw Error('Die JSON-Noten sind unverändert gespeichert. Die TXT-Notenlisten konnten noch nicht vollständig aktualisiert werden. Bitte wähle unter Sicherung erneut TXT-Notenlisten aktualisieren. '+e.message);}};
+Notenblick.refreshTextLists=async function(force=false){
+ const A=Notenblick;if(!A.store)return;if(A.saving)await A.savingPromise;
+ if(A.dirty&&!(A.textPending&&A.jsonSavedSeq===A.seq)){await A.save();if(A.dirty)throw Error('Bitte zuerst die Noten vollständig speichern.');}
+ const at=A.seq;try{const result=await A.store.refreshTextLists(A.data,{force});A.textPending=false;if(A.seq===at&&A.jsonSavedSeq===at){A.dirty=false;A.savedSeq=at;A.forceText=false;}A.cache();A.status(A.dirty?'Änderungen noch nicht gespeichert':'TXT-Notenlisten geprüft');A.updateSaveDetails();return result;}
+ catch(e){A.textPending=true;A.status('Notenlisten fehlen noch','failed');A.updateSaveDetails();throw Error('Die JSON-Noten sind unverändert gespeichert. Die TXT-Notenlisten konnten noch nicht vollständig aktualisiert werden. Bitte wähle unter Sicherung erneut TXT-Notenlisten aktualisieren. '+e.message);}
+};
 Notenblick.activate = function activate(next, d) {
   Notenblick.store = next;
   Notenblick.mode = 'working';
   Notenblick.data = Notenblick.N.upgrade(d);
   Notenblick.dirty = false;
-  Notenblick.seq = Notenblick.savedSeq = 0;
+  Notenblick.seq = Notenblick.savedSeq = Notenblick.jsonSavedSeq = 0;Notenblick.textPending=false;
   Notenblick.undo = [];
   Notenblick.pending.clear();
   Notenblick.rendered = {};
@@ -191,7 +198,7 @@ Notenblick.restoreData = async function restoreData(input) {
     Notenblick.data = result.data;Notenblick.firstRun=false;
     Notenblick.lastSavedAt=result.data.updatedAt;
     Notenblick.dirty = !!result.txtError;
-    Notenblick.seq = 1;
+    Notenblick.seq = 1;Notenblick.jsonSavedSeq=1;Notenblick.textPending=!!result.txtError;
     Notenblick.savedSeq = result.txtError ? 0 : 1;
     Notenblick.status(result.txtError ? 'Notenlisten fehlen noch' : 'Gespeichert', result.txtError ? 'failed' : '');
     if (result.txtError) Notenblick.error('Die Noten wurden wiederhergestellt. Bitte aktualisiere die Notenlisten erneut.','storage');
@@ -199,7 +206,7 @@ Notenblick.restoreData = async function restoreData(input) {
     Notenblick.data = restored;
     Notenblick.mode = 'working';
     Notenblick.dirty = true;
-    Notenblick.seq = 1;
+    Notenblick.seq = 1;Notenblick.jsonSavedSeq=1;Notenblick.textPending=!!result.txtError;
     Notenblick.savedSeq = 0;
     Notenblick.status('Noch nicht gespeichert', 'pending');
   }

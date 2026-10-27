@@ -7,6 +7,7 @@
       id = el.dataset.id,
       kind = el.dataset.kind;
     if (a !== 'close' && !Notenblick.canLeave()) return;
+    if(a.startsWith('setup-')&&Notenblick.setupDraft)return Notenblick.setupAction(el);
     switch (a) {
       case 'weight-preview':Notenblick.previewWeights?.();break;
       case 'matrix-page':{const w=Notenblick.W();w.matrixPages[kind]=Math.max(0,(w.matrixPages[kind]||0)+Number(el.dataset.step));Notenblick.refreshTable('matrix');Notenblick.remember();const b=Notenblick.$('[data-action=matrix-page][data-step="'+el.dataset.step+'"]');(b&&!b.disabled?b:Notenblick.$('#matrixTitle'))?.focus();break;}

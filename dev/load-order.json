@@ -41,6 +41,7 @@
   "dialogs/finals.js",
   "dialogs/transfers.js",
   "dialogs/names.js",
+  "dialogs/setup.js",
   "app/files.js",
   "exports/report.js",
   "exports/text.js",

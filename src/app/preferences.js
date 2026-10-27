@@ -46,6 +46,6 @@ A.subjectCode=function(c){if(Object.hasOwn(A.prefs.courseCodes,c.id))return A.pr
 A.suggestSubjectCode=function(name){const clean=x=>x.toLocaleLowerCase('de').normalize('NFKC').replace(/[\s,\/–—-]+/g,' ').trim();return (window.NRSubjectCatalog?.subjects||[]).find(x=>x.names.some(n=>clean(n)===clean(name)))?.code||'';};
 A.copyCoursePresentation=function(sourceId,targetId){if(Object.hasOwn(A.prefs.courseCodes,sourceId))A.prefs.courseCodes[targetId]=A.prefs.courseCodes[sourceId];};
 A.copyClassPresentation=function(sourceId,targetId,d=A.data){for(const c of d.courses.filter(c=>c.classId===sourceId)){const target=d.courses.find(x=>x.classId===targetId&&x.name===c.name);if(target)A.copyCoursePresentation(c.id,target.id);}};
-A.newCourseConfig=()=>({calculationMode:A.prefs.defaultCalculationMode,weights:A.N.clone(A.prefs.defaultWeights),precision:A.prefs.defaultPrecision,rounding:A.prefs.defaultRounding});
+A.newCourseConfig=(p=A.prefs)=>({calculationMode:p.defaultCalculationMode,weights:A.N.clone(p.defaultWeights),precision:p.defaultPrecision,rounding:p.defaultRounding});
 A.schoolYear=y=>/^Schuljahr\b/i.test(y.label)?y.label:'Schuljahr '+y.label;
 })(globalThis.Notenblick);

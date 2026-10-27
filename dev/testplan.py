@@ -2,8 +2,8 @@
 from pathlib import Path
 import subprocess
 
-QUICK=['domain-storage','transfers','ui','new-features','v140','v150','v160','v170','v180','v190','v1100','v1110','v1120','v1130','v1140','v1150']
-STORAGE=['view-storage','v150-storage','v160-storage','v170-storage','v180-storage','v190-storage','v1110-storage','v1120-storage','v1130-storage','v1140-storage','workflow']
+QUICK=['domain-storage','transfers','ui','new-features','v140','v150','v160','v170','v180','v190','v1100','v1110','v1120','v1130','v1140','v1150','v1160']
+STORAGE=['view-storage','v150-storage','v160-storage','v170-storage','v180-storage','v190-storage','v1110-storage','v1120-storage','v1130-storage','v1140-storage','v1160-storage','workflow']
 BROWSER=['browser','v170-browser','v180-browser','v190-browser','v1100-browser','v1110-browser','v1120-browser','v1130-browser','v1140-browser','v1150-browser']
 FILES=['export-files','office-schema','v1120-files','v1130-files','v1140-files']
 ALL=['infrastructure',*QUICK,'native-host',*STORAGE,'large','loader',*BROWSER,*FILES]

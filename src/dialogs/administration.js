@@ -62,67 +62,6 @@ Notenblick.membersDialog = function membersDialog(c) {
     });
   });
 };
-Notenblick.setup = function setup() {
-  Notenblick.modal('Notenverwaltung einrichten', `<div class="form-grid">${Notenblick.field('setup-year', 'Schuljahr', Notenblick.schoolYearLabel(), 'required maxlength="80"')}${Notenblick.field('setup-class', 'Klasse', '', 'required maxlength="80"')}<div class="full">${Notenblick.field('setup-subject', 'Erstes Fach', '', 'required maxlength="80"')}</div><div class="full">${Notenblick.namesInput('setup-names','Schülerliste (optional)')}</div><label class="check full" id="setupDuplicate" hidden><input type="checkbox" id="setupAllowDuplicate">Gleiche Namen zusätzlich anlegen</label></div>`, () => {
-    const label = Notenblick.required('setup-year', 'das Schuljahr'),
-      className = Notenblick.required('setup-class', 'die Klasse'),
-      subjectName = Notenblick.required('setup-subject', 'das Fach'),
-      names = Notenblick.readNames('setup-names',true);
-    const seen = new Set();
-    let duplicate = false;
-    for (const s of names) {
-      const key = (s.first + '|' + s.last).toLocaleLowerCase('de');
-      if (seen.has(key)) duplicate = true;
-      seen.add(key);
-    }
-    if (duplicate && !Notenblick.$('#setupAllowDuplicate').checked) {
-      Notenblick.$('#setupDuplicate').hidden = false;
-      throw Error('In der Schülerliste kommen gleiche Namen vor. Prüfe die Liste oder bestätige die zusätzlichen Schüler.');
-    }
-    Notenblick.mutate(d => {
-      const y = {
-          id: Notenblick.N.id(),
-          label,
-          archived: false
-        },
-        cl = {
-          id: Notenblick.N.id(),
-          yearId: y.id,
-          name: className,
-          halfYearReport: 'information',
-          archived: false
-        };
-      d.years.push(y);
-      d.classes.push(cl);
-      const students = names.map(row => ({
-        id: Notenblick.N.id(),
-        classId: cl.id,
-        ...row,
-        archived: false
-      }));
-      d.students.push(...students);
-      const c = {
-        id: Notenblick.N.id(),
-        classId: cl.id,
-        name: subjectName,
-        studentIds: students.map(s => s.id),
-        inactiveStudentIds: [],
-        ...Notenblick.newCourseConfig(),
-        lockedPeriods: [],
-        archived: false
-      };
-      d.courses.push(c);
-      Object.assign(Notenblick.ui, {
-        year: y.id,
-        class: cl.id,
-        course: c.id,
-        adminYear: y.id,
-        adminClass: cl.id
-      });
-    });
-    Notenblick.remember();
-  });
-};
 Notenblick.parseNames=text=>Notenblick.N.parseNameLines(text,'last-first').map(({first,last,alias})=>({first,last,alias}));
 Notenblick.schoolYearLabel = function schoolYearLabel() {
   const now = new Date(),

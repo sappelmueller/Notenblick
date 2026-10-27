@@ -73,7 +73,7 @@
     }
     async hasDataEvidence(){
       for await(const [name,h] of this.root.entries()){
-        if(h.kind==='file'&&name!=='Ansicht.json'&&!name.startsWith('.notenblick-'))return true;
+        if(h.kind==='file'&&!['Ansicht.json','InBenutzung.lock'].includes(name)&&!name.startsWith('.notenblick-Schreibpruefung-'))return true;
         if(h.kind==='directory'&&['Sicherungen','Notenlisten'].includes(name))for await(const entry of h.entries())return true;
       }return false;
     }
@@ -104,7 +104,8 @@
       forceTXT = false,
       repair = false,
       workspace = null,
-      previousWorkspace = null
+      previousWorkspace = null,
+      initialSetup = false
     } = {}) {
       if (this.saving) throw Error('Bitte warte, bis die Noten gespeichert sind.');
       this.saving = true;
@@ -130,6 +131,7 @@
         next.revision = Math.max(current?.revision || 0, next.revision) + 1;
         next.commitId = N.id();
         next.updatedAt = new Date().toISOString();
+        if(initialSetup){if(current)throw Error('Es sind inzwischen Daten vorhanden. Die Einrichtung hat nichts überschrieben.');next.workspace={...N.clone(workspace||{}),setupCommitId:next.commitId};}
         const full=(d,previous=false)=>({...d,workspace:(previous?previousWorkspace:null)||workspace||d.workspace||{}});
         const snap = d => `Sicherungen/Stand_${String(d.revision).padStart(8, '0')}_${d.commitId}.json`;
         const snapshotMeta=new Map([[snap(next).split('/').at(-1),{at:next.updatedAt,revision:next.revision}]]);
