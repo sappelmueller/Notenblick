@@ -35,8 +35,8 @@ A.buildReport=function(ctx,options={}){
  const calc=sid=>{if(!cache.has(sid))cache.set(sid,A.calculation(c,sid));return cache.get(sid);};
  const average=value=>value===null?text('–'):{text:A.N.show(value,c),number:Number(A.N.show(value,c).replace(',','.')),format:'average',precision:c.precision};
  const flags=a=>[a.isGfs?'GFS':'',A.N.Q.from(a.weight).cmp(1)!==0n?'Faktor '+a.weight.replace('.',','):''].filter(Boolean).join(', ');
- const pupil=s=>text(name(s)+(s.archived||(c.inactiveStudentIds||[]).includes(s.id)?' (ausgeschieden)':''));
- const result=(a,sid)=>a.participantIds&&!a.participantIds.includes(sid)?text('Nicht beteiligt'):a.results[sid]?.status==='graded'?A.reportGrade(a.results[sid].grade):text(A.N.STATUS[a.results[sid]?.status||'open']);
+ const pupil=s=>text(name(s)+(A.N.participationLabel(s,c)?' ('+A.N.participationLabel(s,c)+')':''));
+ const result=(a,sid)=>a.participantIds&&!a.participantIds.includes(sid)?text('Nimmt nicht teil'):a.results[sid]?.status==='graded'?A.reportGrade(a.results[sid].grade):text(A.N.STATUS[a.results[sid]?.status||'open']);
  const column=(label,type='text')=>({label,type});
  const classNote='Klassendurchschnitt: alle aktiven Schüler des Fachs, unabhängig von Suche und Umfang.';
  const report={type:ctx.type,kind:ctx.kind,title:A.reportTitle(ctx),year:A.schoolYear(year),className:cl.name,subject:c.name,created:A.today(),scope:ctx.type==='pupil'?(options.entries==='entered'?'Nur Leistungen mit Eintrag':'Alle Leistungen des Schülers'):all?'Alle Einträge':'Mit aktuellen Filtern',sections:[],recordIds:[],studentIds:[],remarks,precision:c.precision};

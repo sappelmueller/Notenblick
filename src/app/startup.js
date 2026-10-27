@@ -24,18 +24,23 @@ Notenblick.boot = async function boot() {
       const view=await next.loadWorkspace();
       Notenblick.workspace=view||raw?.workspace||Notenblick.preferencesWorkspace(raw)||{};
       const empty=!raw;
+      if(empty&&await next.hasDataEvidence())throw Error('Im Datenordner liegen bereits Dateien, aber keine lesbare Hauptdatei. Bitte stelle unter Sicherung einen vorhandenen Stand wieder her.');
+      Notenblick.firstRun=empty;
       Notenblick.activate(next,raw||Notenblick.N.upgrade(Notenblick.N.blank()));
-      if(empty)Notenblick.mark();if(Notenblick.dirty){await Notenblick.save();if(Notenblick.dirty)throw Error('Der übernommene Stand konnte noch nicht vollständig gespeichert werden. Die ursprünglichen Dateien bleiben erhalten.');}
-      if(raw?.workspace||raw?.preferences||!view){await next.saveWorkspace(Notenblick.getWorkspace());}
+      if(Notenblick.dirty){await Notenblick.save();if(Notenblick.dirty)throw Error('Der übernommene Stand konnte noch nicht vollständig gespeichert werden. Die ursprünglichen Dateien bleiben erhalten.');}
+      if(!empty&&(raw?.workspace||raw?.preferences||!view)){await next.saveWorkspace(Notenblick.getWorkspace());}
+      if(empty){Notenblick.ui.main='home';Notenblick.activateGroup('main','home');}else try{await Notenblick.refreshTextLists();}catch(e){Notenblick.error(e.message,'storage');}
       Notenblick.storagePath=await window.NRDesktop.call('storage-info');
       if(next.workspaceWarning)Notenblick.error(next.workspaceWarning,'storage');
     }else{
-      const saved=await window.NRSession.load();
+      const saved=await window.NRSession.load();Notenblick.firstRun=!saved?.data;
+      if(Notenblick.firstRun&&localStorage.getItem('notenblick-recovery')){Notenblick.firstRun=false;throw Error('Es liegen frühere Arbeitskopien vor. Bitte prüfe die Wiederherstellung unter Sicherung.');}
       if(saved?.data){Notenblick.workspace=saved.workspace||saved.data.workspace||Notenblick.preferencesWorkspace(saved.data)||{};Notenblick.data=Notenblick.N.upgrade(saved.data);delete Notenblick.data.workspace;delete Notenblick.data.preferences;Notenblick.restoreWorkspace();}
       if(saved?.workspace&&!saved?.data){Notenblick.workspace=saved.workspace;Notenblick.restoreWorkspace();}
       if(saved?.handle&&saved.handle.name==='Daten'&&await saved.handle.queryPermission({mode:'readwrite'})==='granted'){
-        const next=new Notenblick.S.FolderStore(saved.handle),raw=await next.load();if(raw){Notenblick.workspace=await next.loadWorkspace()||Notenblick.workspace;Notenblick.activate(next,raw);}else if(!Notenblick.data.years.length){Notenblick.store=next;Notenblick.mark();await Notenblick.save();}
+        const next=new Notenblick.S.FolderStore(saved.handle),raw=await next.load();if(raw){Notenblick.firstRun=false;Notenblick.workspace=await next.loadWorkspace()||Notenblick.workspace;Notenblick.activate(next,raw);}else if(!Notenblick.data.years.length){if(await next.hasDataEvidence())throw Error('Bitte zuerst den bestehenden Datenordner unter Sicherung prüfen.');Notenblick.store=next;}
       }
+      if(Notenblick.firstRun)Notenblick.ui.main='home';
       Notenblick.normalizeContext();Notenblick.activateGroup('main',Notenblick.ui.main);Notenblick.refreshCurrent();
     }
 
@@ -83,7 +88,7 @@ Notenblick.folder = async function folder() {
     }),
     loaded = await next.load();
   const connect = async () => {
-    if (loaded) {Notenblick.workspace=await next.loadWorkspace()||loaded.workspace||Notenblick.preferencesWorkspace(loaded)||{};Notenblick.activate(next, loaded);if(next.workspaceWarning)Notenblick.error(next.workspaceWarning,'storage');}else {
+    if (loaded) {Notenblick.firstRun=false;Notenblick.workspace=await next.loadWorkspace()||loaded.workspace||Notenblick.preferencesWorkspace(loaded)||{};Notenblick.activate(next, loaded);if(next.workspaceWarning)Notenblick.error(next.workspaceWarning,'storage');}else {
       Notenblick.store = next;
       Notenblick.mode = 'working';
       Notenblick.mark();

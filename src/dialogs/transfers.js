@@ -16,7 +16,7 @@ A.copyCourseDialog=function(){
 };
 A.classNotes=function(id){const cl=A.data.classes.find(x=>x.id===id),list=A.data.courses.filter(c=>c.classId===id);if(!list.length)throw Error('Lege zuerst ein Fach in dieser Klasse an.');
  if(list.length===1){A.courseNotes(list[0].id);return;}
- A.modal('Noten öffnen – Klasse '+cl.name,`<div class="field"><label for="notesCourse">Fach</label><select id="notesCourse">${list.map(c=>A.opt(c.id,c.name,'')).join('')}</select></div>`,()=>{const cid=A.val('notesCourse');A.afterClose=()=>A.courseNotes(cid);},'Öffnen');
+ A.modal('Zur Notenübersicht – Klasse '+cl.name,`<div class="field"><label for="notesCourse">Fach</label><select id="notesCourse">${list.map(c=>A.opt(c.id,c.name,'')).join('')}</select></div>`,()=>{const cid=A.val('notesCourse');A.afterClose=()=>A.courseNotes(cid);},'Öffnen');
 };
 A.courseNotes=function(id){A.chooseContext({courseId:id,historical:true,openNotes:true});A.$('#tab-notes').focus();};
 })(globalThis.Notenblick);
