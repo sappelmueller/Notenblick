@@ -3,6 +3,7 @@ from pathlib import Path
 import base64, hashlib, json, os, subprocess, sys, urllib.request, zipfile
 from guard import check_root
 from toolchain import compiler, DOTNET
+from evidence import component
 ROOT=Path(__file__).resolve().parents[1]
 PROJECT=ROOT/'dev/openxml-validator'
 OUT=ROOT/'.build/openxml-validator'
@@ -33,12 +34,16 @@ def build(setup=False):
             assert z.testzip() is None
             for name in z.namelist():
                 if name.startswith('lib/net8.0/') and name.endswith('.dll'):
-                    target=OUT/Path(name).name;target.write_bytes(z.read(name));libraries.append(target)
+                    target=OUT/Path(name).name;data=z.read(name)
+                    if not target.is_file() or target.read_bytes()!=data:target.write_bytes(data)
+                    libraries.append(target)
     sdk=Path(DOTNET).parent
     ref=max((sdk/'packs/Microsoft.NETCore.App.Ref').iterdir(),key=lambda p:tuple(map(int,p.name.split('.'))))/'ref/net8.0'
     args=compiler()+['-nologo','-nostdlib+','-deterministic+','-nullable:enable','-target:exe','-out:'+str(OUT/'Validator.dll')]
     args+=['-r:'+str(p) for p in sorted(ref.glob('*.dll'))+libraries]
-    subprocess.run(args+[str(PROJECT/'Program.cs')],check=True,cwd=ROOT)
+    inputs=[PROJECT/'Program.cs',PROJECT/'packages.lock.json',PROJECT/'assets-lock.json',ROOT/'dev/openxml-check.py',ROOT/'dev/evidence.py',ref,Path(DOTNET).parent/'shared',Path(compiler()[1]).parent,*libraries]
+    # This validator is a dependency, not a reproducibility target of the app.
+    component('openxml-validator',inputs,[OUT/'Validator.dll'],lambda:subprocess.run(args+[str(PROJECT/'Program.cs')],check=True,cwd=ROOT))
     (OUT/'Validator.runtimeconfig.json').write_text(json.dumps({'runtimeOptions':{'tfm':'net8.0','framework':{'name':'Microsoft.NETCore.App','version':'8.0.15'}}}))
 
 if __name__=='__main__':

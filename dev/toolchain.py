@@ -1,8 +1,10 @@
 """Resolve the local .NET SDK. No network access or package installation."""
 from pathlib import Path
 import os,re,shutil,subprocess
+from functools import lru_cache
 ROOT=Path(__file__).resolve().parents[1]
 DOTNET=os.environ.get('NOTENBLICK_DOTNET') or str(ROOT/'.tools/dotnet'/('dotnet.exe' if os.name=='nt' else 'dotnet'))
+@lru_cache(maxsize=1)
 def compiler():
     lines=subprocess.check_output([DOTNET,'--list-sdks'],text=True).splitlines()
     for line in reversed(lines):
