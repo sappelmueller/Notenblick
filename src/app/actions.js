@@ -38,7 +38,8 @@
       }
       case 'open-assessment': Notenblick.openAssessment(id,true); break;
       case 'oral-picker': Notenblick.oralPicker(); break;
-      case 'final-dialog': Notenblick.finalDialog(id); break;
+      case 'final-dialog': Notenblick.finalDialog(id,el.dataset.period||'annual'); break;
+      case 'finals-class': Notenblick.finalDialog(null,el.dataset.period||'annual'); break;
       case 'edit-result': Notenblick.resultDialog(id,el.dataset.student); break;
       case 'transfer-student': Notenblick.transferDialog(id); break;
       case 'copy-course': Notenblick.copyCourseDialog(); break;

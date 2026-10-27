@@ -12,6 +12,8 @@ compact=lambda s:''.join(unicodedata.normalize('NFKC',s).split())
 assert compact('oﬀen')==compact('offen')
 assert compact('Noch offen')!=compact('Noch')
 word=OUT/'word';word.mkdir(exist_ok=True)
+# Only known synthetic outputs are removed; never reuse a stale conversion.
+for render_name in manifest['documents']:(word/(render_name+'.pdf')).unlink(missing_ok=True)
 runtime=Path(os.environ.get('CODEX_PRIMARY_RUNTIME_ROOT','/nonexistent'))/'dependencies/bin/override/soffice'
 lo=os.environ.get('NOTENBLICK_LIBREOFFICE') or str(runtime if runtime.is_file() else ROOT/'.tools/lo/opt/libreoffice25.8/program/soffice')
 assert Path(lo).is_file(),'LibreOffice-Renderer fehlt; NOTENBLICK_LIBREOFFICE setzen.'

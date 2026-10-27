@@ -126,10 +126,10 @@
             if (!missing(e) && !(e instanceof SyntaxError)) throw e;
           }
           const files = N.exportsTXT(next),
-            previous = !forceTXT && current && manifest.commitId === current.commitId && manifest.version === 13 ? (this.textCache?.commitId===current.commitId?this.textCache.files:N.exportsTXT(N.upgrade(current))) : {};
+            previous = !forceTXT && current && manifest.commitId === current.commitId && manifest.version === 14 ? (this.textCache?.commitId===current.commitId?this.textCache.files:N.exportsTXT(N.upgrade(current))) : {};
           for (const [p, t] of Object.entries(files)) if (previous[p] !== t) await writeAt(this.root, textPath(p), t);
           const parents = new Set();
-          for (const p of manifest.version===13 && Array.isArray(manifest.files) ? manifest.files : []) {
+          for (const p of [13,14].includes(manifest.version) && Array.isArray(manifest.files) ? manifest.files : []) {
             if (typeof p !== 'string' || !p.endsWith('.txt') || p.split('/').length < 3 || p.split('/').length > 5 || p.split('/').some(part => !part || part === '.' || part === '..') || p.split('/')[0].toLocaleLowerCase('de') === 'daten' || p.startsWith('/') || p.includes('\\') || Object.hasOwn(files, p)) continue;
             try {
               await removeAt(this.root, textPath(p));
@@ -160,7 +160,7 @@
           }
           if(parents.size)writeDirectories.delete(this.root);
           await writeAt(this.root, 'Sicherungen/Notenlistenverzeichnis.json', JSON.stringify({
-            version: 13,
+            version: 14,
             commitId: next.commitId,
             files: Object.keys(files)
           }));

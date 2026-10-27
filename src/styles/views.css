@@ -389,7 +389,7 @@ main>.mode-notice,main>.error{margin:0 0 20px}
 .assessment-meta{color:var(--muted);margin:8px 0 0;line-height:1.6}
 .entry-workspace{border:1px solid var(--line);border-radius:12px;padding:24px;background:var(--surface)}
 .progress-cell{white-space:nowrap;font-variant-numeric:tabular-nums}
-.pupil-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.pupil-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:20px}
 .result-card{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:24px}
 .result-card h3{margin:0;font-size:1.15rem}
 .result-origin{color:var(--muted);font-size:.9rem;margin:4px 0 12px}
@@ -459,3 +459,12 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 .oral-notes-table .result-note{margin:0}.oral-notes-table .result-note p{max-width:24rem}
 @media(max-width:740px){.home-grid>.panel{padding:16px}.oral-view-controls{gap:12px}.oral-view-controls .field{flex:1 1 12rem}.oral-work-tools .button-row{gap:10px}.oral-options{padding:12px}}
 @media(forced-colors:active){.continue-course{border-color:Highlight}.oral-settings>summary{color:LinkText}}
+
+.final-status{font-weight:600}.final-tools{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:16px 0}
+.final-table{min-width:630px}.final-table th{white-space:normal}.final-table select{width:100%;min-width:185px}.final-table th[scope=row]{min-width:145px;max-width:230px}
+.final-compatibility{white-space:normal;max-width:300px;font-size:.8rem;color:var(--muted)}.final-remark{margin-top:18px}
+.final-information{margin-top:20px}.final-information summary{cursor:pointer;padding:7px 0;font-weight:600}
+.final-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}.final-meta dt{color:var(--muted)}.final-meta dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.final-value{font-variant-numeric:tabular-nums;min-height:40px}#halfYearReport{white-space:normal}#halfYearWarning{margin-top:16px}
+@media(max-width:520px){.final-meta{grid-template-columns:1fr}.final-meta dd{margin-bottom:10px}.final-tools{align-items:flex-start}}
+@media(max-width:420px){#dialog{overflow:auto}#dialogForm{display:block;max-height:none;overflow:visible;padding:16px}#dialogContent{overflow:visible}#dialogError{max-height:none}#dialog .dialog-header{align-items:flex-start;margin-bottom:16px}#dialogTitle{min-width:0;flex:1;font-size:1.1rem}#dialog .close{flex-shrink:0}#dialog .dialog-actions{justify-content:flex-start}}

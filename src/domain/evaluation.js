@@ -3,7 +3,7 @@
 'use strict';
 const indexes=new WeakMap();
 NR.index=function(d){let x=indexes.get(d);if(!x||x.ar!==d.assessments||x.sr!==d.students||x.cr!==d.courses||x.al!==d.assessments.length||x.sl!==d.students.length||x.cl!==d.courses.length){x={ar:d.assessments,sr:d.students,cr:d.courses,al:d.assessments.length,sl:d.students.length,cl:d.courses.length,assessments:new Map(),students:new Map(d.students.map(s=>[s.id,s])),courses:new Map(d.courses.map(c=>[c.id,c]))};for(const a of d.assessments){if(!x.assessments.has(a.courseId))x.assessments.set(a.courseId,[]);x.assessments.get(a.courseId).push(a);}indexes.set(d,x);}return x;};
-NR.assessments = function(d,cid,period='all'){const list=NR.index(d).assessments.get(cid)||[];return period==='all'?list.slice():list.filter(a=>a.period===period);};
+NR.assessments = function(d,cid,period='all'){const list=NR.index(d).assessments.get(cid)||[];return period==='all'?list.slice():list.filter(a=>{const actual=NR.datePeriod(d,NR.index(d).courses.get(cid),a.date);return period==='year'?actual!==null:actual===period;});};
 NR.calculateCore = function(d,c,studentId,period,kinds,overall,list=NR.assessments(d,c.id,period),writtenWeights=c.weights.written) {
   const categories = {},
     counts = {};
@@ -39,7 +39,7 @@ NR.areaWeight=function(c,k){const o=c.weights.overall;if(NR.courseMode(c)==='dir
 NR.assessmentStudents=(d,c,a,includeArchived=false)=>NR.activeStudents(d,c,includeArchived).filter(s=>!a.participantIds||a.participantIds.includes(s.id));
 NR.calculate=function(d,c,sid,period='all'){
  const result=NR.calculateCore(d,c,sid,period,NR.KINDS,NR.overallLabels(c),NR.assessments(d,c.id,period),NR.writtenWeights(c));
- if(NR.legacyPending?.(d,c.id)){result.total=null;result.blocked=true;}
+ if(period!=='all'&&!NR.courseRange(d,c)||NR.legacyPending?.(d,c.id)){result.total=null;result.blocked=true;}
  return result;
 };
 NR.activeStudents = function activeStudents(d, c, includeArchived = false) {

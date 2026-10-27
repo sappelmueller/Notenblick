@@ -41,7 +41,7 @@
   Notenblick.renderOverview = function renderOverview() {
     if (Notenblick.rendered.overview === Notenblick.seq + ':' + Notenblick.ui.course) return;
     const c = Notenblick.getCourse();
-    Notenblick.setContent('overview', Notenblick.viewHeader('Notenübersicht','overviewTitle',Notenblick.addPerformanceMenu(),'overview') + Notenblick.sortTools('overview', true) + `<div class="table-panel"><div class="table-header"><p class="subtle">${Notenblick.N.activeStudents(Notenblick.data, c).length} Schüler</p></div><div class="table-wrap" id="overviewTable">${Notenblick.overviewTable()}</div></div>`);
+    Notenblick.setContent('overview', Notenblick.viewHeader('Notenübersicht','overviewTitle',Notenblick.addPerformanceMenu()+Notenblick.finalMenu(),'overview') + Notenblick.sortTools('overview', true) + `<div class="table-panel"><div class="table-header"><p class="subtle">${Notenblick.N.activeStudents(Notenblick.data, c).length} Schüler</p></div><div class="table-wrap" id="overviewTable">${Notenblick.overviewTable()}</div></div>`);
     Notenblick.rendered.overview = Notenblick.seq + ':' + Notenblick.ui.course;
   };
   Notenblick.overviewTable = function overviewTable() {
@@ -49,11 +49,10 @@
       w = Notenblick.W(),
       list = Notenblick.studentList(),
       averages = Notenblick.classAverages(c);
-    return `<table aria-labelledby="overviewTitle"><thead><tr><th scope="col">Schüler</th>${w.columns.map(k => `<th scope="col">${Notenblick.N.KINDS[k] || Notenblick.N.OVERALL[k]}</th>`).join('')}<th scope="col">Gesamtschnitt</th><th scope="col">Zeugnisnote</th></tr></thead><tbody>${list.map(s => {
-      const r = Notenblick.calculation(c, s.id),
-        f = Notenblick.data.finals.find(f => f.courseId === c.id && f.studentId === s.id && f.period === 'all');
-      return `<tr><th scope="row">${Notenblick.b('student', Notenblick.rowName(s), `data-id="${s.id}"`, 'person')}${s.archived || (c.inactiveStudentIds || []).includes(s.id) ? '<span class="secondary"><span class="sr-only">, </span>Ausgeschieden</span>' : ''}</th>${w.columns.map(k => `<td>${Notenblick.display(r.categories[k], c)}</td>`).join('')}<td>${Notenblick.display(r.total, c, true)}</td><td>${f ? Notenblick.esc(f.grade.replace('.', ',')) : '–'}</td></tr>`;
-    }).join('') || `<tr><td class="empty-cell" colspan="${w.columns.length + 3}">Keine passenden Schüler.</td></tr>`}</tbody><tfoot><tr><th scope="row">Klassendurchschnitt</th>${w.columns.map(k => `<td>${Notenblick.display(averages.categories[k], c)}</td>`).join('')}<td>${Notenblick.display(averages.total, c, true)}</td><td>–</td></tr></tfoot></table>`;
+    return `<table aria-labelledby="overviewTitle"><thead><tr><th scope="col">Schüler</th>${w.columns.map(k => `<th scope="col">${Notenblick.N.KINDS[k] || Notenblick.N.OVERALL[k]}</th>`).join('')}<th scope="col">Gesamtschnitt</th><th scope="col">${Notenblick.N.finalLabel(Notenblick.data,c,'half')}</th><th scope="col">Zeugnisnote</th></tr></thead><tbody>${list.map(s => {
+      const r = Notenblick.calculation(c, s.id);
+      return `<tr><th scope="row">${Notenblick.b('student', Notenblick.rowName(s), `data-id="${s.id}"`, 'person')}${s.archived || (c.inactiveStudentIds || []).includes(s.id) ? '<span class="secondary"><span class="sr-only">, </span>Ausgeschieden</span>' : ''}</th>${w.columns.map(k => `<td>${Notenblick.display(r.categories[k], c)}</td>`).join('')}<td>${Notenblick.display(r.total, c, true)}</td><td>${Notenblick.finalCell(s,'half')}</td><td>${Notenblick.finalCell(s,'annual')}</td></tr>`;
+    }).join('') || `<tr><td class="empty-cell" colspan="${w.columns.length + 4}">Keine passenden Schüler.</td></tr>`}</tbody><tfoot><tr><th scope="row">Klassendurchschnitt</th>${w.columns.map(k => `<td>${Notenblick.display(averages.categories[k], c)}</td>`).join('')}<td>${Notenblick.display(averages.total, c, true)}</td><td>–</td><td>–</td></tr></tfoot></table>`;
   };
   Notenblick.renderKind = function renderKind(kind) {
     if (!Notenblick.getCourse()) return;
