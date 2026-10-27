@@ -13,6 +13,8 @@ runtime=Path(os.environ.get('CODEX_PRIMARY_RUNTIME_ROOT','/nonexistent'))/'depen
 lo=os.environ.get('NOTENBLICK_LIBREOFFICE') or str(runtime)
 assert Path(lo).is_file(),'LibreOffice fehlt; NOTENBLICK_LIBREOFFICE setzen'
 word=OUT/'word';word.mkdir(exist_ok=True)
+# Only known synthetic outputs are removed; never reuse a stale conversion.
+for render_name in names:(word/(render_name+'.pdf')).unlink(missing_ok=True)
 with tempfile.TemporaryDirectory(prefix='nb1130-lo-') as profile:
  run=subprocess.run([lo,'-env:UserInstallation='+Path(profile).as_uri(),'--headless','--convert-to','pdf','--outdir',str(word),*[str(OUT/(n+'.docx')) for n in names]],capture_output=True,text=True,timeout=180,env={**os.environ,'HOME':profile,'XDG_CACHE_HOME':profile+'/cache','XDG_CONFIG_HOME':profile+'/config','SAL_USE_VCLPLUGIN':'svp'})
  assert run.returncode==0,run.stderr

@@ -17,7 +17,7 @@ fs.mkdirSync(out,{recursive:true});
  let footer;
  for(const search of ['', 'P000', 'Kein Treffer'])for(const scope of ['current','all']){
   A.W().search=search;const r=A.buildReport(A.exportContext('overview'),{scope,remarks:false}),s=r.sections[0];
-  assert.equal(s.footer[0].text,'Klassendurchschnitt');assert.equal(s.footer.at(-1).text,'–');assert.equal(s.footer.at(-2).text,show(manual,c));
+  assert.equal(s.footer[0].text,'Klassendurchschnitt');assert.equal(s.footer.at(-1).text,'–');assert.equal(s.footer.at(-3).text,show(manual,c));
   const row=new w.DOMParser().parseFromString(A.overviewTable(),'text/html').querySelector('tfoot tr');
   assert.deepEqual(Array.from(row.cells,el=>el.textContent.trim()),Array.from(s.footer,cell=>cell.text));
   if(footer)assert.deepEqual(plain(s.footer),footer);footer=plain(s.footer);
@@ -40,7 +40,7 @@ fs.mkdirSync(out,{recursive:true});
  for(const precision of [0,1,2])for(const rounding of ['round','truncate']){
   A.data=N.clone(A.data);c=A.getCourse();c.precision=precision;c.rounding=rounding;c.calculationMode='direct';c.weights.overall={exam:'33.33',test:'16.67',oral:'50',homework:'0',notebook:'0'};
   const r=A.buildReport(A.exportContext('overview'),{scope:'current',remarks:false}),mean=N.average(N.activeStudents(A.data,c).map(s=>({value:N.calculate(A.data,c,s.id).total})));
-  assert.equal(r.sections[0].footer.at(-2).text,N.show(mean,c));await write('rounding-'+precision+'-'+rounding,r);
+  assert.equal(r.sections[0].footer.at(-3).text,N.show(mean,c));await write('rounding-'+precision+'-'+rounding,r);
  }
  checks.push('Individuelle Fachgewichtung, Faktoren, direkte Gewichtung und alle 0/1/2-Stellen-Rundungs-/Abschneidemodi verwenden ungerundete zentrale Ergebnisse');
  c=install();A.data.years[0].archived=true;A.data.years[0].label='2024/25';
@@ -49,16 +49,16 @@ fs.mkdirSync(out,{recursive:true});
   const ctx={...A.exportContext('overview'),type,studentId:c.studentIds[0]},r=A.buildReport(ctx,{});assert.ok(r.sections.every(s=>!s.footer));
  }
  checks.push('Historische Fachzuordnung bleibt getrennt; keine Klassendurchschnittszeilen in Schülerberichten, Leistungs- oder Einzelnote-Listen');
- for(const columns of [7,8,10,20]){
+ for(const columns of [8,9,10,20]){
   c=install(60);A.W().columns=['exam','test','written','oral'];
-  const ctx=columns===7?A.exportContext('overview'):{...A.exportContext('exam'),type:'matrix',kind:'exam'};
-  if(columns!==7){const template=N.clone(A.data.assessments[0]);A.data.assessments=A.data.assessments.filter(a=>a.kind!=='exam');for(let i=0;i<columns-2;i++)A.data.assessments.push({...N.clone(template),id:'wide-'+i,title:'K'+String(i+1).padStart(2,'0')});}
+  const ctx=columns===8?A.exportContext('overview'):{...A.exportContext('exam'),type:'matrix',kind:'exam'};
+  if(columns!==8){const template=N.clone(A.data.assessments[0]);A.data.assessments=A.data.assessments.filter(a=>a.kind!=='exam');for(let i=0;i<columns-2;i++)A.data.assessments.push({...N.clone(template),id:'wide-'+i,title:'K'+String(i+1).padStart(2,'0')});}
   const r=A.buildReport(ctx,{scope:'current',remarks:false}),parts=A.reportTables(r);assert.equal(r.sections[0].columns.length,columns);assert.equal(A.reportLayout(r).landscape,true);
   for(const part of parts){assert.equal(part.footer.length,part.columns.length);assert.deepEqual(plain(part.footer),plain(part.sourceIndices.map(i=>r.sections[0].footer[i])));}
   await write('pages-'+columns,r);
  }
  c=install(60);A.W().columns=[];const narrow=A.buildReport(A.exportContext('overview'),{scope:'current',remarks:false});assert.equal(A.reportLayout(narrow).landscape,false);await write('pages-portrait',narrow);
- checks.push('60 Schüler: sieben bis zehn zusammenhängende Querformatspalten, vollständige breite Spaltenteile und schmale Hochformattabelle mit korrekter Ergebniszeile');
+ checks.push('60 Schüler: acht bis zehn zusammenhängende Querformatspalten, vollständige breite Spaltenteile und schmale Hochformattabelle mit korrekter Ergebniszeile');
  install();original=JSON.stringify(A.data);view=JSON.stringify(A.getWorkspace());
  A.W().pupil=A.getCourse().studentIds[0];view=JSON.stringify(A.getWorkspace());A.output('pupil');
  const output=w.document.querySelector('#exportOutput'),hint=w.document.querySelector('#exportBatchHint'),format=w.document.querySelector('#exportFormat');

@@ -31,3 +31,16 @@ Prüfdatum, Windows-Version/Architektur, WebView2-Version, NVDA-Version und die 
 - Klasse mit aktiver Schülersuche und ohne Suche in allen sechs Formen exportieren. Klassendurchschnitt muss jeweils mit dem Bildschirm übereinstimmen und alle aktiven Fachteilnehmer berücksichtigen; ausgeschiedene Schüler nicht einrechnen, Zeugnisnotenspalte „–“.
 - Word-Dokumente tatsächlich unter Microsoft Word öffnen: keine Feldaktualisierungs-/Reparaturabfrage, unveränderte lokale Seitenzahlen, Tabellenköpfe und letzte Ergebniszeile; NVDA-Tabellennavigation. Automatischer LibreOffice-Render und vollständige Open-XML-Validierung ersetzen diese Prüfung nicht.
 - Bestehenden synthetischen 1.12.0-Datenordner beim Update behalten: nur EXE und vollständigen Programmordner ersetzen, alle Daten/Sicherungen/Notenlisten erhalten.
+
+
+## Ergänzung 1.14.0 – tatsächlich unter Windows/NVDA abnehmen
+
+Diese Punkte sind ein offener Prüfplan, kein Testnachweis:
+
+1. Vorhandenen Datenordner sichern; vollständige EXE/Programm-Ausgabe ersetzen, Daten behalten. Start auf Windows x64/ARM64, WebView2 und Speicherrechte prüfen.
+2. Vorhandenes Schuljahr ohne Halbjahreseinstellung öffnen. Einmalige Auswahl speichern, anderes Fach öffnen, dieselbe Einstellung prüfen. Klassenverwaltung ändern, Warnung bestätigen und alle bisherigen Werte unverändert wiederfinden.
+3. Abschlussnotenmenü mit Enter/Pfeilen öffnen. Fokus auf erster offener Note, native Auswahl mit Pfeilen, kurze eindeutige NVDA-Ausgabe mit Schüler und Note prüfen. Ganze Klasse per Übernahme bearbeiten, offene filtern, Änderungen beibehalten, speichern; Fokus am auslösenden Schalter.
+4. Echte NVDA-Tabellennavigation mit Zeilen-/Spaltenköpfen in Übersicht und Klassendialog; Einzelbearbeitung und drei Schülerkarten, gespeicherte Vorauswahl, Weitere Informationen, Bemerkung, bestätigtes Entfernen und Escape prüfen.
+5. 100/125/150/200-Prozent-Windows-Skalierung und kleines Fenster: letzte Zeile, horizontaler Tabelleninhalt, Dialogaktionen und Fehler weiterhin erreichbar. Keine Tastaturfalle oder abgeschnittene fokussierte Eingabe.
+6. Datenträgerfehler/Schreibschutz: Entwurf behalten, erneutes Speichern, Programmneustart, JSON- und TXT-Sicherung/Wiederherstellung prüfen. Spätere Märzleistungen und Gewichtsänderungen verändern keine Festlegung.
+7. Alle Exportformen mit und ohne Bemerkungen unter echtem Microsoft Word/Excel/Adobe Reader und NVDA prüfen; native Druckvorschau, physischer Druck, Leserichtung und Tabellenbezug kontrollieren.

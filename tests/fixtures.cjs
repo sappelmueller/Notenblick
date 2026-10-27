@@ -11,6 +11,7 @@ module.exports=NR => (function demo() {
     id: NR.id(),
     yearId: y.id,
     name: '6a',
+    halfYearReport: 'information',
     archived: false
   };
   d.classes.push(cl);

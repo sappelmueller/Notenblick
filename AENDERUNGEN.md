@@ -1,3 +1,14 @@
+# Notenblick 1.14.0 – Abschlussnoten
+
+- Ausgabe zum Halbjahr einmal je Klasse/Schuljahr festlegen: Viertelnoten oder ganze Noten; spätere Änderungen lassen Bestandsnoten unverändert.
+- „Abschlussnoten“ über der Notenübersicht: vollständige Klassenliste, Vorschläge nur für unberührte leere Felder, Filter für offene Noten und gemeinsames Speichern.
+- Zwei feste Ergebnisspalten und drei Schülerkarten; derselbe Dialog für Einzel- und Klassenbearbeitung mit nativer Notenauswahl, Bemerkung und nachvollziehbaren gespeicherten Informationen.
+- Exakte rationale Vorschläge ohne Doppelrundung; Halbjahr nach Leistungsdatum bis 31. Januar. Neue Leistungen ab Februar werden automatisch dem zweiten Halbjahr zugeordnet.
+- Festgelegte Noten einschließlich damaligem Durchschnitt, Zeitraum und Datum bleiben unabhängig von späteren Leistungs-/Gewichtsänderungen erhalten.
+- Historische Abschnittsnoten und abweichende frühere Zeugniswerte bleiben erhalten und gezielt korrigierbar; Prüfungs-/Abschlussnoten in Abschlussklassen werden manuell entschieden.
+- Atomare Speicherung über den vorhandenen Speicherkern; Dialogentwürfe bleiben bei Fehlern erhalten. JSON-Sicherungen, TXT-Listen sowie Word/PDF/Excel/Text/CSV/Druck vollständig ergänzt.
+- Automatische Rechen-, Kompatibilitäts-, native Speicher-, Browser-/Tastatur-/axe- und unabhängige Exportprüfungen ergänzt. Tatsächliche Windows-/NVDA-Abnahme bleibt gesondert erforderlich.
+
 # Notenblick 1.13.0
 
 - Schülerexport: beide Ausgabeoptionen haben eine sichtbare, dynamisch zugeordnete Erklärung. Die tatsächliche ZIP-Berichtszahl bleibt erhalten; kein zusätzlicher Live-Bereich oder Fokuswechsel.

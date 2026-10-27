@@ -77,17 +77,17 @@ for model in reports:
     checks.append(model.stem+': TXT/CSV, DOCX-Stile/Tabellen, XLSX-Typen, PDF-Tags/Sprache/Metadaten/vollständiger Text')
 printed=PdfReader(OUT/'browser-print.pdf');assert float(printed.pages[0].mediabox.width)>float(printed.pages[0].mediabox.height)
 checks.append('Tatsächlich gerenderte lange Einzelnotenliste im A4-Querformat')
-for count in [7,8,10,20]:
-    name='v1110-print-eight' if count==8 else 'v1110-print-columns-'+str(count)
+for count in [7,8,9,10,20]:
+    name='v1110-print-nine' if count==9 else 'v1110-print-columns-'+str(count)
     pdf=PdfReader(OUT/(name+'.pdf'))
     assert float(pdf.pages[0].mediabox.width)>float(pdf.pages[0].mediabox.height)
     text=''.join(''.join(p.extract_text().split()) for p in pdf.pages)
-    if count!=8:
+    if count!=9:
         model=json.loads((OUT/('v1110-columns-'+str(count)+'.json')).read_text())
         for section in model['sections']:
             for row in section['rows']:
                 for cell in row:assert ''.join(cell['text'].split()) in text
-checks.append('Tatsächlich gerenderter Chromium-Druck mit 7/8/10/20 Spalten: A4 quer und vollständiger Text, keine Bildschirmbegrenzung')
+checks.append('Tatsächlich gerenderter Chromium-Druck mit 7/8/9/10/20 Spalten: A4 quer und vollständiger Text, keine Bildschirmbegrenzung')
 # PDF/UA machine rules, including every generated report and the real browser PDF.
 validator=os.environ.get('NOTENBLICK_VERAPDF') or str(ROOT/'.tools/verapdf/verapdf')
 if not Path(validator).is_file():raise RuntimeError('veraPDF 1.30.3 fehlt. Siehe docs/EXPORT-PRUEFUNG.md; NOTENBLICK_VERAPDF setzen.')

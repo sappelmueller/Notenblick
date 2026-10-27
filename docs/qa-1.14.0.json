@@ -1,0 +1,342 @@
+{
+  "version": "1.14.0",
+  "base_commit": "c17324ab312bcd49eff2b6aef06745f941cb70ef",
+  "base_tree": "db7a1e1d0e8fb64213d48c05e75cb804417233ab",
+  "base_files_verified": 202,
+  "utc": "2026-10-27T11:08:29.438305+00:00",
+  "release_status": "passed",
+  "all_steps_passed": true,
+  "github_actions_used": false,
+  "windows_gui_tested": false,
+  "nvda_tested": false,
+  "office_live_tested": false,
+  "steps": [
+    {
+      "name": "Web-Programm erstellen",
+      "exit_code": 0,
+      "seconds": 0.04
+    },
+    {
+      "name": "Windows-Programm kompilieren",
+      "exit_code": 0,
+      "seconds": 2.11
+    },
+    {
+      "name": "Entwicklungsregressionen",
+      "exit_code": 0,
+      "seconds": 1.32
+    },
+    {
+      "name": "domain-storage",
+      "exit_code": 0,
+      "seconds": 0.86
+    },
+    {
+      "name": "transfers",
+      "exit_code": 0,
+      "seconds": 0.08
+    },
+    {
+      "name": "ui",
+      "exit_code": 0,
+      "seconds": 2.82
+    },
+    {
+      "name": "new-features",
+      "exit_code": 0,
+      "seconds": 1.11
+    },
+    {
+      "name": "v140",
+      "exit_code": 0,
+      "seconds": 4.32
+    },
+    {
+      "name": "v150",
+      "exit_code": 0,
+      "seconds": 4.46
+    },
+    {
+      "name": "v160",
+      "exit_code": 0,
+      "seconds": 1.52
+    },
+    {
+      "name": "v170",
+      "exit_code": 0,
+      "seconds": 1.93
+    },
+    {
+      "name": "v180",
+      "exit_code": 0,
+      "seconds": 2.02
+    },
+    {
+      "name": "v190",
+      "exit_code": 0,
+      "seconds": 2.58
+    },
+    {
+      "name": "v1100",
+      "exit_code": 0,
+      "seconds": 2.92
+    },
+    {
+      "name": "v1110",
+      "exit_code": 0,
+      "seconds": 1.62
+    },
+    {
+      "name": "v1120",
+      "exit_code": 0,
+      "seconds": 19.36
+    },
+    {
+      "name": "v1130",
+      "exit_code": 0,
+      "seconds": 2.56
+    },
+    {
+      "name": "v1140",
+      "exit_code": 0,
+      "seconds": 1.96
+    },
+    {
+      "name": "Nativen Testhost erstellen",
+      "exit_code": 0,
+      "seconds": 2.09
+    },
+    {
+      "name": "view-storage",
+      "exit_code": 0,
+      "seconds": 1.04
+    },
+    {
+      "name": "v150-storage",
+      "exit_code": 0,
+      "seconds": 1.63
+    },
+    {
+      "name": "v160-storage",
+      "exit_code": 0,
+      "seconds": 1.83
+    },
+    {
+      "name": "v170-storage",
+      "exit_code": 0,
+      "seconds": 1.79
+    },
+    {
+      "name": "v180-storage",
+      "exit_code": 0,
+      "seconds": 1.84
+    },
+    {
+      "name": "v190-storage",
+      "exit_code": 0,
+      "seconds": 2.39
+    },
+    {
+      "name": "v1110-storage",
+      "exit_code": 0,
+      "seconds": 1.64
+    },
+    {
+      "name": "v1120-storage",
+      "exit_code": 0,
+      "seconds": 2.25
+    },
+    {
+      "name": "v1130-storage",
+      "exit_code": 0,
+      "seconds": 2.26
+    },
+    {
+      "name": "v1140-storage",
+      "exit_code": 0,
+      "seconds": 1.39
+    },
+    {
+      "name": "workflow",
+      "exit_code": 0,
+      "seconds": 4.22
+    },
+    {
+      "name": "Großer Datenbestand",
+      "exit_code": 0,
+      "seconds": 43.73
+    },
+    {
+      "name": "Produktiven Assembly-Lader prüfen",
+      "exit_code": 0,
+      "seconds": 2.29
+    },
+    {
+      "name": "browser",
+      "exit_code": 0,
+      "seconds": 36.94
+    },
+    {
+      "name": "v170-browser",
+      "exit_code": 0,
+      "seconds": 8.91
+    },
+    {
+      "name": "v180-browser",
+      "exit_code": 0,
+      "seconds": 16.03
+    },
+    {
+      "name": "v190-browser",
+      "exit_code": 0,
+      "seconds": 23.16
+    },
+    {
+      "name": "v1100-browser",
+      "exit_code": 0,
+      "seconds": 28.73
+    },
+    {
+      "name": "v1110-browser",
+      "exit_code": 0,
+      "seconds": 7.01
+    },
+    {
+      "name": "v1120-browser",
+      "exit_code": 0,
+      "seconds": 7.73
+    },
+    {
+      "name": "v1130-browser",
+      "exit_code": 0,
+      "seconds": 5.86
+    },
+    {
+      "name": "v1140-browser",
+      "exit_code": 0,
+      "seconds": 18.22
+    },
+    {
+      "name": "Exportdateien und PDF/UA prüfen",
+      "exit_code": 0,
+      "seconds": 21.46
+    },
+    {
+      "name": "Vollständige Office-Schemata prüfen",
+      "exit_code": 0,
+      "seconds": 5.3
+    },
+    {
+      "name": "Sammelexporte und gerenderte Fortsetzungsseiten prüfen",
+      "exit_code": 0,
+      "seconds": 61.07
+    },
+    {
+      "name": "Klassendurchschnitte und Druckseiten unabhängig lesen",
+      "exit_code": 0,
+      "seconds": 10.96
+    },
+    {
+      "name": "Abschlussnotenexporte unabhängig lesen",
+      "exit_code": 0,
+      "seconds": 5.57
+    },
+    {
+      "name": "Web-Programm erstellen",
+      "exit_code": 0,
+      "seconds": 0.04
+    },
+    {
+      "name": "Windows-Programm kompilieren",
+      "exit_code": 0,
+      "seconds": 1.93
+    },
+    {
+      "name": "Assembly-Lader nach Wiederholungsbuild",
+      "exit_code": 0,
+      "seconds": 2.26
+    },
+    {
+      "name": "ZIP-Archive vollständig erstellen",
+      "exit_code": 0,
+      "seconds": 2.61
+    },
+    {
+      "name": "Entpackte Auslieferung starten",
+      "exit_code": 0,
+      "seconds": 0.73
+    }
+  ],
+  "new_checks": {
+    "v1140": {
+      "checks": [
+        "Alle Viertel-/Ganznoten, exakte Grenzwerte und rationale Nachbarwerte, keine Doppelrundung, strenge Eingaberegeln und Plus/Minus/halbe Noten",
+        "Datumsgrenzen und Schuljahre einschließlich widersprüchlicher alter Perioden; unbekannte Zeiträume blockiert, expliziter Jahresbeginn möglich",
+        "Bestehende zentrale gruppierte/direkte Berechnung mit Faktoren und Fachgewichten; Anzeigepräzision unabhängig, nicht gewertete Leistungen ohne Vorschlag",
+        "Pädagogische Wahl und unveränderliche exakte Durchschnittsschnappschüsse trotz Noten/Gewichten/Zeugnisartänderung; kontrollierte Korrektur/Entfernung und manuelle Abschlussklasse",
+        "1.13-Bestand, Dezimal-Altzeugnis und historische Abschnitte unverändert; neue Halbjahresnoten eindeutig, Metadaten validiert",
+        "Übernommene Klassen und Archive behalten sämtliche ursprünglichen Abschlüsse; neue Schuljahre erhalten keine alten Noten oder abgeleitete Zeugnisart",
+        "Einmalige, klassenweit gespeicherte Zeugnisart; Abbrechen ohne Speicherung, ganze Noten, manuelle Jahresabschlusswahl",
+        "Gesamte Klasse trotz Suche, Fokus auf erste offene Note; Filter/Übernahme schützen gespeicherte und bearbeitete Werte, fehlende Leistungen bleiben offen",
+        "Gezieltes Entfernen erfordert Bestätigung, Fehlerfokus am betroffenen Kontrollfeld",
+        "Speicherfehler erhält vollständigen Entwurf und unveränderte Daten, erneutes Speichern gelingt; Abbrechen verwirft ungespeicherte Änderungen",
+        "Klassenverwaltung bestätigt Artwechsel, Altwert unverändert vorausgewählt und unverändert speicherbar, ausdrückliche Korrektur möglich",
+        "Auch numerisch gleiche ganze Bestandsnote kann ausdrücklich in die geänderte Zeugnisart übernommen werden",
+        "Neue Klassenarbeiten und mündliche Einzelnoten im März automatisch dem zweiten Halbjahr zugeordnet",
+        "Acht echte Berichtsfälle: Halbjahresinformation/-zeugnis, Klasse/Schüler, mit/ohne Bemerkungen; Word, Excel, TXT, CSV und PDF im bestehenden Exportmodell",
+        "Ungeklärter Altbestand blockiert Vorschläge; manuelle pädagogische Festlegung ohne künstlichen Durchschnitt möglich"
+      ],
+      "documents": 8,
+      "syntheticOnly": true,
+      "windows": false,
+      "nvda": false
+    },
+    "v1140-storage": {
+      "checks": [
+        "Produktiver C#-Kern öffnet 1.13-Datei bytegleich; alte Dezimal-Jahresnote und beide historischen Abschnitte unverändert",
+        "Einmalige Konfiguration und gemeinsame Festlegung atomar gespeichert; fünf gültige Vorschläge, keine künstliche Note, ursprüngliche Datensätze und Sicherungen erhalten",
+        "Programmneustart über produktiven Speicher: alle Festlegungen, Metadaten und Notenlisten erhalten und korrekt vorausgewählt",
+        "Speicherfehler vor JSON-Annahme: Datenträger und Arbeitsspeicher unverändert, Eingaben erhalten, Wiederholen erfolgreich",
+        "TXT-Fehler nach angenommener JSON-Datei klar unterschieden; Dialog und Entwurf bleiben erhalten, erneutes Speichern ohne doppelte Festlegungen",
+        "Vollständige Sicherung/Wiederherstellung mit Schutzkopie; nachträgliche Noten- und Artänderungen verändern keine festgelegte Note"
+      ],
+      "syntheticOnly": true,
+      "windows": false,
+      "nvda": false,
+      "platform": "Produktiver C#-Speicherkern, .NET 8/Linux"
+    },
+    "v1140-browser": {
+      "checks": [
+        "60 Schüler trotz Suche: echter Accessibility-Baum, beschriftete native Auswahlfelder/Tabellen, Pfeil-/Tab-Tasten, Filter/Übernahme schützen Entwürfe, Escape verwirft und gibt Fokus zurück",
+        "Gemeinsames Speichern von 59 Noten, Schüler ohne bewertete Leistungen bleibt offen; Fokus am auslösenden Abschlussnotenmenü",
+        "Direkte Einzelbearbeitung aus Notenübersicht und drei Schülerkarten, gespeicherte Auswahl/Informationen und stabiler Rückkehrfokus",
+        "Tatsächlicher fehlgeschlagener Speicheraufruf im Browser: Dialog und Eingaben bleiben erhalten, kein vorzeitiger Datenwechsel, erneutes Speichern erfolgreich",
+        "Zwölf effektive Fenster-/Skalierungsgrößen plus 320×480: kein Dialogüberlauf, letzte Notenauswahl erreichbar, scrollbare Tabelle und axe ohne Verstöße",
+        "Abschlussklassen mit ganzen Noten, unverändertem Viertel-Altbestand zur kontrollierten Korrektur; jährliche Abschlussnote ausschließlich manuell",
+        "Acht tatsächliche Chromium-Druckrender der gemeinsamen Abschlussnotenberichte für die unabhängige Dateiprüfung",
+        "300 Schüler unmittelbar bearbeitbar; Klassenaufbau unter zehn Sekunden, vollständige Auswahlfelder und keine JavaScript-/axe-Fehler"
+      ],
+      "chromium": "156.0.8078.47",
+      "syntheticOnly": true,
+      "windows": false,
+      "nvda": false
+    },
+    "v1140-files": {
+      "checks": [
+        "Acht Optionsfälle in allen sechs Formen, 32 echte PDF-/Chromium-/LibreOffice-Seiten: vollständige Werte, gespeicherte Noten, optionale Bemerkungen, Excel-Zahlentypen/Tendenzformat, Orientierung und Textgrenzen",
+        "Open XML SDK 3.3.0: 16 vollständige Word-/Excel-Pakete ohne Schemafehler",
+        "veraPDF 1.30.3: acht native PDF/UA-1-Dateien ohne verletzte maschinelle Regeln"
+      ],
+      "pages": 32,
+      "windows": false,
+      "nvda": false,
+      "officeLive": false
+    }
+  },
+  "program_archive": {
+    "name": "Notenblick_1.14.0.zip",
+    "bytes": 1926541,
+    "sha256": "437ea128a5a01de7b4e370da570bc3501600327a94ea9a414b6c502b37d9d1a8"
+  },
+  "deterministic_build": true
+}

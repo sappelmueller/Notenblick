@@ -53,9 +53,10 @@
     const txt = (v, label, max = 500) => {
       if (typeof v !== 'string' || v.length > max || !v.trim()) fail(label + ' fehlt oder ist zu lang.');
     };
-    for (const y of d.years) txt(y.label, 'Schuljahr', 80);
+    for (const y of d.years) {txt(y.label, 'Schuljahr', 80);if(y.startYear!==undefined&&(!Number.isInteger(y.startYear)||y.startYear<1900||y.startYear>9998))fail('Ungültiger Beginn des Schuljahres.');}
     for (const c of d.classes) {
       txt(c.name, 'Klasse', 80);
+      if(c.halfYearReport!==undefined&&!['information','certificate'].includes(c.halfYearReport))fail('Ungültige Ausgabe zum Halbjahr.');
       if (!sets.years.has(c.yearId)) fail('Klasse ohne Schuljahr.');
     }
     for (const s of d.students) {
@@ -98,9 +99,17 @@
     }
     const finalKeys = new Set();
     for (const f of d.finals) {
-      const key = f.courseId + '|' + f.period + '|' + f.studentId;
+      const key = f.courseId + '|' + (NR.isHalfFinal?.(f)?'half':f.period) + '|' + f.studentId;
       if (finalKeys.has(key) || !sets.courses.has(f.courseId) || !['1', '2', 'all'].includes(f.period) || !memberships.get(f.courseId).has(f.studentId) || typeof f.note !== 'string' || f.note.length > 2000 || typeof f.grade !== 'string') fail('Ungültige Zeugnisnote.');
       NR.grade(f.grade);
+      if(f.reportType!==undefined){
+        if(!['information','certificate','annual'].includes(f.reportType)||f.period!==(f.reportType==='annual'?'all':'1'))fail('Ungültige Zeugnisart oder Bezugszeit.');
+        NR.finalGrade(f.grade,f.reportType);const c=maps.courses.get(f.courseId),cl=maps.classes.get(c.classId);
+        if(f.classId!==cl.id||f.yearId!==cl.yearId||typeof f.decidedAt!=='string'||!Number.isFinite(Date.parse(f.decidedAt)))fail('Ungültige Zuordnung oder Festlegungsdatum.');
+        const date=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v)&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString().slice(0,10)===v;
+        if(!date(f.referenceStart)||!date(f.referenceEnd)||f.referenceStart>f.referenceEnd)fail('Ungültiger Notenzeitraum.');
+        const a=f.averageAtDecision;if(a!==null){if(!a||typeof a.n!=='string'||typeof a.d!=='string'||!/^\d{1,300}$/.test(a.n)||!/^\d{1,300}$/.test(a.d)||BigInt(a.d)===0n)fail('Ungültiger gespeicherter Durchschnitt.');const q=new NR.Q(BigInt(a.n),BigInt(a.d));if(q.cmp(1)<0n||q.cmp(6)>0n)fail('Ungültiger gespeicherter Durchschnitt.');}
+      }
       finalKeys.add(key);
     }
     if (d.previousFinals !== undefined) {

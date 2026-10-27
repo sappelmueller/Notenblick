@@ -38,21 +38,23 @@ NR.exportsTXT = function exportsTXT(d) {
       for (const c of courses) {
         const folder = base + '/' + fn.get(c.id),
           list = NR.assessments(d, c.id, 'all'),
-          hasFinal = d.finals.some(f => f.courseId === c.id && f.period === 'all') || (d.previousFinals || []).some(f => f.courseId === c.id);
+          hasFinal = d.finals.some(f => f.courseId === c.id) || (d.previousFinals || []).some(f => f.courseId === c.id);
         if (!list.length && !hasFinal) continue;
         const head = `${c.name} – Klasse ${cl.name} – ${y.label}`;
         const calculated=new Map(NR.activeStudents(d,c,true).map(s=>[s.id,NR.calculate(d,c,s.id)]));
         const lines = [head, 'Gewichtung: ' + Object.keys(NR.overallLabels(c)).filter(k => NR.Q.from(c.weights.overall[k]).n).map(k => `${NR.overallLabels(c)[k]} ${c.weights.overall[k]} %`).join(', '), NR.courseMode(c)==='direct'?'Berechnung: Leistungsarten einzeln gewichten':'Schriftlich: Klassenarbeiten ' + c.weights.written.exam + ' %, Tests ' + c.weights.written.test + ' %', ''];
         for (const s of NR.sorted(NR.activeStudents(d, c, true))) {
           const result = calculated.get(s.id),
-            f = d.finals.find(f => f.courseId === c.id && f.studentId === s.id && f.period === 'all');
+            f = NR.finalFor(d,c.id,s.id,'annual'), h=NR.finalFor(d,c.id,s.id,'half');
           lines.push(NR.name(s) + (s.archived || (c.inactiveStudentIds || []).includes(s.id) ? ' (ausgeschieden)' : ''));
           for (const k of Object.keys(NR.KINDS)) if (result.categories[k] !== null) lines.push(NR.KINDS[k] + ': ' + NR.show(result.categories[k], c));
           if(result.blocked)lines.push('Gesamtschnitt: Altbestand noch prüfen');
           else lines.push('Gesamtschnitt' + (result.total && result.missing.length ? ' (vorläufig)' : '') + ': ' + NR.show(result.total, c));
+          lines.push(NR.finalLabel(d,c,'half')+' (manuell festgelegt): '+NR.finalText(h?.grade,h?.reportType||NR.halfType(d,c))+(NR.finalConflict(h,NR.halfType(d,c))?' (bisher: '+NR.FINAL_TYPES[h.reportType]+')':''));
+          if(h?.note)lines.push('Bemerkung zum Halbjahr: '+NR.plain(h.note));
           if (f) lines.push('Zeugnisnote: ' + f.grade.replace('.', ','));
           if (f?.note) lines.push('Bemerkung: ' + NR.plain(f.note));
-          for (const old of (d.previousFinals || []).filter(x => x.courseId === c.id && x.studentId === s.id)) lines.push('Bisherige Zeugnisnote, Abschnitt ' + old.period + ': ' + old.grade.replace('.', ',') + (old.note ? ' – ' + NR.plain(old.note) : ''));
+          for (const old of [...(d.previousFinals || []),...d.finals.filter(f=>f.period!=='all'&&!NR.isHalfFinal(f))].filter(x => x.courseId === c.id && x.studentId === s.id)) lines.push('Bisherige Zeugnisnote, Abschnitt ' + old.period + ': ' + old.grade.replace('.', ',') + (old.note ? ' – ' + NR.plain(old.note) : ''));
           lines.push('');
         }
         const avg = NR.average(NR.activeStudents(d, c).map(s => ({

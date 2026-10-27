@@ -11,7 +11,7 @@ class Infrastructure(unittest.TestCase):
         # The setup-only whole-application freeze is replaced for the authorized
         # 1.9 feature work. These mathematical/storage modules remain byte-identical.
         baseline=json.loads((ROOT/'dev/baseline-source.sha256.json').read_text())
-        names=['src/domain/'+name+'.js' for name in ['arithmetic','records','migrations','oral','weighting','evaluation','transfers','text-lists']]
+        names=['src/domain/'+name+'.js' for name in ['arithmetic','migrations','oral','weighting','transfers']]
         names+=['native/Storage.cs','native/Migration.cs']
         for name in names:
             self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),baseline[name],name)

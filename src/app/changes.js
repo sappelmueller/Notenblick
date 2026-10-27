@@ -91,6 +91,21 @@ Notenblick.mutate = function mutate(fn, {
   if (!Notenblick.pending.size) Notenblick.error();
   if (refresh) Notenblick.refreshCurrent();
 };
+// Publish a draft only after the existing storage layer has accepted its JSON.
+Notenblick.commitDraft=async function(fn){
+ const A=Notenblick;if(A.starting||A.fatalStart)throw Error('Bitte zuerst deine Noten vollständig öffnen.');
+ if(A.saving)await A.savingPromise;if(A.store&&A.dirty){await A.save();if(A.dirty)throw Error('Der bisherige Stand konnte noch nicht vollständig gespeichert werden. Bitte erneut speichern.');}
+ const previous=A.data,next=A.N.clone(previous);fn(next);next.appVersion=A.version;A.N.validate(next);
+ const controls=[...A.$('#dialogContent').querySelectorAll('input,select,textarea,button')].map(el=>[el,el.disabled]);for(const[el]of controls)el.disabled=true;
+ let finish;A.savingPromise=new Promise(r=>finish=r);A.saving=true;clearTimeout(A.saveTimer);
+ try{
+  const result=A.store?await A.store.save(next,{workspace:A.getWorkspace()}):A.mode!=='demo'?(await window.NRSession.save(next),null):null;
+  if(A.data!==previous)throw Error('Die Daten wurden inzwischen verändert. Bitte den Dialog erneut öffnen.');
+  A.undo.push(A.N.clone(previous));if(A.undo.length>20)A.undo.shift();A.data=result?.data||next;A.seq++;A.savedSeq=A.store&&!result?.txtError?A.seq:A.seq-1;A.dirty=!!result?.txtError||!A.store;if(A.mode==='none')A.mode='working';A.rendered={};A.cache();A.refreshCurrent();A.lastSavedAt=A.data.updatedAt;
+  if(result?.txtError){A.status('Notenlisten fehlen noch','failed');throw Error('Die Noten sind gespeichert. Die Textlisten konnten noch nicht aktualisiert werden. Bitte wähle erneut Speichern.');}
+  A.status(A.store?'Gespeichert':A.mode==='demo'?'Beispieldaten':'Im Browser aufbewahrt');if(!A.pending.size)A.error();
+ }finally{for(const[el,disabled]of controls)if(el.isConnected)el.disabled=disabled;A.saving=false;finish();A.savingPromise=null;}
+};
 Notenblick.save = async function save() {
   clearTimeout(Notenblick.saveTimer);
   if (Notenblick.saving) return Notenblick.savingPromise;

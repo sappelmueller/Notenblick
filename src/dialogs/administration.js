@@ -89,6 +89,7 @@ Notenblick.setup = function setup() {
           id: Notenblick.N.id(),
           yearId: y.id,
           name: className,
+          halfYearReport: 'information',
           archived: false
         };
       d.years.push(y);
@@ -154,15 +155,16 @@ Notenblick.yearDialog = function yearDialog(edit = false) {
 Notenblick.classDialog = function classDialog(cl = null) {
   if (!Notenblick.ui.adminYear) throw Error('Bitte lege zuerst ein Schuljahr an.');
   if(!cl && Notenblick.data.years.find(y=>y.id===Notenblick.ui.adminYear)?.archived)throw Error('Bitte öffne das Schuljahr zuerst wieder.');
-  Notenblick.modal(cl ? 'Klasse bearbeiten' : 'Klasse anlegen', Notenblick.field('className', 'Klassenname', cl?.name || '', 'required maxlength="80"') + (cl ? `<p style="margin-top:20px">${Notenblick.b('toggle-class', cl.archived ? 'Klasse wieder anzeigen' : 'Klasse ausblenden', `data-id="${cl.id}"`, 'text-button')}</p>` : ''), () => {
-    const name = Notenblick.required('className', 'einen Klassennamen');
+  Notenblick.modal(cl ? 'Klasse bearbeiten' : 'Klasse anlegen', Notenblick.field('className', 'Klassenname', cl?.name || '', 'required maxlength="80"') + Notenblick.halfYearFields(cl) + (cl ? `<p style="margin-top:20px">${Notenblick.b('toggle-class', cl.archived ? 'Klasse wieder anzeigen' : 'Klasse ausblenden', `data-id="${cl.id}"`, 'text-button')}</p>` : ''), async () => {
+    const name = Notenblick.required('className', 'einen Klassennamen'), type=Notenblick.readHalfYearType();
     if (Notenblick.data.classes.some(x => x.yearId === Notenblick.ui.adminYear && x.id !== cl?.id && x.name.toLocaleLowerCase('de') === name.toLocaleLowerCase('de'))) throw Error('Diese Klasse gibt es im Schuljahr bereits.');
-    Notenblick.mutate(d => {
-      if (cl) d.classes.find(x => x.id === cl.id).name = name;else {
+    await Notenblick.commitDraft(d => {
+      if (cl) Object.assign(d.classes.find(x => x.id === cl.id),{name,halfYearReport:type});else {
         const target = {
           id: Notenblick.N.id(),
           yearId: Notenblick.ui.adminYear,
           name,
+          halfYearReport: type,
           archived: false
         };
         d.classes.push(target);
@@ -172,6 +174,7 @@ Notenblick.classDialog = function classDialog(cl = null) {
     });
     Notenblick.remember();
   });
+  Notenblick.bindHalfYearFields(cl);
 };
 Notenblick.copyClassDialog = function copyClassDialog() {
   if(Notenblick.data.years.find(y=>y.id===Notenblick.ui.adminYear)?.archived)throw Error('Bitte öffne das Schuljahr zuerst wieder.');
