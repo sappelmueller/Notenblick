@@ -1,5 +1,6 @@
 from pathlib import Path
 from toolchain import compiler as resolve_compiler
+from evidence import component,settled_files
 import subprocess, shutil, hashlib, json
 r=Path(__file__).resolve().parents[1]; dev=r/'dev'; refs=dev/'microsoft.netframework.referenceassemblies.net48/build/.NETFramework/v4.8'; wv=dev/'webview2'; dll=r/'dist/Programm/Windows';dll.mkdir(parents=True,exist_ok=True)
 generated_root=r/'.build/generated';generated_root.mkdir(parents=True,exist_ok=True)
@@ -12,7 +13,9 @@ newton=dev/'newtonsoft.json/lib/net45/Newtonsoft.Json.dll'
 def compile(name,files,extra=[],exe=False):
  dest=(r/'dist'/name) if exe else dll/name
  args=compiler+ref+['-target:'+('winexe' if exe else 'library'),'-out:'+str(dest)]+(['-win32manifest:'+str(generated_root/'app.manifest'),'-win32icon:'+str(r/'native/Notenblick.ico'),'-platform:anycpu'] if exe else [])+extra+[str((generated_root if x.startswith('Release') or x in ['Launcher.cs','ProgramLibraries.cs'] else r/'native')/x) for x in files]
- subprocess.run(args,check=True)
+ inputs=[dev/'compile.py',dev/'toolchain.py',dev/'evidence.py',dev/'sdk-lock.json',r/'global.json',refs,newton,wv/'lib/net462',*[Path(x[3:]) for x in args if x.startswith('-r:')],r/'native/Notenblick.ico',generated_root/'app.manifest',Path(compiler[0]).parent/'shared',Path(compiler[1]).parent,*[Path(x) for x in args if x.endswith(('.cs','.manifest','.ico'))]]
+ reused=component(name,inputs,[dest],lambda:subprocess.run(args,check=True))
+ print(('Reused ' if reused else 'Compiled ')+name)
 compile('Notenblick.Speicherung.dll',['Storage.cs','Migration.cs','ExportFiles.cs','OfficePackage.cs'],['-r:'+str(newton)])
 compile('Notenblick.Fenster.dll',['Window.cs'],['-r:'+str(newton),'-r:'+str(dll/'Notenblick.Speicherung.dll')]+['-r:'+str(wv/'lib/net462'/x) for x in ['Microsoft.Web.WebView2.Core.dll','Microsoft.Web.WebView2.WinForms.dll']])
 names=['Newtonsoft.Json','Microsoft.Web.WebView2.Core','Microsoft.Web.WebView2.WinForms','Notenblick.Speicherung','Notenblick.Fenster']
@@ -26,7 +29,7 @@ for arch in ['x86','x64','arm64']:
  (dll/arch).mkdir(exist_ok=True);shutil.copy2(wv/'build/native'/arch/'WebView2Loader.dll',dll/arch/'WebView2Loader.dll')
 lic=dll/'Lizenzen';lic.mkdir(exist_ok=True)
 for source,name in [(wv/'LICENSE.txt','Microsoft-WebView2.txt'),(dev/'newtonsoft.json/LICENSE.md','Newtonsoft-Json.md')]:shutil.copy2(source,lic/name)
-files=sorted(p for p in (r/'dist/Programm').rglob('*') if p.is_file())
+files=settled_files(r/'dist/Programm')
 generated='// Generated release file allowlist.\nnamespace Notenblick.Native {internal static class ReleaseFiles {internal static readonly ProgramLibraries.ProgramFileSpec[] Files={\n'
 for p in files:generated+='new ProgramLibraries.ProgramFileSpec("'+p.relative_to(r/'dist/Programm').as_posix()+'","'+hashlib.sha256(p.read_bytes()).hexdigest().upper()+'"),\n'
 generated+='};}}\n';(generated_root/'ReleaseFiles.g.cs').write_text(generated)

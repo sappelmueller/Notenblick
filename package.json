@@ -10,11 +10,14 @@
   },
   "scripts": {
     "setup": "python3 dev/manage.py setup",
-    "test": "python3 dev/manage.py test quick",
+    "test": "python3 dev/manage.py test changed",
     "test:full": "python3 dev/manage.py test full",
     "test:browser": "python3 dev/manage.py test browser",
     "build": "python3 dev/manage.py build",
-    "release": "python3 dev/manage.py release"
+    "release": "python3 dev/manage.py release",
+    "test:quick": "python3 dev/manage.py test quick",
+    "test:integration": "python3 dev/manage.py test changed --stage integration",
+    "plan": "python3 dev/manage.py plan"
   },
   "engines": {
     "node": ">=22 <25"

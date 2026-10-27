@@ -8,7 +8,8 @@ Nur das private Repository `sappelmueller/Notenblick` abrufen. Nach dem Abrufen 
 
 ```sh
 python3 dev/manage.py setup
-python3 dev/manage.py test quick
+python3 dev/manage.py plan
+python3 dev/manage.py test changed
 ```
 
 Falls die Git-CLI hier keine Anmeldung besitzt, beschreibt [docs/GITHUB-ANBINDUNG.md](docs/GITHUB-ANBINDUNG.md) den bereits geprüften Abruf und die Sicherung über die verbundene GitHub-Anbindung.
@@ -17,24 +18,30 @@ Die Einrichtung lädt das festgelegte .NET SDK und die gesperrten Testabhängigk
 
 Benötigt: Python ab 3.12, Git und Node.js (getestet mit der Version in `.node-version`). Für vollständige Exportprüfungen werden zusätzlich die in `dev/export-qa-requirements.txt` gesperrten Python-Pakete, Java und veraPDF 1.30.3 benötigt; siehe [docs/EXPORT-PRUEFUNG.md](docs/EXPORT-PRUEFUNG.md). SDK, Compiler und Linux-Testbrowser werden projektspezifisch eingerichtet. Bibliotheksdateien für den Windows-Build sind inklusive SHA-256-Prüfsummen enthalten. Es wird kein globales System umkonfiguriert.
 
+Kurzer technischer Einstieg und verbindlicher Arbeitsablauf: [Projektübersicht](docs/PROJEKTUEBERSICHT.md). Einzelheiten zur effizienten Prüfsteuerung und Messungen: [Entwicklungsoptimierung](docs/ENTWICKLUNGSOPTIMIERUNG.md).
+
 ## Befehle
 
 | Aufgabe | Befehl |
 | --- | --- |
 | Einmalige bzw. wiederholbare Einrichtung | `python3 dev/manage.py setup` |
 | Werkzeugdiagnose | `python3 dev/manage.py doctor` |
-| Schnelle Standardtests | `python3 dev/manage.py test quick` |
+| Änderungsplan | `python3 dev/manage.py plan` |
+| Gezielte Entwicklungsprüfung | `python3 dev/manage.py test changed` |
+| Integration betroffener Bereiche | `python3 dev/manage.py test changed --stage integration` |
+| Unveränderte bisherige Standardsammlung | `python3 dev/manage.py test quick` |
 | Produktiver C#-Speicherkern | `python3 dev/manage.py test storage` |
 | Tastatur, Fokus, Browser und axe | `python3 dev/manage.py test browser` |
 | Großer Datenbestand | `python3 dev/manage.py test stress` |
 | Alle Prüfungen | `python3 dev/manage.py test full` |
 | Windows-Programm bauen | `python3 dev/manage.py build` |
 | ZIP mit Integritäts- und Entpackprüfung | `python3 dev/manage.py package` |
+| Vollständige Infrastrukturabnahme ohne neuen Download | `python3 dev/manage.py release --check-only` |
 | Vollständiger Prüf-, Build- und ZIP-Ablauf | `python3 dev/manage.py release` |
 
 `release` baut sauber, führt alle Tests aus, wiederholt den Build und verlangt bytegleiche Programmdateien. Danach werden vollständige Programm- und Quellcode-ZIPs samt Prüfsummen unter `artifacts` erzeugt und die entpackte Anwendung im Testhost geprüft. Ein Fehler stoppt den Ablauf. Kein Befehl führt einen Push, eine GitHub-Veröffentlichung oder einen GitHub-Runner aus. `package` ist für lokale Paketprüfungen; vor einer Veröffentlichung ist `release` erforderlich.
 
-Berichte, Ausgaben und vollständige Testprotokolle stehen unter `reports/<Zeitpunkt>`. `summary.json` unterscheidet laufende, erfolgreiche und fehlgeschlagene Durchläufe. Vorherige Testergebnisse werden beim neuen Lauf entfernt. Eine erfolgreiche Linux-Prüfung ist keine Windows-/NVDA-Freigabe.
+Berichte, Ausgaben und vollständige Testprotokolle stehen unter `reports/<Zeitpunkt>`. `summary.json` unterscheidet laufende, erfolgreiche und fehlgeschlagene Durchläufe. Vollständige Läufe entfernen vorherige generierte Testausgaben; gezielte Läufe nutzen nur nachgewiesene gültige Ergebnisse. `--retry reports/<Lauf>` wiederholt den ursprünglichen Plan samt neu betroffenen Bereichen. `status --report reports/<Lauf>/summary.json` erkennt ungültig gewordene Freigaben. Eine erfolgreiche Linux-Prüfung ist keine Windows-/NVDA-Freigabe.
 
 ## Architektur und Ablage
 

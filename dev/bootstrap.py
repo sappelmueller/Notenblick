@@ -1,6 +1,7 @@
 """Pinned, checksum-verified project-local SDK and locked test dependencies."""
 from pathlib import Path
 import hashlib, json, os, platform, shutil, subprocess, sys, tarfile, urllib.request, zipfile
+from evidence import digest as fingerprint,inventory,read,write
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT/'.tools'
@@ -39,11 +40,14 @@ def setup():
     assert any(line.startswith(lock['version']+' [') for line in installed), 'Erwartetes SDK fehlt: '+lock['version']
     npm = shutil.which('npm.cmd' if os.name=='nt' else 'npm')
     assert npm, 'Node.js/npm fehlen. Version siehe .node-version.'
-    state = TOOLS/'npm-lock.sha256'
-    expected = hashlib.sha256((ROOT/'package-lock.json').read_bytes()).hexdigest()
-    if not (ROOT/'node_modules').is_dir() or not state.is_file() or state.read_text()!=expected:
+    state = TOOLS/'npm-state.json'
+    packages=json.loads((ROOT/'package-lock.json').read_text())['packages']
+    packages[''].pop('version',None)
+    expected=fingerprint([packages,inventory(ROOT,[shutil.which('node'),Path(npm).resolve()])])
+    installed=inventory(ROOT,[ROOT/'node_modules']);previous=read(state)
+    if previous.get('key')!=expected or previous.get('files')!=installed or not (ROOT/'node_modules').is_dir():
         subprocess.run([npm,'ci','--ignore-scripts','--no-audit','--no-fund'],cwd=ROOT,check=True)
-        state.write_text(expected)
+        write(state,{'key':expected,'files':inventory(ROOT,[ROOT/'node_modules'])})
     env = os.environ.copy()
     env['PLAYWRIGHT_BROWSERS_PATH'] = str(TOOLS/'browsers')
     browser_lock = ROOT/'dev/browser-lock.json'
