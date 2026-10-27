@@ -17,6 +17,12 @@ NVDA-Sprach-/Brailleansagen, Windows/WebView2/UIA, tatsächliche Windows-Skalier
 - `v1140-storage.cjs`: bisherigen vollständigen produktiven Speicher-/Fehler-/Sicherungsprüfungen um tatsächliche 1.14.0-Datei, bytegleiches Öffnen, vorausgewählte Festlegung und Wiederherstellung unter 1.15.0 ergänzt.
 - `v1140-files.py`: unabhängige Word-/Excel-/Text-/CSV-/PDF-/Druckleser prüfen numerische Festlegungen, echte Excelzahlen mit `0.00`, Schema, PDF/UA und vollständige gerenderte Inhalte. Sämtliche bestehenden Exportprüfungen und Schüler-ZIP-Regressionen bleiben bestehen.
 
+## Ausgeführte Vorabprüfungen am 27. Oktober 2026
+
+Die sechs neuen Struktur-/Domänengruppen und fünf neuen Browsergruppen einschließlich neun Klassenfällen (30/60/300 Schüler × drei Zeugnisarten) sind erfolgreich. Die sieben produktiven Speichergruppen einschließlich 1.14.0-Update/Wiederherstellung sowie die unabhängigen Abschlussnoten-Dateiprüfungen sind ebenfalls erfolgreich. Bei 320 × 480 Pixeln wurde das Bemerkungsfeld tatsächlich per Tab erreicht; effektive Größen bis 160 Pixel Breite und die zwölf bestehenden Größen-/Skalierungskombinationen werden zusätzlich im vollständigen Lauf geprüft.
+
+Der neue Tendenzprüfer erkannte zunächst aneinandergehängte Word-Tabellenzellen mit Note, Gedankenstrich und Datum irrtümlich als Minusnotation. Die Regel erkennt nun die tatsächlichen bisherigen Tendenzformate; positive und negative Beispiele sichern sie ab. Die anschließend erneut ausgeführte unabhängige Dateiprüfung besteht. Bestehende Berechnungs-, Migrations-, Wechsel- und produktive Speicherdateien wurden zusätzlich bytegleich mit dem Ausgangsstand verglichen.
+
 ## Freigabenachweis
 
 Entwicklungsplan und gezielte Prüfungen laufen über `dev/manage.py`. Der unmittelbar folgende vollständige `python3 dev/manage.py release` deckt die Integration ab: alle 46 Testsuiten einschließlich 180.000 Ergebnissen, sämtliche bisherigen Berechnungen/Regressionen, Sicherung/Wiederherstellung, Browser/Tastatur/Fokus/axe, Office/PDF-UA/Druck, Lader/Abhängigkeiten sowie zwei frische bytegleiche Builds und ZIP-/Entpacktest. Insgesamt 53 Prozessschritte. Keine GitHub Actions.
