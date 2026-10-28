@@ -21,6 +21,13 @@ Notenblick.$('#dialog').addEventListener('cancel', e => {
   e.preventDefault();
   if(!Notenblick.dialogBusy||Notenblick.dialogCancellable)Notenblick.closeModal();
 });
+// Handle protected Escape before the native dialog dismissal, including
+// repeated Escape while a confirmation is being shown/restored.
+Notenblick.$('#dialog').addEventListener('keydown', e => {
+  if(e.key!=='Escape'||e.defaultPrevented||!(Notenblick.dialogBeforeClose||Notenblick.dialogReturn))return;
+  e.preventDefault();e.stopPropagation();
+  if(!Notenblick.dialogBusy||Notenblick.dialogCancellable)Notenblick.closeModal();
+});
 document.addEventListener('submit', e => {
   if(e.target.id==='adminViewForm'){e.preventDefault();Notenblick.$('#adminViewDetails').open=false;Notenblick.$('#adminViewSummary').focus();Notenblick.remember();return;}
   if (e.target.id === 'viewForm') {
@@ -151,7 +158,7 @@ Notenblick.$('#importFile').addEventListener('change', async e => {
   }
 });
 window.addEventListener('beforeunload', e => {
-  if (Notenblick.mode !== 'demo' && (Notenblick.pending.size || (Notenblick.$('#defaultWeightEditor')?.isConnected&&Notenblick.settingsWeights?.dirty()) || (Notenblick.store ? Notenblick.dirty || Notenblick.saving : Notenblick.sessionWrites > 0))) {
+  if (Notenblick.mode !== 'demo' && (Notenblick.setupHasChanges?.() || Notenblick.pending.size || (Notenblick.$('#defaultWeightEditor')?.isConnected&&Notenblick.settingsWeights?.dirty()) || (Notenblick.store ? Notenblick.dirty || Notenblick.saving : Notenblick.sessionWrites > 0))) {
     e.preventDefault();
     e.returnValue = '';
   }

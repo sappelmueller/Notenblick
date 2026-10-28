@@ -2,10 +2,10 @@
 from pathlib import Path
 import subprocess
 
-QUICK=['domain-storage','transfers','ui','new-features','v140','v150','v160','v170','v180','v190','v1100','v1110','v1120','v1130','v1140','v1150','v1160']
-STORAGE=['view-storage','v150-storage','v160-storage','v170-storage','v180-storage','v190-storage','v1110-storage','v1120-storage','v1130-storage','v1140-storage','v1160-storage','workflow']
-BROWSER=['browser','v170-browser','v180-browser','v190-browser','v1100-browser','v1110-browser','v1120-browser','v1130-browser','v1140-browser','v1150-browser','v1160-browser']
-FILES=['export-files','office-schema','v1120-files','v1130-files','v1140-files']
+QUICK=['domain-storage','transfers','ui','new-features','v140','v150','v160','v170','v180','v190','v1100','v1110','v1120','v1130','v1140','v1150','v1160','v1170']
+STORAGE=['view-storage','v150-storage','v160-storage','v170-storage','v180-storage','v190-storage','v1110-storage','v1120-storage','v1130-storage','v1140-storage','v1160-storage','v1170-storage','workflow']
+BROWSER=['browser','v170-browser','v180-browser','v190-browser','v1100-browser','v1110-browser','v1120-browser','v1130-browser','v1140-browser','v1150-browser','v1160-browser','v1170-browser']
+FILES=['export-files','office-schema','v1120-files','v1130-files','v1140-files','v1170-files']
 ALL=['infrastructure',*QUICK,'native-host',*STORAGE,'large','loader',*BROWSER,*FILES]
 DEPENDENCIES={name:['native-host'] for name in [*STORAGE,'large']}
 DEPENDENCIES.update({
@@ -16,6 +16,8 @@ DEPENDENCIES.update({
  'v1120-files':['v1120','v1120-browser'], 'v1130-files':['v1130','v1130-browser'],
  'v1150-browser':['v1150'],
  'v1160-browser':['v1160'],
+ 'v1170-browser':['v1170'],
+ 'v1170-files':['v1170','v1170-browser'],
  'v1140-files':['v1140','v1140-browser']})
 
 
@@ -60,14 +62,18 @@ def select(paths,stage='develop'):
         if group in ['shared','infrastructure']:
             names.update(ALL);reasons.append(group+': Auswirkungen breit oder unbekannt → alle Bereiche')
         elif group=='math':
+            names.update(['v1170','v1170-storage','v1170-browser','v1170-files'])
             names.update(['domain-storage','transfers','v150','v160','v170','v1140'] if stage=='develop' else ALL);names.update(['v1140-storage','v1140-browser','v1150','v1150-browser','v1160','v1160-storage','v1160-browser']);reasons.append('math: exakte Referenzen, Gewichte, Kompatibilität und Abschlussnoten')
         elif group=='storage':
+            names.update(['v1170','v1170-storage'])
             names.update(['domain-storage',*STORAGE,'v1140','v1140-browser','v1150','v1150-browser','v1160','v1160-browser']);
             if stage=='integration':names.update(ALL)
             reasons.append('storage: Integrität, Migration, Sicherung und Wiederherstellung')
         elif group=='export':
+            names.update(['v1170','v1170-files'])
             names.update(['v1140-files','v1150','v1150-browser','v1160'] if stage=='develop' else [*QUICK,*BROWSER,*FILES]);reasons.append('export: acht repräsentative Optionsfälle / vollständige Integration')
         elif group=='ui':
+            names.update(['v1170','v1170-browser'])
             names.update([*QUICK,*BROWSER,*FILES] if stage=='integration' else ['ui','new-features','v140','v150','v160','v170','v180','v190','v1140','v1150','v1160','v1160-browser','browser','v1140-browser','v1150-browser']);reasons.append('ui: gemeinsame Oberfläche, Tastatur, Fokus, axe und Skalierung')
         elif group.startswith('test:'):
             name=group[5:];names.add(name)

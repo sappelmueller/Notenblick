@@ -36,7 +36,7 @@ Notenblick.calculation = function(c, sid) {
 // individual results until NR.show applies the course's rounding for display.
 Notenblick.classAverages = function(c) {
  const A=Notenblick,results=A.N.activeStudents(A.data,c).map(s=>A.calculation(c,s.id));
- return {categories:Object.fromEntries(['written',...A.kinds].map(k=>[k,A.N.average(results.map(r=>({value:r.categories[k]})))])),total:A.N.average(results.map(r=>({value:r.total})))};
+ return {categories:Object.fromEntries(['written',...A.kinds].map(k=>[k,A.N.average(results.map(r=>({value:r.categories[k]})))])),total:A.N.average(results.map(r=>({value:r.total}))),finals:A.N.classFinalAverages(A.data,c)};
 };
 const assessmentStats = new WeakMap();
 Notenblick.assessmentStats = function(a,c=Notenblick.getCourse()) {

@@ -17,7 +17,7 @@ fs.mkdirSync(out,{recursive:true});
  let footer;
  for(const search of ['', 'P000', 'Kein Treffer'])for(const scope of ['current','all']){
   A.W().search=search;const r=A.buildReport(A.exportContext('overview'),{scope,remarks:false}),s=r.sections[0];
-  assert.equal(s.footer[0].text,'Klassendurchschnitt');assert.equal(s.footer.at(-1).text,'–');assert.equal(s.footer.at(-3).text,show(manual,c));
+  assert.equal(s.footer[0].text,'Klassendurchschnitt');assert.equal(s.footer.at(-1).text,show(N.average(active.map(p=>({value:N.finalFor(A.data,c.id,p.id,'annual')?.grade}))),c));assert.equal(s.footer.at(-3).text,show(manual,c));
   const row=new w.DOMParser().parseFromString(A.overviewTable(),'text/html').querySelector('tfoot tr');
   assert.deepEqual(Array.from(row.cells,el=>el.textContent.trim()),Array.from(s.footer,cell=>cell.text));
   if(footer)assert.deepEqual(plain(s.footer),footer);footer=plain(s.footer);

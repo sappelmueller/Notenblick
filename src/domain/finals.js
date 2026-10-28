@@ -38,4 +38,18 @@ N.setFinal=function(d,c,sid,period,grade,note='',{remove=false}={}){
  if(prior)d.finals=d.finals.map(x=>x.id===prior.id?f:x);else d.finals.push(f);
 };
 N.finalAverage=f=>f?.averageAtDecision?new N.Q(BigInt(f.averageAtDecision.n),BigInt(f.averageAtDecision.d)):null;
+// Manual decisions form an independent, unweighted class result. Missing or
+// incompatible decisions never enter the denominator, nor do former members.
+N.classFinalAverages=function(d,c){
+ const students=N.activeStudents(d,c),types={half:N.halfType(d,c),annual:'annual'};
+ return Object.fromEntries(Object.entries(types).map(([period,type])=>[period,N.average(students.map(s=>{
+  const f=N.finalFor(d,c.id,s.id,period),actual=f?.reportType||(period==='annual'&&f?.period==='all'?'annual':null);
+  return {value:f&&actual===type&&!N.finalConflict(f,type)?f.grade:null};
+ }))]));
+};
+N.compareSchoolYears=function(a,b){
+ const start=y=>Number.isInteger(y?.startYear)&&y.startYear>=1900&&y.startYear<=9998?y.startYear:Number(N.schoolYearRange(y)?.start.slice(0,4))||0;
+ return start(b)-start(a);
+};
+N.sortedYears=years=>[...years].sort(N.compareSchoolYears);
 })(globalThis.NR=globalThis.NR||{});
