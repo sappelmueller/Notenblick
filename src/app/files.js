@@ -18,7 +18,8 @@ Notenblick.download = async function download(name, text, type = 'text/plain;cha
   setTimeout(() => URL.revokeObjectURL(url), 10000);
   Notenblick.announce('Die Datei wird gespeichert.');
 };
-Notenblick.backup = function backup() {
+Notenblick.backup = async function backup() {
+  if(Notenblick.fatalStart)throw Error('Bitte öffne zuerst einen lesbaren Notenstand oder stelle eine Sicherung wieder her.');
   return Notenblick.download('Notenblick-Sicherung-' + new Date().toISOString().replace(/[:.]/g, '-') + '.json', JSON.stringify({...Notenblick.data,workspace:Notenblick.getWorkspace()},null,2), 'application/json');
 };
 Notenblick.backupDetails=function(d){const A=Notenblick;return '<dl class="storage-details">'+[['Datum und Uhrzeit',new Date(d.updatedAt).toLocaleString('de-DE')+' Uhr'],['Schuljahre',d.years.length],...(d.classes?[['Klassen',d.classes.length]]:[]),['Schüler',d.students.length],['Leistungen',d.assessments.length],...(d.legacyOther?.assessments.length?[['Frühere Leistungen',d.legacyOther.assessments.length]]:[])].map(([k,v])=>'<div><dt>'+A.esc(k)+'</dt><dd>'+A.esc(v)+'</dd></div>').join('')+'</dl>';};

@@ -5,6 +5,7 @@
 - Hilfe als sechster echter Hauptnavigationslink und eigener H1/H2-Bereich. Sämtliche bisherigen Hilfetexte und ihre Themenreihenfolge erhalten, keine inhaltliche Überarbeitung.
 - Sicherung mit derselben Tabkomponente wie Verwaltung/Einstellungen: Speicherstatus, Sicherung erstellen, Wiederherstellen und Exportieren. Keine zusätzlichen Regionen oder vier gleichzeitig sichtbaren Karten.
 - Speicherstatus unterscheidet ungespeicherte Noten, unvollständige zusätzliche TXT-Dateien und noch offene Ansichtsspeicherung. Tatsächlichen JSON-Speicherzeitpunkt auch bei TXT-Fehlern anzeigen. Aktionen: Datenordner öffnen, Automatische Notenlisten prüfen und Erneut speichern.
+- Bei Lesefehlern der Hauptdatei keine TXT-Neuerstellung oder scheinbare Sicherung/Exporte des leeren Ersatzstands; vorhandene TXT-Dateien und frühere Speicherstände bleiben geschützt.
 - Datei- und Standwiederherstellung mit beschrifteten Angaben und ausdrücklicher Ersetzungsbestätigung. Ausgewählter Stand mit dynamischer Vorschau; SHA-256-Kontrolle verhindert Übernahme inzwischen veränderter Quelldateien. Bestehende atomare Speicherung und zusätzliche Schutzsicherung erhalten.
 - Rückgängig mit sinnvoller Fokuswiederherstellung. Ungespeicherte Arbeitskopien nur bei Verfügbarkeit und einschließlich ihrer gespeicherten Einstellungen wiederherstellen. Historische Daten und mündliche Zuordnungen bleiben zugänglich.
 - Zentralen Exportdialog aus Sicherung öffnen; alle Formate und Schüler-Sammelexporte erhalten. Doppelten CSV-Schalter entfernt; TXT-Prüfung ausschließlich unter Speicherstatus.
