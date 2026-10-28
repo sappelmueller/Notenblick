@@ -1,3 +1,13 @@
+# Notenblick 1.18.0
+
+- Ersteinrichtung gezielt vereinfacht: Halbjahresoptionen nennen Viertelnoten beziehungsweise ganze Noten direkt; doppelte Erklärungen entfallen.
+- Fachliste ohne wiederholte Klassenüberschrift/Anzahl, dauerhaftes Feldlabel „Fachname“ und eindeutige dynamische Entfernen-Aktionen. Leere Entwürfe sind weiterhin keine eingerichteten Fächer.
+- Schülerlisten ohne doppelte Klassenüberschrift; kompakte dynamische Überschrift „Schüler (Anzahl)“. Einstellungen werden ausschließlich im fünften Schritt zusammengefasst.
+- Kompakte einheitliche Klassenbereiche, natürlich umbrechende Eingaben/Aktionen auch bei hohem Zoom. Sichtbare Fokusmarkierungen und bisherige Komponenten bleiben erhalten.
+- Nach Entfernen Fokus zum benachbarten Feld/Schüler beziehungsweise zur Hinzufügen-Aktion. Schrittüberschriften erhalten den Fokus; beim Zurückgehen wird die vorherige Scrollposition wiederhergestellt.
+- Bestehende atomare Abschlussspeicherung und Abbruchbestätigungen bleiben erhalten. Berechnung, Abschlussnoten, Exporte, TXT-Verzeichnisversion 17, Datenformat und native Speicherung unverändert.
+- Dauerhafte Funktions-/Browserregressionen, zusätzliche bytegleiche Öffnungsprüfung von 1.17.0 und vollständiger lokaler Release-Ablauf. Windows-/NVDA-/Braille-/Microsoft-Office-Liveabnahme bleibt separat erforderlich.
+
 # Notenblick 1.17.0
 
 - Fehler in der Notenübersicht behoben: Die beiden Abschlussnoten-Klassendurchschnitte waren bisher fest als Striche ausgegeben. Jetzt zählen bereits teilweise festgelegte passende Noten aktiver Fachschüler; keine Nullwerte für fehlende Noten, keine Veränderung gespeicherter Entscheidungen. Bildschirm, TXT-Übersicht und gemeinsame Exportmodelle verwenden dieselbe exakte Berechnung. Suche, angezeigte Seite und Exportumfang beeinflussen die Grundlage nicht.
