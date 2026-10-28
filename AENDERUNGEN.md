@@ -1,3 +1,16 @@
+# Notenblick 1.19.0
+
+- Neue Standards nur für neue Bestände: Kürzen und Notenansicht nach Leistungsarten. Gespeicherte Entscheidungen sowie bisherige implizite Standards alter Bestände bleiben erhalten; exakte Rechnungen und Zeugnisnotenvorschläge unverändert.
+- Ersteinrichtung mit Zurück, Einrichtung beenden und Weiter beziehungsweise Notenblick einrichten in einer gemeinsamen Fußzeile. Fünf Schritte, Fokus, Scrollposition und Verwerfschutz erhalten.
+- Hilfe als sechster echter Hauptnavigationslink und eigener H1/H2-Bereich. Sämtliche bisherigen Hilfetexte und ihre Themenreihenfolge erhalten, keine inhaltliche Überarbeitung.
+- Sicherung mit derselben Tabkomponente wie Verwaltung/Einstellungen: Speicherstatus, Sicherung erstellen, Wiederherstellen und Exportieren. Keine zusätzlichen Regionen oder vier gleichzeitig sichtbaren Karten.
+- Speicherstatus unterscheidet ungespeicherte Noten, unvollständige zusätzliche TXT-Dateien und noch offene Ansichtsspeicherung. Tatsächlichen JSON-Speicherzeitpunkt auch bei TXT-Fehlern anzeigen. Aktionen: Datenordner öffnen, Automatische Notenlisten prüfen und Erneut speichern.
+- Datei- und Standwiederherstellung mit beschrifteten Angaben und ausdrücklicher Ersetzungsbestätigung. Ausgewählter Stand mit dynamischer Vorschau; SHA-256-Kontrolle verhindert Übernahme inzwischen veränderter Quelldateien. Bestehende atomare Speicherung und zusätzliche Schutzsicherung erhalten.
+- Rückgängig mit sinnvoller Fokuswiederherstellung. Ungespeicherte Arbeitskopien nur bei Verfügbarkeit und einschließlich ihrer gespeicherten Einstellungen wiederherstellen. Historische Daten und mündliche Zuordnungen bleiben zugänglich.
+- Zentralen Exportdialog aus Sicherung öffnen; alle Formate und Schüler-Sammelexporte erhalten. Doppelten CSV-Schalter entfernt; TXT-Prüfung ausschließlich unter Speicherstatus.
+- Gezielter Umbruch langer Sicherungsaktionen und Texte; Dialoge aus Sicherung bei kleiner effektiver Breite erreichbar. Die bestehende Scrollprüfung reagiert zusätzlich auf Layout-/Zoomänderungen, damit auch leere scrollbare Tabellen tastaturerreichbar bleiben.
+- Dauerhafte v1190-Funktions-, produktive C#-Speicher- und Chromium/axe-Prüfungen mit 65 Fenster-/CSS-Zoomfällen. Hilfe-Textdigest, Altstand 1.18.0 bytegleich, Fehler-/Abbruch-/Wiederherstellungsfälle. Infrastrukturprüfung unterstützt Abschlusscommits mit identischem Quellbaum.
+
 # Notenblick 1.18.0
 
 - Ersteinrichtung gezielt vereinfacht: Halbjahresoptionen nennen Viertelnoten beziehungsweise ganze Noten direkt; doppelte Erklärungen entfallen.

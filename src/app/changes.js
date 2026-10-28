@@ -17,7 +17,7 @@ Notenblick.mark = function mark() {
   Notenblick.dirty = true;
   Notenblick.seq++;
   Notenblick.cache();
-  if (Notenblick.mode !== 'demo') { Notenblick.sessionWrites++;window.NRSession.save(Notenblick.data).catch(() => Notenblick.error('Deine Eingaben konnten noch nicht gesichert werden. Bitte erstelle eine Sicherung.','storage')).finally(()=>Notenblick.sessionWrites--); }
+  if (Notenblick.mode !== 'demo') { Notenblick.sessionWrites++;window.NRSession.save(Notenblick.data).then(()=>{Notenblick.sessionFailed=false;}).catch(() => {Notenblick.sessionFailed=true;Notenblick.error('Deine Eingaben konnten noch nicht gesichert werden. Bitte erstelle eine Sicherung.','storage');}).finally(()=>{Notenblick.sessionWrites--;Notenblick.updateSaveDetails?.();}); }
   if (Notenblick.store) {
     Notenblick.status('Wird gespeichert …', 'pending');
     clearTimeout(Notenblick.saveTimer);
@@ -25,7 +25,7 @@ Notenblick.mark = function mark() {
   } else Notenblick.status(Notenblick.mode === 'demo' ? 'Beispieldaten' : 'Im Browser aufbewahrt');
 };
 Notenblick.workspacePromise=Promise.resolve();
-Notenblick.getWorkspace=()=>({...((Notenblick.data.workspace?.setupCommitId||Notenblick.workspace?.setupCommitId)?{setupCommitId:Notenblick.data.workspace?.setupCommitId||Notenblick.workspace?.setupCommitId}:{}),main:Notenblick.ui.main,lastNotesCourse:Notenblick.ui.lastNotesCourse,workingYear:Notenblick.ui.workingYear,historicalYear:Notenblick.ui.historicalYear,year:Notenblick.ui.year,class:Notenblick.ui.class,course:Notenblick.ui.course,weightClass:Notenblick.ui.weightClass,weightCourse:Notenblick.ui.weightCourse,adminYear:Notenblick.ui.adminYear,adminClass:Notenblick.ui.adminClass,adminView:Notenblick.ui.adminView,adminSearch:Notenblick.ui.adminSearch,showExitedAdmin:Notenblick.ui.showExitedAdmin,showArchived:Notenblick.ui.showArchived,nameOrder:Notenblick.ui.nameOrder,selections:Notenblick.N.clone(Notenblick.ui.selections||{}),scrolls:Notenblick.N.clone(Notenblick.scrolls),settings:Notenblick.N.clone(Notenblick.prefs),settingsView:Notenblick.ui.settingsView,workspaces:Notenblick.N.clone(Notenblick.ui.workspaces)});
+Notenblick.getWorkspace=()=>({...((Notenblick.data.workspace?.setupCommitId||Notenblick.workspace?.setupCommitId)?{setupCommitId:Notenblick.data.workspace?.setupCommitId||Notenblick.workspace?.setupCommitId}:{}),main:Notenblick.ui.main,lastNotesCourse:Notenblick.ui.lastNotesCourse,workingYear:Notenblick.ui.workingYear,historicalYear:Notenblick.ui.historicalYear,year:Notenblick.ui.year,class:Notenblick.ui.class,course:Notenblick.ui.course,weightClass:Notenblick.ui.weightClass,weightCourse:Notenblick.ui.weightCourse,adminYear:Notenblick.ui.adminYear,adminClass:Notenblick.ui.adminClass,adminView:Notenblick.ui.adminView,adminSearch:Notenblick.ui.adminSearch,showExitedAdmin:Notenblick.ui.showExitedAdmin,showArchived:Notenblick.ui.showArchived,nameOrder:Notenblick.ui.nameOrder,selections:Notenblick.N.clone(Notenblick.ui.selections||{}),scrolls:Notenblick.N.clone(Notenblick.scrolls),settings:Notenblick.N.clone(Notenblick.prefs),settingsView:Notenblick.ui.settingsView,backupView:Notenblick.ui.backupView,workspaces:Notenblick.N.clone(Notenblick.ui.workspaces)});
 Notenblick.remember=function(){
  if(Notenblick.starting||Notenblick.fatalStart)return;
  const workspace=Notenblick.getWorkspace(),store=Notenblick.store;Notenblick.workspace=workspace;
@@ -44,6 +44,7 @@ Notenblick.restoreWorkspace = function restoreWorkspace(source=Notenblick.worksp
   Notenblick.ui.nameOrder=a.nameOrder==='first-last'?'first-last':'last-first';
   for (const key of ['year', 'class', 'course', 'adminYear', 'adminClass','weightClass','weightCourse']) Notenblick.ui[key] = typeof a[key] === 'string' ? a[key] : '';
   Notenblick.ui.main = Notenblick.starting&&Notenblick.prefs.startupView==='home'?'home':Notenblick.mainKeys.includes(a.main)?a.main:'notes';
+  Notenblick.ui.backupView=['status','create','restore','export'].includes(a.backupView)?a.backupView:'status';
   Notenblick.ui.adminView = ['years','classes','students','subjects'].includes(a.adminView) ? a.adminView : 'years';
   Notenblick.ui.workspaces = {};
   if (a.workspaces && typeof a.workspaces === 'object') for (const [id, w] of Object.entries(a.workspaces)) {
@@ -129,14 +130,14 @@ Notenblick.save = async function save() {
         updatedAt: result.data.updatedAt,
         appVersion: result.data.appVersion
       });
-      Notenblick.jsonSavedSeq=target;Notenblick.textPending=!!result.txtError;
+      Notenblick.jsonSavedSeq=target;Notenblick.textPending=!!result.txtError;Notenblick.lastSavedAt=result.data.updatedAt;
       Notenblick.savedSeq = target;
       Notenblick.dirty = Notenblick.savedSeq < Notenblick.seq;
       if (result.txtError) {
         Notenblick.dirty = true;
         Notenblick.savedSeq = target - 1;
         Notenblick.status('Notenlisten fehlen noch', 'failed');
-        Notenblick.error('Deine Noten sind gespeichert. Die Textlisten konnten noch nicht aktualisiert werden. Bitte wähle unter „Sicherung“ erneut „TXT-Notenlisten aktualisieren“.','storage');
+        Notenblick.error('Deine Noten sind gespeichert. Die Textlisten konnten noch nicht aktualisiert werden. Bitte wähle unter „Sicherung → Speicherstatus“ „Automatische Notenlisten prüfen“.','storage');
         break;
       }
       Notenblick.forceText = false;
@@ -154,14 +155,14 @@ Notenblick.save = async function save() {
   } finally {
     Notenblick.saving = false;
     finish();
-    Notenblick.savingPromise = null;
+    Notenblick.savingPromise = null;Notenblick.updateSaveDetails?.();
   }
 };
 Notenblick.refreshTextLists=async function(force=false){
  const A=Notenblick;if(!A.store)return;if(A.saving)await A.savingPromise;
  if(A.dirty&&!(A.textPending&&A.jsonSavedSeq===A.seq)){await A.save();if(A.dirty)throw Error('Bitte zuerst die Noten vollständig speichern.');}
  const at=A.seq;let finish;A.savingPromise=new Promise(r=>finish=r);A.saving=true;try{const result=await A.store.refreshTextLists(A.data,{force});A.textPending=false;if(A.seq===at&&A.jsonSavedSeq===at){A.dirty=false;A.savedSeq=at;A.forceText=false;}A.cache();A.status(A.dirty?'Änderungen noch nicht gespeichert':'TXT-Notenlisten geprüft');A.updateSaveDetails();return result;}
- catch(e){A.textPending=true;A.status('Notenlisten fehlen noch','failed');A.updateSaveDetails();throw Error('Die JSON-Noten sind unverändert gespeichert. Die TXT-Notenlisten konnten noch nicht vollständig aktualisiert werden. Bitte wähle unter Sicherung erneut TXT-Notenlisten aktualisieren. '+e.message);}
+ catch(e){A.textPending=true;A.status('Notenlisten fehlen noch','failed');A.updateSaveDetails();throw Error('Die JSON-Noten sind unverändert gespeichert. Die TXT-Notenlisten konnten noch nicht vollständig aktualisiert werden. Bitte wähle unter Sicherung → Speicherstatus „Automatische Notenlisten prüfen“. '+e.message);}
  finally{A.saving=false;finish();A.savingPromise=null;if(A.dirty&&A.seq!==at){clearTimeout(A.saveTimer);A.saveTimer=setTimeout(A.save,0);}}
 };
 Notenblick.activate = function activate(next, d) {

@@ -1,3 +1,5 @@
+Aktueller versionsbezogener Bericht: [Notenblick 1.19.0](docs/PRUEFBERICHT-1.19.0.md). Die folgenden früheren Nachweise bleiben erhalten.
+
 # Prüfbericht – Notenblick 1.9.0
 
 Stand: 24. Oktober 2026. Grundlage ausschließlich `sappelmueller/Notenblick`, `main`, Commit `c42c7390540d6b6a56756dd221abae9f292b3791`, Quellbaum `eb187f9ff4b526387575b743dcfe8a284fbe30c2`. Alle 147 Quelldateien wurden beim Abruf anhand ihrer Git-Blob-Prüfsummen bestätigt. Wiederverwendete lokale Bibliotheken waren bytegleich. Der ursprüngliche 1.8.0-Prüfbericht bleibt unter `docs/PRUEFBERICHT-1.8.0.md` erhalten.

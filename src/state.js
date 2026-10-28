@@ -13,7 +13,7 @@ Notenblick.esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({
   "'": '&#39;'
 })[c]);
 Notenblick.kinds = Object.keys(Notenblick.N.KINDS);
-Notenblick.mainKeys = ['home','notes', 'admin', 'backup', 'settings'];
+Notenblick.mainKeys = ['home','notes', 'admin', 'backup', 'settings', 'help'];
 Notenblick.noteKeys = ['overview', 'assessments', ...Notenblick.kinds, 'pupil'];
 Notenblick.extraKeys = ['homework', 'notebook'];
 Notenblick.data = Notenblick.N.upgrade(Notenblick.N.blank());
