@@ -187,6 +187,7 @@
         break;
       case 'all-text':
         {
+          if(Notenblick.fatalStart)throw Error('Bitte öffne zuerst einen lesbaren Notenstand oder stelle eine Sicherung wieder her.');
           const files = Notenblick.N.exportsTXT(Notenblick.data);
           await Notenblick.download('Notenblick-Alle-Noten.txt', '\ufeff' + Object.entries(files).map(([path, text]) => path + '\r\n\r\n' + text.replace(/^\ufeff/, '')).join('\r\n\r\n'));
           break;

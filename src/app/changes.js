@@ -159,7 +159,7 @@ Notenblick.save = async function save() {
   }
 };
 Notenblick.refreshTextLists=async function(force=false){
- const A=Notenblick;if(!A.store)return;if(A.saving)await A.savingPromise;
+ const A=Notenblick;if(A.fatalStart)throw Error('Bitte öffne zuerst einen lesbaren Notenstand oder stelle eine Sicherung wieder her. Die vorhandenen Textdateien bleiben unverändert.');if(!A.store)return;if(A.saving)await A.savingPromise;
  if(A.dirty&&!(A.textPending&&A.jsonSavedSeq===A.seq)){await A.save();if(A.dirty)throw Error('Bitte zuerst die Noten vollständig speichern.');}
  const at=A.seq;let finish;A.savingPromise=new Promise(r=>finish=r);A.saving=true;try{const result=await A.store.refreshTextLists(A.data,{force});A.textPending=false;if(A.seq===at&&A.jsonSavedSeq===at){A.dirty=false;A.savedSeq=at;A.forceText=false;}A.cache();A.status(A.dirty?'Änderungen noch nicht gespeichert':'TXT-Notenlisten geprüft');A.updateSaveDetails();return result;}
  catch(e){A.textPending=true;A.status('Notenlisten fehlen noch','failed');A.updateSaveDetails();throw Error('Die JSON-Noten sind unverändert gespeichert. Die TXT-Notenlisten konnten noch nicht vollständig aktualisiert werden. Bitte wähle unter Sicherung → Speicherstatus „Automatische Notenlisten prüfen“. '+e.message);}
