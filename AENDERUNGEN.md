@@ -1,3 +1,13 @@
+# Notenblick 1.17.0
+
+- Fehler in der Notenübersicht behoben: Die beiden Abschlussnoten-Klassendurchschnitte waren bisher fest als Striche ausgegeben. Jetzt zählen bereits teilweise festgelegte passende Noten aktiver Fachschüler; keine Nullwerte für fehlende Noten, keine Veränderung gespeicherter Entscheidungen. Bildschirm, TXT-Übersicht und gemeinsame Exportmodelle verwenden dieselbe exakte Berechnung. Suche, angezeigte Seite und Exportumfang beeinflussen die Grundlage nicht.
+- TXT-Schülerberichte ohne technische normale Zeitabschnitte oder wiederholten Faktor 1. Abweichende Faktoren direkt bei Leistungen, GFS weiterhin deutlich. Abweichende historische Halbjahre und frühere Zeugnisnoten verständlich benannt. Ordnerstruktur, Vollständigkeit, SHA-256, Inhaltsreparatur und geschützte Bereinigung bleiben erhalten; Verzeichnisversion 17.
+- Schuljahre nach tatsächlichem Beginn absteigend, ohne gespeicherte Reihenfolge oder Arbeitsjahr zu ändern. Bei Schülern und Fächern stehen Jahr/Klasse vor den Aktionen. Dialogtitel nennen die Klasse; Fächer stehen alphabetisch.
+- Fünfstufiger Assistent mit dynamischen Klassen-/Fachnamen, bevorzugtem Listenimport, kompakter Schülertabelle und Inline-Bearbeitung. Grundeinstellungen getrennt von letzter Überprüfungsseite; einfache Standardgewichtung erst nach Wunsch bearbeiten, Gegenanteile unmittelbar sichtbar. Erweiterte Vorgaben unverändert geschützt.
+- Gemeinsamer Schutz bei Escape, X, Einrichtung beenden und Programm-Schließanfrage. Fortsetzen und Escape der Bestätigung bewahren Eingaben, Auswahl, Fokus und Scrollposition. Erst ausdrückliches Verwerfen beendet den Entwurf; ausgefüllte Klassen benötigen ebenfalls Bestätigung. Wiederholtes Escape wird vor der nativen Dialogschließung behandelt. Keine Teildatenspeicherung; bestehende atomare Abschlusstransaktion erhalten.
+- Schnellzugriff standardmäßig bei neuen Datenbeständen, einschließlich Ersteinrichtung. Gespeicherte Darstellungen und ältere implizite Auswahlfelder bleiben erhalten; vollständige Auswahl und Darstellungswechsel bestehen weiter.
+- Neue Domänen-, produktive C#-Speicher-, Chromium-/axe-/Tastatur-/Zoom- und unabhängige Office-/PDF-/Druckregressionen. Tatsächliche Windows-/NVDA-/Microsoft-Office-/Druckabnahme bleibt gesondert erforderlich.
+
 # Notenblick 1.16.0
 
 - TXT-Notfalllisten: Halbjahres- und Zeugnisnote immer sichtbar, offene Werte als „–“, genau ein berechneter Gesamtdurchschnitt pro Schüler. Gewichtungen, Bemerkungen, ehemalige Schüler und historische Noten erhalten; lesbare Übersichten auch ohne Leistungen. Zusätzliche eindeutige Windows-kompatible TXT-Dateien unter „Schülernoten“ für jeden Fachschüler.

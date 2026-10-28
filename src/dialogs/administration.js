@@ -3,7 +3,7 @@
 'use strict';
 Notenblick.subjectDialog=function(c=null){
  const A=Notenblick,cl=A.adminClass();A.ensureClassEdit(cl);
- A.modal(c?'Fach bearbeiten':'Fach anlegen',A.field('subjectName','Fachname',c?.name||'','required maxlength="80"')+A.field('subjectCode','Fachkürzel',c?A.subjectCode(c):'','maxlength="16"','text','Für den Schnellzugriff. Ohne Kürzel wird der vollständige Fachname angezeigt.')+(c?`<p>${A.b('toggle-subject',c.archived?'Fach wieder anzeigen':'Fach ausblenden',`data-id="${c.id}"`,'text-button')}</p>`:''),()=>{
+ A.modal((c?'Fach bearbeiten':'Fach anlegen')+' – Klasse '+cl.name,A.field('subjectName','Fachname',c?.name||'','required maxlength="80"')+A.field('subjectCode','Fachkürzel',c?A.subjectCode(c):'','maxlength="16"','text','Für den Schnellzugriff. Ohne Kürzel wird der vollständige Fachname angezeigt.')+(c?`<p>${A.b('toggle-subject',c.archived?'Fach wieder anzeigen':'Fach ausblenden',`data-id="${c.id}"`,'text-button')}</p>`:''),()=>{
   const name=A.required('subjectName','einen Fachnamen'),code=A.val('subjectCode')||(!c&&!A.$('#subjectCode').dataset.edited?A.suggestSubjectCode(name):'');
   if(A.data.courses.some(x=>x.classId===cl.id&&x.id!==c?.id&&x.name.toLocaleLowerCase('de')===name.toLocaleLowerCase('de')))throw Error('Dieses Fach gibt es in der Klasse bereits.');
   if(/[\r\n\u0000-\u001f]/.test(code))throw Error('Bitte ein Kürzel ohne Steuerzeichen eingeben.');
@@ -17,7 +17,7 @@ Notenblick.studentDialog = function studentDialog(s = null) {
   const cl = Notenblick.adminClass(); Notenblick.ensureClassEdit(cl);
   const
     courses = Notenblick.data.courses.filter(c => c.classId === cl.id && !c.archived);
-  Notenblick.modal(s ? 'Schüler bearbeiten' : 'Schüler hinzufügen', `<div class="form-grid">${Notenblick.field('first', 'Vorname', s?.first || '', 'required maxlength="100"')}${Notenblick.field('last', 'Nachname', s?.last || '', 'required maxlength="100"')}<div class="full">${Notenblick.field('alias', 'Namenszusatz', s?.alias || '', 'maxlength="80"', 'text', 'Nur nötig, um gleiche Namen zu unterscheiden.')}</div></div><fieldset><legend>Teilnahme an Fächern</legend><div class="check-list">${courses.map(c => `<label class="check"><input name="member" type="checkbox" value="${c.id}"${!s || c.studentIds.includes(s.id) && !(c.inactiveStudentIds || []).includes(s.id) ? ' checked' : ''}>${Notenblick.esc(c.name)}</label>`).join('') || '<p>Noch keine Fächer angelegt.</p>'}</div></fieldset><label class="check" id="duplicateConfirm" hidden><input id="allowDuplicate" type="checkbox">Gleichnamigen Schüler zusätzlich anlegen</label>`, () => {
+  Notenblick.modal((s ? 'Schüler bearbeiten' : 'Schüler hinzufügen')+' – Klasse '+cl.name, `<div class="form-grid">${Notenblick.field('first', 'Vorname', s?.first || '', 'required maxlength="100"')}${Notenblick.field('last', 'Nachname', s?.last || '', 'required maxlength="100"')}<div class="full">${Notenblick.field('alias', 'Namenszusatz', s?.alias || '', 'maxlength="80"', 'text', 'Nur nötig, um gleiche Namen zu unterscheiden.')}</div></div><fieldset><legend>Teilnahme an Fächern</legend><div class="check-list">${courses.map(c => `<label class="check"><input name="member" type="checkbox" value="${c.id}"${!s || c.studentIds.includes(s.id) && !(c.inactiveStudentIds || []).includes(s.id) ? ' checked' : ''}>${Notenblick.esc(c.name)}</label>`).join('') || '<p>Noch keine Fächer angelegt.</p>'}</div></fieldset><label class="check" id="duplicateConfirm" hidden><input id="allowDuplicate" type="checkbox">Gleichnamigen Schüler zusätzlich anlegen</label>`, () => {
     const first = Notenblick.required('first', 'den Vornamen'),
       last = Notenblick.required('last', 'den Nachnamen'),
       alias = Notenblick.val('alias'),
@@ -70,7 +70,7 @@ Notenblick.schoolYearLabel = function schoolYearLabel() {
 };
 Notenblick.yearDialog = function yearDialog(edit = false) {
   const y = edit ? Notenblick.data.years.find(y => y.id === Notenblick.ui.adminYear) : null;
-  Notenblick.modal(edit ? 'Schuljahr bearbeiten' : 'Schuljahr anlegen', Notenblick.field('yearLabel', 'Schuljahr', y?.label || Notenblick.schoolYearLabel(), 'required maxlength="80"') + (!edit ? `<div class="field" style="margin-top:18px"><label for="copyYear">Klassen, Schüler und Fächer übernehmen aus</label><select id="copyYear">${Notenblick.opt('', 'Keine Übernahme', '')}${Notenblick.data.years.map(y => Notenblick.opt(y.id, Notenblick.schoolYear(y), '')).join('')}</select><small>Es werden Namen und Gewichtungen übernommen. Die bisherigen Noten bleiben beim bisherigen Schuljahr.</small></div>` : `<p style="margin-top:20px">${Notenblick.b('toggle-year', y.archived ? 'Schuljahr wieder öffnen' : 'Schuljahr abschließen', `data-id="${y.id}"`, 'text-button')}</p>`), () => {
+  Notenblick.modal(edit ? 'Schuljahr bearbeiten' : 'Schuljahr anlegen', Notenblick.field('yearLabel', 'Schuljahr', y?.label || Notenblick.schoolYearLabel(), 'required maxlength="80"') + (!edit ? `<div class="field" style="margin-top:18px"><label for="copyYear">Klassen, Schüler und Fächer übernehmen aus</label><select id="copyYear">${Notenblick.opt('', 'Keine Übernahme', '')}${Notenblick.N.sortedYears(Notenblick.data.years).map(y => Notenblick.opt(y.id, Notenblick.schoolYear(y), '')).join('')}</select><small>Es werden Namen und Gewichtungen übernommen. Die bisherigen Noten bleiben beim bisherigen Schuljahr.</small></div>` : `<p style="margin-top:20px">${Notenblick.b('toggle-year', y.archived ? 'Schuljahr wieder öffnen' : 'Schuljahr abschließen', `data-id="${y.id}"`, 'text-button')}</p>`), () => {
     const label = Notenblick.required('yearLabel', 'das Schuljahr');
     if (Notenblick.data.years.some(x => x.id !== y?.id && x.label.toLocaleLowerCase('de') === label.toLocaleLowerCase('de'))) throw Error('Dieses Schuljahr gibt es bereits.');
     const source = edit ? '' : Notenblick.val('copyYear');
@@ -117,7 +117,7 @@ Notenblick.classDialog = function classDialog(cl = null) {
 };
 Notenblick.copyClassDialog = function copyClassDialog() {
   if(Notenblick.data.years.find(y=>y.id===Notenblick.ui.adminYear)?.archived)throw Error('Bitte öffne das Schuljahr zuerst wieder.');
-  const sources = Notenblick.data.classes.filter(c => c.yearId !== Notenblick.ui.adminYear);
+  const sources = Notenblick.classesByYear(Notenblick.data.classes.filter(c => c.yearId !== Notenblick.ui.adminYear));
   if (!sources.length) throw Error('Es gibt noch keine Klasse aus einem anderen Schuljahr.');
   Notenblick.modal('Klasse übernehmen', `<div class="field"><label for="sourceClass">Bisherige Klasse</label><select id="sourceClass">${sources.map(c => Notenblick.opt(c.id, Notenblick.schoolYear(Notenblick.data.years.find(y => y.id === c.yearId)) + ' – ' + c.name, '')).join('')}</select></div><div style="margin-top:18px">${Notenblick.field('newClassName', 'Neuer Klassenname', '', 'required maxlength="80"')}</div><p class="hint" style="margin-top:18px">Schüler, Fächer und Gewichtungen werden übernommen. Bisherige Noten bleiben beim bisherigen Schuljahr.</p>`, () => {
     const name = Notenblick.required('newClassName', 'den neuen Klassennamen'),
@@ -133,8 +133,8 @@ Notenblick.copyClassDialog = function copyClassDialog() {
 Notenblick.bulkDialog = function bulkDialog() {
   const cl = Notenblick.adminClass(); Notenblick.ensureClassEdit(cl);
   const
-    sources = Notenblick.data.classes.filter(c => c.id !== cl.id);
-  Notenblick.modal('Schülerliste übernehmen', `<div class="field"><label for="bulkClass">Aus einer bisherigen Klasse</label><select id="bulkClass">${Notenblick.opt('', 'Keine Auswahl', '')}${sources.map(c => Notenblick.opt(c.id, Notenblick.schoolYear(Notenblick.data.years.find(y => y.id === c.yearId)) + ' – ' + c.name, '')).join('')}</select></div><p class="hint" style="margin-top:18px">Oder füge eine Namensliste ein.</p>${Notenblick.namesInput('bulkNames')}<label class="check" id="bulkDuplicate" hidden style="margin-top:18px"><input type="checkbox" id="bulkAllow">Gleiche Namen zusätzlich übernehmen</label>`, () => {
+    sources = Notenblick.classesByYear(Notenblick.data.classes.filter(c => c.id !== cl.id));
+  Notenblick.modal('Schülerliste übernehmen – Klasse '+cl.name, `<div class="field"><label for="bulkClass">Aus einer bisherigen Klasse</label><select id="bulkClass">${Notenblick.opt('', 'Keine Auswahl', '')}${sources.map(c => Notenblick.opt(c.id, Notenblick.schoolYear(Notenblick.data.years.find(y => y.id === c.yearId)) + ' – ' + c.name, '')).join('')}</select></div><p class="hint" style="margin-top:18px">Oder füge eine Namensliste ein.</p>${Notenblick.namesInput('bulkNames')}<label class="check" id="bulkDuplicate" hidden style="margin-top:18px"><input type="checkbox" id="bulkAllow">Gleiche Namen zusätzlich übernehmen</label>`, () => {
     const source = Notenblick.val('bulkClass'),
       text = Notenblick.val('bulkNames');
     if (source && text) throw Error('Bitte wähle eine bisherige Klasse oder füge eine Namensliste ein.');

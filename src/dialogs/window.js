@@ -22,6 +22,7 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
     wraps:[...document.querySelectorAll('.table-wrap')].filter(el=>el.id&&!el.closest('[hidden]')).map(el=>({id:el.id,x:el.scrollLeft,y:el.scrollTop}))
   };
   Notenblick.dialogOnClose=options.onClose||null;
+  Notenblick.dialogBeforeClose=options.beforeClose||null;
   Notenblick.dialogCancellable=options.cancelWhileBusy===true;
   Notenblick.setDialogSize(options.size||'medium');
   Notenblick.$('#dialogNext').hidden=true;Notenblick.oralDraft=null;Notenblick.afterClose=null;
@@ -36,8 +37,11 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
   const initial=options.focus?document.getElementById(options.focus):null;
   (initial&&!initial.disabled&&!initial.closest('[hidden]')&&Notenblick.$('#dialogContent').contains(initial)?initial:[...Notenblick.$('#dialogContent').querySelectorAll('input:not([type=checkbox]):not([type=hidden]):not(:disabled),select:not(:disabled),textarea:not(:disabled)')].find(el=>!el.closest('[hidden]'))||Notenblick.$('#dialog .close')).focus();
 };
-Notenblick.closeModal = function closeModal() {
+Notenblick.closeModal = function closeModal(options={}) {
   if(!Notenblick.$('#dialog').open)return;
+  if(Notenblick.dialogReturn){const back=Notenblick.dialogReturn;Notenblick.dialogReturn=null;back();return;}
+  if(!options.submitted&&Notenblick.dialogBeforeClose?.()===false)return;
+  Notenblick.dialogBeforeClose=null;
   const cancel=Notenblick.migrationCancel;Notenblick.migrationCancel=null;
   const onClose=Notenblick.dialogOnClose;Notenblick.dialogOnClose=null;
   const previous = Notenblick.opener;
@@ -67,12 +71,33 @@ Notenblick.submitModal=async function(next=false){
  if(Notenblick.dialogBusy||!Notenblick.submitDialog)return;
  Notenblick.dialogBusy=true;const fn=Notenblick.submitDialog;let result;
  Notenblick.$('#dialogSave').disabled=true;Notenblick.$('#dialogNext').disabled=true;Notenblick.$('#dialogError').hidden=true;
- try{result=await fn(next);if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open&&!result?.keepOpen)Notenblick.closeModal();}
+ try{result=await fn(next);if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open&&!result?.keepOpen)Notenblick.closeModal({submitted:true});}
  catch(e){if(Notenblick.submitDialog!==fn||!Notenblick.$('#dialog').open)return;const el=Notenblick.$('#dialogError');el.textContent=e.message;el.hidden=false;}
  finally{if(Notenblick.submitDialog===fn||!Notenblick.$('#dialog').open){Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=false;Notenblick.$('#dialogNext').disabled=false;Notenblick.updateOralNext?.();if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open){if(result?.focus)document.getElementById(result.focus)?.focus();else if(!Notenblick.$('#dialog').contains(document.activeElement))Notenblick.$('#dialogSave').focus();}}}
 };
 Notenblick.confirm = function confirm(title, text, fn, label = 'Bestätigen') {
   Notenblick.modal(title, '<p>' + Notenblick.esc(text) + '</p>', fn, label,{size:'small'});
+};
+// Suspend the current form in the shared dialog, preserving nodes/listeners,
+// invalid input, selection and focus. Cancel/Escape restores without closing it.
+Notenblick.confirmInDialog=function(title,text,fn,label='Bestätigen',cancelLabel='Abbrechen'){
+ const A=Notenblick;if(A.dialogReturn)return;
+ const content=A.$('#dialogContent'),save=A.$('#dialogSave'),cancel=A.$('#dialog .dialog-actions [data-action=close]'),next=A.$('#dialogNext'),error=A.$('#dialogError'),focus=document.activeElement;
+ // Commit the focused control's native change while all form fields are still
+ // connected. Detaching it first can dispatch change during partial removal.
+ cancel.focus({preventScroll:true});
+ const state={title:A.$('#dialogTitle').textContent,size:A.$('#dialog').dataset.size,submit:A.submitDialog,onClose:A.dialogOnClose,beforeClose:A.dialogBeforeClose,afterClose:A.afterClose,opener:A.opener,cancellable:A.dialogCancellable,save:save.textContent,hidden:save.hidden,cancel:cancel.textContent,nextHidden:next.hidden,error:error.textContent,errorHidden:error.hidden,scroll:content.scrollTop,dialogScroll:A.$('#dialog').scrollTop};
+ const nodes=document.createDocumentFragment();while(content.firstChild)nodes.append(content.firstChild);
+ const restore=()=>{
+  A.dialogReturn=null;A.$('#dialogTitle').textContent=state.title;A.setDialogSize(state.size);content.replaceChildren(nodes);content.scrollTop=state.scroll;A.$('#dialog').scrollTop=state.dialogScroll;
+  A.submitDialog=state.submit;A.dialogOnClose=state.onClose;A.dialogBeforeClose=state.beforeClose;A.afterClose=state.afterClose;A.opener=state.opener;A.dialogCancellable=state.cancellable;A.dialogBusy=false;
+  save.textContent=state.save;save.hidden=state.hidden;save.disabled=false;cancel.textContent=state.cancel;next.hidden=state.nextHidden;next.disabled=false;error.textContent=state.error;error.hidden=state.errorHidden;
+  (focus?.isConnected?focus:save).focus({preventScroll:true});
+ };
+ A.dialogReturn=restore;A.dialogBeforeClose=null;A.dialogOnClose=null;A.afterClose=null;A.setDialogSize('small');A.$('#dialogTitle').textContent=title;
+ content.innerHTML='<p>'+A.esc(text)+'</p>';A.$('#dialog').scrollTop=0;error.hidden=true;save.textContent=label;save.hidden=false;cancel.textContent=cancelLabel;next.hidden=true;
+ A.submitDialog=async()=>{restore();try{await fn();}catch(e){error.textContent=e.message;error.hidden=false;}return{keepOpen:true};};
+ cancel.focus();
 };
 Notenblick.ensureClassEdit=function(cl){if(cl?.archived||Notenblick.data.years.find(y=>y.id===cl?.yearId)?.archived)throw Error('Bitte öffne das Schuljahr und die Klasse zuerst wieder.');};
 Notenblick.ensureEdit = function ensureEdit(c = Notenblick.getCourse()) {

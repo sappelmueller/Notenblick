@@ -111,6 +111,7 @@ Notenblick.requestClose = async function requestClose() {
   }
   if (!Notenblick.canLeave()) return;
   if (Notenblick.$('#dialog').open) {
+    if(Notenblick.setupDraft){Notenblick.closeModal();return;}
     if (Notenblick.submitDialog) {
       Notenblick.$('#dialogError').textContent = 'Bitte speichere deine Angaben oder wähle Abbrechen, bevor du das Programm schließt.';
       Notenblick.$('#dialogError').hidden = false;
