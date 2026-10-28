@@ -256,8 +256,12 @@ class Efficiency(unittest.TestCase):
         changed=json.loads(subprocess.check_output([sys.executable,str(ROOT/'dev/github-export.py'),'plan','HEAD','HEAD^'],text=True))
         expected=set(subprocess.check_output(['git','diff','--name-only','HEAD^','HEAD'],cwd=ROOT,text=True).splitlines())
         self.assertEqual({e['path'] for e in changed['entries']+changed['deleted']},expected)
-        text=json.loads(subprocess.check_output([sys.executable,str(ROOT/'dev/github-export.py'),'texts','HEAD','0','1','HEAD^'],text=True))[0]
-        self.assertEqual(text['content'].encode(),subprocess.check_output(['git','show','HEAD:'+text['path']],cwd=ROOT))
+        texts=json.loads(subprocess.check_output([sys.executable,str(ROOT/'dev/github-export.py'),'texts','HEAD','0','1','HEAD^'],text=True))
+        if texts:
+            text=texts[0]
+            self.assertEqual(text['content'].encode(),subprocess.check_output(['git','show','HEAD:'+text['path']],cwd=ROOT))
+        else:
+            self.assertFalse(any(not e['binary'] for e in changed['entries']))
 
     def test_volatile_proxy_and_trace_metadata_are_not_test_conditions(self):
         first={'PATH':'stable','TZ':'Europe/Berlin','NODE_OPTIONS':'--test-flag','HTTP_PROXY':'per-call-a','CODEX_TOOL_CALL_ID':'a','NOTENBLICK_FLAG':'one'}

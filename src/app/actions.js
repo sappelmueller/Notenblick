@@ -6,7 +6,7 @@
     const a = el.dataset.action,
       id = el.dataset.id,
       kind = el.dataset.kind;
-    if (a !== 'close' && !Notenblick.canLeave()) return;
+    if (!['close','help'].includes(a) && !Notenblick.canLeave()) return;
     if(a.startsWith('setup-')&&Notenblick.setupDraft)return Notenblick.setupAction(el);
     switch (a) {
       case 'weight-preview':Notenblick.previewWeights?.();break;
@@ -207,8 +207,8 @@
             found = JSON.parse(localStorage.getItem('notenblick-recovery'));
           } catch {}
           if (!found?.dirty || found.demo) throw Error('Es gibt keine ungespeicherten Noten zum Wiederherstellen.');
-          const recovered = Notenblick.N.upgrade(found.data);
-          Notenblick.confirm('Änderungen wiederherstellen', 'Die letzte Arbeitskopie vom ' + new Date(found.at).toLocaleString('de-DE') + ' wird geöffnet. Vorhandene Noten werden vorher gesichert.', () => Notenblick.restoreData(recovered), 'Wiederherstellen');
+          const recovered = Notenblick.N.upgrade({...found.data,...(found.workspace?{workspace:found.workspace}:{})});
+          Notenblick.confirmRestore(recovered,null,'Ungespeicherte Änderungen wiederherstellen','Die Arbeitskopie ersetzt deinen aktuellen Datenstand. Notenblick sichert deine bisherigen Daten vorher zusätzlich.');
           break;
         }
       case 'regenerate':
@@ -228,6 +228,7 @@
           Notenblick.rendered = {};
           Notenblick.mark();
           Notenblick.refreshCurrent();
+          if(Notenblick.ui.main==='backup'){const control=Notenblick.$('#backup-undo');(control&&!control.disabled?control:Notenblick.$('#backupTabs [aria-selected=true]'))?.focus();}
           Notenblick.announce('Die letzte Änderung wurde zurückgenommen.');
           break;
         }

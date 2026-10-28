@@ -1,10 +1,10 @@
 /* One authoritative set of presentation preferences, persisted only in Ansicht.json. */
 (function(A){'use strict';
-A.preferenceDefaults=()=>({version:1,startupView:'last',nameFormat:'first-last',sortBy:'last',sortDir:'asc',selectionMode:'quick',notesLayout:'compact',areaView:'matrix',visibleKinds:[...A.kinds],pupilOrder:'kind',pupilEntries:'all',defaultPrecision:2,defaultRounding:'round',defaultCalculationMode:'grouped',defaultWeights:A.N.defaultWeights(),quickIds:null,courseCodes:{}});
+A.preferenceDefaults=()=>({version:1,startupView:'last',nameFormat:'first-last',sortBy:'last',sortDir:'asc',selectionMode:'quick',notesLayout:'kinds',areaView:'matrix',visibleKinds:[...A.kinds],pupilOrder:'kind',pupilEntries:'all',defaultPrecision:2,defaultRounding:'truncate',defaultCalculationMode:'grouped',defaultWeights:A.N.defaultWeights(),quickIds:null,courseCodes:{}});
 A.prefs=A.preferenceDefaults();
 A.restorePreferences=function(workspace){
  const source=workspace.settings||{},old=workspace.workspaces?.[workspace.course]||{},p=A.preferenceDefaults();
- if(!Object.hasOwn(source,'selectionMode')&&A.firstRun===false)p.selectionMode='select';
+ if(A.firstRun===false){p.notesLayout='compact';p.defaultRounding='round';if(!Object.hasOwn(source,'selectionMode'))p.selectionMode='select';}
  for(const[k,values]of Object.entries({startupView:['last','home'],nameFormat:['first-last','last-first'],sortBy:['first','last'],sortDir:['asc','desc'],selectionMode:['select','quick'],notesLayout:['compact','kinds'],areaView:['matrix','list'],pupilOrder:['kind','date'],pupilEntries:['all','entered'],defaultRounding:['round','truncate']}))if(values.includes(source[k]))p[k]=source[k];
  if(!workspace.settings){p.sortBy=workspace.main==='admin'?(workspace.adminSort||old.sortBy||'last'):(old.sortBy||workspace.adminSort||'last');p.sortDir=workspace.main==='admin'?(workspace.adminDir||old.sortDir||'asc'):(old.sortDir||workspace.adminDir||'asc');if(!['first','last'].includes(p.sortBy))p.sortBy='last';if(!['asc','desc'].includes(p.sortDir))p.sortDir='asc';}
  if(Array.isArray(source.visibleKinds))p.visibleKinds=A.kinds.filter(k=>source.visibleKinds.includes(k));

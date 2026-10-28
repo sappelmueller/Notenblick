@@ -21,10 +21,12 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
     details:[...document.querySelectorAll('#oralSettings[open]')].map(el=>el.id),
     wraps:[...document.querySelectorAll('.table-wrap')].filter(el=>el.id&&!el.closest('[hidden]')).map(el=>({id:el.id,x:el.scrollLeft,y:el.scrollTop}))
   };
+  if(options.describedBy)Notenblick.$('#dialog').setAttribute('aria-describedby',options.describedBy);else Notenblick.$('#dialog').removeAttribute('aria-describedby');
   Notenblick.dialogOnClose=options.onClose||null;
   Notenblick.dialogBeforeClose=options.beforeClose||null;
   Notenblick.dialogCancellable=options.cancelWhileBusy===true;
-  Notenblick.setDialogSize(options.size||'medium');
+  Notenblick.setDialogSize(options.size||'medium');Notenblick.$('#dialog').dataset.context=Notenblick.ui.main;
+  Notenblick.$('#setupFooterSlot').hidden=true;Notenblick.$('#setupFooterSlot').innerHTML='';Notenblick.$('#dialog .dialog-actions [data-action=close]').classList.remove('text-button');
   Notenblick.$('#dialogNext').hidden=true;Notenblick.oralDraft=null;Notenblick.afterClose=null;
   Notenblick.$('#dialogTitle').textContent = title;
   Notenblick.$('#dialogContent').innerHTML = content;
@@ -86,16 +88,16 @@ Notenblick.confirmInDialog=function(title,text,fn,label='Bestätigen',cancelLabe
  // Commit the focused control's native change while all form fields are still
  // connected. Detaching it first can dispatch change during partial removal.
  cancel.focus({preventScroll:true});
- const state={title:A.$('#dialogTitle').textContent,size:A.$('#dialog').dataset.size,submit:A.submitDialog,onClose:A.dialogOnClose,beforeClose:A.dialogBeforeClose,afterClose:A.afterClose,opener:A.opener,cancellable:A.dialogCancellable,save:save.textContent,hidden:save.hidden,cancel:cancel.textContent,nextHidden:next.hidden,error:error.textContent,errorHidden:error.hidden,scroll:content.scrollTop,dialogScroll:A.$('#dialog').scrollTop};
+ const state={title:A.$('#dialogTitle').textContent,size:A.$('#dialog').dataset.size,submit:A.submitDialog,onClose:A.dialogOnClose,beforeClose:A.dialogBeforeClose,afterClose:A.afterClose,opener:A.opener,cancellable:A.dialogCancellable,save:save.textContent,hidden:save.hidden,cancel:cancel.textContent,nextHidden:next.hidden,error:error.textContent,errorHidden:error.hidden,footerHidden:A.$('#setupFooterSlot').hidden,scroll:content.scrollTop,dialogScroll:A.$('#dialog').scrollTop};
  const nodes=document.createDocumentFragment();while(content.firstChild)nodes.append(content.firstChild);
  const restore=()=>{
   A.dialogReturn=null;A.$('#dialogTitle').textContent=state.title;A.setDialogSize(state.size);content.replaceChildren(nodes);content.scrollTop=state.scroll;A.$('#dialog').scrollTop=state.dialogScroll;
-  A.submitDialog=state.submit;A.dialogOnClose=state.onClose;A.dialogBeforeClose=state.beforeClose;A.afterClose=state.afterClose;A.opener=state.opener;A.dialogCancellable=state.cancellable;A.dialogBusy=false;
+  A.$('#setupFooterSlot').hidden=state.footerHidden;A.submitDialog=state.submit;A.dialogOnClose=state.onClose;A.dialogBeforeClose=state.beforeClose;A.afterClose=state.afterClose;A.opener=state.opener;A.dialogCancellable=state.cancellable;A.dialogBusy=false;
   save.textContent=state.save;save.hidden=state.hidden;save.disabled=false;cancel.textContent=state.cancel;next.hidden=state.nextHidden;next.disabled=false;error.textContent=state.error;error.hidden=state.errorHidden;
   (focus?.isConnected?focus:save).focus({preventScroll:true});
  };
  A.dialogReturn=restore;A.dialogBeforeClose=null;A.dialogOnClose=null;A.afterClose=null;A.setDialogSize('small');A.$('#dialogTitle').textContent=title;
- content.innerHTML='<p>'+A.esc(text)+'</p>';A.$('#dialog').scrollTop=0;error.hidden=true;save.textContent=label;save.hidden=false;cancel.textContent=cancelLabel;next.hidden=true;
+ A.$('#setupFooterSlot').hidden=true;content.innerHTML='<p>'+A.esc(text)+'</p>';A.$('#dialog').scrollTop=0;error.hidden=true;save.textContent=label;save.hidden=false;cancel.textContent=cancelLabel;next.hidden=true;
  A.submitDialog=async()=>{restore();try{await fn();}catch(e){error.textContent=e.message;error.hidden=false;}return{keepOpen:true};};
  cancel.focus();
 };

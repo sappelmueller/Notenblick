@@ -19,7 +19,7 @@ Notenblick.bind = function bind(id, keys, onActivate, before = Notenblick.canLea
   return window.tsBindViewTabs(list, {
     tabs,
     panels,
-    label: id === 'mainTabs' ? 'Hauptbereiche' : id === 'noteTabs' ? 'Notenbereiche' : id === 'extraTabs' ? 'Weitere Leistungen' : id === 'adminTabs' ? 'Verwaltung' : id==='settingsTabs'?'Einstellungen':'Noteneingabe',
+    label: id === 'mainTabs' ? 'Hauptbereiche' : id === 'noteTabs' ? 'Notenbereiche' : id === 'extraTabs' ? 'Weitere Leistungen' : id === 'adminTabs' ? 'Verwaltung' : id==='settingsTabs'?'Einstellungen':id==='backupTabs'?'Sicherung':'Noteneingabe',
     beforeActivate: before,
     onError: e => Notenblick.error('Der Bereich konnte nicht geöffnet werden. '+e.message),
     onActivate: (tab, update) => onActivate(tab.dataset.key, update)
@@ -28,7 +28,7 @@ Notenblick.bind = function bind(id, keys, onActivate, before = Notenblick.canLea
 Notenblick.initTabs = function initTabs() {
   const links = [...Notenblick.$('#mainTabs').querySelectorAll('a')];
   Notenblick.groups.main = {activate(link, focus = false, update = false) {
-    if (!Notenblick.canLeave()) return false;
+    if (link.dataset.key!=='help'&&!Notenblick.canLeave()) return false;
     Notenblick.closeMenu?.(false);
     const key = link.dataset.key;
     links.forEach(item => {if (item === link) item.setAttribute('aria-current','page'); else item.removeAttribute('aria-current'); Notenblick.$('#'+item.dataset.key).hidden = item !== link;});
@@ -40,6 +40,7 @@ Notenblick.initTabs = function initTabs() {
   }};
   links.forEach(link => link.addEventListener('click', e => {e.preventDefault(); Notenblick.groups.main.activate(link,true,true);}));
   Notenblick.ensureNoteTabs();
+  Notenblick.groups.backup=Notenblick.bind('backupTabs',['status','create','restore','export'],(key,update)=>{Notenblick.ui.backupView=key;Notenblick.renderBackupPane(key);if(update)Notenblick.remember();});
   Notenblick.groups.settings=Notenblick.bind('settingsTabs',['general','display','calculation'],(key,update)=>{Notenblick.ui.settingsView=key;Notenblick.renderSettingsPane(key);if(update)Notenblick.remember();});
   Notenblick.groups.class = Notenblick.bind('adminTabs', ['years','classes','students','subjects'], (key, update) => {
     Notenblick.ui.adminView = key; Notenblick.renderAdminSelection(); Notenblick.renderAdminPane(key); if (update) Notenblick.remember();
@@ -51,7 +52,7 @@ Notenblick.activateGroup = function activateGroup(group, key, focus = false, upd
       main: 'mainTabs',
       notes: 'noteTabs',
       class: 'adminTabs',
-      settings:'settingsTabs'
+      settings:'settingsTabs',backup:'backupTabs'
     },
     tab = Notenblick.$('#' + map[group]).querySelector(`[data-key="${key}"]`);
   if (tab) Notenblick.groups[group].activate(tab, focus, update);
@@ -111,6 +112,7 @@ Notenblick.refreshCurrent = function refreshCurrent() {
   if (Notenblick.ui.main === 'admin') Notenblick.renderAdmin();
   if (Notenblick.ui.main === 'backup') Notenblick.renderBackup();
   if (Notenblick.ui.main === 'settings') Notenblick.renderSettings();
+  if (Notenblick.ui.main === 'help') Notenblick.renderHelp();
 };
 Notenblick.restoreScroll=function(){for(const el of document.querySelectorAll('.table-wrap')){const value=Notenblick.scrolls[Notenblick.ui.course+':'+(el.id||el.closest('[role=tabpanel]')?.id)];if(value!==undefined){const x=typeof value==='number'?value:value.x,y=typeof value==='number'?el.scrollTop:value.y;if(el.scrollLeft!==x)el.scrollLeft=x;if(el.scrollTop!==y)el.scrollTop=y;}}};
 })(globalThis.Notenblick = globalThis.Notenblick || {});
