@@ -30,7 +30,7 @@ Bestehende Regressionen bleiben erhalten; ausdrücklich geänderte Texte/Struktu
 
 Nach Abschluss sämtlicher Änderungen folgt frisch `python3 dev/manage.py release`: alle 58 Testsuiten und 65 Prozessschritte ohne Testwiederverwendung, 180.000 Ergebnisse, vollständige TXT-/JSON-/Sicherungs-/Wiederherstellungsprüfungen, Browser/Tastatur/Accessibility, alle bisherigen Office/PDF/UA-/Druckvalidatoren, zwei saubere bytegleiche Windows-Builds, produktiver Assembly-Lader, vollständige ZIP-/Entpackprüfung und Start im Testhost. Kein identischer vollständiger Integrationslauf wird vorgeschaltet.
 
-Die tatsächliche erfolgreiche Laufkennung, geprüfter Quellbaum, Inhaltsnachweis, Dauer und Prüfsummen der beiden vollständigen ZIPs stehen im abschließenden Versionscommit. Lokale Vollnachweise unter `reports/<Lauf>`; `status --report` muss Quelle, Werkzeuge, Laufzeit und vollständig gestagten Stand bestätigen. Gezielte oder fehlgeschlagene Zwischenläufe sind keine Release-Freigabe.
+Die tatsächliche erfolgreiche Laufkennung, geprüfter Quellbaum, Inhaltsnachweis, Dauer und Prüfsummen der beiden vollständigen ZIPs stehen im abschließenden Versionscommit. Lokale Vollnachweise unter `reports/<Lauf>`; `status --report` muss Quelle, Werkzeuge, Laufzeit und vollständig gestagten Stand bestätigen. Gezielte oder fehlgeschlagene Zwischenläufe sind keine Release-Freigabe. Der entpackte Paketstart prüft die neuen Standards ausdrücklich und öffnet die mündliche Ansicht über dieselbe zentrale Ansichtsauswahl wie die Anwendung.
 
 ## Verbleibende Abnahme
 
