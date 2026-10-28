@@ -36,6 +36,8 @@ Bisherige Assertions wurden nur für die beauftragten fünf Schritte, geschützt
 
 ## Vollständiger Release-Nachweis
 
+Gezielter Abschlusslauf: `reports/20261028T155405271056Z`, acht frisch ausgeführte Schritte in 27,86 Sekunden erfolgreich, einschließlich bisheriger Exportregressionen und der neuen Rechen-, Browser- und unabhängigen Dateiprüfungen. Der geschützte Dialog verarbeitet native Änderungsereignisse vor dem Herausnehmen der Eingabefelder; der Browserlauf enthält keine JavaScript-Fehler. Dies ersetzt den folgenden vollständigen Release-Lauf nicht.
+
 Vor Auslieferung frischer `python3 dev/manage.py release`: alle 53 Testsuiten/60 Prozessschritte, alle bisherigen Regressionen, 180.000 Ergebnisse und 9.200 TXT-Dateien mit 3.000 Schülerberichten, sämtliche Office-/PDF-UA-/Druck-/Schüler-ZIP-Validatoren, produktiver Assembly-Lader, zwei saubere bytegleiche Windows-Builds, ZIP-Integritäts-/Entpackprüfung und Testhost-Start der entpackten Ausgabe. Keine Testwiederverwendung und keine GitHub Actions. Der vollständige Release-Lauf deckt Integration ab.
 
 Die tatsächliche erfolgreiche Laufkennung, Dauer, Quellbaum und ZIP-Prüfsummen werden im abschließenden Versionscommit festgehalten. `reports/<Lauf>/summary.json`, Einzellogs, `determinism.json` und `status --report` sind die lokalen Nachweise. Zwischenstände oder fehlgeschlagene Läufe sind keine Freigabe. Dokumentation und vorgesehene Dateiauswahl werden vor dem abschließenden Lauf fertiggestellt.
