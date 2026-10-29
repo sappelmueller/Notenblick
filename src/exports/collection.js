@@ -12,7 +12,7 @@ const cell=value=>A.reportCell(value);
 A.legacyReportWarning=function(report,d,c){if(A.N.legacyPending?.(d,c.id)){const value='Frühere Noten dieses Fachs müssen noch geprüft werden. Der Gesamtdurchschnitt ist deshalb noch nicht verfügbar.';if(!report.intro.includes(value))report.intro.push(value);}};
 A.appendReportHistory=function(report,ctx,options){
  const d=ctx.data||A.data,c=d.courses.find(c=>c.id===ctx.courseId);if(!c)return;const prefs=ctx.prefs||A.prefs,remarks=options.remarks===true,students=report.studentIds.map(id=>d.students.find(s=>s.id===id)).filter(Boolean),rows=[];
- for(const a of A.N.assessments(d,c.id))if(a.period&&A.N.datePeriod(d,c,a.date)!==a.period&&Object.values(a.results).some(A.N.hasEntry)&&(ctx.type!=='pupil'||!a.participantIds||a.participantIds.includes(ctx.studentId)))rows.push([cell(a.title+' · '+A.date(a.date)),cell('Bisherige Halbjahreszuordnung'),cell(a.period+'. Halbjahr'),cell('')]);
+ for(const a of A.N.assessments(d,c.id))if(a.period&&A.N.datePeriod(d,c,a.date)!==a.period&&Object.values(a.results).some(A.N.hasEntry)&&(ctx.type!=='pupil'||A.relevantReportEntry(a,ctx.studentId,remarks)))rows.push([cell(a.title+' · '+A.date(a.date)),cell('Bisherige Halbjahreszuordnung'),cell(a.period+'. Halbjahr'),cell('')]);
  for(const s of students){for(const f of [...(d.previousFinals||[]),...d.finals.filter(f=>f.period!=='all'&&!A.N.isHalfFinal(f))].filter(f=>f.courseId===c.id&&f.studentId===s.id))rows.push([cell(A.N.name(s,prefs.nameFormat)),cell('Frühere Zeugnisnote – '+(['1','2'].includes(f.period)?f.period+'. Halbjahr':'Zuordnung nicht eindeutig')),A.reportGrade(f.grade),cell(remarks?f.note||'':'')]);if(s.originStudentId){const prior=d.students.find(x=>x.id===s.originStudentId),cl=d.classes.find(x=>x.id===prior?.classId),y=d.years.find(x=>x.id===cl?.yearId);if(cl)rows.push([cell(A.N.name(s,prefs.nameFormat)),cell('Frühere Klasse'),cell(cl.name+(y?' – '+y.label:'')),cell('')]);}}
  if(rows.length)report.sections.push(section('Historische Angaben',['Schüler / Leistung','Angabe','Wert',...(remarks?['Bemerkung']:[])],rows.map(row=>remarks?row:row.slice(0,3))));
  if(ctx.type==='pupil'){
@@ -22,22 +22,22 @@ A.appendReportHistory=function(report,ctx,options){
 };
 A.buildExtendedReport=function(ctx,options={}){
  const d=ctx.data||A.data,prefs=ctx.prefs||A.prefs,c=d.courses.find(c=>c.id===ctx.courseId),cl=d.classes.find(x=>x.id===(c?.classId||ctx.classId));if(!cl)throw Error('Die gewählte Klasse ist nicht mehr vorhanden.');const y=d.years.find(x=>x.id===cl.yearId),remarks=options.remarks===true;
- let base={type:ctx.type,kind:ctx.kind,title:'',year:A.schoolYear(y),className:cl.name,subject:c?.name||'Schülerliste',created:A.today(),scope:'Alle Einträge',intro:[],sections:[],recordIds:[],studentIds:[],remarks,precision:c?.precision??2};
+ let base={type:ctx.type,kind:ctx.kind,title:'',year:A.schoolYear(y),className:cl.name,subject:c?.name||'',created:A.today(),scope:'Alle Einträge',intro:[],sections:[],recordIds:[],studentIds:[],remarks,precision:c?.precision??2};
  const hasValue=a=>Object.values(a.results).some(r=>A.N.hasEntry(r)||remarks&&r?.note);
  if(ctx.type==='roster'){
   const students=A.N.sorted(d.students.filter(s=>s.classId===cl.id),prefs.sortBy,prefs.sortDir),status=students.some(s=>s.archived);base.title='Schülerliste';base.studentIds=students.map(s=>s.id);base.sections.push(section('',['Schüler',...(status?['Status']:[])],students.map(s=>[cell(A.N.name(s,prefs.nameFormat)),...(status?[cell(s.archived?'Ehemaliger Schüler':'Aktiv')]:[])])));
  }else if(ctx.type==='assessment'||ctx.type==='legacy-assessment'){
-  const legacy=ctx.type==='legacy-assessment',a=(legacy?d.legacyOther?.assessments||[]:d.assessments).find(a=>a.id===ctx.assessmentId&&a.courseId===c?.id);if(!a)throw Error('Die gewählte Leistung ist nicht mehr vorhanden.');base.title=a.title;base.recordIds=[a.id];base.intro=[A.date(a.date)+' · '+(legacy?'Frühere Leistung':a.kind==='oral'?'Mündliche Noten':A.N.KINDS[a.kind])+(A.reportFlags(a)?' · '+A.reportFlags(a):'')];
+  const legacy=ctx.type==='legacy-assessment',a=(legacy?d.legacyOther?.assessments||[]:d.assessments).find(a=>a.id===ctx.assessmentId&&a.courseId===c?.id);if(!a)throw Error('Die gewählte Leistung ist nicht mehr vorhanden.');base.title=A.reportAssessmentLabels(legacy?d.legacyOther.assessments.filter(x=>x.courseId===c.id):A.N.assessments(d,c.id),{dated:false,flags:false}).get(a.id);base.recordIds=[a.id];base.intro=[A.date(a.date)+' · '+(legacy?'Frühere Leistung':a.kind==='oral'?'Mündliche Noten':A.N.KINDS[a.kind])+(A.reportFlags(a)?' · '+A.reportFlags(a):'')];
   if(legacy)base.intro.push('Ursprüngliche Gewichtung: '+Object.entries(d.legacyOther.courses.find(x=>x.courseId===c.id)?.overall||{}).map(([k,v])=>(A.N.OVERALL[k]||'Sonstige Leistungen')+' '+v.replace('.',',')+' %').join(' · '));
-  const students=A.N.sorted(A.N.assessmentStudents(d,c,a,true),prefs.sortBy,prefs.sortDir);base.studentIds=students.map(s=>s.id);base.sections.push(section('Noten',['Schüler',{label:'Note / Status',type:'grade'},...(remarks?['Bemerkung']:[])],students.map(s=>[A.reportPupil(s,c,prefs),A.reportResult(a,s.id),...(remarks?[cell(a.results[s.id]?.note||'')]:[])]),{footer:[cell('Klassendurchschnitt'),A.assessmentMeanCell(d,c,a),...(remarks?[cell('')]:[])]}));
+  const students=A.N.sorted(A.N.assessmentStudents(d,c,a,true),prefs.sortBy,prefs.sortDir).filter(s=>a.kind!=='oral'||A.relevantReportEntry(a,s.id,remarks));base.studentIds=students.map(s=>s.id);base.sections.push(section('Noten',['Schüler',{label:'Note / Status',type:'grade'},...(remarks?['Bemerkung']:[])],students.map(s=>[A.reportPupil(s,c,prefs),A.reportResult(a,s.id),...(remarks?[cell(a.results[s.id]?.note||'')]:[])]),{footer:[cell('Klassendurchschnitt'),A.assessmentMeanCell(d,c,a),...(remarks?[cell('')]:[])]}));
  }else if(ctx.type==='kind-complete'){
   const matrix=A.buildReport({...ctx,type:'matrix'}, {...options,history:false});base={...matrix,type:ctx.type,title:ctx.kind==='oral'?'Mündliche Noten':A.N.KINDS[ctx.kind]};
   if(ctx.kind==='oral'){const individual=A.buildReport({...ctx,type:'oral-individual'}, {...options,history:false});if(individual.recordIds.length){base.sections.push(...individual.sections.map(s=>({...s,title:'Mündliche Einzelnoten'})));base.recordIds.push(...individual.recordIds);base.studentIds.push(...individual.studentIds);}}
   if(!base.recordIds.length)base.sections=[section('',['Hinweis'],[[cell('Noch keine Bewertungen erfasst.')]])];
   if(options.history)A.appendReportHistory(base,ctx,options);
  }else{
-  const overview=A.buildReport({...ctx,type:'overview',w:{...ctx.w,columns:['written',...A.kinds]}},{...options,scope:'all',remarks:false,history:false});base={...overview,type:'complete',title:'Fachbericht mit Einzelnoten',remarks,recordIds:[]};base.sections[0].title='Fachübersicht';
-  for(const kind of A.kinds){const list=A.selectAssessments(d,c.id,kind).filter(a=>!A.N.isOralIndividual(a)&&hasValue(a)).sort((a,b)=>a.date.localeCompare(b.date)||a.title.localeCompare(b.title,'de')||a.id.localeCompare(b.id));if(list.length){base.sections.push(A.performanceTable({...ctx,kind},{...options,scope:'all'},list,{title:kind==='oral'?'Mündliche Klassenrunden':A.N.KINDS[kind]}));base.recordIds.push(...list.map(a=>a.id));}}
+  const overview=A.buildReport({...ctx,type:'overview',w:{...ctx.w,columns:['written',...A.kinds]}},{...options,scope:'all',remarks:false,history:false});base={...overview,type:'complete',title:'Fachbericht mit Einzelnoten',remarks,recordIds:[]};if(base.sections.length)base.sections[0].title='Fachübersicht';
+  for(const kind of A.kinds){const list=A.selectAssessments(d,c.id,kind).filter(a=>!A.N.isOralIndividual(a)&&hasValue(a)).sort((a,b)=>a.date.localeCompare(b.date)||a.title.localeCompare(b.title,'de')||a.id.localeCompare(b.id));if(list.length){if(kind==='oral')base.sections.push(...A.oralReportSections({...ctx,kind},{...options,scope:'all'},list));else base.sections.push(A.performanceTable({...ctx,kind},{...options,scope:'all'},list,{title:A.N.KINDS[kind]}));base.recordIds.push(...list.map(a=>a.id));}}
   const oral=A.buildReport({...ctx,type:'oral-individual',kind:'oral'}, {...options,scope:'all',remarks:false,history:false});if(oral.recordIds.length){base.sections.push(...oral.sections.map(s=>({...s,title:'Mündliche Einzelnoten'})));base.recordIds.push(...oral.recordIds);}
   // A note-only individual entry belongs in the collected remarks, without an empty grade row.
   if(remarks)base.recordIds.push(...A.N.assessments(d,c.id).filter(a=>A.N.isOralIndividual(a)&&hasValue(a)).map(a=>a.id));
@@ -46,10 +46,11 @@ A.buildExtendedReport=function(ctx,options={}){
  }
  if(c)A.legacyReportWarning(base,d,c);return A.finishReport(base);
 };
+A.exportNotesPlan=data=>Array.from(A.N.textListPlan(data)).filter(e=>e.context.type!=='pupil'||A.hasPupilReportInformation(data,data.courses.find(c=>c.id===e.context.courseId),e.context.studentId));
 A.exportAllNotes=async function(format,stillRequested=()=>true,progress=()=>{},maximum=A.exportMaximumBytes,phase=()=>{}){
  if(A.fatalStart)throw Error('Bitte öffne zuerst einen lesbaren Notenstand oder stelle eine Sicherung wieder her.');
  if(!['txt','docx','pdf'].includes(format))throw Error('Bitte wähle Text, Word oder PDF.');
- const data=A.N.clone(A.data),plan=Array.from(A.N.textListPlan(data));if(!plan.length)throw Error('Es sind noch keine Klassen zum Exportieren vorhanden.');if(plan.length>4096)throw Error('Der Gesamtexport enthält mehr als 4096 Dokumente. Bitte exportiere einzelne Fächer über „Ausgewählte Noten exportieren“.');
+ const data=A.N.clone(A.data),plan=A.exportNotesPlan(data);if(!plan.length)throw Error('Es sind noch keine Klassen zum Exportieren vorhanden.');if(plan.length>4096)throw Error('Der Gesamtexport enthält mehr als 4096 Dokumente. Bitte exportiere einzelne Fächer über „Ausgewählte Noten exportieren“.');
  const writer=A.zipWriter(maximum);let archive;
  try{
   for(let i=0;i<plan.length;i++){

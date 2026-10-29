@@ -105,3 +105,11 @@ Neue Installation mit Kürzen und Leistungsarten, Altstand ohne globale Vorgaben
 - TXT-/Word-/PDF-Gesamt-ZIPs und fünf Schüler-ZIP-Formate tatsächlich über Windows speichern und öffnen. Gleiche Ordnerstruktur, sichere Namen, Erfolg erst nach Speicherung, Abbruch ohne Erfolg; automatischen Datenordner/Notfalllisten unverändert lassen.
 
 Diese Punkte sind keine bereits ausgeführten Windows-/NVDA-Livetests. Automatische Linux-/Chromium-/LibreOffice-/C#-Host-/Open-XML-/veraPDF-Prüfungen sind im aktuellen Prüfbericht getrennt dokumentiert.
+
+## 1.20.3 Registerkarten und Exporte Liveabnahme offen
+
+- Nach Leistungsarten: alle 32 Sichtbarkeitskombinationen, insbesondere ohne Hausaufgaben/Heftführung; niemals zusätzlicher Reiter Leistungen. Kompakt behält Leistungen. Ausgeblendete vorhandene Leistung über Übersicht öffnen, bearbeiten und schließen; Fokus, Registerkarten und gespeicherte Vorgaben prüfen.
+- Schülerberichte über Sicherung: Schüler gezielt auswählen, fehlende Auswahl, gleiche Namen, ehemalige Schüler und Wechsel zu Alle Schüler einzeln. Arbeitsfach/-schüler unverändert; Escape und Fehlerfokus nachvollziehbar, keine doppelten NVDA-Ansagen.
+- Mündliche vollständige Klassenrunde, dünn besetzte Klassenbewertung und echte Einzelnote in allen Formaten prüfen. Gleiche Titel/Datumswerte müssen in Berichten eindeutig zugeordnet bleiben. Bemerkungen/Status/GFS/Faktoren erhalten.
+- Kurze Schüler-, Test- und Fachberichte ohne unnötige PDF-Restseite; große Tabellen mit wiederholten Köpfen und langen Bemerkungen ohne Überlauf. PDF-Tags/Lesereihenfolge mit geeignetem Hilfsmittel menschlich prüfen.
+- Gesamtexport immer als ZIP: Fächer und Klassenlisten vollständig, leere Schülerberichte nur bei ausdrücklicher Einzelanforderung; manuelle Abschlussnoten/Bemerkungen/Historie niemals unterdrücken. Unbenotete Fachinformation statt Leertabelle. Automatische Notfalllisten und JSON-Sicherungen unverändert.
