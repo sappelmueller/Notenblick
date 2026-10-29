@@ -74,7 +74,7 @@ Notenblick.submitModal=async function(next=false){
  Notenblick.dialogBusy=true;const fn=Notenblick.submitDialog;let result;
  Notenblick.$('#dialogSave').disabled=true;Notenblick.$('#dialogNext').disabled=true;Notenblick.$('#dialogError').hidden=true;
  try{result=await fn(next);if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open&&!result?.keepOpen)Notenblick.closeModal({submitted:true});}
- catch(e){if(Notenblick.submitDialog!==fn||!Notenblick.$('#dialog').open)return;const el=Notenblick.$('#dialogError');el.textContent=e.message;el.hidden=false;}
+ catch(e){if(Notenblick.submitDialog!==fn||!Notenblick.$('#dialog').open)return;const el=Notenblick.$('#dialogError');el.textContent=e.message;el.hidden=false;if(document.activeElement===Notenblick.$('#dialogTitle'))result={keepOpen:true,focus:'dialogSave'};}
  finally{if(Notenblick.submitDialog===fn||!Notenblick.$('#dialog').open){Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=false;Notenblick.$('#dialogNext').disabled=false;Notenblick.updateOralNext?.();if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open){if(result?.focus)document.getElementById(result.focus)?.focus();else if(!Notenblick.$('#dialog').contains(document.activeElement))Notenblick.$('#dialogSave').focus();}}}
 };
 Notenblick.confirm = function confirm(title, text, fn, label = 'Bestätigen') {
@@ -122,7 +122,10 @@ Notenblick.runOperation=async function(title,work,{cancellable=false}={}){
   if(Number.isSafeInteger(total)&&total>0&&Number.isSafeInteger(done)){bar.max=total;bar.value=done;}else bar.removeAttribute('value');
   if(text!==previous&&(Date.now()-last>=2500||!last||done===total)){A.announce(text);last=Date.now();previous=text;}
  };
- try{return await work(update,()=>dialog.open&&A.submitDialog===fn);}
+ // Once the native save handoff begins, only its save dialog can cancel it.
+ // Keep the originating form alive until the native final reply arrives.
+ const lock=()=>{A.dialogCancellable=false;for(const[el]of close)el.disabled=true;};
+ try{return await work(update,()=>dialog.open&&A.submitDialog===fn,lock);}
  finally{
   live.textContent='';saved.liveParent.insertBefore(live,saved.liveNext?.parentNode===saved.liveParent?saved.liveNext:null);
   if(dialog.open&&A.submitDialog===fn){content.replaceChildren(nodes);if(saved.description)dialog.setAttribute('aria-describedby',saved.description);else dialog.removeAttribute('aria-describedby');heading.textContent=saved.title;save.hidden=saved.saveHidden;A.dialogCancellable=saved.cancellable;for(const[el,disabled]of close)el.disabled=disabled;dialog.scrollTop=saved.scroll;save.focus();}

@@ -1,6 +1,6 @@
 # Notenblick: technischer Einstieg
 
-Programmversion 1.20.0, Windows/.NET Framework 4.8/WinForms/WebView2, vollständig offline. Nur privates `sappelmueller/Notenblick` (ID 1432518047); Actions aus. Echte Schülerdaten, Sicherungen, Schlüssel und generierte Dateien niemals einchecken. Vor Schreiben `python3 dev/guard.py`.
+Programmversion 1.20.1, Windows/.NET Framework 4.8/WinForms/WebView2, vollständig offline. Nur privates `sappelmueller/Notenblick` (ID 1432518047); Actions aus. Echte Schülerdaten, Sicherungen, Schlüssel und generierte Dateien niemals einchecken. Vor Schreiben `python3 dev/guard.py`.
 
 ## Aufbau und kritische Verträge
 
@@ -21,6 +21,8 @@ Programmversion 1.20.0, Windows/.NET Framework 4.8/WinForms/WebView2, vollständ
 
 - 1.20: `storage.js` ergänzt `backupInventory`/`cleanBackups` im bestehenden FolderStore. Vollständige frische Validierung, eindeutige eigene Standnamen und Aufbewahrungsmetadaten; mindestens 30 gültige eigene Stände und alle geschützten/fremden Dateien behalten. Reguläre Aufbewahrung unverändert. `dialogs/window.js` stellt dieselben Formknoten nach Fehlern wieder her und verwendet genau die bestehende Statusquelle für echten Fortschritt. Wiederherstellungen behalten Einstellungen, kehren aber ausdrücklich zum Wiederherstellen-Tab zurück.
 - `exports/collection.js` erweitert das zentrale Berichtsmodell um vollständige Fächer, Klassenlisten und einzelne/historische Leistungen. Unabhängige unveränderliche Exportkontexte verändern keine Notenansicht. `domain/text-lists.js` liefert denselben Plan und einen begrenzten TXT-Iterator für alle ZIP-Formate. Der bestehende ZIP-Schreiber und alle vorhandenen Renderer bleiben maßgeblich. Grenzen 64 MB/4096 Dokumente, sequenzielle Erstellung und echter Dateizähler. Neue Gruppen `v1200`, `v1200-storage`, `v1200-browser`, `v1200-files` im Katalog.
+
+- 1.20.1: `OfficePackage.ValidateBatch` prüft relative Archivpfade segmentweise über `ExportFiles.Component`, Dateiblätter separat über `FileName`. CRC, lokale/zentral abgeglichene ZIP-Bereiche, Inhalt und Grenzen bleiben verbindlich; doppelte kanonische Pfade und Datei-/Ordnerkollisionen werden abgelehnt. `Window` meldet echte native Prüf-/Speicherphasen, `desktop.js` hält Zwischenmeldungen von Endantworten getrennt. `assessmentProgress` liefert den Mittelwert einzelner Berichte; `textListEntries({exportDetails:true})` ergänzt ausschließlich den Gesamtexport, die automatische Standardausgabe bleibt fachlich unverändert. Neue Gruppen `v1201`/`v1201-storage`/`v1201-browser`/`v1201-files`: vollständige echte ZIPs durch produktiven C#-Prüfer und Dateischreiber, JS-Bridge-Rundlauf, feindliche Archive und gemeinsame Dokumentgestaltung.
 
 ## Ablauf mit wenig KI-Kontext
 

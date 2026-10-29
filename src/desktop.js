@@ -10,6 +10,7 @@
     const msg = event.data;
     if (!msg || !pending.has(msg.id)) return;
     const task = pending.get(msg.id);
+    if(typeof msg.progress==='string'){task.progress?.(msg.progress);return;}
     pending.delete(msg.id);
     clearTimeout(task.timer);
     if (msg.ok) task.resolve(msg.result);else {
@@ -19,7 +20,7 @@
       task.reject(error);
     }
   });
-  function call(op, args = {}) {
+  function call(op, args = {}, progress = null) {
     if (!channel) return Promise.reject(Error('Bitte starte Notenblick.exe.'));
     const id = session + '-' + (++sequence);
     return new Promise((resolve, reject) => {
@@ -31,6 +32,7 @@
       pending.set(id, {
         resolve,
         reject,
+        progress,
         timer
       });
       channel.postMessage({

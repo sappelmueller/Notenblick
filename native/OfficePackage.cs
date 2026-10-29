@@ -17,16 +17,20 @@ namespace Notenblick.Native {
    Require(end>=0&&U16(bytes,end+4)==0&&U16(bytes,end+6)==0);
    int count=U16(bytes,end+10);Require(count>0&&count<=4096&&U16(bytes,end+8)==count);
    uint start=U32(bytes,end+16),size=U32(bytes,end+12);Require((ulong)start+size==(ulong)end);
-   var result=new Dictionary<string,uint>(StringComparer.OrdinalIgnoreCase);int at=(int)start;
+   var result=new Dictionary<string,uint>(StringComparer.OrdinalIgnoreCase);var ranges=new List<Tuple<long,long>>();int at=(int)start;
    for(int i=0;i<count;i++){
     Require(U32(bytes,at)==0x02014b50);int names=U16(bytes,at+28),extra=U16(bytes,at+30),comment=U16(bytes,at+32);Require((long)at+46+names+extra+comment<=end);
-    string name=Utf8.GetString(bytes,at+46,names);Require(name.Length>0&&!name.StartsWith("/")&&!name.Contains("\\")&&!name.Contains(":")&&!name.Contains("..")&&!result.ContainsKey(name));
-    uint crc=U32(bytes,at+16),local=U32(bytes,at+42);int flags=U16(bytes,at+8),method=U16(bytes,at+10);Require((flags&1)==0&&(method==0||method==8)&&local<start&&U32(bytes,(int)local)==0x04034b50);
-    int localAt=(int)local;Require(U16(bytes,localAt+8)==method&&(U16(bytes,localAt+6)&1)==0&&Utf8.GetString(bytes,localAt+30,U16(bytes,localAt+26))==name);
-    if((flags&8)==0)Require(U32(bytes,localAt+14)==crc&&U32(bytes,localAt+18)==U32(bytes,at+20)&&U32(bytes,localAt+22)==U32(bytes,at+24));
+    string name=Utf8.GetString(bytes,at+46,names);Require(name.Length>0&&!name.StartsWith("/")&&!name.Contains("\\")&&!name.Contains(":")&&!result.ContainsKey(name));foreach(var part in name.Split('/'))Require(part!="."&&part!="..");
+    uint crc=U32(bytes,at+16),local=U32(bytes,at+42),packed=U32(bytes,at+20),unpacked=U32(bytes,at+24);int flags=U16(bytes,at+8),method=U16(bytes,at+10);Require((flags&~0x080e)==0&&(method==0||method==8)&&(method!=0||(flags&6)==0)&&U16(bytes,at+34)==0&&(ulong)local+30<=start&&U32(bytes,(int)local)==0x04034b50);
+    int localAt=(int)local;long payload=(long)local+30+U16(bytes,localAt+26)+U16(bytes,localAt+28),limit=payload+packed;Require(payload<=start&&limit<=start&&U16(bytes,localAt+8)==method&&U16(bytes,localAt+6)==flags&&Utf8.GetString(bytes,localAt+30,U16(bytes,localAt+26))==name);
+    if(method==0)Require(packed==unpacked);
+    if((flags&8)==0)Require(U32(bytes,localAt+14)==crc&&U32(bytes,localAt+18)==packed&&U32(bytes,localAt+22)==unpacked);
+    else{int descriptor=(int)limit;if(U32(bytes,descriptor)==0x08074b50)descriptor+=4;Require((long)descriptor+12<=start&&U32(bytes,descriptor)==crc&&U32(bytes,descriptor+4)==packed&&U32(bytes,descriptor+8)==unpacked);limit=descriptor+12;}
+    // Reject links/devices, aliased local headers, overlapping data and orphan payloads.
+    int unixType=(int)(U32(bytes,at+38)>>16)&0xf000;Require(unixType==0||unixType==0x8000||unixType==0x4000);ranges.Add(Tuple.Create((long)local,limit));
     result.Add(name,crc);at+=46+names+extra+comment;
    }
-   Require(at==end);return result;
+   Require(at==end);ranges.Sort((a,b)=>a.Item1.CompareTo(b.Item1));long next=0;foreach(var range in ranges){Require(range.Item1==next&&range.Item2>range.Item1);next=range.Item2;}Require(next==start);return result;
   }
   public static void Validate(byte[] bytes,string extension){
    try{
@@ -62,25 +66,31 @@ namespace Notenblick.Native {
   }
   public static void ValidateBatch(byte[] bytes){
    try{
-    var expected=DirectoryCrc(bytes);long total=0;string format=null;
+    Require(bytes.Length<=64*1024*1024);var expected=DirectoryCrc(bytes);long total=0;string format=null;
+    // Compare canonical paths without changing the actual ZIP entry names.
+    var files=new HashSet<string>(StringComparer.OrdinalIgnoreCase);var directories=new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    foreach(var path in expected.Keys){
+     Require(path.Length<=2048);var parts=path.Split('/');Require(parts.Length<=32);string parent="";
+     for(int i=0;i<parts.Length;i++){ExportFiles.Component(parts[i],120);var key=parts[i].Normalize(NormalizationForm.FormC);parent+=(i==0?"":"/")+key;
+      if(i<parts.Length-1){Require(!files.Contains(parent));directories.Add(parent);}else Require(!directories.Contains(parent)&&files.Add(parent));
+     }
+    }
     using(var stream=new MemoryStream(bytes,false))using(var zip=new ZipArchive(stream,ZipArchiveMode.Read)){
      Require(zip.Entries.Count==expected.Count);
      foreach(var entry in zip.Entries){
-      var name=ExportFiles.FileName(entry.FullName);var ext=Path.GetExtension(name).ToLowerInvariant();
-      Require(name.Length<=120&&!name.EndsWith(".")&&!name.EndsWith(" ")&&name.IndexOf('/')<0&&name.IndexOf('\\')<0);
-      Require(!System.Text.RegularExpressions.Regex.IsMatch(name,@"^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)",System.Text.RegularExpressions.RegexOptions.IgnoreCase));
+      var path=entry.FullName;var name=ExportFiles.FileName(path.Substring(path.LastIndexOf('/')+1));var ext=Path.GetExtension(name).ToLowerInvariant();
       Require(Array.IndexOf(new[]{".pdf",".docx",".xlsx",".txt",".csv"},ext)>=0);if(format==null)format=ext;Require(format==ext);
-      total+=entry.Length;Require(entry.Length>0&&total<=64*1024*1024&&expected.ContainsKey(name));
+      total+=entry.Length;Require(entry.Length>0&&total<=64*1024*1024&&expected.ContainsKey(path));
       using(var source=entry.Open())using(var data=new MemoryStream()){
        var buffer=new byte[32768];int read;uint crc=0xffffffff;long length=0;
        while((read=source.Read(buffer,0,buffer.Length))>0){length+=read;Require(length<=entry.Length);for(int i=0;i<read;i++)crc=CrcTable[(crc^buffer[i])&255]^(crc>>8);data.Write(buffer,0,read);}
-       Require(length==entry.Length&&(crc^0xffffffff)==expected[name]);
+       Require(length==entry.Length&&(crc^0xffffffff)==expected[path]);
        // Validate one document at a time, before any save dialog or disk write.
        var content=data.ToArray();if(ext==".txt"||ext==".csv")Utf8.GetString(content);else ExportFiles.ValidateContent(content,name);
       }
      }
     }
-   }catch{throw new InvalidDataException("Ungültiges Schülerarchiv.");}
+   }catch{throw new InvalidDataException("Ungültiges ZIP-Archiv.");}
   }
  }
 }

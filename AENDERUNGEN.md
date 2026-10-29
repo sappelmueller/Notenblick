@@ -1,3 +1,12 @@
+# Notenblick 1.20.1
+
+- Kritischen Windows-Gesamtexportfehler behoben: sichere Unterordner werden akzeptiert, vollständige Archivpfade und einzelne Dateinamen getrennt geprüft. Dieselbe Struktur nach Schuljahr/Klasse/Fach für TXT, Word und PDF; flache Schüler-ZIPs bleiben möglich.
+- Pfadsegmente, reservierte Windows-Namen, Groß-/Kleinschreibung und Unicode-Namenskollisionen, Datei-/Ordnerkonflikte, lokale/zentral abgeglichene ZIP-Daten, CRC, Inhalt und Grenzen geprüft. Keine Prüfung deaktiviert. ZIP-Dateifilter heißt einheitlich „ZIP-Archiv“.
+- Klassendurchschnitt einzelner Leistungen in allen drei Formaten aus der vorhandenen exakten Funktion; aktive bewertete Teilnehmer, keine Null für fehlende Noten, individuelle Anzeigevorgaben, „–“ ohne Grundlage. Präzision null in erweiterten Berichten korrekt erhalten. TXT-Gesamtexport ergänzt Gewichtungs-/Status-/Bereichsmittelwerte; automatische TXT-Ausgabe und Notenberechnung bleiben erhalten.
+- Gesamtexport nutzt weiterhin dieselben Berichtsmodelle und Word-/PDF-Renderer wie der Einzelexport. Fortschritt unterscheidet Dokumente, ZIP-Erstellung, native Prüfung und tatsächliche Speicherung. Erfolg erst nach abschließender positiver Antwort, abgebrochene Dateiauswahl ohne Erfolg.
+- Kritische Übergabe gegen wiederholtes Escape geschützt; nach korrigierbaren Fehlern wieder bedienbarer Dialog mit sinnvoller Fokusrückgabe. Eine sichtbare Erfolgsmeldung über die vorhandene Statusquelle.
+- Dauerhafte native Tests akzeptieren echte verschachtelte Archive; vollständige erzeugte TXT-/Word-/PDF-ZIPs durchlaufen produktive Validierung und atomare Erst-/Ersetzungsspeicherung. JS-Download/Bridge zusätzlich gegen C#-Host, Sicherheitskorpus, Inhalts-/Layoutvergleich, Open XML, veraPDF und Chromium ergänzt. Windows-/NVDA-Liveprüfung bleibt gesondert offen.
+
 # Notenblick 1.20.0
 
 - Einrichtung abschließen: neue Abschlussbeschriftung, eindeutige sichtbare Bestätigung und erste Notenübersicht.
