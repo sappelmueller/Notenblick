@@ -5,7 +5,7 @@ N.participationLabel=(s,c)=>s.archived?'Ehemaliger Schüler':(c.inactiveStudentI
 N.safePart=s=>String(s).normalize('NFC').replace(/[<>:"/\\|?*\u0000-\u001f\u007f]/g,'_').replace(/[. ]+$/g,'').slice(0,90)||'Ohne_Name';
 N.plain=s=>String(s??'').replace(/[\r\n\t]/g,' ');
 N.textDigest=async text=>Array.from(new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256',new TextEncoder().encode(text.replace(/^\ufeff/,''))))).map(b=>b.toString(16).padStart(2,'0')).join('');
-const clean=s=>{let n=N.safePart(String(s).replaceAll('/','-')).trim();if(n.toLocaleLowerCase('de')==='daten'||/^Schülerliste\.(txt|docx|pdf)$/i.test(n)||/^(CON|PRN|AUX|NUL|CONIN\$|CONOUT\$|COM[1-9¹²³]|LPT[1-9¹²³])(\.|$)/i.test(n))n='_'+n;return n||'Ohne_Name';};
+const clean=s=>{let n=N.safePart(String(s).replaceAll('/','-')).trim();if(n.toLocaleLowerCase('de')==='daten'||/^Schülerliste\.(txt|docx|pdf)$/i.test(n)||/^(CON|PRN|AUX|NUL|CONIN\$|CONOUT\$|COM[1-9¹²³]|LPT[1-9¹²³])( *\.|$)/i.test(n))n='_'+n;return n||'Ohne_Name';};
 N.textNames=(items,fn)=>{const used=new Set(),out=new Map();for(const x of items){const base=clean(fn(x));let n=base,i=2;while(used.has(n.toLocaleLowerCase('de')))n=base+' ('+i+++')';used.add(n.toLocaleLowerCase('de'));out.set(x.id,n);}return out;};
 N.textListEntries=function*(d,{exportDetails=false}={}){
  const names=N.textNames;

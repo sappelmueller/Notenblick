@@ -11,7 +11,7 @@ namespace Notenblick.Native {
   public static string Component(string name,int maximum=240){
    if(String.IsNullOrWhiteSpace(name)||name.Length>maximum||name=="."||name==".."||name.EndsWith(".")||name.EndsWith(" ")||name.IndexOfAny(new[]{'<','>',':','"','|','?','*','/','\\'})>=0)throw new InvalidDataException("Ungültiger Exportdateiname.");
    foreach(char ch in name)if(ch<32||ch==127)throw new InvalidDataException("Ungültiger Exportdateiname.");
-   if(System.Text.RegularExpressions.Regex.IsMatch(name,@"^(con|prn|aux|nul|conin\$|conout\$|com[1-9¹²³]|lpt[1-9¹²³])(?:\.|$)",System.Text.RegularExpressions.RegexOptions.IgnoreCase|System.Text.RegularExpressions.RegexOptions.CultureInvariant))throw new InvalidDataException("Ungültiger Exportdateiname.");
+   if(System.Text.RegularExpressions.Regex.IsMatch(name,@"^(con|prn|aux|nul|conin\$|conout\$|com[1-9¹²³]|lpt[1-9¹²³])(?: *\.|$)",System.Text.RegularExpressions.RegexOptions.IgnoreCase|System.Text.RegularExpressions.RegexOptions.CultureInvariant))throw new InvalidDataException("Ungültiger Exportdateiname.");
    return name;
   }
   public static string FileName(string proposed){
