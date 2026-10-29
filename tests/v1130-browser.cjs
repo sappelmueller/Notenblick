@@ -15,7 +15,7 @@ const server=http.createServer((req,res)=>{const p=path.resolve(root,'.'+new URL
  await page.locator('#exportOutput').focus();await page.keyboard.press('Home');await description('Es wird ein Bericht für den ausgewählten Schüler erstellt.');assert.equal(await page.evaluate(()=>document.activeElement.id),'exportOutput');
  assert.equal(await page.locator('#exportExitedField').isVisible(),false);assert.equal(await page.locator('#exportScopeHint').isVisible(),true);assert.equal(await page.locator('#exportGroupingHint').isVisible(),true);
  await page.locator('#exportGrouping').focus();await page.keyboard.press('End');assert.equal(await page.evaluate(()=>document.activeElement.id),'exportGrouping');assert.equal(await page.locator('#exportGroupingHint').textContent(),'Alle Einzelnoten werden gemeinsam nach Datum sortiert, neueste zuerst.');
- await page.locator('#exportFormat').selectOption('print');assert.equal(await page.locator('#exportPrintHint').textContent(),'Empfohlen: A4 quer. Bitte in der Druckvorschau prüfen.');assert.equal(await page.locator('#exportFormat').getAttribute('aria-describedby'),'exportPageInfo');
+ await page.locator('#exportFormat').selectOption('print');assert.equal(await page.locator('#exportPrintHint').textContent(),'Empfohlen: A4 hoch. Bitte in der Druckvorschau prüfen.');assert.equal(await page.locator('#exportFormat').getAttribute('aria-describedby'),'exportPageInfo');
  await page.addScriptTag({content:axe});for(const width of [1280,640,320])for(const zoom of [1,1.25,1.5,2]){
   await page.setViewportSize({width,height:900});await page.evaluate(z=>document.documentElement.style.zoom=z,zoom);
   assert.equal(await page.locator('#dialog').evaluate(el=>el.scrollWidth>el.clientWidth+1),false);

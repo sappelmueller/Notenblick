@@ -14,7 +14,12 @@ for model in reports:
     text=stem.with_suffix('.txt').read_text(encoding='utf-8-sig')
     assert report['title'] in text and report['year'] in text
     with stem.with_suffix('.csv').open(encoding='utf-8-sig',newline='') as f: rows=list(csv.reader(f,delimiter=';'))
-    assert len(rows)==1+sum(len(s['rows'])+bool(s.get('footer')) for s in report['sections'])
+    if rows[0]==['Abschnitt','Schüler','Bezug','Angabe','Wert']:
+        assert all(len(row)==5 for row in rows)
+        for section in report['sections']:
+            for row in section['rows']:
+                for cell in row:assert cell['text'] in ''.join(''.join(r) for r in rows)
+    else:assert len(rows)==1+sum(len(s['rows'])+bool(s.get('footer')) for s in report['sections'])
     assert all(len(row)==len(rows[0]) for row in rows)
     doc=Document(stem.with_suffix('.docx'))
     assert any(p.style.name=='Heading 1' and p.text==report['title'] for p in doc.paragraphs)
@@ -28,7 +33,7 @@ for model in reports:
     assert len(wb.sheetnames)<=max(3,len(report['sections']))
     for ws in wb:
         assert ws.freeze_panes in {'A7','B7'}
-        assert len(ws.merged_cells.ranges)==0
+        assert all(r.min_row==r.max_row==5 for r in ws.merged_cells.ranges) # metadata only; never merge table data
         assert ws['A1'].value=='Notenblick'
         assert all(c.data_type!='f' for row in ws for c in row)
         assert ws.print_title_rows=='$1:$6'

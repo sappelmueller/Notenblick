@@ -25,7 +25,7 @@ for name in names:
   assert not tendency.search(source),name
   assert ('Halbjahresbemerkung' in source)==remarks
   assert ('Jahresbemerkung' in source)==remarks
-  assert 'Zeugnis' in source
+  assert 'zeugnis' in source.lower()
  assert ('Halbjahresinformation' in doc_text)==name.startswith('information')
  rows=list(csv.reader(io.StringIO(csvtext),delimiter=';'));assert all(len(row)==len(rows[0]) for row in rows)
  if len(model['sections'])>1:

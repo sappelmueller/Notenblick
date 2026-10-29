@@ -95,3 +95,13 @@ Neue Installation mit Kürzen und Leistungsarten, Altstand ohne globale Vorgaben
 3. Tastatur, NVDA-Sprache und Braille im Fortschritts-/Fehler-/Abbruchzustand prüfen; 100/150/200/300 Prozent Windows-Skalierung, 320/640/1280 effektive Pixel, keine verdeckten Aktionen. Dies ist durch Linux-/Chromium-/CSS-Zoomtests nicht belegt.
 4. Tatsächliches Microsoft Word und PDF-Leser: Einzel-/ZIP-Berichte gleich gestaltet, Tabellenköpfe auf Folgeseiten, Farben/Schrift, Kopf-/Fußzeilen/Seitennummern, Lesereihenfolge, Tags und keine abgeschnittenen langen Namen/Bemerkungen. Klassendurchschnitt einzelner Leistungen mit nur aktiven bewerteten Teilnehmern, fehlende Werte als „–“; gespeicherte Zeugnisnoten unverändert.
 5. Windows x64/ARM64, WebView2 und echtes Programmstarten/Neustarten mit altem Datenordner getrennt protokollieren. Beim Update nur EXE und vollständigen Programmordner ersetzen; Daten, Sicherungen und Einstellungen bleiben bestehen.
+
+## 1.20.2: kompakte Exportberichte, Liveabnahme offen
+
+- Synthetischen Fachbericht mit 23 Schülern/wenigen Leistungen und mit vielen Leistungen in Word, PDF, Excel, TXT, CSV und Druck öffnen. Vollständige Einzelnoten ohne eingebettete Wiederholungen aller Schülerberichte, tatsächliche Bemerkungen einmal und nur bei aktivierter Option; keine normalen Berechnungsstatus- oder leeren Gewichtungstabellen.
+- Achtspaltige Notenübersicht A4 quer: genau eine zusammenhängende Tabelle einschließlich Halbjahres- und Jahreszeugnisnoten, ausschließlich vertikale Fortsetzungen, wiederholte Tabellenköpfe, lange Namen ohne Abschneiden. Viele Leistungsarten in den Details vollständig erhalten.
+- Klassenarbeiten/Tests, mündliche Runden und Einzelnoten, GFS/Faktoren, besondere Status, fehlende Noten, manuelle Abschlussnoten und Klassendurchschnitte gegen die Anwendung vergleichen. Eigenständige Schülerberichte und explizite Auswahl aller Leistungen prüfen.
+- NVDA/Braille: Inhaltsbeschreibungen, Tab-Reihenfolge, Format-/Bemerkungsauswahl, Abbruch und Fokusrückkehr im Exportdialog; Word-Überschriften, Tabellenköpfe, PDF-Lesereihenfolge. Windows-Skalierung und tatsächliche Druckvorschau mit Hoch-/Querformat prüfen.
+- TXT-/Word-/PDF-Gesamt-ZIPs und fünf Schüler-ZIP-Formate tatsächlich über Windows speichern und öffnen. Gleiche Ordnerstruktur, sichere Namen, Erfolg erst nach Speicherung, Abbruch ohne Erfolg; automatischen Datenordner/Notfalllisten unverändert lassen.
+
+Diese Punkte sind keine bereits ausgeführten Windows-/NVDA-Livetests. Automatische Linux-/Chromium-/LibreOffice-/C#-Host-/Open-XML-/veraPDF-Prüfungen sind im aktuellen Prüfbericht getrennt dokumentiert.
