@@ -202,7 +202,7 @@ Notenblick.restoreData = async function restoreData(input,{onProgress=()=>{}}={}
       onProgress('Noten wiederherstellen.');const clean=A.N.clone(restored);delete clean.workspace;delete clean.preferences;await window.NRSession.save(clean);A.data=clean;committed=true;
       A.mode='working';A.dirty=true;A.seq=A.jsonSavedSeq=1;A.textPending=false;A.savedSeq=0;
     }
-    A.firstRun=false;A.fatalStart=false;A.undo=[];A.pending.clear();A.rendered={};
+    A.firstRun=false;A.fatalStart=false;A.mode='working';A.undo=[];A.pending.clear();A.rendered={};
     A.workspace=input.workspace||A.preferencesWorkspace(input)||{};delete A.data.workspace;delete A.data.preferences;A.restoreWorkspace();
     // Restore settings and workspaces, then explicitly retain the recovery
     // context. A saved navigation choice must never move focus after restore.
