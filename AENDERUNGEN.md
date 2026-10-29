@@ -1,3 +1,13 @@
+# Notenblick 1.20.3
+
+- Nach Leistungsarten zeigt ausschließlich Übersicht, aktivierte Leistungsarten und Schüler. Leistungen bleibt der kompakten Ansicht vorbehalten. Vorhandene ausgeblendete Leistungen sind über die Übersicht erreichbar; Tastatur und Fokus bleiben gültig.
+- Der zentrale Exportdialog ergänzt eine alphabetische, vom Arbeitskontext unabhängige Schülerauswahl. Gleiche Namen werden unterschieden, ehemalige Schüler ausdrücklich einbezogen; ohne Auswahl kein Export. Ausgabewechsel erhalten Eingaben.
+- Dünn besetzte mündliche Klassenbewertungen werden kompakt zeilenweise dargestellt. Echte Klassenrunden und mündliche Einzelnoten bleiben getrennt; eindeutige fachweit stabile Bezeichnungen bei gleichem Titel/Datum. Einzelberichte zeigen nur relevante Teilnehmer, alle Noten, Status, Faktoren/GFS und Bemerkungen bleiben erhalten.
+- PDF nutzt kompaktere lesbare Abstände und die tatsächliche A4-Fläche. Kurze Schüler-, Test- und Fachübersichten vermeiden Restseiten; Tags, Tabellenköpfe und Lesereihenfolge bleiben erhalten. Word-Struktur und ungeteilte Notenübersichten geschützt.
+- Gesamtexporte lassen ausschließlich Schülerberichte ohne relevante Angaben weg. Abschlussnoten, Bemerkungen, Status und Historie genügen weiterhin. Alle Klassenlisten/Fächer bleiben auffindbar; leere Fächer erhalten eine kurze Fachinformation. Identischer gefilterter Plan für TXT, Word und PDF; ausdrücklich angeforderte leere Einzelberichte bleiben möglich.
+- Schülerlisten ohne falsche Fachbezeichnung; gültiger Excel-Export und sinnvolle CSV-Ausgabe auch für kurze Fachinformationen. Automatische TXT-Notfalllisten, Noten-JSON und Sicherungen unverändert.
+- Referenzvergleich: je 167 zu 51 Dokumente, 139 zu 23 Schülerberichte, 191 zu 51 PDF-Seiten und 169 zu 53 gerenderte Word-Seiten. Alle 236 Einzelnoteneinträge und 40 manuellen Abschlussnoten erhalten. Dauerhafte Tests ausschließlich synthetisch; vollständiger Nachweis und Liveprüfgrenzen im Prüfbericht.
+
 # Notenblick 1.20.2
 
 - „Fachbericht mit Einzelnoten“ ersetzt den überladenen vollständigen Fachbericht: eine Fachübersicht, gemeinsame Tabellen je tatsächlich verwendeter Leistungsart, kompakte mündliche Einzelnoten und einmalige tatsächliche Bemerkungen. Eigenständige Schülerberichte bleiben verfügbar; nur vorhandene Einträge sind dort vorausgewählt.

@@ -111,7 +111,7 @@ def execute(name):
     elif name=='native-host':py('Nativen Testhost erstellen','dev/test-native.py',task=name)
     elif name=='large':run('Großer Datenbestand',['node','--max-old-space-size=4096','tests/large.cjs'],timeout=900,task=name)
     elif name=='loader':py('Produktiven Assembly-Lader prüfen','tests/loader.py',task=name)
-    elif name in FILES:py(name,'tests/'+name+'.py',timeout={'export-files':300,'office-schema':300,'v1120-files':900,'v1130-files':360,'v1140-files':360,'v1170-files':360,'v1200-files':360,'v1201-files':360,'v1202-files':360}[name],task=name)
+    elif name in FILES:py(name,'tests/'+name+'.py',timeout={'export-files':300,'office-schema':300,'v1120-files':900,'v1130-files':360,'v1140-files':360,'v1170-files':360,'v1200-files':360,'v1201-files':360,'v1202-files':360,'v1203-files':360}[name],task=name)
     else:run(name,['node','tests/'+name+'.cjs'],timeout=360,task=name)
 
 

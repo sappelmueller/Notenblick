@@ -17,6 +17,7 @@
     Notenblick.activateGroup('notes', Notenblick.W().view);
   };
   Notenblick.showNotesPane = function showNotesPane(key) {
+    if(key!=='overview')Notenblick.$('#hiddenAssessmentWorkspace')?.remove();
     if (!Notenblick.getCourse()) {
       Notenblick.setContent(Notenblick.notePanel(key), `<div class="blank"><h2>${!Notenblick.data.years.length ? 'Notenverwaltung einrichten' : !Notenblick.getClass() ? 'Klasse anlegen' : 'Fach anlegen'}</h2><p>${!Notenblick.data.years.length ? 'Beginne mit deinem ersten Schuljahr.' : 'Ergänze die Klasse und ihre Fächer in der Verwaltung.'}</p>${!Notenblick.data.years.length ? (Notenblick.firstRun?Notenblick.b('setup','Jetzt einrichten','','button primary'):Notenblick.b('new-year','Schuljahr anlegen','','button primary')) : Notenblick.b('open-admin','Zur Verwaltung','','button primary')}</div>`,'Notenübersicht');return;
     }
@@ -39,10 +40,14 @@
     {action:'new-assessment',label:'Heftbewertung',attrs:'data-kind="notebook" data-fixed="true"'}
   ],'Leistung hinzufügen','button primary').replace('data-menu-toggle', 'data-menu-toggle'+(Notenblick.readonly()?' disabled':''));
   Notenblick.renderOverview = function renderOverview() {
-    if (Notenblick.rendered.overview === Notenblick.seq + ':' + Notenblick.ui.course) return;
-    const c = Notenblick.getCourse();
-    Notenblick.setContent('overview', Notenblick.viewHeader('Notenübersicht','overviewTitle',Notenblick.addPerformanceMenu()+Notenblick.finalMenu(),'overview') + Notenblick.sortTools('overview', true) + `<div class="table-panel"><div class="table-header"><p class="subtle">${Notenblick.N.activeStudents(Notenblick.data, c).length} Schüler</p></div><div class="table-wrap" id="overviewTable">${Notenblick.overviewTable()}</div></div>`);
-    Notenblick.rendered.overview = Notenblick.seq + ':' + Notenblick.ui.course;
+    const A=Notenblick,c=A.getCourse(),w=A.W(),hidden=A.prefs.notesLayout==='kinds'?A.selectAssessments(A.data,c.id).filter(a=>!A.prefs.visibleKinds.includes(a.kind)):[],selected=w.assessmentWorkOpen&&hidden.find(a=>a.id===w.assessmentId&&!A.N.isOralIndividual(a)),key=A.seq+':'+c.id+':'+A.prefs.notesLayout+':'+A.prefs.visibleKinds.join(',')+':'+(selected?.id||'');
+    if(A.rendered.overview!==key){
+      A.setContent('overview', A.viewHeader('Notenübersicht','overviewTitle',A.addPerformanceMenu()+A.finalMenu(),'overview')+A.sortTools('overview',true)+`<div class="table-panel"><div class="table-header"><p class="subtle">${A.N.activeStudents(A.data,c).length} Schüler</p></div><div class="table-wrap" id="overviewTable">${A.overviewTable()}</div></div>`+(hidden.length?`<details id="hiddenPerformances"${selected?' open':''}><summary>Ausgeblendete Leistungsarten</summary><p class="hint">Hier kannst du vorhandene Leistungen öffnen. Die Registerkarten bleiben ausgeblendet.</p><div class="table-wrap"><table aria-label="Ausgeblendete Leistungsarten"><thead><tr><th scope="col">Bezeichnung</th><th scope="col">Datum</th><th scope="col">Leistungsart</th><th scope="col">Erfasst</th><th scope="col">Aktion</th></tr></thead><tbody>${A.assessmentRows(hidden,selected)}</tbody></table></div></details>`:''));
+      A.rendered.overview=key;
+    }
+    if(selected&&!A.$('#hiddenAssessmentWorkspace')){
+      A.$('#overview').insertAdjacentHTML('beforeend',`<div class="entry-workspace" id="hiddenAssessmentWorkspace"><div id="${selected.kind}"></div></div>`);delete A.rendered[selected.kind];w.selected[selected.kind]=selected.id;A.renderKind(selected.kind);
+    }
   };
   Notenblick.overviewTable = function overviewTable() {
     const c = Notenblick.getCourse(),

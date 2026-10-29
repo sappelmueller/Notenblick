@@ -88,11 +88,11 @@ Notenblick.fillSelection=function(yid=Notenblick.ui.year,cid=Notenblick.ui.class
  if(quick){const {chosen}=A.shortcutChoices(yid,fid);A.$('#quickSelection').innerHTML=A.quickLinks(chosen,{activeId:fid})+(!chosen.length?'<p class="hint">Keine Schnellzugriffe ausgewählt.</p>':'');}
 
 };
-Notenblick.noteTabKeys=()=>Notenblick.prefs.notesLayout==='kinds'?['overview',...(Notenblick.prefs.visibleKinds.length<Notenblick.kinds.length?['assessments']:[]),...Notenblick.prefs.visibleKinds,'pupil']:['overview','assessments','pupil'];
-Notenblick.assessmentView=kind=>Notenblick.prefs.notesLayout==='kinds'&&Notenblick.prefs.visibleKinds.includes(kind)?kind:'assessments';
+Notenblick.noteTabKeys=()=>Notenblick.prefs.notesLayout==='kinds'?['overview',...Notenblick.prefs.visibleKinds,'pupil']:['overview','assessments','pupil'];
+Notenblick.assessmentView=kind=>Notenblick.prefs.notesLayout==='kinds'?(Notenblick.prefs.visibleKinds.includes(kind)?kind:'overview'):'assessments';
 Notenblick.mapNotesView=function(key){const A=Notenblick,w=A.W(),keys=A.noteTabKeys();
  if(A.prefs.notesLayout==='compact'&&A.kinds.includes(key)){w.assessmentFilter=key;return'assessments';}
- if(A.prefs.notesLayout==='kinds'&&key==='assessments'&&!keys.includes(key)){const kind=A.data.assessments.find(a=>a.id===w.assessmentId)?.kind;return A.prefs.visibleKinds.includes(kind)?kind:A.prefs.visibleKinds[0]||'overview';}
+ if(A.prefs.notesLayout==='kinds'&&key==='assessments'){const kind=A.data.assessments.find(a=>a.id===w.assessmentId)?.kind;return A.prefs.visibleKinds.includes(kind)?kind:'overview';}
  if(A.kinds.includes(key)&&!keys.includes(key)){w.assessmentFilter=key;return keys.includes('assessments')?'assessments':'overview';}
  return keys.includes(key)?key:'overview';
 };

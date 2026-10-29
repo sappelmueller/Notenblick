@@ -1,4 +1,4 @@
-# Exportentwicklung und Prüfgrenzen – 1.20.2
+# Exportentwicklung und Prüfgrenzen – 1.20.3
 
 Alle Ausgaben werden im Programm lokal erzeugt. Für die Dateierstellung braucht Windows weder Python, Java, Office noch einen PDF-Drucker. Mitgeliefert werden PDFKit 0.20.2 (MIT) und DejaVu Sans einschließlich Lizenzen und ergänzenden Drittbibliotheks-Hinweisen. Die unveränderten Bibliotheksdateien und Schriftdateien sind in `dev/export-assets-lock.json` mit SHA-256 gesperrt.
 
@@ -61,3 +61,7 @@ Zentrale Notenübersichten sind unteilbare Tabellen mit höchstens acht wesentli
 `v1202` erstellt 14 synthetische Fälle in fünf Formaten. `v1202-files` vergleicht alle Modellwerte mit unabhängig geöffneten Dateien, rendert jedes Word-Dokument über LibreOffice und prüft PDF-Seiten, Tabellen, Kopf-/Fußzeilen, Open XML und PDF/UA-1. `v1202-browser` ergänzt echte Chromium-Druckseiten, dynamische Beschreibungen, Fokus, axe und schmale/skalierte Ansichten. `v1202-storage` exportiert vollständige TXT-/Word-/PDF-ZIPs und alle Schüler-Sammelformate durch die produktive native C#-Prüfung und Dateischreibung. Das bytegleiche Öffnen von Altdaten und unveränderte automatische TXT-Notfalllisten sind verbindlich. Vergleichskennzahlen stehen in `tests/v1202-baseline.json`, ausschließlich anonymisierte Strukturzahlen; das private Negativbeispiel selbst ist kein Testdatum und wird niemals eingecheckt.
 
 Heterogene CSV-Berichte besitzen das lange Schema Abschnitt/Schüler/Bezug/Angabe/Wert, einfache Übersichten weiterhin eine breite Tabelle. Excel-Daten bleiben numerisch, unverbunden und filterbar; nur die Metadatenzeile darf verbunden sein. Reale Windows-/Microsoft-Word-/NVDA-Livetests bleiben separat erforderlich.
+
+## Ergänzungen 1.20.3
+
+Die vier Gruppen v1203 prüfen gefilterte Gesamtexporte, unabhängige Schülerauswahl, mündliche Besetzungsfälle und gemeinsame Daten in allen Formaten. Fachinformationen ohne Tabellen benötigen ein gültiges Excel-Blatt und eine CSV-Hinweiszeile. Gleichnamige Leistungen erhalten fachweit stabile Zuordnungen. PDF-/Word-Seitentext wird einschließlich mehrseitiger Bemerkungen verglichen; ausschließlich bekannte Seitenkopf-/Fußzeilen dürfen aus dem linearen Vergleich entfernt werden. Native ZIP-Sicherheitsprüfungen bleiben vollständig aktiv. Konkrete Referenzzahlen und Nachweisgrenzen stehen in PRUEFBERICHT-1.20.3.md.
