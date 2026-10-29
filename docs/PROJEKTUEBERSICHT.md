@@ -1,6 +1,6 @@
 # Notenblick: technischer Einstieg
 
-Programmversion 1.19.0, Windows/.NET Framework 4.8/WinForms/WebView2, vollständig offline. Nur privates `sappelmueller/Notenblick` (ID 1432518047); Actions aus. Echte Schülerdaten, Sicherungen, Schlüssel und generierte Dateien niemals einchecken. Vor Schreiben `python3 dev/guard.py`.
+Programmversion 1.20.0, Windows/.NET Framework 4.8/WinForms/WebView2, vollständig offline. Nur privates `sappelmueller/Notenblick` (ID 1432518047); Actions aus. Echte Schülerdaten, Sicherungen, Schlüssel und generierte Dateien niemals einchecken. Vor Schreiben `python3 dev/guard.py`.
 
 ## Aufbau und kritische Verträge
 
@@ -18,6 +18,9 @@ Programmversion 1.19.0, Windows/.NET Framework 4.8/WinForms/WebView2, vollständ
 - `src/state.js`, `app/`, `views/`, `dialogs/`, `tabs.js`/`events.js`: gemeinsame Oberflächen-/Fokuskonzepte. Hauptnavigation als Links, echte manuell aktivierte Tabs, kurze Labels, echte Tabellen, Escape und Rückkehrfokus. Keine unnötigen Regionen oder section-Elemente.
 - `src/exports/report.js`: gemeinsames unveränderliches Berichtsmodell. `text.js`, `office.js`, `pdf.js`, `dialog.js`: TXT/CSV, DOCX/XLSX, PDF/UA und Druck/Sammelexporte. Keine parallele Exportberechnung.
 - `native/Launcher.cs`, `ProgramLibraries.cs`, `Window.cs`: AnyCPU-Starter, vollständige Hashliste, WebView2 und native Datei-/Druckkanäle. Abhängigkeiten unter `dev` gesperrt. Keine Internetressourcen in der Anwendung.
+
+- 1.20: `storage.js` ergänzt `backupInventory`/`cleanBackups` im bestehenden FolderStore. Vollständige frische Validierung, eindeutige eigene Standnamen und Aufbewahrungsmetadaten; mindestens 30 gültige eigene Stände und alle geschützten/fremden Dateien behalten. Reguläre Aufbewahrung unverändert. `dialogs/window.js` stellt dieselben Formknoten nach Fehlern wieder her und verwendet genau die bestehende Statusquelle für echten Fortschritt. Wiederherstellungen behalten Einstellungen, kehren aber ausdrücklich zum Wiederherstellen-Tab zurück.
+- `exports/collection.js` erweitert das zentrale Berichtsmodell um vollständige Fächer, Klassenlisten und einzelne/historische Leistungen. Unabhängige unveränderliche Exportkontexte verändern keine Notenansicht. `domain/text-lists.js` liefert denselben Plan und einen begrenzten TXT-Iterator für alle ZIP-Formate. Der bestehende ZIP-Schreiber und alle vorhandenen Renderer bleiben maßgeblich. Grenzen 64 MB/4096 Dokumente, sequenzielle Erstellung und echter Dateizähler. Neue Gruppen `v1200`, `v1200-storage`, `v1200-browser`, `v1200-files` im Katalog.
 
 ## Ablauf mit wenig KI-Kontext
 

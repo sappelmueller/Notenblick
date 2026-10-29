@@ -48,6 +48,7 @@
   "exports/office.js",
   "exports/pdf.js",
   "exports/dialog.js",
+  "exports/collection.js",
   "views/help.js",
   "app/actions.js",
   "app/entry.js",

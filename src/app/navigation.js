@@ -33,6 +33,7 @@ Notenblick.initTabs = function initTabs() {
     const key = link.dataset.key;
     links.forEach(item => {if (item === link) item.setAttribute('aria-current','page'); else item.removeAttribute('aria-current'); Notenblick.$('#'+item.dataset.key).hidden = item !== link;});
     Notenblick.ui.main = key;
+    if(update)Notenblick.$('#actionFeedback').hidden=true;
     Notenblick.refreshCurrent();
     if (focus) link.focus();
     if (update) Notenblick.remember();

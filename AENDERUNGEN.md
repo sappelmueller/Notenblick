@@ -1,3 +1,15 @@
+# Notenblick 1.20.0
+
+- Einrichtung abschließen: neue Abschlussbeschriftung, eindeutige sichtbare Bestätigung und erste Notenübersicht.
+- Speicherstatus mit drei erklärten Aktionen und einmaligen tatsächlichen Rückmeldungen. JSON-Speicherung, TXT-Reparatur und offene Einstellungen bleiben klar getrennt.
+- Alle Wiederherstellungswege mit tatsächlichen Arbeitsschritten, Schutz des vorherigen Standes und Rückkehr zu Sicherung → Wiederherstellen. Einstellungen bleiben erhalten, Fokus steht auf dem Tab. Fehlerdialoge bleiben wiederholbar; offene Zusatzarbeiten werden nicht als Vollerfolg gemeldet.
+- Ungeklärte Altbestände nur bei Bedarf im geschlossenen Bereich Weitere Möglichkeiten; keine historischen Daten entfernt.
+- Anzahl und Speicherplatz automatischer/geschützter Sicherungen. Bestätigte manuelle Bereinigung älterer eigener Stände mit vollständiger Inhalts-/Bestandsprüfung, mindestens 30 gültigen verbleibenden eigenen Ständen, Konfliktsperren und atomarer Indexpflege. Geschützte, fremde und veränderte Dateien bleiben erhalten. Reguläre Aufbewahrung und Schuljahre unverändert.
+- Unabhängige Exportauswahl nach Schuljahr/Klasse/Fach/Inhalt. Leistungsübersicht und vollständiger Fachbericht unterschieden; zentraler Exportdialog und sämtliche Formate/Schüler-ZIPs bleiben erhalten.
+- Alle Noten immer als ZIP in identischer Struktur für TXT/Word/PDF. Abgeschlossene Jahre, frühere Schüler, individuelle Teilnahmen, Noten/Status, Gewichtungen, Bemerkungen und Abschluss-/Altangaben erhalten; eindeutige Namen ohne leere Ordner. Historische sonstige Leistungen werden auch ohne eingetragene Bewertung dokumentiert.
+- Begrenzte sequenzielle Dokumenterstellung, echter Fortschritt, Abbruch ohne Teilarchiv; bestehende Grenzen 64 MB/4096 Dokumente mit verständlicher Meldung. Keine zweite Berechnungs- oder Speicherarchitektur.
+- Betroffene Hilfe und neue dauerhafte Funktions-, Speicher-, Chromium- und unabhängige Exportprüfungen ergänzt. Tatsächliche Windows-/NVDA-Liveabnahme bleibt gesondert offen; siehe docs/PRUEFBERICHT-1.20.0.md.
+
 # Notenblick 1.19.0
 
 - Neue Standards nur für neue Bestände: Kürzen und Notenansicht nach Leistungsarten. Gespeicherte Entscheidungen sowie bisherige implizite Standards alter Bestände bleiben erhalten; exakte Rechnungen und Zeugnisnotenvorschläge unverändert.

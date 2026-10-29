@@ -47,8 +47,8 @@
       this.path = 'notenverwaltung.json';
       this.saving = false;
     }
-    async protect(label,input,workspace) {const full={...N.clone(N.validate(input)),workspace:N.clone(workspace||{})},path='Sicherungen/'+String(label).replace(/[^a-zA-Z0-9_-]/g,'_')+'_'+new Date().toISOString().replace(/[:.]/g,'-')+'_'+N.id()+'.json';await writeAt(this.root,path,JSON.stringify(full));const restored=json(await readAt(this.root,path));N.validate(restored);if(JSON.stringify(restored)!==JSON.stringify(full))throw Error('Die Sicherung konnte nicht geprüft werden. Es wurden keine Daten übernommen.');return path;}
-    async saveWorkspace(value) {if(this.viewBefore140){const d=await this.raw();if(d)await writeAt(this.root,'Sicherungen/Vor_Einstellungen_1-4_'+new Date().toISOString().replace(/[:.]/g,'-')+'_'+N.id()+'.json',JSON.stringify({...d,workspace:this.viewBefore140}));this.viewBefore140=null;}await writeAt(this.root,'Ansicht.json',JSON.stringify(value));}
+    async protect(label,input,workspace) {if(this.cleaning)throw Error('Bitte warte, bis die Sicherungen bereinigt sind.');this.protectWrites=(this.protectWrites||0)+1;try{const full={...N.clone(N.validate(input)),workspace:N.clone(workspace||{})},path='Sicherungen/'+String(label).replace(/[^a-zA-Z0-9_-]/g,'_')+'_'+new Date().toISOString().replace(/[:.]/g,'-')+'_'+N.id()+'.json';await writeAt(this.root,path,JSON.stringify(full));const restored=json(await readAt(this.root,path));N.validate(restored);if(JSON.stringify(restored)!==JSON.stringify(full))throw Error('Die Sicherung konnte nicht geprüft werden. Es wurden keine Daten übernommen.');return path;}finally{this.protectWrites--;}}
+    async saveWorkspace(value) {if(this.cleaning)throw Error('Bitte warte, bis die Sicherungen bereinigt sind.');this.workspaceWrites=(this.workspaceWrites||0)+1;try{if(this.viewBefore140){const d=await this.raw();if(d)await writeAt(this.root,'Sicherungen/Vor_Einstellungen_1-4_'+new Date().toISOString().replace(/[:.]/g,'-')+'_'+N.id()+'.json',JSON.stringify({...d,workspace:this.viewBefore140}));this.viewBefore140=null;}await writeAt(this.root,'Ansicht.json',JSON.stringify(value));}finally{this.workspaceWrites--;}}
     async loadWorkspace() {
       let text;try{text=await readAt(this.root,'Ansicht.json');}catch(e){if(missing(e))return null;throw e;}
       try{const value=json(text);if(!value||typeof value!=='object'||Array.isArray(value))throw new SyntaxError('Ungültige Ansicht');if(!value.settings)this.viewBefore140=N.clone(value);return value;}catch(e){
@@ -81,7 +81,7 @@
     async syncTextLists(d,{force=false}={}){
       const manifestPath='Sicherungen/Notenlistenverzeichnis.json',normal=t=>t.replace(/^\ufeff/,''),textPath=p=>this.textPrefix?this.textPrefix+'/'+p:p;
       let old={};try{old=json(await readAt(this.root,manifestPath))||{};}catch(e){if(!missing(e)&&!(e instanceof SyntaxError))throw e;}
-      const safe=p=>typeof p==='string'&&!p.includes('\\')&&!/[\u0000-\u001f:]/.test(p)&&!p.startsWith('/')&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&p.split('/')[0].toLocaleLowerCase('de')!=='daten'&&(p.split('/').length===3&&p.endsWith('/Schülerliste.txt')||p.split('/').length===4&&p.endsWith('/Notenübersicht.txt')||p.split('/').length===5&&['Schülernoten','Mündliche Noten',...Object.values(N.KINDS)].includes(p.split('/')[3])&&p.endsWith('.txt'));
+      const safe=p=>typeof p==='string'&&!p.includes('\\')&&!/[\u0000-\u001f:]/.test(p)&&!p.startsWith('/')&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&p.split('/')[0].toLocaleLowerCase('de')!=='daten'&&(p.split('/').length===3&&p.endsWith('/Schülerliste.txt')||p.split('/').length===4&&p.endsWith('/Notenübersicht.txt')||p.split('/').length===5&&['Schülernoten','Mündliche Noten','Gesicherter Altbestand',...Object.values(N.KINDS)].includes(p.split('/')[3])&&p.endsWith('.txt'));
       const files=N.exportsTXT(d),previous=[13,14,16,17].includes(old.version)&&Array.isArray(old.files)?[...new Set([...old.files,...(Array.isArray(old.retained)?old.retained:[])])].filter(safe):[],hashes={};
       // A pending directory can never be mistaken for a complete update.
       await writeAt(this.root,manifestPath,JSON.stringify({version:N.TEXT_LIST_VERSION,state:'updating',commitId:d.commitId,files:[...new Set([...previous,...Object.keys(files)])],hashes:old.version===N.TEXT_LIST_VERSION?old.hashes||{}:{}}));
@@ -97,7 +97,60 @@
       }
       for(const p of [...parents].sort((a,b)=>b.length-a.length)){try{const parts=textPath(p).split('/');let dir=this.root;for(const part of parts.slice(0,-1))dir=await dir.getDirectoryHandle(part);const child=await dir.getDirectoryHandle(parts.at(-1));let empty=true;for await(const entry of child.entries()){empty=false;break;}if(empty)await dir.removeEntry(parts.at(-1));}catch(e){if(!missing(e)&&e.name!=='InvalidModificationError')throw e;}}if(parents.size)writeDirectories.delete(this.root);
       await writeAt(this.root,manifestPath,JSON.stringify({version:N.TEXT_LIST_VERSION,state:'complete',commitId:d.commitId,files:Object.keys(files),hashes,retained}));
-      this.textCache={commitId:d.commitId,files};this.textWarning=retained.length?retained.length+' ältere oder nachträglich geänderte TXT-Dateien wurden zur Sicherheit beibehalten.':'';return{files:Object.keys(files).length,written,retained};
+      this.textCache={commitId:d.commitId,files};this.textWarning=retained.length?retained.length+' ältere oder nachträglich geänderte TXT-Dateien wurden zur Sicherheit beibehalten.':'';return this.lastTextResult={files:Object.keys(files).length,written,retained};
+    }
+    // Cleanup never trusts a cached or partially received directory listing.
+    async backupInventory() {
+      let dir;try{dir=await this.root.getDirectoryHandle('Sicherungen');}catch(e){if(missing(e))return {regular:[],protected:[],remove:[],bytes:0,protectedBytes:0,signature:'empty',metadata:{},reason:''};throw e;}
+      const entries=[];for await(const [name,h] of dir.entries())entries.push({name,h});
+      const listing=entries.map(({name,h})=>[name,h.kind,h.meta?.size,h.meta?.lastModified]).sort((a,b)=>a[0].localeCompare(b[0]));
+      let metadata={},metaText='',reason='';
+      try{metaText=await readAt(this.root,'Sicherungen/Aufbewahrung.json');metadata=json(metaText);if(!metadata||Array.isArray(metadata)||typeof metadata!=='object')throw new SyntaxError();if(Object.entries(metadata).some(([name,v])=>!/^Stand_\d{8,}_[a-zA-Z0-9_-]+\.json$/.test(name)||!v||v.name!==name||!Number.isFinite(Date.parse(v.at))||!Number.isSafeInteger(v.revision)||!Number.isSafeInteger(v.size)||!Number.isFinite(v.lastModified)))throw new SyntaxError();}
+      catch(e){if(!missing(e)&&!(e instanceof SyntaxError))throw e;reason='Die Aufbewahrungsinformationen sind nicht vollständig lesbar. Zur Sicherheit wird keine Sicherung entfernt.';metadata={};}
+      const regular=[],protectedFiles=[],digests=[];
+      for(const {name,h} of entries){
+        if(h.kind!=='file')continue;
+        const match=/^Stand_(\d{8,})_([a-zA-Z0-9_-]+)\.json$/.exec(name),protectedName=/^(Vor_Wiederherstellung_|Vor_Einstellungen_1-4_|Vor_Muendlich_Zuordnung_|Ansicht_Vor_Wiederherstellung_|Ansicht_Beschaedigt_|Beschaedigt_)[a-zA-Z0-9_-]+\.json$/.test(name)||/^(Vor_Migration_|Vor_Ersetzen_)[a-zA-Z0-9_-]+\.zip$/.test(name);
+        if(!match&&!protectedName)continue;
+        let info,text,size;
+        try{info=h.meta||await h.getFile();if(protectedName&&Number.isSafeInteger(info.size)){protectedFiles.push({name,size:info.size});continue;}text=await(await h.getFile()).text();size=Number.isSafeInteger(info.size)?info.size:new TextEncoder().encode(text).length;}
+        catch(e){throw Error('Die Sicherungen konnten nicht vollständig gelesen werden. Es wurde nichts bereinigt. '+e.message);}
+        if(protectedName){protectedFiles.push({name,size});continue;}
+        const entry={name,size,valid:false,owned:false};regular.push(entry);
+        try{
+          const d=N.validate(json(text));if(String(d.revision).padStart(8,'0')!==match[1]||d.commitId!==match[2])throw Error('Name und Inhalt stimmen nicht überein.');
+          Object.assign(entry,{valid:true,at:d.updatedAt,revision:d.revision,digest:await N.textDigest(text)});digests.push([name,entry.digest]);
+          const known=metadata[name];entry.owned=!!known&&known.name===name&&known.at===d.updatedAt&&known.revision===d.revision&&known.size===size&&known.lastModified===info.lastModified;
+        }catch{reason='Mindestens ein automatischer Speicherstand ist nicht vollständig gültig. Zur Sicherheit wird keine Sicherung entfernt.';}
+      }
+      const again=[];for await(const [name,h]of dir.entries())again.push([name,h.kind,h.meta?.size,h.meta?.lastModified]);again.sort((a,b)=>a[0].localeCompare(b[0]));
+      if(JSON.stringify(listing)!==JSON.stringify(again))throw Error('Die Sicherungen haben sich während der Prüfung verändert. Bitte erneut prüfen.');
+      regular.sort((a,b)=>Date.parse(b.at||0)-Date.parse(a.at||0)||(b.revision||0)-(a.revision||0)||a.name.localeCompare(b.name));
+      // Foreign/modified files stay. Keep 30 valid owned snapshots in addition
+      // to every protected snapshot; invalid snapshots prevent all deletion.
+      const owned=regular.filter(e=>e.valid&&e.owned),keep=new Set(owned.slice(0,30).map(e=>e.name)),remove=reason?[]:owned.filter(e=>!keep.has(e.name));
+      return {regular,protected:protectedFiles,remove,bytes:regular.reduce((n,e)=>n+e.size,0),protectedBytes:protectedFiles.reduce((n,e)=>n+e.size,0),metadata,reason,signature:await N.textDigest(JSON.stringify([listing,metaText,digests]))};
+    }
+    async cleanBackups(plan) {
+      if(this.saving||this.workspaceWrites||this.protectWrites)throw Error('Bitte warte, bis alle Daten gespeichert sind.');
+      this.saving=this.cleaning=true;let removed=0,bytes=0,current,meta;
+      try{
+        current=await this.backupInventory();
+        if(current.signature!==plan.signature)throw Error('Die Sicherungen haben sich inzwischen verändert. Bitte öffne die Bereinigung erneut.');
+        if(current.reason)throw Error(current.reason);
+        const dir=await this.root.getDirectoryHandle('Sicherungen');meta={...current.metadata};
+        const present=new Set(current.regular.map(e=>e.name));for(const name of Object.keys(meta))if(!present.has(name))delete meta[name];
+        for(const entry of current.remove){
+          const text=await(await(await dir.getFileHandle(entry.name)).getFile()).text();
+          if(await N.textDigest(text)!==entry.digest)throw Error('Ein Speicherstand wurde inzwischen verändert. Die Bereinigung wurde angehalten.');
+          await dir.removeEntry(entry.name);removed++;bytes+=entry.size;delete meta[entry.name];
+          await writeAt(this.root,'Sicherungen/Aufbewahrung.json',JSON.stringify(meta));this.retentionMeta=meta;
+        }
+        await writeAt(this.root,'Sicherungen/Aufbewahrung.json',JSON.stringify(meta));this.retentionMeta=meta;return {removed,bytes};
+      }catch(e){
+        if(removed){try{await writeAt(this.root,'Sicherungen/Aufbewahrung.json',JSON.stringify(meta));this.retentionMeta=meta;}catch{}throw Error('Die Bereinigung wurde nicht vollständig abgeschlossen. '+removed+' ältere Sicherungen wurden entfernt; die übrigen bleiben erhalten. '+e.message);}
+        throw e;
+      }finally{this.saving=this.cleaning=false;}
     }
     async save(input, {
       replace = false,
@@ -105,11 +158,13 @@
       repair = false,
       workspace = null,
       previousWorkspace = null,
-      initialSetup = false
+      initialSetup = false,
+      onProgress = () => {}
     } = {}) {
       if (this.saving) throw Error('Bitte warte, bis die Noten gespeichert sind.');
       this.saving = true;
       try {
+        if(replace)onProgress('Bisherigen Datenstand sichern.');
         if(replace){let priorView;try{priorView=await readAt(this.root,'Ansicht.json');}catch(e){if(!missing(e))throw e;}if(priorView!==undefined)await writeAt(this.root,'Sicherungen/Ansicht_Vor_Wiederherstellung_'+new Date().toISOString().replace(/[:.]/g,'-')+'_'+N.id()+'.json',priorView);}
         let current;
         try {
@@ -139,6 +194,7 @@
         if (current) {await writeAt(this.root, snap(current), JSON.stringify(full(current,true), null, 2));
           if(replace) await writeAt(this.root,'Sicherungen/Vor_Wiederherstellung_'+new Date().toISOString().replace(/[:.]/g,'-')+'_'+N.id()+'.json',JSON.stringify(full(current,true),null,2));
         }
+        onProgress('Noten wiederherstellen.');
         await writeAt(this.root, snap(next), JSON.stringify(full(next), null, 2));
         await writeAt(this.root, this.path, JSON.stringify(next, null, 2));
         this.base = {
@@ -147,7 +203,7 @@
           revision: next.revision
         };
         let txtError = null;
-        try {await this.syncTextLists(next,{force:forceTXT});}catch(e){this.textCache=null;txtError=e.message;}
+        try {onProgress('Automatische Notenlisten aktualisieren.');await this.syncTextLists(next,{force:forceTXT});}catch(e){this.textCache=null;txtError=e.message;}
         try {
           const backup=await this.root.getDirectoryHandle('Sicherungen'), points=[],meta={};
           if(!this.retentionMeta){try{this.retentionMeta=json(await readAt(this.root,'Sicherungen/Aufbewahrung.json'));}catch{this.retentionMeta={};}}

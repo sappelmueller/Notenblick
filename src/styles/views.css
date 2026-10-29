@@ -493,3 +493,9 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 #backup button,#backup a{max-width:100%;white-space:normal;overflow-wrap:anywhere;min-width:0}#backup .storage-details dt{max-width:100%;overflow-wrap:anywhere}.help h2{overflow-wrap:anywhere}
 
 #backup p,#backup h1,#backup h2,#backup h3,.help{overflow-wrap:anywhere}#dialog[data-context=backup]{max-height:calc(100% - 16px);overflow:auto}#dialog[data-context=backup] #dialogForm{display:block;max-height:none;overflow:visible}#dialog[data-context=backup] #dialogContent{overflow:visible}
+.action-feedback{padding:12px 16px;margin:16px 0;background:var(--soft);border-left:4px solid var(--accent);color:var(--ink);overflow-wrap:anywhere}
+.backup-actions{max-width:64rem}.backup-actions>div{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding:16px 0;border-bottom:1px solid var(--line)}.backup-actions p{flex:1 1 28rem;margin:0;min-width:0}.backup-actions button{flex:0 1 auto;margin:0}
+#backup .form-grid{max-width:62rem;gap:16px}#backup .field{min-width:0}#backup select{width:100%;min-width:0}#backup details>summary{font-weight:600}#backup details[open]>summary{margin-bottom:18px}
+.operation-progress{padding:8px 0;min-width:0}.operation-progress p{overflow-wrap:anywhere}.operation-progress progress{display:block;width:100%;height:18px;accent-color:var(--accent);margin:20px 0}
+@media(forced-colors:active){.action-feedback{border:1px solid CanvasText;border-left-width:4px}.operation-progress progress{forced-color-adjust:auto}}
+@media(max-width:420px){body:has(#backup:not([hidden])) main{padding-inline:12px}body:has(#backup:not([hidden])) .header-inner{padding-inline:12px;gap:8px}body:has(#backup:not([hidden])) .brand{font-size:1.05rem}#backup h1{font-size:1.45rem}#backup h2{font-size:1.2rem}#backupTabs a{padding-inline:8px;font-size:.85rem}#backup .button{padding-inline:10px}}
