@@ -6,7 +6,7 @@ Stand 29. Oktober 2026. Ausgangspunkt: privates `sappelmueller/Notenblick`, Repo
 
 Der alte vollständige Fachbericht hängte die gesamten Einzelberichte sämtlicher Schüler an: Gesamtergebnis, Gewichtung, Leistungsbereiche und Einzelnoten wiederholten sich je Person. Dazu kamen offene Zeilen, allgemeine Berechnungsstatusabschnitte und künstliche Umbrüche. Die Breitenplanung behandelte lange Überschriften der zentralen Notenübersicht wie beliebige Leistungsmatrizen und teilte selbst acht Spalten horizontal.
 
-`buildReport` und `buildExtendedReport` erzeugen jetzt eine Fachübersicht und gemeinsame Klassentabellen je verwendeter Leistungsart. Mündliche Einzelnoten werden kompakt gesondert zugeordnet. Tatsächliche Bemerkungen erscheinen einmal gesammelt; abgeschaltete Bemerkungen entfernen auch historische Bemerkungsspalten. Originale historische Leistungen, Zuordnungsabweichungen, frühere Zeugnisse und tatsächlich ungeklärte Altbestände bleiben gezielt sichtbar. Normale fehlende Noten verursachen keinen Sonderabschnitt. Die Leistungsliste enthält nur die angelegten Leistungen, erfasste Bewertungen, Datum, Art und Klassendurchschnitt. Selbständige Schülerberichte bleiben ausführlich, enthalten standardmäßig vorhandene Einträge und erlauben weiterhin ausdrücklich alle Leistungen.
+`buildReport` und `buildExtendedReport` erzeugen jetzt eine Fachübersicht und gemeinsame Klassentabellen je verwendeter Leistungsart. Mündliche Einzelnoten werden kompakt gesondert zugeordnet; mündliche Klassentabellen enthalten nur tatsächlich erfasste Bewertungen oder Bemerkungen statt leerer Schülerzeilen. Tatsächliche Bemerkungen erscheinen einmal gesammelt; abgeschaltete Bemerkungen entfernen auch historische Bemerkungsspalten. Originale historische Leistungen, Zuordnungsabweichungen, frühere Zeugnisse und tatsächlich ungeklärte Altbestände bleiben gezielt sichtbar. Normale fehlende Noten verursachen keinen Sonderabschnitt. Die Leistungsliste enthält nur die angelegten Leistungen, erfasste Bewertungen, Datum, Art und Klassendurchschnitt. Selbständige Schülerberichte bleiben ausführlich, enthalten standardmäßig vorhandene Einträge und erlauben weiterhin ausdrücklich alle Leistungen.
 
 `reportLayout` hält zentrale Notenübersichten immer in einer einzigen Tabelle. Acht wesentliche Spalten mit kurzen Bezeichnungen passen bei lesbarer Schrift auf A4 quer. Zusätzliche Leistungsarten konzentrieren die zentrale Übersicht auf die wesentlichen Bereiche; vollständige Einzelnoten bleiben in den Leistungsteilen. Nur umfangreiche Leistungsmatrizen dürfen in zusammengehörige Gruppen mit Schülernamen und Durchschnitt aufgeteilt werden. Alle Tabellen laufen vertikal weiter und wiederholen ihre Köpfe. Keine erzwungenen Seitenumbrüche. Klassenmittelwerte kommen aus den bestehenden exakten Domainfunktionen; fehlende Noten zählen nie als Null, festgelegte Abschlussnoten bleiben unabhängig.
 
@@ -20,8 +20,8 @@ Ein dauerhaft synthetisch erzeugter Vergleichsfall mit 23 Schülern, sechs Leist
 
 | Kennzahl | 1.20.1 | 1.20.2 |
 | --- | ---: | ---: |
-| Word-Seiten, tatsächlich durch LibreOffice gerendert | 37 | 6 |
-| PDF-Seiten, gemeinsamer PDF-Renderer | 42 | 6 |
+| Word-Seiten, tatsächlich durch LibreOffice gerendert | 37 | 5 |
+| PDF-Seiten, gemeinsamer PDF-Renderer | 42 | 5 |
 | Word-Tabellen | 137 | 6 |
 | Excel-Blätter | 136 | 6 |
 

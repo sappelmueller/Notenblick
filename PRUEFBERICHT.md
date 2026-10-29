@@ -1,6 +1,6 @@
-# Aktueller Stand 1.20.1
+# Aktueller Stand 1.20.2
 
-Der aktuelle Funktions- und Prüfnachweis steht in [docs/PRUEFBERICHT-1.20.1.md](docs/PRUEFBERICHT-1.20.1.md). Historische Nachweise bleiben nachfolgend erhalten.
+Der aktuelle Funktions- und Prüfnachweis steht in [docs/PRUEFBERICHT-1.20.2.md](docs/PRUEFBERICHT-1.20.2.md). Historische Nachweise bleiben nachfolgend erhalten.
 
 # Aktueller Stand 1.20.0
 

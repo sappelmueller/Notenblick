@@ -1,4 +1,4 @@
-# Exportentwicklung und Prüfgrenzen – 1.12.0
+# Exportentwicklung und Prüfgrenzen – 1.20.2
 
 Alle Ausgaben werden im Programm lokal erzeugt. Für die Dateierstellung braucht Windows weder Python, Java, Office noch einen PDF-Drucker. Mitgeliefert werden PDFKit 0.20.2 (MIT) und DejaVu Sans einschließlich Lizenzen und ergänzenden Drittbibliotheks-Hinweisen. Die unveränderten Bibliotheksdateien und Schriftdateien sind in `dev/export-assets-lock.json` mit SHA-256 gesperrt.
 
@@ -53,3 +53,11 @@ Word-Kopfzeilen enthalten ausschließlich statischen Text. Die erste Kopfzeile b
 Die bestehende WebView2-Version 1.0.2903.40 bleibt unverändert. Der feste lokale Nachrichtenkanal öffnet `ShowPrintUI(CoreWebView2PrintDialogKind.Browser)` auf dem UI-Thread; bei nicht unterstützter Laufzeit bleibt `window.print()` der Vorschau-Fallback. Der Kanal hat wie der Speicherdialog keinen Bedienungs-Timeout. CSS `@page` setzt A4 und die gemeinsam berechnete Ausrichtung. ShowPrintUI nimmt keine PrintSettings entgegen. Print/PrintAsync mit PrintSettings würde ohne Vorschau drucken und wird deshalb nicht verwendet. Die Anwendung verändert weder Druckertreiber-Voreinstellungen noch Office-/Windows-Sicherheit. Im vorhandenen Seitenformathinweis steht beim Drucken kurz „Empfohlen: A4 quer/hoch. Bitte in der Druckvorschau prüfen.“ Diese Empfehlung ist keine Zusicherung einer WebView2-/Treiber-Vorbelegung.
 
 Offizielle Schnittstellenbeschreibung: https://learn.microsoft.com/en-us/microsoft-edge/webview2/how-to/print und https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.core.corewebview2.showprintui . Tatsächliche Druckdialog-/Druckerorientierung muss weiterhin unter Windows mit der installierten WebView2-Laufzeit und dem verwendeten Drucker geprüft werden.
+
+## Ergänzungen 1.20.2
+
+Zentrale Notenübersichten sind unteilbare Tabellen mit höchstens acht wesentlichen Spalten auf A4 quer. Sie dürfen niemals horizontal aufgeteilt werden; zusätzliche Leistungsdetails stehen in den jeweiligen Leistungsarten. Die frühere allgemeine Matrixregel gilt nur für umfangreiche Leistungstabellen. `buildExtendedReport(complete)` verbindet Fachübersicht und gemeinsame Klassentabellen statt vollständiger Schülerberichte. `intro` enthält die einmalige Gewichtung und die Spaltenlegende. Normale fehlende Noten erzeugen keinen technischen Berechnungsstatus. Bemerkungen und echte historische Angaben bleiben optional und gezielt zugeordnet.
+
+`v1202` erstellt 14 synthetische Fälle in fünf Formaten. `v1202-files` vergleicht alle Modellwerte mit unabhängig geöffneten Dateien, rendert jedes Word-Dokument über LibreOffice und prüft PDF-Seiten, Tabellen, Kopf-/Fußzeilen, Open XML und PDF/UA-1. `v1202-browser` ergänzt echte Chromium-Druckseiten, dynamische Beschreibungen, Fokus, axe und schmale/skalierte Ansichten. `v1202-storage` exportiert vollständige TXT-/Word-/PDF-ZIPs und alle Schüler-Sammelformate durch die produktive native C#-Prüfung und Dateischreibung. Das bytegleiche Öffnen von Altdaten und unveränderte automatische TXT-Notfalllisten sind verbindlich. Vergleichskennzahlen stehen in `tests/v1202-baseline.json`, ausschließlich anonymisierte Strukturzahlen; das private Negativbeispiel selbst ist kein Testdatum und wird niemals eingecheckt.
+
+Heterogene CSV-Berichte besitzen das lange Schema Abschnitt/Schüler/Bezug/Angabe/Wert, einfache Übersichten weiterhin eine breite Tabelle. Excel-Daten bleiben numerisch, unverbunden und filterbar; nur die Metadatenzeile darf verbunden sein. Reale Windows-/Microsoft-Word-/NVDA-Livetests bleiben separat erforderlich.
