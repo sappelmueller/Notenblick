@@ -47,7 +47,7 @@ for name in manifest['documents']:
    elif model['type']=='pupil':
     # Date-bearing rows always have their own table header, including repeats.
     if re.search(r'\d{2}\.\d{2}\.2026Leistung',text):
-     expected=['Datum','Bezeichnung','Note/Status','Gewichtung']
+     expected=['Datum','Bezeichnung','Note/Status'] # optional weight appears only for an actual deviation
      assert all(compact(label) in text for label in expected),(source,i,'pupil header')
      if i:continuations+=1
  assert float(pdf.pages[0].mediabox.width)>0

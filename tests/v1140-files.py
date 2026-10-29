@@ -25,9 +25,12 @@ for name in names:
   assert not tendency.search(source),name
   assert ('Halbjahresbemerkung' in source)==remarks
   assert ('Jahresbemerkung' in source)==remarks
-  assert 'Zeugnisnote' in source
+  assert 'Zeugnis' in source
  assert ('Halbjahresinformation' in doc_text)==name.startswith('information')
- rows=list(csv.reader(io.StringIO(csvtext),delimiter=';'));assert len(rows)==1+sum(len(s['rows'])+bool(s.get('footer')) for s in model['sections'])
+ rows=list(csv.reader(io.StringIO(csvtext),delimiter=';'));assert all(len(row)==len(rows[0]) for row in rows)
+ if len(model['sections'])>1:
+  assert rows[0]==['Abschnitt','Schüler','Bezug','Angabe','Wert']
+ else:assert len(rows)==1+len(summary['rows'])+bool(summary.get('footer'))
  for section in model['sections']:
   for row in section['rows']:
    for cell in row:

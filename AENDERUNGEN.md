@@ -1,3 +1,13 @@
+# Notenblick 1.20.2
+
+- „Fachbericht mit Einzelnoten“ ersetzt den überladenen vollständigen Fachbericht: eine Fachübersicht, gemeinsame Tabellen je tatsächlich verwendeter Leistungsart, kompakte mündliche Einzelnoten und einmalige tatsächliche Bemerkungen. Eigenständige Schülerberichte bleiben verfügbar; nur vorhandene Einträge sind dort vorausgewählt.
+- Notenübersichten bleiben immer eine zusammenhängende Tabelle. Acht wesentliche Spalten passen gemeinsam auf A4 quer; ausschließlich vertikale Fortsetzung mit wiederholtem Tabellenkopf. Kurze eindeutige Spaltennamen, dynamische Leistungsarten und gezielt begrenzte Übersicht bei zusätzlichen Arten; sämtliche Details bleiben in den Leistungstabellen.
+- Fachgewichtung einmal kompakt am Anfang, GFS und besondere Faktoren unmittelbar an der Leistung. Keine normalen Berechnungsstatus-, Vorläufigkeits- oder offenen Platzhaltertabellen. Echte Sonderzustände, historische Angaben und ungeklärte Altbestände bleiben erkennbar. Exakte Berechnungen und festgelegte Abschlussnoten unverändert.
+- Leistungsliste, Klassenarbeiten, Tests, mündliche und weitere Noten, Schülerberichte und ZIP-Dokumente nutzen die gemeinsamen verbesserten Vorlagen. Leere Bemerkungs-/Gewichtungsspalten entfallen; Bemerkungsauswahl wird auch für historische Angaben berücksichtigt.
+- Word, PDF und Druck behalten grüne Tabellenköpfe, lesbare Schrift, echte Überschriften, wiederholte Köpfe und Seitenzahlen bei kompakteren Abständen ohne erzwungene Seitenumbrüche. Excel hat ein Blatt je sinnvoller Tabelle sowie echte Zahlen mit bis zu vier Nachkommastellen. Gemischte CSV-Berichte verwenden ein einheitliches langes Fünfspaltenschema statt einer überwiegend leeren Spaltenunion; Formelschutz bleibt erhalten.
+- „Inhalt“ erläutert Notenübersicht, Leistungsliste, Fachbericht und Schülerberichte dynamisch über eine zugeordnete Beschreibung. Gesamtexporte behalten identische ZIP-Pfade und die produktive native Prüfung für TXT, Word und PDF. Automatische TXT-Notfalllisten und gespeicherte Daten bleiben unverändert.
+- Dauerhafte synthetische Qualitätsregressionen für 23 Schüler/wenige Leistungen, große Klassen, lange/gleiche Namen, Status, GFS, Bemerkungen, Abschlussnoten und Historie. Tatsächliche Dokumente unabhängig geöffnet, gerendert und validiert; Windows-/NVDA-Liveprüfungen separat ausstehend. Einzelheiten im Prüfbericht.
+
 # Notenblick 1.20.1
 
 - Kritischen Windows-Gesamtexportfehler behoben: sichere Unterordner werden akzeptiert, vollständige Archivpfade und einzelne Dateinamen getrennt geprüft. Dieselbe Struktur nach Schuljahr/Klasse/Fach für TXT, Word und PDF; flache Schüler-ZIPs bleiben möglich.

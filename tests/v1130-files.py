@@ -22,9 +22,9 @@ pages=continuations=0
 for name in names:
  model=json.loads((OUT/(name+'.json')).read_text());section=model['sections'][0];footer=section['footer'];expected={c['label']:v for c,v in zip(section['columns'],footer)}
  text=(OUT/(name+'.txt')).read_text(encoding='utf-8-sig')
- assert 'alle aktiven Schüler des Fachs, unabhängig von Suche' in text
- assert text.count('Schüler: Klassendurchschnitt')==1
- for column,value in zip(section['columns'],footer):assert column['label']+': '+value['text'] in text
+ assert not section.get('description') # population checked independently in v1130.cjs
+ assert text.count('Klassendurchschnitt')==1
+ for column,value in zip(section['columns'][1:],footer[1:]):assert column['label']+': '+value['text'] in text
  rows=list(csv.reader(io.StringIO((OUT/(name+'.csv')).read_text(encoding='utf-8-sig')),delimiter=';'))
  assert len(rows)==len(section['rows'])+2
  assert rows[-1]==['Klassendurchschnitt (alle aktiven Schüler)',*[c['text'] for c in footer[1:]]]
@@ -64,7 +64,7 @@ for name in names:
   assert landscape==model['landscape'],(source,'orientation')
   # Every width part ends with exactly one class result. CSS tfoot must not
   # repeat it as a page footer when the table continues.
-  assert full.count('Klassendurchschnitt')==2*len(tables),(source,'duplicate class result') # one basis description + one result per width part
+  assert full.count('Klassendurchschnitt')==len(tables),(source,'duplicate class result') # one result per table, no repeated explanatory paragraph
   for values in footers:assert compact(''.join(values)) in full,(source,'class result values/order')
   for row in section['rows']:
    for cell in row:assert compact(cell['text']) in full,(source,'missing data')

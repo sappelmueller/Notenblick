@@ -1,6 +1,6 @@
 # Notenblick: technischer Einstieg
 
-Programmversion 1.20.1, Windows/.NET Framework 4.8/WinForms/WebView2, vollständig offline. Nur privates `sappelmueller/Notenblick` (ID 1432518047); Actions aus. Echte Schülerdaten, Sicherungen, Schlüssel und generierte Dateien niemals einchecken. Vor Schreiben `python3 dev/guard.py`.
+Programmversion 1.20.2, Windows/.NET Framework 4.8/WinForms/WebView2, vollständig offline. Nur privates `sappelmueller/Notenblick` (ID 1432518047); Actions aus. Echte Schülerdaten, Sicherungen, Schlüssel und generierte Dateien niemals einchecken. Vor Schreiben `python3 dev/guard.py`.
 
 ## Aufbau und kritische Verträge
 
@@ -42,3 +42,5 @@ Programmversion 1.20.1, Windows/.NET Framework 4.8/WinForms/WebView2, vollständ
 Vollständige Logs unter `reports/<Lauf>`, kompakte `summary.json`/`failure.json`; keine großen JSON-/PDF-/Screenshot-Sammlungen im Chat lesen. Bei visuellen Änderungen repräsentative Ansichten und konkret auffällige Seiten untersuchen, automatische vollständige Inhalts-/Schema-/Bounding-Box-Prüfungen weiterlaufen lassen. Keine unbelegten Token-Prozente nennen.
 
 Werkzeuge/Caches sind temporär und müssen nach einem Umgebungsreset ggf. erneut eingerichtet werden. GitHub bewahrt Quellcode, Tests, Sperren und Anleitungen. Linux-/Chromium-/axe-/LibreOffice-/PDF/UA-Erfolge sind keine tatsächlichen Windows-, UIA-, NVDA- oder Microsoft-Office-Livetests.
+
+- 1.20.2: `buildReport`/`buildExtendedReport` liefern Fachübersicht und gemeinsame Leistungsmatrizen statt eingebetteter Schülerberichte. `reportLayout` behandelt zentrale Übersichten als unteilbar (höchstens acht wesentliche Spalten); Leistungsdetails dürfen mit Zuordnung gruppiert werden. Gewichtung/Legende in `intro`, tatsächliche Bemerkungen einmal gesammelt, historische Sonderfälle gezielt. Die unveränderten Domainfunktionen liefern sämtliche Ergebnisse. TXT, Word, PDF, Excel und CSV verwenden denselben Bericht; normale TXT-ZIP-Dokumente ebenfalls. `domain/text-lists.js` bleibt unverändert und liefert weiterhin den gemeinsamen ZIP-Plan sowie die separaten automatischen Notfalllisten. Heterogene CSV-Tabellen nutzen das Schema Abschnitt/Schüler/Bezug/Angabe/Wert. `v1202`/`v1202-storage`/`v1202-browser`/`v1202-files` sind dauerhaft im Katalog: echte native Speicherkette, unveränderte Altdaten/automatische TXT-Dateien, Dialog/Print/Responsive, unabhängige Dokumentinhalte, Open XML, LibreOffice und veraPDF sowie anonymisierter Seiten-/Tabellenvergleich.
