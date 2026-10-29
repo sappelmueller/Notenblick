@@ -3,7 +3,7 @@
 A.independentExportContext=function(courseId,kind='overview',data=A.N.clone(A.data)){
  const c=data.courses.find(c=>c.id===courseId);if(!c)throw Error('Bitte wähle ein Fach.');
  const w=A.N.clone(A.ui.workspaces[c.id]||A.defaults());w.columns=['written',...A.kinds];w.search=w.oralClassSearch=w.assessmentSearch=w.oralListSearch=w.oralSearch='';w.showExited=true;
- const studentId=c.studentIds.includes(w.pupil)?w.pupil:A.N.sorted(A.N.activeStudents(data,c,true))[0]?.id;
+ const studentId=c.studentIds.includes(w.pupil)?w.pupil:A.N.sorted(A.N.activeStudents(data,c,true))[0]?.id;if(kind==='pupil'&&!studentId)throw Error('Diesem Fach sind noch keine Schüler zugeordnet. Wähle einen anderen Inhalt oder ein anderes Fach.');
  return {data,w,prefs:A.N.clone(A.prefs),courseId,studentId,kind:kind==='all'?'all':kind,type:kind==='complete'?'complete':kind==='overview'?'overview':kind==='all'?'assessments':kind==='pupil'?'pupil':'kind-complete',independent:true,history:true,batch:kind==='pupil'};
 };
 const section=(title,labels,rows,extra={})=>({title,columns:labels.map(label=>typeof label==='string'?{label}:label),rows,...extra});
@@ -42,6 +42,7 @@ A.buildExtendedReport=function(ctx,options){
   base.studentIds=[...new Set(base.studentIds)];
  }else{
   const overview=A.buildReport({...ctx,type:'overview',w:{...ctx.w,columns:['written',...A.kinds]}},{...options,scope:'all',history:true});Object.assign(base,overview,{type:'complete',title:'Alle Noten des Fachs'});
+  const performances=A.buildReport({...ctx,type:'assessments',kind:'all'},{...options,scope:'all',remarks:false,history:false});base.sections.push(...performances.sections.map(s=>({...s,title:s.title||'Alle Leistungen'})));base.recordIds.push(...performances.recordIds);
   for(const s of A.N.sorted(A.N.activeStudents(d,c,true),prefs.sortBy,prefs.sortDir)){const pupil=A.buildReport({...ctx,type:'pupil',studentId:s.id},{...options,scope:'all',entries:'all',remarks:true,history:true,weights:false});base.sections.push(...pupil.sections.map(part=>({...part,title:A.N.name(s,prefs.nameFormat)+' – '+part.title})));base.recordIds.push(...pupil.recordIds);}
   for(const a of d.legacyOther?.assessments?.filter(a=>a.courseId===c.id&&!Object.keys(a.results).length)||[]){const old=A.buildReport({...ctx,type:'legacy-assessment',assessmentId:a.id},options);base.sections.push(...old.sections.map(s=>({...s,title:a.title+' – '+s.title})));base.recordIds.push(a.id);}
   base.recordIds=[...new Set(base.recordIds)];
