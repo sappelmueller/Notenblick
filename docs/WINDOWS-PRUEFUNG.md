@@ -86,3 +86,12 @@ Neue Installation mit Kürzen und Leistungsarten, Altstand ohne globale Vorgaben
 - Automatische/geschützte Sicherungszahlen und Bytes. Bestätigte Bereinigung mit 0/1/30/31/50/vielen Ständen; fremde, geschützte, beschädigte und veränderte Dateien sowie Strom-/Dateisystemfehler berücksichtigen. Daten/Ansicht/TXT müssen erhalten bleiben.
 - Unabhängige Exportauswahl mit allen Formaten, Leistungsübersicht gegen vollständigen Fachbericht unterscheiden. Alle Noten immer als TXT-/Word-/PDF-ZIP; abgeschlossene Jahre, Kollisionen, leere und historische Daten kontrollieren.
 - Tatsächliche Fortschritte, Escape während Erstellung, Dateidialog-Abbruch, Größen-/Dokumentgrenze und Fokus prüfen. NVDA-Sprache/Braille, Windows-Skalierung, WebView2/UIA, Microsoft Office und realer Druck bleiben live zu prüfen.
+
+
+## 1.20.1: verbindliche Windows-/NVDA-Liveabnahme (offen)
+
+1. Mit ausschließlich synthetischen Daten alle TXT-/Word-/PDF-Gesamtexporte über Sicherung → Exportieren speichern: mehrere/abgeschlossene Jahre, mehrere Klassen/Fächer, Umlaute und gleiche Namen. Im echten Windows-Speicherdialog „ZIP-Archiv (*.zip)“. Gespeicherte Archive unabhängig entpacken; dieselben Ordner und vollständige Dokumente.
+2. Nacheinander Dokumenterstellung, Zusammenstellung, native Prüfung, Dateiauswahl und Speicherung beobachten. Während des Handoffs wiederholtes Escape darf keinen noch laufenden Vorgang verwaisen lassen. Abbruch ausschließlich im Speicherdialog, kein Erfolg; Fehler mit erneut bedienbarem Ursprungsdialog. Erfolg erst nach dem tatsächlichen Schreiben, eine sichtbare Rückmeldung und eine NVDA-Ansage; Rückkehr zum Auslöser.
+3. Tastatur, NVDA-Sprache und Braille im Fortschritts-/Fehler-/Abbruchzustand prüfen; 100/150/200/300 Prozent Windows-Skalierung, 320/640/1280 effektive Pixel, keine verdeckten Aktionen. Dies ist durch Linux-/Chromium-/CSS-Zoomtests nicht belegt.
+4. Tatsächliches Microsoft Word und PDF-Leser: Einzel-/ZIP-Berichte gleich gestaltet, Tabellenköpfe auf Folgeseiten, Farben/Schrift, Kopf-/Fußzeilen/Seitennummern, Lesereihenfolge, Tags und keine abgeschnittenen langen Namen/Bemerkungen. Klassendurchschnitt einzelner Leistungen mit nur aktiven bewerteten Teilnehmern, fehlende Werte als „–“; gespeicherte Zeugnisnoten unverändert.
+5. Windows x64/ARM64, WebView2 und echtes Programmstarten/Neustarten mit altem Datenordner getrennt protokollieren. Beim Update nur EXE und vollständigen Programmordner ersetzen; Daten, Sicherungen und Einstellungen bleiben bestehen.

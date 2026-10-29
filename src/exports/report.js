@@ -26,7 +26,7 @@ A.batchStudents=function(ctx,includeExited=false){
 };
 A.batchEntryName=function(student,extension,used){
  let base=(student.first+'_'+student.last).normalize('NFKC').replace(/[<>:"/\\|?*\u0000-\u001f\u007f]/g,'_').replace(/[\s.]+/g,'_').replace(/^_+|_+$/g,'').slice(0,100)||'Schueler';
- if(/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(base))base='Schueler_'+base;
+ if(/^(con|prn|aux|nul|conin\$|conout\$|com[1-9¹²³]|lpt[1-9¹²³])(?:\.|$)/i.test(base))base='Schueler_'+base;
  let name=base+'.'+extension,n=1;while(used.has(name.toLocaleLowerCase('de')))name=base+'_'+(++n)+'.'+extension;used.add(name.toLocaleLowerCase('de'));return name;
 };
 A.buildReport=function(ctx,options={}){

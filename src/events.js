@@ -24,7 +24,11 @@ Notenblick.$('#dialog').addEventListener('cancel', e => {
 // Handle protected Escape before the native dialog dismissal, including
 // repeated Escape while a confirmation is being shown/restored.
 Notenblick.$('#dialog').addEventListener('keydown', e => {
-  if(e.key!=='Escape'||e.defaultPrevented||!(Notenblick.dialogBeforeClose||Notenblick.dialogReturn))return;
+  if(e.key!=='Escape'||e.defaultPrevented)return;
+  // Prevent the native close watcher itself during a critical operation,
+  // including repeated Escape, rather than relying only on cancel events.
+  if(Notenblick.dialogBusy&&!Notenblick.dialogCancellable){e.preventDefault();e.stopPropagation();return;}
+  if(!(Notenblick.dialogBeforeClose||Notenblick.dialogReturn))return;
   e.preventDefault();e.stopPropagation();
   if(!Notenblick.dialogBusy||Notenblick.dialogCancellable)Notenblick.closeModal();
 });

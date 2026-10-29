@@ -6,13 +6,21 @@ using Newtonsoft.Json.Linq;
 namespace Notenblick.Native {
  public static class ExportFiles {
   public const int MaximumBytes=256*1024*1024;
+  // Windows components are checked explicitly, including on the Linux test host.
+  // A component is never a path: callers must validate the archive hierarchy separately.
+  public static string Component(string name,int maximum=240){
+   if(String.IsNullOrWhiteSpace(name)||name.Length>maximum||name=="."||name==".."||name.EndsWith(".")||name.EndsWith(" ")||name.IndexOfAny(new[]{'<','>',':','"','|','?','*','/','\\'})>=0)throw new InvalidDataException("Ungültiger Exportdateiname.");
+   foreach(char ch in name)if(ch<32||ch==127)throw new InvalidDataException("Ungültiger Exportdateiname.");
+   if(System.Text.RegularExpressions.Regex.IsMatch(name,@"^(con|prn|aux|nul|conin\$|conout\$|com[1-9¹²³]|lpt[1-9¹²³])(?:\.|$)",System.Text.RegularExpressions.RegexOptions.IgnoreCase|System.Text.RegularExpressions.RegexOptions.CultureInvariant))throw new InvalidDataException("Ungültiger Exportdateiname.");
+   return name;
+  }
   public static string FileName(string proposed){
-   if(String.IsNullOrWhiteSpace(proposed)||proposed!=Path.GetFileName(proposed)||proposed.Length>240||proposed.IndexOfAny(Path.GetInvalidFileNameChars())>=0||proposed.IndexOfAny(new[]{'<','>',':','"','|','?','*'})>=0||proposed.Contains("/")||proposed.Contains("\\"))throw new InvalidDataException("Ungültiger Exportdateiname.");
+   Component(proposed);if(proposed!=Path.GetFileName(proposed)||proposed.IndexOfAny(Path.GetInvalidFileNameChars())>=0)throw new InvalidDataException("Ungültiger Exportdateiname.");
    var extension=Path.GetExtension(proposed).ToLowerInvariant();
    if(Array.IndexOf(new[]{".json",".txt",".csv",".pdf",".docx",".xlsx",".zip"},extension)<0)throw new InvalidDataException("Dieses Dateiformat wird nicht unterstützt.");return proposed;
   }
   public static string Filter(string name){switch(Path.GetExtension(name).ToLowerInvariant()){
-   case ".zip":return "Schülerberichte (*.zip)|*.zip";
+   case ".zip":return "ZIP-Archiv (*.zip)|*.zip";
    case ".json":return "Notenblick-Sicherung (*.json)|*.json";
    case ".pdf":return "PDF-Dokument (*.pdf)|*.pdf";
    case ".docx":return "Word-Dokument (*.docx)|*.docx";
@@ -34,7 +42,16 @@ namespace Notenblick.Native {
    ValidateContent(bytes,name);return bytes;
   }
   public static void ValidateContent(byte[] bytes,string name){
-   var ext=Path.GetExtension(name).ToLowerInvariant();if(ext==".pdf"&&(bytes.Length<5||Encoding.ASCII.GetString(bytes,0,5)!="%PDF-"))throw new InvalidDataException("Ungültige PDF-Datei.");
+   var ext=Path.GetExtension(name).ToLowerInvariant();if(ext==".pdf"){
+    // The document validators check tags/content independently. Here reject
+    // truncated/spoofed payloads before the save dialog as well as in batches.
+    bool valid=bytes.Length>=32&&System.Text.RegularExpressions.Regex.IsMatch(Encoding.ASCII.GetString(bytes,0,8),@"^%PDF-[12]\.[0-9]");
+    if(valid){var tail=Encoding.ASCII.GetString(bytes,Math.Max(0,bytes.Length-1024),Math.Min(1024,bytes.Length));var match=System.Text.RegularExpressions.Regex.Match(tail,@"startxref\s+(\d+)\s+%%EOF[\t\r\n ]*$");long offset;
+     valid=match.Success&&Int64.TryParse(match.Groups[1].Value,out offset)&&offset>=8&&offset<bytes.Length-16;
+     if(valid){int at=Int32.Parse(match.Groups[1].Value);var xref=Encoding.ASCII.GetString(bytes,at,Math.Min(256,bytes.Length-at));valid=xref.StartsWith("xref")||System.Text.RegularExpressions.Regex.IsMatch(xref,@"^\d+\s+\d+\s+obj\s*<<[\s\S]*/Type\s*/XRef\b");}
+    }
+    if(!valid)throw new InvalidDataException("Ungültige PDF-Datei.");
+   }
    if(ext==".docx"||ext==".xlsx")OfficePackage.Validate(bytes,ext);if(ext==".zip")OfficePackage.ValidateBatch(bytes);
   }
   public static string ErrorCode(Exception error){return error is DirectoryNotFoundException||error is DriveNotFoundException?"export-location-unavailable":error is UnauthorizedAccessException||error is System.Security.SecurityException?"export-permission":"export-save-failed";}
