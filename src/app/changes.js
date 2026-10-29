@@ -159,9 +159,9 @@ Notenblick.save = async function save() {
   }
 };
 Notenblick.refreshTextLists=async function(force=false){
- const A=Notenblick;if(A.fatalStart)throw Error('Bitte öffne zuerst einen lesbaren Notenstand oder stelle eine Sicherung wieder her. Die vorhandenen Textdateien bleiben unverändert.');if(!A.store)return;if(A.saving)await A.savingPromise;
- if(A.dirty&&!(A.textPending&&A.jsonSavedSeq===A.seq)){await A.save();if(A.dirty)throw Error('Bitte zuerst die Noten vollständig speichern.');}
- const at=A.seq;let finish;A.savingPromise=new Promise(r=>finish=r);A.saving=true;try{const result=await A.store.refreshTextLists(A.data,{force});A.textPending=false;if(A.seq===at&&A.jsonSavedSeq===at){A.dirty=false;A.savedSeq=at;A.forceText=false;}A.cache();A.status(A.dirty?'Änderungen noch nicht gespeichert':'TXT-Notenlisten geprüft');A.updateSaveDetails();return result;}
+ const A=Notenblick;if(A.fatalStart)throw Error('Bitte öffne zuerst einen lesbaren Notenstand oder stelle eine Sicherung wieder her. Die vorhandenen Textdateien bleiben unverändert.');if(!A.store)return;if(A.saving)await A.savingPromise;let renewed=0;
+ if(A.dirty&&!(A.textPending&&A.jsonSavedSeq===A.seq)){await A.save();if(A.dirty)throw Error('Bitte zuerst die Noten vollständig speichern.');renewed=A.store.lastTextResult?.written||0;}
+ const at=A.seq;let finish;A.savingPromise=new Promise(r=>finish=r);A.saving=true;try{const result=await A.store.refreshTextLists(A.data,{force});A.textPending=false;if(A.seq===at&&A.jsonSavedSeq===at){A.dirty=false;A.savedSeq=at;A.forceText=false;}A.cache();A.status(A.dirty?'Änderungen noch nicht gespeichert':'TXT-Notenlisten geprüft');A.updateSaveDetails();if(!A.dirty&&!A.workspaceFailed)A.error('','storage');return {...result,written:result.written+renewed};}
  catch(e){A.textPending=true;A.status('Notenlisten fehlen noch','failed');A.updateSaveDetails();throw Error('Die JSON-Noten sind unverändert gespeichert. Die TXT-Notenlisten konnten noch nicht vollständig aktualisiert werden. Bitte wähle unter Sicherung → Speicherstatus „Automatische Notenlisten prüfen“. '+e.message);}
  finally{A.saving=false;finish();A.savingPromise=null;if(A.dirty&&A.seq!==at){clearTimeout(A.saveTimer);A.saveTimer=setTimeout(A.save,0);}}
 };
@@ -185,44 +185,34 @@ Notenblick.activate = function activate(next, d) {
   Notenblick.status('Gespeichert');
   if(!Notenblick.N.isCurrentData(d)||d.workspace||d.preferences)Notenblick.mark();
 };
-Notenblick.restoreData = async function restoreData(input) {
-  const restored = Notenblick.N.upgrade(input);
-  await Notenblick.workspacePromise;
-  if(!Notenblick.store) localStorage.setItem('notenblick-vor-wiederherstellung',JSON.stringify({...Notenblick.data,workspace:Notenblick.getWorkspace()}));
-  if(Notenblick.saving)await Notenblick.savingPromise;
-  if(Notenblick.store && Notenblick.dirty && !Notenblick.fatalStart){await Notenblick.save();if(Notenblick.dirty)throw Error('Der aktuelle Stand konnte vor der Wiederherstellung nicht vollständig gesichert werden.');}
-  if (Notenblick.store) {
-    const result = await Notenblick.store.save(restored, {
-      replace: true,
-      repair: true,
-      forceTXT: true,workspace:input.workspace||{},previousWorkspace:Notenblick.getWorkspace()
-    });
-    Notenblick.data = result.data;Notenblick.firstRun=false;
-    Notenblick.lastSavedAt=result.data.updatedAt;
-    Notenblick.dirty = !!result.txtError;
-    Notenblick.seq = 1;Notenblick.jsonSavedSeq=1;Notenblick.textPending=!!result.txtError;
-    Notenblick.savedSeq = result.txtError ? 0 : 1;
-    Notenblick.status(result.txtError ? 'Notenlisten fehlen noch' : 'Gespeichert', result.txtError ? 'failed' : '');
-    if (result.txtError) Notenblick.error('Die Noten wurden wiederhergestellt. Bitte aktualisiere die Notenlisten erneut.','storage');
-  } else {
-    Notenblick.data = restored;
-    Notenblick.mode = 'working';
-    Notenblick.dirty = true;
-    Notenblick.seq = 1;Notenblick.jsonSavedSeq=1;Notenblick.textPending=false;Notenblick.firstRun=false;
-    Notenblick.savedSeq = 0;
-    Notenblick.status('Noch nicht gespeichert', 'pending');
-  }
-  Notenblick.fatalStart = false;
-  Notenblick.undo = [];
-  Notenblick.pending.clear();
-  Notenblick.rendered = {};
-  Notenblick.workspace=input.workspace||Notenblick.preferencesWorkspace(input)||{};delete Notenblick.data.workspace;delete Notenblick.data.preferences;
-  if(!Notenblick.store)await window.NRSession.save(Notenblick.data);
-  Notenblick.restoreWorkspace();
-  if(Notenblick.store)await Notenblick.store.saveWorkspace(Notenblick.getWorkspace());else await window.NRSession.saveWorkspace(Notenblick.getWorkspace());
-  Notenblick.ui.main = 'notes';
-  Notenblick.activateGroup('main', 'notes');
-  Notenblick.remember();
-  Notenblick.cache();
+Notenblick.restoreData = async function restoreData(input,{onProgress=()=>{}}={}) {
+  const A=Notenblick;onProgress('Sicherung prüfen.');const restored=A.N.upgrade(input);
+  await A.workspacePromise;if(A.saving)await A.savingPromise;
+  if(A.store&&A.dirty&&!A.fatalStart){await A.save();if(A.dirty)throw Error('Der aktuelle Stand konnte vor der Wiederherstellung nicht vollständig gesichert werden.');}
+  const previous=A.data;let committed=false,warning='';clearTimeout(A.saveTimer);
+  let finish;A.saving=true;A.savingPromise=new Promise(resolve=>finish=resolve);
+  try{
+    if(A.store){
+      const result=await A.store.save(restored,{replace:true,repair:true,forceTXT:true,workspace:input.workspace||{},previousWorkspace:A.getWorkspace(),onProgress});
+      A.data=result.data;committed=true;A.lastSavedAt=result.data.updatedAt;A.dirty=!!result.txtError;A.seq=1;A.jsonSavedSeq=1;A.textPending=!!result.txtError;A.savedSeq=result.txtError?0:1;
+      if(result.txtError)warning='Deine Noten wurden wiederhergestellt. Die zusätzlichen Textdateien konnten noch nicht vollständig aktualisiert werden. Bitte prüfe die automatischen Notenlisten unter Speicherstatus.';
+      A.status(result.txtError?'Notenlisten fehlen noch':'Gespeichert',result.txtError?'failed':'');
+    }else{
+      onProgress('Bisherigen Datenstand sichern.');localStorage.setItem('notenblick-vor-wiederherstellung',JSON.stringify({...A.data,workspace:A.getWorkspace()}));
+      onProgress('Noten wiederherstellen.');const clean=A.N.clone(restored);delete clean.workspace;delete clean.preferences;await window.NRSession.save(clean);A.data=clean;committed=true;
+      A.mode='working';A.dirty=true;A.seq=A.jsonSavedSeq=1;A.textPending=false;A.savedSeq=0;
+    }
+    A.firstRun=false;A.fatalStart=false;A.undo=[];A.pending.clear();A.rendered={};
+    A.workspace=input.workspace||A.preferencesWorkspace(input)||{};delete A.data.workspace;delete A.data.preferences;A.restoreWorkspace();
+    // Restore settings and workspaces, then explicitly retain the recovery
+    // context. A saved navigation choice must never move focus after restore.
+    A.ui.main='backup';A.ui.backupView='restore';A.normalizeContext();onProgress('Wiederherstellung abschließen.');
+    try{if(A.store)await A.store.saveWorkspace(A.getWorkspace());else await window.NRSession.saveWorkspace(A.getWorkspace());A.workspaceFailed=false;}
+    catch{A.workspaceFailed=true;warning+=(warning?' ':'')+'Die Noten wurden übernommen. Die Einstellungen konnten noch nicht vollständig gespeichert werden. Bitte erneut speichern.';}
+    A.cache();A.activateGroup('main','backup');A.activateGroup('backup','restore');
+    if(warning)A.error(warning,'storage');else{A.error('','storage');A.error();}
+    return {warning};
+  }catch(e){if(!committed)A.data=previous;A.ui.main='backup';A.ui.backupView='restore';throw e;}
+  finally{A.saving=false;finish();A.savingPromise=null;}
 };
 })(globalThis.Notenblick = globalThis.Notenblick || {});

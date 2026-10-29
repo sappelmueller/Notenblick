@@ -107,4 +107,25 @@ Notenblick.ensureEdit = function ensureEdit(c = Notenblick.getCourse()) {
     y = Notenblick.data.years.find(x => x.id === cl?.yearId);
   if (c?.archived || cl?.archived || y?.archived) throw Error('Bitte öffne das Schuljahr, die Klasse oder das Fach zuerst wieder in der Verwaltung.');
 };
+// Temporarily use the existing dialog and the one existing live status source.
+// Original form nodes survive errors, so retry never loses the user's selection.
+Notenblick.runOperation=async function(title,work,{cancellable=false}={}){
+ const A=Notenblick,dialog=A.$('#dialog'),content=A.$('#dialogContent'),fn=A.submitDialog,heading=A.$('#dialogTitle'),save=A.$('#dialogSave'),live=A.$('#announcement');
+ const nodes=document.createDocumentFragment(),saved={title:heading.textContent,cancellable:A.dialogCancellable,saveHidden:save.hidden,description:dialog.getAttribute('aria-describedby'),scroll:dialog.scrollTop,liveParent:live.parentNode,liveNext:live.nextSibling};
+ const close=[...dialog.querySelectorAll('[data-action=close]')].map(el=>[el,el.disabled]);
+ while(content.firstChild)nodes.append(content.firstChild);
+ heading.textContent=title;heading.tabIndex=-1;save.hidden=true;A.dialogCancellable=cancellable;for(const[el]of close)el.disabled=!cancellable;
+ content.innerHTML='<div class="operation-progress"><p id="operationStep"></p><progress id="operationProgress" aria-label="Fortschritt"></progress></div>';content.append(live);dialog.setAttribute('aria-describedby','operationStep');dialog.scrollTop=0;heading.focus();
+ let last=0,previous='';const update=(text,done,total)=>{
+  if(!dialog.open||A.submitDialog!==fn)return;
+  A.$('#operationStep').textContent=text;const bar=A.$('#operationProgress');
+  if(Number.isSafeInteger(total)&&total>0&&Number.isSafeInteger(done)){bar.max=total;bar.value=done;}else bar.removeAttribute('value');
+  if(text!==previous&&(Date.now()-last>=2500||!last||done===total)){A.announce(text);last=Date.now();previous=text;}
+ };
+ try{return await work(update,()=>dialog.open&&A.submitDialog===fn);}
+ finally{
+  live.textContent='';saved.liveParent.insertBefore(live,saved.liveNext?.parentNode===saved.liveParent?saved.liveNext:null);
+  if(dialog.open&&A.submitDialog===fn){content.replaceChildren(nodes);if(saved.description)dialog.setAttribute('aria-describedby',saved.description);else dialog.removeAttribute('aria-describedby');heading.textContent=saved.title;save.hidden=saved.saveHidden;A.dialogCancellable=saved.cancellable;for(const[el,disabled]of close)el.disabled=disabled;dialog.scrollTop=saved.scroll;save.focus();}
+ }
+};
 })(globalThis.Notenblick = globalThis.Notenblick || {});

@@ -1,3 +1,7 @@
+# Aktueller Stand 1.20.0
+
+Der aktuelle Funktions- und Prüfnachweis steht in [docs/PRUEFBERICHT-1.20.0.md](docs/PRUEFBERICHT-1.20.0.md). Historische Nachweise bleiben nachfolgend erhalten.
+
 Aktueller versionsbezogener Bericht: [Notenblick 1.19.0](docs/PRUEFBERICHT-1.19.0.md). Die folgenden früheren Nachweise bleiben erhalten.
 
 # Prüfbericht – Notenblick 1.9.0

@@ -76,3 +76,13 @@ Alle fünf Schritte mit NVDA-Sprache/Braille prüfen: Halbjahresoptionen ohne do
 ## Ergänzung 1.19.0 – manuell noch abzunehmen
 
 Neue Installation mit Kürzen und Leistungsarten, Altstand ohne globale Vorgaben mit Runden/Kompakt sowie ausdrückliche Kurs-/Benutzervorgaben unter Windows x64 und ARM64 prüfen. Alle fünf Einrichtungsschritte mit gemeinsamer Fußzeile bei 100/150/200 Prozent Windows-Skalierung bedienen. Sechs Hauptlinks einschließlich Hilfe, alle vier Sicherungstabs mit NVDA-Sprache/Braille und Pfeilen/Pos1/Ende/Enter/Leertaste abnehmen. JSON- und TXT-Fehler, Datenordner öffnen, vollständige Sicherung, Datei-/Stand-/Arbeitskopiewiederherstellung, zweite Bestätigung, Schutzsicherung, Abbruch und Rückkehrfokus prüfen. Alle Exportformate/Schüler-ZIPs mit Microsoft Office, PDF-Anwendung und physischem Druck kontrollieren. Automatisierte Linux/Chromium/axe/CSS-Zoom-Prüfungen ersetzen diese tatsächliche Abnahme nicht.
+
+
+## Ergänzung 1.20.0 – manuell noch abzunehmen
+
+- Einrichtung abschließen und einmalige sichtbare/NVDA-Rückmeldung; alle fünf Schritte und gemeinsame Fußzeile.
+- Drei Speicherfunktionen einschließlich Beschreibungen, tatsächlichem Ergebnis und getrennten JSON-/TXT-/Ansichtsfehlern. Kein doppeltes NVDA-Erfolgssignal.
+- Datei-/Stand-/Arbeitskopie-Wiederherstellung: tatsächliche Phasen, keine kritische Unterbrechung, sinnvolle Fehlerrückkehr und Fokus ausschließlich auf Sicherung → Wiederherstellen. Übernommene Darstellung und Noten-Arbeitsbereiche bleiben erhalten; Notenübersicht nur auf Wunsch.
+- Automatische/geschützte Sicherungszahlen und Bytes. Bestätigte Bereinigung mit 0/1/30/31/50/vielen Ständen; fremde, geschützte, beschädigte und veränderte Dateien sowie Strom-/Dateisystemfehler berücksichtigen. Daten/Ansicht/TXT müssen erhalten bleiben.
+- Unabhängige Exportauswahl mit allen Formaten, Leistungsübersicht gegen vollständigen Fachbericht unterscheiden. Alle Noten immer als TXT-/Word-/PDF-ZIP; abgeschlossene Jahre, Kollisionen, leere und historische Daten kontrollieren.
+- Tatsächliche Fortschritte, Escape während Erstellung, Dateidialog-Abbruch, Größen-/Dokumentgrenze und Fokus prüfen. NVDA-Sprache/Braille, Windows-Skalierung, WebView2/UIA, Microsoft Office und realer Druck bleiben live zu prüfen.

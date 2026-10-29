@@ -21,8 +21,8 @@ A.reportTitle=ctx=>ctx.type==='overview'?'Notenübersicht':ctx.type==='pupil'?'S
 A.reportOrientation=r=>'Notenblick · '+r.subject+' · '+r.className+' · '+r.year.replace(/^Schuljahr\s+/i,'');
 A.reportGroupingDescription=grouping=>grouping==='date'?'Alle Einzelnoten werden gemeinsam nach Datum sortiert, neueste zuerst.':'Die Einzelnoten werden nach Leistungsarten gruppiert, innerhalb der Gruppen neueste zuerst.';
 A.batchStudents=function(ctx,includeExited=false){
- const course=A.data.courses.find(c=>c.id===ctx.courseId);if(!course)throw Error('Das gewählte Fach ist nicht mehr vorhanden.');
- return A.N.sorted(A.N.activeStudents(A.data,course,includeExited),ctx.prefs.sortBy,ctx.prefs.sortDir);
+ const d=ctx.data||A.data,course=d.courses.find(c=>c.id===ctx.courseId);if(!course)throw Error('Das gewählte Fach ist nicht mehr vorhanden.');
+ return A.N.sorted(A.N.activeStudents(d,course,includeExited),ctx.prefs.sortBy,ctx.prefs.sortDir);
 };
 A.batchEntryName=function(student,extension,used){
  let base=(student.first+'_'+student.last).normalize('NFKC').replace(/[<>:"/\\|?*\u0000-\u001f\u007f]/g,'_').replace(/[\s.]+/g,'_').replace(/^_+|_+$/g,'').slice(0,100)||'Schueler';
@@ -30,9 +30,10 @@ A.batchEntryName=function(student,extension,used){
  let name=base+'.'+extension,n=1;while(used.has(name.toLocaleLowerCase('de')))name=base+'_'+(++n)+'.'+extension;used.add(name.toLocaleLowerCase('de'));return name;
 };
 A.buildReport=function(ctx,options={}){
- const d=A.data,c=d.courses.find(c=>c.id===ctx.courseId);if(!c)throw Error('Das gewählte Fach ist nicht mehr vorhanden.');
+ if(['roster','assessment','legacy-assessment','complete','kind-complete'].includes(ctx.type))return A.buildExtendedReport(ctx,options);
+ const d=ctx.data||A.data,c=d.courses.find(c=>c.id===ctx.courseId);if(!c)throw Error('Das gewählte Fach ist nicht mehr vorhanden.');
  const cl=d.classes.find(x=>x.id===c.classId),year=d.years.find(y=>y.id===cl.yearId),w=ctx.w,prefs=ctx.prefs,all=options.scope==='all',remarks=options.remarks??ctx.type==='pupil',grouping=options.grouping||prefs.pupilOrder||'kind',name=s=>A.N.name(s,prefs.nameFormat),sorted=list=>A.N.sorted(list,prefs.sortBy,prefs.sortDir),cache=new Map();
- const calc=sid=>{if(!cache.has(sid))cache.set(sid,A.calculation(c,sid));return cache.get(sid);};
+ const calc=sid=>{if(!cache.has(sid))cache.set(sid,A.calculation(c,sid,d));return cache.get(sid);};
  const average=value=>value===null?text('–'):{text:A.N.show(value,c),number:Number(A.N.show(value,c).replace(',','.')),format:'average',precision:c.precision};
  const flags=a=>[a.isGfs?'GFS':'',A.N.Q.from(a.weight).cmp(1)!==0n?'Faktor '+a.weight.replace('.',','):''].filter(Boolean).join(', ');
  const pupil=s=>text(name(s)+(A.N.participationLabel(s,c)?' ('+A.N.participationLabel(s,c)+')':''));
@@ -58,13 +59,14 @@ A.buildReport=function(ctx,options={}){
   add('',['Bezeichnung',column('Datum','date'),'Leistungsart','Erfasst',column('Durchschnitt','average'),'Teilnahme','Gewichtung'],list.map(a=>{const p=A.N.assessmentProgress(d,c,a),members=A.N.assessmentStudents(d,c,a);return[text(a.title),A.reportDate(a.date),text(A.N.KINDS[a.kind]+(A.N.isOralIndividual(a)?' – Einzelnote':'')),text(p.captured+' von '+p.total),average(p.average),text(a.participantIds?sorted(members).map(name).join(', '):'Ganze Klasse'),text(flags(a))];}));
   if(remarks){const listRows=[];for(const a of list)for(const s of sorted(A.N.assessmentStudents(d,c,a)))if(a.results[s.id]?.note)listRows.push([text(a.title+', '+A.date(a.date)),pupil(s),text(a.results[s.id].note)]);if(listRows.length)add('Bemerkungen',['Leistung','Schüler','Bemerkung'],listRows);}
  }else if(ctx.type==='overview'){
-  const means=A.classAverages(c);report.studentIds=students.map(s=>s.id);add('', ['Schüler',...w.columns.map(k=>column(A.N.KINDS[k]||A.N.OVERALL[k],'average')),column('Gesamtdurchschnitt','average'),column(A.N.finalLabel(d,c,'half'),'grade'),column('Zeugnisnote','grade')],students.map(s=>{const r=calc(s.id),f=A.N.finalFor(d,c.id,s.id,'annual'),h=A.N.finalFor(d,c.id,s.id,'half'),halfType=A.N.halfType(d,c);return[pupil(s),...w.columns.map(k=>average(r.categories[k])),average(r.total),A.reportFinal(h,halfType),A.reportFinal(f,'annual')];}),{matrix:true,fixed:1,description:'Gesamtdurchschnitt: berechnet. Halbjahres- und Zeugnisnoten: manuell festgelegt. '+classNote,footer:[text('Klassendurchschnitt'),...w.columns.map(k=>average(means.categories[k])),average(means.total),average(means.finals.half),average(means.finals.annual)]});
+  const means=A.classAverages(c,d);report.studentIds=students.map(s=>s.id);add('', ['Schüler',...w.columns.map(k=>column(A.N.KINDS[k]||A.N.OVERALL[k],'average')),column('Gesamtdurchschnitt','average'),column(A.N.finalLabel(d,c,'half'),'grade'),column('Zeugnisnote','grade')],students.map(s=>{const r=calc(s.id),f=A.N.finalFor(d,c.id,s.id,'annual'),h=A.N.finalFor(d,c.id,s.id,'half'),halfType=A.N.halfType(d,c);return[pupil(s),...w.columns.map(k=>average(r.categories[k])),average(r.total),A.reportFinal(h,halfType),A.reportFinal(f,'annual')];}),{matrix:true,fixed:1,description:'Gesamtdurchschnitt: berechnet. Halbjahres- und Zeugnisnoten: manuell festgelegt. '+classNote,footer:[text('Klassendurchschnitt'),...w.columns.map(k=>average(means.categories[k])),average(means.total),average(means.finals.half),average(means.finals.annual)]});
   if(remarks){const rows=[];for(const student of students)for(const period of ['half','annual']){const f=A.N.finalFor(d,c.id,student.id,period);if(f?.note)rows.push([pupil(student),text(A.N.FINAL_TYPES[f.reportType]||A.N.finalLabel(d,c,period)),text(f.note)]);}if(rows.length)add('Bemerkungen zu Abschlussnoten',['Schüler','Abschluss','Bemerkung'],rows);}
  }else{
   const list=A.N.assessments(d,c.id).filter(a=>a.kind===ctx.kind&&(ctx.kind!=='oral'||!A.N.isOralIndividual(a))).sort((a,b)=>a.date.localeCompare(b.date)||a.title.localeCompare(b.title,'de')||a.id.localeCompare(b.id));report.recordIds=list.map(a=>a.id);report.studentIds=students.map(s=>s.id);
-  add('', ['Schüler',column('Durchschnitt','average'),...list.map(a=>column(a.title+', '+A.date(a.date)+(flags(a)?' ('+flags(a)+')':''),'grade'))],students.map(s=>[pupil(s),average(calc(s.id).categories[ctx.kind]),...list.map(a=>result(a,s.id))]),{matrix:true,fixed:2,description:classNote,footer:[text('Klassendurchschnitt'),average(A.classAverages(c).categories[ctx.kind]),...list.map(a=>average(A.assessmentStats(a,c).average))]});
+  add('', ['Schüler',column('Durchschnitt','average'),...list.map(a=>column(a.title+', '+A.date(a.date)+(flags(a)?' ('+flags(a)+')':''),'grade'))],students.map(s=>[pupil(s),average(calc(s.id).categories[ctx.kind]),...list.map(a=>result(a,s.id))]),{matrix:true,fixed:2,description:classNote,footer:[text('Klassendurchschnitt'),average(A.classAverages(c,d).categories[ctx.kind]),...list.map(a=>average(A.assessmentStats(a,c,d).average))]});
   if(remarks){const rows=[];for(const s of students)for(const a of list)if((!a.participantIds||a.participantIds.includes(s.id))&&a.results[s.id]?.note)rows.push([pupil(s),text(a.title+', '+A.date(a.date)),text(a.results[s.id].note)]);if(rows.length)add('Bemerkungen',['Schüler','Leistung','Bemerkung'],rows);}
  }
+ if(options.history)A.appendReportHistory(report,ctx,options);
  if(!report.sections.length)add('Einzelnoten',['Bezeichnung'],[]);
  report.landscape=A.reportLayout(report).landscape;return report;
 };
@@ -129,6 +131,8 @@ A.reportLayout=function(report){
 A.reportTables=report=>A.reportLayout(report).sections;
 A.reportColumnWeights=s=>s.widths||profiles(s,s.fontSize||10).map(p=>p.desired);
 A.reportScopeDescription=function(report){
+ if(report.type==='complete')return 'Der Bericht enthält sämtliche Einzelnoten, Leistungsbereiche, Durchschnitte und Abschlussnoten des Fachs.';
+ if(report.type==='kind-complete')return report.recordIds.length+' Leistungen mit sämtlichen Einzelnoten.';
  const all=report.scope==='Alle Einträge',n=report.type==='overview'||report.type==='matrix'?report.studentIds.length:report.recordIds.length,verb=n===1?'Es wird':'Es werden';
  if(!n)return 'Es sind keine passenden '+(report.type==='oral-individual'?'Einzelnoten':report.type==='overview'||report.type==='matrix'?'Schüler':'Leistungen')+' vorhanden.';
  if(report.type==='oral-individual')return verb+' '+(all&&n>1?'alle ':'')+n+' '+(n===1?'Einzelnote':'Einzelnoten')+' exportiert.';

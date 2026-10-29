@@ -181,17 +181,15 @@
           break;
         }
       case 'copy-weights':Notenblick.openWeightCopy();break;
-      case 'save':
-        Notenblick.remember();await Notenblick.workspacePromise;await Notenblick.save();
-        if(Notenblick.dirty)Notenblick.error('Bitte beachte die Meldung zum Speichern.','storage');
-        break;
-      case 'all-text':
-        {
-          if(Notenblick.fatalStart)throw Error('Bitte öffne zuerst einen lesbaren Notenstand oder stelle eine Sicherung wieder her.');
-          const files = Notenblick.N.exportsTXT(Notenblick.data);
-          await Notenblick.download('Notenblick-Alle-Noten.txt', '\ufeff' + Object.entries(files).map(([path, text]) => path + '\r\n\r\n' + text.replace(/^\ufeff/, '')).join('\r\n\r\n'));
-          break;
-        }
+      case 'save':{
+        const A=Notenblick,needed=A.dirty||A.workspaceFailed;A.feedback('status','');A.remember();await A.workspacePromise;await A.save();
+        if(A.workspaceFailed||A.dirty)A.error('Bitte beachte die Meldung zum Speichern.','storage');else{A.error('','storage');A.feedback('status',needed?'Alle Änderungen wurden gespeichert.':'Alle Noten sind bereits gespeichert.');}break;
+      }
+      case 'cleanup':await Notenblick.openCleanup();break;
+      case 'selected-export':{const s=Notenblick.backupExportSelection;Notenblick.output(s.content,Notenblick.independentExportContext(s.course,s.content));break;}
+      case 'all-notes':await Notenblick.openAllNotesExport(Notenblick.val('allNotesFormat'));break;
+      case 'restored-notes':Notenblick.activateGroup('main','notes',false,true);Notenblick.activateGroup('notes','overview',true,true);break;
+      case 'all-text':await Notenblick.openAllNotesExport('txt');break;
       case 'backup':
         await Notenblick.backup();
         break;
@@ -213,7 +211,7 @@
           break;
         }
       case 'regenerate':
-        await Notenblick.refreshTextLists(true);
+        {Notenblick.feedback('status','');const result=await Notenblick.refreshTextLists(false);if(result)Notenblick.feedback('status',result.written?'Automatische Notenlisten aktualisiert. Fehlende oder veraltete Dateien wurden erneuert.':'Automatische Notenlisten geprüft. Alle Dateien sind aktuell.');}
         break;
       case 'undo':
         {

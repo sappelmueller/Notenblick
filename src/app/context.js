@@ -24,25 +24,25 @@ Notenblick.defaults = () => ({
   pupil: ''
 });
 const calculations = new WeakMap();
-Notenblick.calculation = function(c, sid) {
-  let cache = calculations.get(Notenblick.data);
-  if (!cache) {cache = new Map(); calculations.set(Notenblick.data, cache);}
+Notenblick.calculation = function(c, sid, data=Notenblick.data) {
+  let cache = calculations.get(data);
+  if (!cache) {cache = new Map(); calculations.set(data, cache);}
   const key = c.id + ':' + sid;
-  if (!cache.has(key)) cache.set(key, Notenblick.N.calculate(Notenblick.data, c, sid));
+  if (!cache.has(key)) cache.set(key, Notenblick.N.calculate(data, c, sid));
   return cache.get(key);
 };
 // The class result always uses active course members, independently of the
 // displayed search, pagination and inclusion of former pupils. Keep the exact
 // individual results until NR.show applies the course's rounding for display.
-Notenblick.classAverages = function(c) {
- const A=Notenblick,results=A.N.activeStudents(A.data,c).map(s=>A.calculation(c,s.id));
- return {categories:Object.fromEntries(['written',...A.kinds].map(k=>[k,A.N.average(results.map(r=>({value:r.categories[k]})))])),total:A.N.average(results.map(r=>({value:r.total}))),finals:A.N.classFinalAverages(A.data,c)};
+Notenblick.classAverages = function(c,data=Notenblick.data) {
+ const A=Notenblick,results=A.N.activeStudents(data,c).map(s=>A.calculation(c,s.id,data));
+ return {categories:Object.fromEntries(['written',...A.kinds].map(k=>[k,A.N.average(results.map(r=>({value:r.categories[k]})))])),total:A.N.average(results.map(r=>({value:r.total}))),finals:A.N.classFinalAverages(data,c)};
 };
 const assessmentStats = new WeakMap();
-Notenblick.assessmentStats = function(a,c=Notenblick.getCourse()) {
- let cache=assessmentStats.get(Notenblick.data);if(!cache){cache=new Map();assessmentStats.set(Notenblick.data,cache);}
+Notenblick.assessmentStats = function(a,c=Notenblick.getCourse(),data=Notenblick.data) {
+ let cache=assessmentStats.get(data);if(!cache){cache=new Map();assessmentStats.set(data,cache);}
  if(!cache.has(a.id)){
-  cache.set(a.id,Notenblick.N.assessmentProgress(Notenblick.data,c,a));
+  cache.set(a.id,Notenblick.N.assessmentProgress(data,c,a));
  }
  return cache.get(a.id);
 };
@@ -65,7 +65,12 @@ Notenblick.error=function(message='',kind='input'){
   if(box.dataset.message===text)return;box.dataset.message=text;box.hidden=!text;
   box.innerHTML=text?`<div>${[...Notenblick.errors.values()].map(x=>`<p>${Notenblick.esc(x)}</p>`).join('')}</div>${Notenblick.b('dismiss-errors','Meldung schließen','','text-button')}`:'';
 };
-Notenblick.announce=function(text){Notenblick.$('#announcement').textContent=text;};
+Notenblick.announce=function(text){const A=Notenblick,el=A.$('#announcement');clearTimeout(A.announcementTimer);if(el.textContent===text){el.textContent='';A.announcementTimer=setTimeout(()=>el.textContent=text,30);}else el.textContent=text;};
+// Visible messages have no live semantics. The existing single status source
+// announces each completed action, including a repeated deliberate action.
+Notenblick.feedbacks={};
+Notenblick.feedback=function(key,text,announce=true){const A=Notenblick;A.feedbacks[key]=text;const el=(A.ui.main==='backup'&&A.ui.backupView===key?A.$('#backup-message-'+key):null)||A.$('#actionFeedback');if(el){el.textContent=text;el.hidden=!text;}if(text&&announce)A.announce(text);};
+Notenblick.paintFeedback=function(key){const el=Notenblick.$('#backup-message-'+key);if(el){el.textContent=Notenblick.feedbacks[key]||'';el.hidden=!el.textContent;}};
 Notenblick.status=function(text,state=''){Notenblick.saveState=state||'saved';if(Notenblick.ui.main==='backup')Notenblick.updateSaveDetails?.();};
 Notenblick.weightsText = c => Object.keys(Notenblick.N.overallLabels(c)).filter(k => Notenblick.N.Q.from(c.weights.overall[k]).n).map(k => Notenblick.N.overallLabels(c)[k] + ' ' + c.weights.overall[k] + ' %').join(' · ');
 Notenblick.val = id => Notenblick.$('#'+id).dataset.dateValue!==undefined?Notenblick.readDate(id):Notenblick.$('#'+id).value.trim();

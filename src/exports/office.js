@@ -14,7 +14,7 @@ A.zipWriter=function(maximum=A.exportMaximumBytes){
    if(closed)throw Error('Das Archiv ist bereits abgeschlossen.');
    if(!name||name.startsWith('/')||/[\\:\u0000-\u001f\u007f]/.test(name)||name.split('/').some(p=>!p||p==='.'||p==='..')||seen.has(name.toLocaleLowerCase('de')))throw Error('Ungültiger oder doppelter Archivname.');
    const filename=enc.encode(name),data=typeof value==='string'?enc.encode(value):value;
-   if(!(data instanceof Uint8Array)||filename.length>65535||count>=4096)throw Error('Ungültiger Archivinhalt.');
+   if(count>=4096)throw Error('Das Archiv enthält mehr als 4096 Dokumente. Bitte exportiere einzelne Fächer.');if(!(data instanceof Uint8Array)||filename.length>65535)throw Error('Ungültiger Archivinhalt.');
    if(offset+30+filename.length+data.length+centralSize+46+filename.length+22>maximum)throw Error('Das ZIP-Archiv ist zu groß. Bitte wähle ein anderes Ausgabeformat oder weniger Bemerkungen.');
    let crc=0xffffffff;for(const b of data)crc=crcTable[(crc^b)&255]^(crc>>>8);crc=(crc^0xffffffff)>>>0;
    const local=record(30,v=>{v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x800,true);v.setUint16(12,33,true);v.setUint32(14,crc,true);v.setUint32(18,data.length,true);v.setUint32(22,data.length,true);v.setUint16(26,filename.length,true);});
@@ -22,7 +22,7 @@ A.zipWriter=function(maximum=A.exportMaximumBytes){
    chunks.push(local,filename,data);directory.push(central,filename);offset+=local.length+filename.length+data.length;centralSize+=central.length+filename.length;seen.add(name.toLocaleLowerCase('de'));count++;
   },
   finish(asBytes=false){
-   if(closed||!count)throw Error('Das Archiv enthält keine Schülerberichte.');closed=true;
+   if(closed||!count)throw Error('Das Archiv enthält keine Dokumente.');closed=true;
    const end=record(22,v=>{v.setUint32(0,0x06054b50,true);v.setUint16(8,count,true);v.setUint16(10,count,true);v.setUint32(12,centralSize,true);v.setUint32(16,offset,true);});
    let result;if(asBytes){result=new Uint8Array(offset+centralSize+22);let at=0;for(const part of [...chunks,...directory,end]){result.set(part,at);at+=part.length;}}else result=new Blob([...chunks,...directory,end],{type:'application/zip'});chunks.length=directory.length=0;return result;
   },
