@@ -40,7 +40,7 @@ for name in manifest['documents']:
     for cell in row:assert compact(cell['text']) in full,(source.name,cell['text'][:70])
   for i,text in enumerate(texts):
    assert compact('Seite '+str(i+1)+' von '+str(len(texts))) in text,(source,i,'footer')
-   if i:assert compact('Notenblick · '+model['subject']+' · '+model['className']+' · '+model['year'].replace('Schuljahr ','')) in text,(source,i,'orientation')
+   if i:assert compact('Notenblick · '+model['subject']+' · Klasse '+model['className']+' · '+model['year']) in text,(source,i,'orientation')
    if model['type']=='matrix' and re.search(r'P\d{3}',text):
     assert any(all(label in text for label in head) for head in headers),(source,i,'missing complete table header')
     if i:continuations+=1

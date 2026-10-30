@@ -69,7 +69,10 @@ for item in manifest['archives']:
    elif item['format']=='docx':
     doc=Document(io.BytesIO(data));text=''.join(p.text for p in doc.paragraphs)+''.join(c.text for t in doc.tables for row in t.rows for c in row.cells);office.append(str(destination))
     with zipfile.ZipFile(io.BytesIO(data)) as package:
-     xml=ET.fromstring(package.read('word/document.xml'));assert all(t.find('w:tr/w:trPr/w:tblHeader',ns) is not None for t in xml.findall('.//w:tbl',ns));assert b'235B47' in package.read('word/document.xml');styles=ET.fromstring(package.read('word/styles.xml'));assert styles.find("w:style[@w:styleId='Heading2']/w:pPr/w:spacing",ns).get('{'+ns['w']+'}before')=='200'
+     xml=ET.fromstring(package.read('word/document.xml'));tables=xml.findall('.//w:tbl',ns);assert all(t.find('w:tr/w:trPr/w:tblHeader',ns) is not None for t in tables)
+     if tables:assert b'235B47' in package.read('word/document.xml')
+     else:assert report.get('empty') is True and not report['sections'] and 'Für dieses Fach sind noch keine Noten erfasst.' in text
+     styles=ET.fromstring(package.read('word/styles.xml'));assert styles.find("w:style[@w:styleId='Heading1']/w:rPr/w:color",ns).get('{'+ns['w']+'}val')=='235B47';assert styles.find("w:style[@w:styleId='Heading2']/w:pPr/w:spacing",ns).get('{'+ns['w']+'}before')=='200'
    else:
     reader=PdfReader(io.BytesIO(data));text=''.join(p.extract_text() for p in reader.pages);assert reader.trailer['/Root']['/Lang']=='de-DE';assert reader.trailer['/Root'].get('/StructTreeRoot');pdfs.append(str(destination))
    if item['format']!='txt':

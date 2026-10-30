@@ -74,7 +74,7 @@ for name in names:
    if re.search(r'P\d{3}',text) or 'Klassendurchschnitt' in text and i:
     assert any(all(compact(label) in text for label in head) for head in heads),(source,i,'missing full header')
     if i:continuations+=1
-   if i:assert compact('Notenblick · '+model['subject']+' · '+model['className']+' · '+model['year'].replace('Schuljahr ','')) in text
+   if i:assert compact('Notenblick · '+model['subject']+' · Klasse '+model['className']+' · '+model['year']) in text
   # Check actual selectable word boxes, including wide reports and the final row.
   bbox=subprocess.run(['pdftotext','-bbox-layout',str(source),'-'],capture_output=True,text=True,timeout=30)
   assert bbox.returncode==0
