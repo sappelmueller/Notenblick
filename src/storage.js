@@ -82,7 +82,7 @@
       const manifestPath='Sicherungen/Notenlistenverzeichnis.json',normal=t=>t.replace(/^\ufeff/,''),textPath=p=>this.textPrefix?this.textPrefix+'/'+p:p;
       let old={};try{old=json(await readAt(this.root,manifestPath))||{};}catch(e){if(!missing(e)&&!(e instanceof SyntaxError))throw e;}
       const safe=p=>typeof p==='string'&&!p.includes('\\')&&!/[\u0000-\u001f:]/.test(p)&&!p.startsWith('/')&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&p.split('/')[0].toLocaleLowerCase('de')!=='daten'&&(p.split('/').length===3&&p.endsWith('/Schülerliste.txt')||p.split('/').length===4&&p.endsWith('/Notenübersicht.txt')||p.split('/').length===5&&['Schülernoten','Mündliche Noten','Gesicherter Altbestand',...Object.values(N.KINDS)].includes(p.split('/')[3])&&p.endsWith('.txt'));
-      const files=N.exportsTXT(d),previous=[13,14,16,17].includes(old.version)&&Array.isArray(old.files)?[...new Set([...old.files,...(Array.isArray(old.retained)?old.retained:[])])].filter(safe):[],hashes={};
+      const files=N.exportsTXT(d),previous=[13,14,16,17,18].includes(old.version)&&Array.isArray(old.files)?[...new Set([...old.files,...(Array.isArray(old.retained)?old.retained:[])])].filter(safe):[],hashes={};
       // A pending directory can never be mistaken for a complete update.
       await writeAt(this.root,manifestPath,JSON.stringify({version:N.TEXT_LIST_VERSION,state:'updating',commitId:d.commitId,files:[...new Set([...previous,...Object.keys(files)])],hashes:old.version===N.TEXT_LIST_VERSION?old.hashes||{}:{}}));
       let written=0;for(const[p,text]of Object.entries(files)){

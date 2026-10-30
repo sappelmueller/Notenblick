@@ -2,10 +2,10 @@
 from pathlib import Path
 import subprocess
 
-QUICK=['domain-storage','transfers','ui','new-features','v140','v150','v160','v170','v180','v190','v1100','v1110','v1120','v1130','v1140','v1150','v1160','v1170','v1180','v1190','v1200','v1201','v1202','v1203']
-STORAGE=['view-storage','v150-storage','v160-storage','v170-storage','v180-storage','v190-storage','v1110-storage','v1120-storage','v1130-storage','v1140-storage','v1160-storage','v1170-storage','v1190-storage','v1200-storage','v1201-storage','v1202-storage','v1203-storage','workflow']
-BROWSER=['browser','v170-browser','v180-browser','v190-browser','v1100-browser','v1110-browser','v1120-browser','v1130-browser','v1140-browser','v1150-browser','v1160-browser','v1170-browser','v1180-browser','v1190-browser','v1200-browser','v1201-browser','v1202-browser','v1203-browser']
-FILES=['export-files','office-schema','v1120-files','v1130-files','v1140-files','v1170-files','v1200-files','v1201-files','v1202-files','v1203-files']
+QUICK=['domain-storage','transfers','ui','new-features','v140','v150','v160','v170','v180','v190','v1100','v1110','v1120','v1130','v1140','v1150','v1160','v1170','v1180','v1190','v1200','v1201','v1202','v1203','v1210']
+STORAGE=['view-storage','v150-storage','v160-storage','v170-storage','v180-storage','v190-storage','v1110-storage','v1120-storage','v1130-storage','v1140-storage','v1160-storage','v1170-storage','v1190-storage','v1200-storage','v1201-storage','v1202-storage','v1203-storage','v1210-storage','workflow']
+BROWSER=['browser','v170-browser','v180-browser','v190-browser','v1100-browser','v1110-browser','v1120-browser','v1130-browser','v1140-browser','v1150-browser','v1160-browser','v1170-browser','v1180-browser','v1190-browser','v1200-browser','v1201-browser','v1202-browser','v1203-browser','v1210-browser']
+FILES=['export-files','office-schema','v1120-files','v1130-files','v1140-files','v1170-files','v1200-files','v1201-files','v1202-files','v1203-files','v1210-files']
 ALL=['infrastructure',*QUICK,'native-host',*STORAGE,'large','loader',*BROWSER,*FILES]
 DEPENDENCIES={name:['native-host'] for name in [*STORAGE,'large']}
 DEPENDENCIES.update({
@@ -20,7 +20,8 @@ DEPENDENCIES.update({
  'v1180-browser':['v1180'], 'v1190-browser':['v1190'],
  'v1170-files':['v1170','v1170-browser'], 'v1200-browser':['v1200'], 'v1200-files':['v1200','v1200-browser'],
  'v1201-storage':['native-host','v1201'], 'v1201-browser':['v1201'], 'v1201-files':['native-host','v1200','v1201','v1201-storage','v1200-browser'],
- 'v1203-storage':['native-host','v1203'], 'v1203-browser':['v1203'], 'v1203-files':['native-host','v1203','v1203-browser'],
+ 'v1210-storage':['native-host','v1210'], 'v1210-browser':['v1210'], 'v1210-files':['native-host','v1210','v1210-browser'],
+ 'v1203-storage':['native-host','v1203'], 'v1203-browser':['v1203'], 'v1203-files':['native-host','v1203','v1203-browser','v1210-browser'],
  'v1202-storage':['native-host','v1202'], 'v1202-browser':['v1202'], 'v1202-files':['v1202','v1202-browser'],
  'v1140-files':['v1140','v1140-browser']})
 

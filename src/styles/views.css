@@ -499,3 +499,12 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 .operation-progress{padding:8px 0;min-width:0}.operation-progress p{overflow-wrap:anywhere}.operation-progress progress{display:block;width:100%;height:18px;accent-color:var(--accent);margin:20px 0}
 @media(forced-colors:active){.action-feedback{border:1px solid CanvasText;border-left-width:4px}.operation-progress progress{forced-color-adjust:auto}}
 @media(max-width:420px){body:has(#backup:not([hidden])) main{padding-inline:12px}body:has(#backup:not([hidden])) .header-inner{padding-inline:12px;gap:8px}body:has(#backup:not([hidden])) .brand{font-size:1.05rem}#backup h1{font-size:1.45rem}#backup h2{font-size:1.2rem}#backupTabs a{padding-inline:8px;font-size:.85rem}#backup .button{padding-inline:10px}}
+
+/* The existing form/table flow also serves decimal point entry. */
+.point-settings {margin: 12px 0 18px; padding: 12px; border: 1px solid var(--border, #a7b7ad); border-radius: 6px;}
+.point-settings > .field {max-width: 34rem;}
+.point-settings .form-grid > * {min-width: 0;}
+.point-settings input, .point-settings select {max-width: 100%;}
+.point-summary {font-weight: 600; margin: 12px 0 4px;}
+.entry-heading > .button-row {flex-wrap: wrap; align-self: start;}
+.entry-table td {vertical-align: top;}

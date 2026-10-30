@@ -1,0 +1,32 @@
+# Prüfbericht Notenblick 1.21.0
+
+Stand: 30. Oktober 2026. Ausgangspunkt: privates sappelmueller/Notenblick, ID 1432518047, GitHub main b213ea3f97c3d8d137be353320672bbe139a086e, Baum c35b92c886455a18a07a284b464408aabb7cc0db. Die wiederhergestellte Quellkopie wurde für alle 261 Dateien einschließlich Dateimodi bytegenau mit diesem Baum verglichen. GitHub Actions deaktiviert. Keine echten Schülerdaten verwendet.
+
+## Umsetzung und Rechenvertrag
+
+Eine zentrale Erweiterung der bestehenden exakten Bruchrechnung liefert die Leistungsnote. Linear verbindet 100 Prozent/Note 1 mit null Punkten/Note 6. Mit Knick verbindet diese Endpunkte über die einstellbare Note-4-Grenze. Individuelle Mindestgrenzen sind streng absteigende Prozentwerte für 1 bis 5; unterhalb der fünften Grenze gilt 6. Zwischen den Stützpunkten wird linear gerechnet. Alle Eingaben unterstützen bis zu vier Dezimalstellen, auch mit Komma. Bei exakt gleichem Abstand zur nächsten Notenstufe gilt die höhere Note. Mindestgrenzen verhindern eine unzulässige Verbesserung durch Rundung. Vorschau und PDF zeigen die tatsächlichen Intervalle mit ein-/ausgeschlossenen Grenzen, nötigenfalls als exakten Bruch.
+
+Die bestehende grade-Spalte enthält weiterhin ausschließlich die gewertete Note; die Durchschnittsrechnung einschließlich Gewichtungen, GFS und Abschlussnoten wurde nicht umgebaut. Punktzahlen, automatische und manuelle Leistungsnoten sowie aufbewahrte direkte Eingaben/Status werden getrennt im vorhandenen Datensatz gehalten. Schlüsseländerungen zeigen die Anzahl betroffener berechneter oder gewerteter Noten, bestätigen belegte Leistungen und verweigern ein Maximum unter gespeicherten Punkten. Direkte Noteneingabe bleibt Standard; Hausaufgaben und Heftführung bleiben ohne Punktefunktion.
+
+## Tatsächlich ausgeführte gezielte Prüfungen
+
+- 158.484 exakte Umrechnungen gegen eine unabhängige Auswahl der nächsten erlaubten Notenstufe. Alle zwölf Schlüssel-/Abstufungskombinationen, sieben Maxima einschließlich ungerader und dezimaler Werte, null/volle/leere Punkte, Monotonie und exakte Grenzintervalle. Knickgrenze unmittelbar darunter und darauf, exakte Halbwerte, fehlerhafte Grenzen und Punkte sowie von der Schlüsselstufe unabhängige manuelle Noten.
+- Browser mit echten Tastaturereignissen: Tabellen- und Einzelansicht, Eingabe/Umschalt+Eingabe, Suchfilter, Listenränder, Fehlerfokus, unveränderte Eingabeknoten und jeweils eine Statusmeldung pro Punktänderung. Die einzige Livequelle wandert bei modalen mündlichen Eingaben in den Dialogbaum und kehrt beim Schließen zurück. Fünf Fenster-/CSS-Zoomkombinationen ohne axe-Regelverletzung. Keine tatsächlich gehörte NVDA-Sprachausgabe.
+- Produktive C#-Speicherung, bytegleiches Öffnen alter 1.20.3-Daten, Neustart, Sicherung, Schutzstand vor Wiederherstellung und vollständige Wiederherstellung der neuen Felder. Automatische TXT-Listen werden inhaltlich mit dem gemeinsamen Generator verglichen. Fünf einzelne Dateiformate und drei vollständige ZIP-Ausgaben durch die native Validierung und Dateischreibung.
+- 15 echte Berichtsfälle in TXT, CSV, Word, Excel und PDF, zusätzlich drei vollständige ZIPs mit jeweils elf Dokumenten. Punkt- und Notenwerte unabhängig mit python-docx, openpyxl, pypdf und CSV-Leser geöffnet und verglichen. Word zusätzlich in LibreOffice gerendert; PDF-Seitenzahl, Seitenfüße, Tags und Textgrenzen geprüft. 41 Open-XML-Pakete und 26 PDF/UA-Dateien ohne Regelverletzung. Alle drei Archive CRC-geprüft und durch die produktive native ZIP-Prüfung bytegleich gespeichert.
+
+Die fünf kurzen Leistungsfälle benötigen jeweils eine PDF- und eine gerenderte Word-Seite. Der repräsentative Schülerbericht benötigt mit und ohne optionale Punkte je eine Seite und dieselben fünf Tabellen. Die drei Zehntel-Notenschlüssel umfassen jeweils zwei Seiten mit regulärer Tabellenfortsetzung. Diese Zahlen sind synthetische Prüffälle und keine allgemeine Seitenbegrenzung.
+
+## Erhaltene Funktionen und Ausgaben
+
+Gemeinsame Noten-, Klassenarbeits-, Test-, mündliche und Fachberichte erhalten ihre Notenspalten. Punkte werden in den Einzeldateien einer Leistung ausgegeben und in Schülerberichten ausschließlich nach ausdrücklicher Wahl; im Gesamtexport bleiben Schülerberichte ohne Punkte. Die bestehenden ZIP-Pfade und die native Sicherheitsprüfung bleiben maßgeblich. Nur einzelne mündliche Berichte unterdrücken die redundante Durchschnittszeile bei weniger als zwei benoteten Personen. Normale TXT-Leistungsberichte sind auf eine Zeile je Schüler verkürzt; Bemerkungen bleiben zugeordnet. Word-/PDF-Renderer, Ränder, Schriftgrößen und Seitenlogik unverändert.
+
+Alte JSON-Daten bleiben lesbar und werden nicht in Punkte umgerechnet. Die automatische TXT-Verzeichnisversion 18 ergänzt nur Punktdaten; Dateien ohne Punkte bleiben inhaltlich gleich. Bisherige Manifestversionen werden weiterhin sicher berücksichtigt, veränderte oder fremde Dateien nicht gelöscht. Portable Struktur EXE / Programm / Daten, Offline-Betrieb, Registerkarten und zentrale Sicherungs-/Wiederherstellungsabläufe bleiben erhalten.
+
+## Verbindlicher vollständiger Freigabenachweis
+
+Die Auslieferung erfolgt ausschließlich nach `TZ=UTC python3 dev/manage.py release`: 78 Testgruppen und 85 Schritte ohne Ergebniswiederverwendung, einschließlich aller bisherigen Rechen-/Speicher-/Browser-/Exportprüfungen, 180.000 synthetischer Ergebnisse, Office/PDF/UA/Druck, produktivem Lader, zwei frischen bytegleichen Windows-Builds und vollständigem Archiv-/Entpack-/Starttest. Der abschließende Git-Commit hält den tatsächlichen Laufpfad, Quellen-/Werkzeughash, getesteten Baum und beide Archivprüfsummen fest. `status --report` muss Quelle, Index, Werkzeuge und Laufzeitausgabe als aktuell bestätigen; jeder Fehler verhindert die Auslieferung.
+
+## Offene Liveabnahme
+
+Tatsächliche Windows-Starts, Windows UIA, reale Windows-Skalierung, Microsoft Word, NVDA-Sprache/Braille und physischer Druck wurden hier nicht ausgeführt. Chromium-Status-/Fokusprüfungen und PDF/UA-Regelprüfungen ersetzen diese Liveabnahme nicht. Die ZIP-Ausgabe ist entsprechend als unter Linux automatisiert geprüfter Entwicklungskandidat zu behandeln. Die konkrete Windows-Prüfliste steht in WINDOWS-PRUEFUNG.md.
