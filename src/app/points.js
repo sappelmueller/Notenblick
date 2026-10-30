@@ -26,8 +26,30 @@ A.bindPointSettings=function(a,p='point',inline=true){
   if(impact.occupied)A.confirm('Eingabeart und Notenschlüssel ändern',A.pointImpactText(impact)+(mode==='points'&&!A.N.isPoints(current)?' Direkte vorhandene Noten bleiben als manuelle Festlegungen erhalten.':'')+' Die bisherigen Eingaben beider Eingabearten bleiben gesichert.',commit,'Übernehmen');else commit();
  }catch(e){A.error(e.message);}});
 };
-A.pointKeyReport=function(a){const c=A.getCourse(),cl=A.getClass();return A.finishReport({type:'point-key',kind:a.kind,title:'Notenschlüssel – '+a.title,subject:c.name,className:cl.name,year:A.schoolYear(A.getYear()),created:A.today(),scope:'Notenschlüssel',intro:[A.date(a.date),...A.N.pointKeyDetails(a.pointKey),'Brüche in Punktgrenzen sind exakte Werte. „Mehr als“ schließt die Grenze aus.'],sections:[{title:'Geltende Grenzen',columns:[{label:'Note'},{label:'Punkte'}],rows:A.N.pointBoundaries(a.pointKey).map(r=>[A.reportCell(r.grade),A.reportCell(r.range)])}],recordIds:[a.id],studentIds:[],remarks:false,precision:2});};
-A.showPointKey=function(a){const report=A.pointKeyReport(a),html=`<p>${A.esc(a.title+' · '+A.date(a.date))}</p>${report.intro.slice(1).map(t=>'<p>'+A.esc(t)+'</p>').join('')}<div class="table-wrap"><table aria-label="Geltende Grenzen"><thead><tr><th scope="col">Note</th><th scope="col">Punkte</th></tr></thead><tbody>${report.sections[0].rows.map(r=>`<tr><th scope="row">${A.esc(r[0].text)}</th><td>${A.esc(r[1].text)}</td></tr>`).join('')}</tbody></table></div>`;if(A.$('#dialog').open){A.confirmInDialog('Notenschlüssel','',()=>{},'','Schließen');A.$('#dialogContent').innerHTML=html;A.$('#dialogSave').hidden=true;A.setDialogSize('medium');}else A.modal('Notenschlüssel',html,null,'Schließen',{size:'medium'});};
+A.pointKeySteps=new Map();
+A.pointStepLabels={'1':'Ganze Punkte','0.5':'Halbe Punkte','0.1':'Zehntelpunkte'};
+A.pointTableRows=function(key,step='1'){
+ const N=A.N,k=N.validatePointKey(key);if(!Object.hasOwn(A.pointStepLabels,step))throw Error('Bitte gültige Punkteschritte wählen.');
+ const maximum=N.Q.from(k.maximum),increment=N.Q.from(step),units=maximum.div(increment),count=units.n/units.d;
+ if(count>100000n)throw Error('Diese Tabelle ist zu umfangreich. Bitte wähle größere Punkteschritte oder prüfe die gewünschte Punktzahl im Eingabefeld.');
+ const values=[maximum];for(let i=count;i>=0n;i--){const q=new N.Q(i).mul(increment);if(q.cmp(maximum)!==0n)values.push(q);}
+ return values.map(q=>{const points=N.exactPointText(q);return {points,grade:N.pointGradeText(N.pointGrade(points,k),k)};});
+};
+A.pointKeyReport=function(a,step=A.pointKeySteps.get(a.id)||'1'){
+ const c=A.getCourse(),cl=A.getClass();return A.finishReport({type:'point-key',kind:a.kind,title:'Notenschlüssel – '+a.title,subject:c.name,className:cl.name,year:A.schoolYear(A.getYear()),created:A.today(),scope:'',intro:[A.date(a.date),A.N.pointKeySummary(a.pointKey),...(a.pointKey.type==='custom'?a.pointKey.limits.map((p,i)=>'Note '+(i+1)+' ab '+p.replace('.',',')+' %'):[]),'Punkteschritte: '+A.pointStepLabels[step]],sections:[{title:'',columns:[{label:'Punkte'},{label:'Note'}],rows:A.pointTableRows(a.pointKey,step).map(r=>[A.reportCell(r.points),A.reportCell(r.grade)])}],recordIds:[a.id],studentIds:[],remarks:false,precision:2});
+};
+A.showPointKey=function(a){
+ const html='<p class="point-summary">'+A.esc(A.N.pointKeySummary(a.pointKey))+'</p><div class="field"><label for="keyCheck">Punktzahl</label><input id="keyCheck" inputmode="decimal" autocomplete="off" aria-describedby="keyCheckResult"><p id="keyCheckResult">Noch keine Punktzahl eingegeben.</p></div><div class="field"><label for="keyStep">Punkteschritte</label><select id="keyStep">'+Object.entries(A.pointStepLabels).map(([v,l])=>A.opt(v,l,A.pointKeySteps.get(a.id)||'1')).join('')+'</select></div><div id="keyTable"></div><button type="button" class="button" id="keyPdf">Notenschlüssel als PDF speichern</button>';
+ const title='Notenschlüssel – '+a.title;if(A.$('#dialog').open){A.confirmInDialog(title,'',()=>{},'','Schließen');A.$('#dialogContent').innerHTML=html;A.$('#dialogSave').hidden=true;A.setDialogSize('medium');}else A.modal(title,html,null,'Schließen',{size:'medium',focus:'keyCheck'});
+ let page=0;const render=()=>{try{
+  const rows=A.pointTableRows(a.pointKey,A.val('keyStep')),size=200,start=page*size;
+  A.$('#keyTable').innerHTML='<div class="table-wrap"><table aria-label="Punkte und Noten"><thead><tr><th scope="col">Punkte</th><th scope="col">Note</th></tr></thead><tbody>'+rows.slice(start,start+size).map(r=>'<tr><th scope="row">'+A.esc(r.points)+'</th><td>'+A.esc(r.grade)+'</td></tr>').join('')+'</tbody></table></div>'+(rows.length>size?'<p>'+(start+1)+' bis '+Math.min(start+size,rows.length)+' von '+rows.length+' Punktwerten</p><div class="button-row"><button type="button" class="button" id="keyPrev"'+(page===0?' disabled':'')+'>Vorherige Punktwerte</button><button type="button" class="button" id="keyNext"'+(start+size>=rows.length?' disabled':'')+'>Weitere Punktwerte</button></div>':'');
+  for(const[id,delta]of [['keyPrev',-1],['keyNext',1]])A.$('#'+id)?.addEventListener('click',()=>{page+=delta;render();(A.$('#'+id+':not(:disabled)')||A.$('#keyStep')).focus();});
+ }catch(e){A.$('#keyTable').textContent=e.message;}};
+ A.$('#keyCheck').addEventListener('input',e=>{const el=e.target;try{const grade=A.N.pointGrade(el.value,a.pointKey);A.$('#keyCheckResult').textContent=grade===null?'Noch keine Punktzahl eingegeben.':'Note: '+A.N.pointGradeText(grade,a.pointKey);el.removeAttribute('aria-invalid');}catch{A.$('#keyCheckResult').textContent='Bitte einen Wert zwischen 0 und '+a.pointKey.maximum.replace('.',',')+' eingeben.';el.setAttribute('aria-invalid','true');}});
+ A.$('#keyStep').addEventListener('change',()=>{A.pointKeySteps.set(a.id,A.val('keyStep'));page=0;render();});
+ A.$('#keyPdf').addEventListener('click',async()=>{try{await A.exportFile({}, {},'pdf',A.pointKeyReport(a,A.val('keyStep')));}catch(e){A.$('#dialogError').textContent=e.message;A.$('#dialogError').hidden=false;}});render();A.$('#keyCheck').focus();
+};
 A.pointAnnouncement=function(a,r){return r.points===null||r.points===undefined?'Keine Punktebewertung.':r.points.replace('.',',')+' von '+a.pointKey.maximum.replace('.',',')+' Punkten, '+(r.grade!==null?'Note '+A.N.pointGradeText(r.grade,a.pointKey)+(r.manualGrade!=null?', manuell festgelegt':''):'berechnet Note '+A.N.pointGradeText(r.calculatedGrade,a.pointKey)+', '+A.N.STATUS[r.status])+'.';};
 // Reuse the one polite live source. Focus is placed first, then its queued
 // announcement is updated in the next frame; no per-cell live regions.
@@ -46,14 +68,20 @@ A.bindOralPoints=function(a,old,record){
  const preview=()=>{const mode=A.val('oralKeyMode'),points=mode==='points';if(mode!==lastMode){if(points)directValue=A.val('q-grade');else A.$('#q-grade').value=directValue;lastMode=mode;}A.$('#q-directField').hidden=points;A.$('#q-pointField').hidden=!points;if(!record)A.$('#q-pointStatusField').hidden=!points;if(!points)return;
   try{const {key}=A.readPointSettings('oralKey');A.$('#q-keySummary').textContent=A.N.pointKeySummary(key);const calculated=A.N.pointGrade(A.val('q-points'),key),manual=A.oralDraft?.manualEdited?(A.val('q-manual')?A.N.grade(A.val('q-manual')):null):old.manualGrade??(!A.N.isPoints(a)?old.grade:null);
    A.$('#q-calculated').textContent='Berechnet: '+A.N.pointGradeText(calculated,key);A.$('#q-effective').textContent=manual!=null?'Festgelegt: '+manual.replace('.',',')+' · Manuell festgelegt':'';A.$('#q-reset').disabled=calculated===null;A.$('#q-points').removeAttribute('aria-invalid');return {calculated,manual,key};
-  }catch{A.$('#q-calculated').textContent='Bitte gültige Punkte und einen vollständigen Notenschlüssel eingeben.';}
+  }catch{A.$('#q-calculated').textContent='Bitte einen Wert zwischen 0 und '+A.val('oralKeyMaximum')+' eingeben und den Notenschlüssel prüfen.';}
  };
  const snapshot=()=>({id:A.oralDraft?.id||a.id,kind:'oral',pointKey:A.readPointSettings('oralKey').key,title:A.val('q-title')||'Mündliche Note',date:A.val('q-date')||A.today()});
  const error=e=>{A.$('#dialogError').textContent=e.message;A.$('#dialogError').hidden=false;};
  A.$('#q-keyShow').addEventListener('click',()=>{try{A.showPointKey(snapshot());}catch(e){error(e);}});
  A.$('#q-keyPdf').addEventListener('click',async()=>{try{await A.exportFile({}, {}, 'pdf',A.pointKeyReport(snapshot()));}catch(e){error(e);}});
  A.updateOralPoints=preview;
+ let keyValues;A.$('#oralKeyEdit').addEventListener('click',()=>{keyValues=[...A.$('#oralKeySettings').querySelectorAll('input,select')].map(el=>el.value);A.$('#oralKeyConfiguration').hidden=false;A.$('#oralKeyMode').focus();});
+ A.$('#oralKeyCancel').addEventListener('click',()=>{[...A.$('#oralKeySettings').querySelectorAll('input,select')].forEach((el,i)=>el.value=keyValues[i]);A.$('#oralKeyMode').dispatchEvent(new Event('change'));A.$('#oralKeyConfiguration').hidden=true;preview();A.$('#oralKeyEdit').focus();});
+ A.$('#oralKeyApply').addEventListener('click',()=>{try{const settings=A.readPointSettings('oralKey'),impact=A.N.pointKeyImpact(a,settings.mode,settings.key);if(impact.invalid.length)throw Error('Gespeicherte Punkte liegen über dem neuen Maximum.');const apply=()=>{A.oralDraft.keyConfirmed=true;A.$('#oralKeyConfiguration').hidden=true;A.$('#oralKeyEdit').textContent=settings.mode==='points'?'Notenschlüssel ändern':'Eingabeart ändern';preview();A.$('#oralKeyEdit').focus();};if(record&&impact.occupied&&!A.oralDraft.keyConfirmed)A.confirmInDialog('Notenschlüssel ändern',A.pointImpactText(impact),apply,'Übernehmen');else apply();}catch(e){error(e);}});
+
  for(const el of A.$('#oralKeySettings').querySelectorAll('input,select'))el.addEventListener('change',()=>{if(A.oralDraft)A.oralDraft.keyConfirmed=false;preview();});
+ A.$('#q-points').addEventListener('input',preview);
+ A.$('#q-points').addEventListener('keydown',e=>{if(e.key==='Tab'){if(!preview()){e.preventDefault();return;}A.submitModal('stay');}});
  A.$('#q-points').addEventListener('change',()=>{if(!preview())A.$('#q-points').setAttribute('aria-invalid','true');});
  A.$('#q-change').addEventListener('click',()=>{A.$('#q-manualField').hidden=false;A.$('#q-manual').focus();});
  A.$('#q-manual').addEventListener('input',()=>{if(A.oralDraft)A.oralDraft.manualEdited=true;});A.$('#q-manual').addEventListener('change',preview);

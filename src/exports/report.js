@@ -3,6 +3,7 @@
 const text=value=>({text:String(value??'')});
 A.reportCell=text;
 A.reportDate=value=>({text:A.date(value),date:value});
+A.reportDateLine=r=>['assessment','legacy-assessment','point-key'].includes(r.type)?r.scope:'Erstellt am '+A.date(r.created)+(r.scope?' · '+r.scope:'');
 A.reportGrade=value=>value===null||value===undefined?text('–'):{text:String(value).replace('.',','),number:Number(value)};
 A.reportFinal=(f,type)=>!f?text('–'):A.N.finalConflict(f,type)?text(A.N.finalText(f.grade,f.reportType||type)+' (bisher: '+(A.N.FINAL_TYPES[f.reportType]||'Altbestand')+')'):{text:A.N.finalText(f.grade,f.reportType||type),number:Number(f.grade),finalType:f.reportType||type};
 A.selectAssessments=(data,cid,kind='all',term='')=>A.N.assessments(data,cid,'all').filter(a=>(kind==='all'||a.kind===kind)&&a.title.toLocaleLowerCase('de').includes(term.toLocaleLowerCase('de'))).sort((a,b)=>b.date.localeCompare(a.date)||a.title.localeCompare(b.title,'de')||a.id.localeCompare(b.id));

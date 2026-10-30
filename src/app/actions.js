@@ -234,7 +234,7 @@
           Notenblick.announce('Die letzte Änderung wurde zurückgenommen.');
           break;
         }
-      case 'oral-record-export':{const aid=id;if(Notenblick.readonly())Notenblick.closeModal();else await Notenblick.submitModal();if(!Notenblick.$('#dialog').open){const record=Notenblick.data.assessments.find(x=>x.id===aid);Notenblick.output('oral',Notenblick.singleAssessmentContext(record));}break;}
+      case 'oral-record-export':{const aid=id;if(Notenblick.readonly()||Notenblick.$('#oralEditFields')?.hidden)Notenblick.closeModal({submitted:true});else await Notenblick.submitModal('export');if(!Notenblick.$('#dialog').open){const record=Notenblick.data.assessments.find(x=>x.id===aid);Notenblick.output('oral',Notenblick.singleAssessmentContext(record));}break;}
       case 'assessment-export':{const record=Notenblick.data.assessments.find(x=>x.id===id);Notenblick.output(record.kind,Notenblick.singleAssessmentContext(record));break;}
       case 'point-key':Notenblick.showPointKey(Notenblick.data.assessments.find(x=>x.id===id));break;
       case 'point-key-pdf':{const r=Notenblick.pointKeyReport(Notenblick.data.assessments.find(x=>x.id===id));await Notenblick.exportFile({}, {}, 'pdf',r);break;}
