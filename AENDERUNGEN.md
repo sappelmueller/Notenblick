@@ -8,6 +8,7 @@
 - Sofortige ungespeicherte Punkte-Notenvorschau, einschließlich berechneter und manuell festgelegter Note. Übernahme über Eingabe, Umschalt+Eingabe und Tabulator nutzt die zentrale Berechnung und eine vorhandene Statusquelle. Keine Ansage je Tastendruck.
 - Einheitliche Aktionen Noten bearbeiten / Fertig, Leistung exportieren und Schließen. Kurze Erklärungen zur Eingabeart. Fokus nach Fertig, Dialogen und Schließen stabilisiert; ungültige ARIA-Verknüpfung ausgeblendeter Leistungen entfernt.
 - Einzelberichte mit kurzen Punkten, einer Datumsangabe, ohne unnötige Noten-Überschrift und mit leerem Durchschnittspunktefeld. Filter nur bei tatsächlicher Einschränkung. Word, PDF, Druck, Excel, TXT und CSV behalten das gemeinsame Modell; ZIP-Struktur, grüne Gestaltung und gemeinsame Notenübersichten erhalten.
+- Bereits mit Tab erfasste neue mündliche Noten behalten Punkte und direkte Eingaben bei späterem Eingabeartwechsel. Zusatzangaben bleiben beim ursprünglichen Schüler; ungültige Eingaben blockieren einen Schülerwechsel. Die Vorschau zeigt nur tatsächlich vorhandene manuelle Festlegungen.
 - Zentrale Bruchrechnung, Punkteumrechnung, Gewichtung, Noten, JSON-/TXT-Sicherung und portable Struktur unverändert. Neue Gruppen v1211, v1211-browser und v1211-files, ausschließlich synthetische Daten. Windows-/NVDA-/Microsoft-Word-Liveabnahme gesondert offen.
 
 # Notenblick 1.21.0
