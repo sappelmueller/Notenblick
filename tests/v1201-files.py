@@ -63,7 +63,11 @@ for item in manifest['archives']:
    if item['format']=='txt':
     text=data.decode('utf-8');assert text==m['txt'];assert not re.search(r'\S {4,}\S',text)
     if report['type'] in ['assessment','legacy-assessment']:
-     mean=report['sections'][-1]['footer'][1]['text'];assert 'Klassendurchschnitt: '+mean in text
+     footer=report['sections'][-1].get('footer')
+     if footer:
+      mean=footer[1]['text'];assert 'Klassendurchschnitt: '+mean in text
+     else:
+      assert report['kind']=='oral' and 'Klassendurchschnitt:' not in text
      for row in report['sections'][-1]['rows']:
       for cell in row:assert compact(cell['text']) in compact(text),(name,cell['text'])
    elif item['format']=='docx':

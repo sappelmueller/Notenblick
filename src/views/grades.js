@@ -87,7 +87,7 @@
   };
   Notenblick.renderEntry = function renderEntry(kind, type) {
     const a = Notenblick.data.assessments.find(a => a.id === Notenblick.W().selected[kind]),
-      list = Notenblick.entryList(a),
+      list = Notenblick.pointEntryList(a),
       w = Notenblick.W();
     if (!a) return;
     const current=Notenblick.$('#currentEntryPupil');if(current)current.hidden=type==='single'||!current.textContent;
@@ -117,7 +117,7 @@
     el.textContent=Notenblick.progressText(a);
     if(Notenblick.$('#matrixTable'))Notenblick.refreshTable('matrix');
     const cell=Notenblick.$('[data-progress="'+a.id+'"]');if(cell)cell.innerHTML=Notenblick.progressCell(a);
-    const next=Notenblick.$('[data-action="next-empty"]');if(next)next.disabled=!Notenblick.entryList(a).some(s=>!Notenblick.N.hasEntry(a.results[s.id]));
+    const next=Notenblick.$('[data-action="next-empty"]');if(next)next.disabled=!Notenblick.pointEntryList(a).some(s=>!Notenblick.N.hasEntry(a.results[s.id]));
   };
   Notenblick.refreshTable = function refreshTable(kind) {
     const c = Notenblick.getCourse();

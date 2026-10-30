@@ -58,9 +58,9 @@ N.pointKeyImpact=function(a,mode,key){
   if(N.isPoints(a)&&mode==='direct'){r.pointStatus=r.status;r.grade=Object.hasOwn(r,'directGrade')?r.directGrade:r.grade;r.status=r.directStatus||(r.grade!==null?'graded':r.status==='graded'?'open':r.status);}
   if(mode==='points'){
    if(!N.isPoints(a)){r.directGrade=r.grade;r.directStatus=r.status;if(r.manualGrade===undefined&&r.points==null&&r.grade!==null)r.manualGrade=r.grade;r.status=r.pointStatus||r.status;}
-   try{Object.assign(r,N.pointResult(next,r,r.points??''));}catch{invalid.push(sid);continue;}
+   try{Object.assign(r,N.pointResult(next,r,r.points??'',{status:r.status}));}catch{invalid.push(sid);continue;}
   }
-  if(r.calculatedGrade!==old.calculatedGrade||r.grade!==old.grade||r.status!==old.status)changes.push(sid);next.results[sid]=r;
+  if((r.calculatedGrade??null)!==(old.calculatedGrade??null)||r.grade!==old.grade||r.status!==old.status)changes.push(sid);next.results[sid]=r;
  }
  return {assessment:next,invalid,changes,occupied};
 };
