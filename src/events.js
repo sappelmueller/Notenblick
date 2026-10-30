@@ -69,7 +69,7 @@ document.addEventListener('change', e => {
   const el = e.target;
   try {
     if(el.dataset.setting){const key=el.dataset.setting,value=key==='visibleKinds'?[...document.querySelectorAll('[data-setting=visibleKinds]:checked')].map(x=>x.value):el.value;if(!Notenblick.setPreference(key,value)){if(key==='visibleKinds')el.checked=Notenblick.prefs.visibleKinds.includes(el.value);else el.value=String(Notenblick.prefs[key]);}return;}
-    if(el.dataset.entryPupil){if(!Notenblick.canLeave())return;const kind=el.dataset.entryPupil,a=Notenblick.data.assessments.find(x=>x.id===Notenblick.W().selected[kind]);Notenblick.W().studentIndex=Notenblick.entryList(a).findIndex(s=>s.id===el.value);Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.$('#entryPupil-'+kind).focus();return;}
+    if(el.dataset.entryPupil){if(!Notenblick.canLeave())return;const kind=el.dataset.entryPupil,a=Notenblick.data.assessments.find(x=>x.id===Notenblick.W().selected[kind]);Notenblick.W().studentIndex=Notenblick.pointEntryList(a).findIndex(s=>s.id===el.value);Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.$('#entryPupil-'+kind).focus();return;}
     if(el.id==='oralAreaView'){const w=Notenblick.W();if(!Notenblick.canLeave()){el.value=w.oralAreaView;return;}w.oralAreaView=el.value;w.assessmentWorkOpen=false;Notenblick.renderAssessments(Notenblick.kinds.includes(w.view)?w.view:'');Notenblick.$('#oralSettings').open=true;Notenblick.$('#oralAreaView').focus();Notenblick.remember();return;}
     if(el.id==='oralView'){if(Notenblick.canLeave()){Notenblick.showOral(el.value);Notenblick.$('#oralView').focus();}else el.value=Notenblick.W().oralView;return;}
     if(['oralStudentFilter','oralSort'].includes(el.id)){Notenblick.W()[el.id==='oralSort'?'oralSort':'oralStudent']=el.value;Notenblick.W().oralPage=0;Notenblick.refreshOralTable();Notenblick.remember();return;}
@@ -122,7 +122,7 @@ document.addEventListener('keydown', e => {
     if (el.getAttribute('aria-invalid') === 'true') {el.focus();return;}
     const {kind,mode:type,entry}=el.dataset;
     if(type==='single'){
-      const w=Notenblick.W(),list=Notenblick.entryList(Notenblick.data.assessments.find(a=>a.id===el.dataset.assessment)),next=w.studentIndex+(e.shiftKey?-1:1);
+      const w=Notenblick.W(),list=Notenblick.pointEntryList(Notenblick.data.assessments.find(a=>a.id===el.dataset.assessment)),next=w.studentIndex+(e.shiftKey?-1:1);
       if(next>=0&&next<list.length){w.studentIndex=next;Notenblick.renderEntry(kind,type);Notenblick.remember();Notenblick.$('#entry-'+kind+'-single [data-entry='+entry+']')?.focus();}
     }else{
       const inputs=[...document.querySelectorAll('#entry-'+kind+'-table [data-entry='+entry+']')],at=inputs.indexOf(el);inputs[at+(e.shiftKey?-1:1)]?.focus();

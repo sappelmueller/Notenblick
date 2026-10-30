@@ -32,7 +32,7 @@
       case 'current-year':Notenblick.ui.historicalYear='';Notenblick.ui.year=Notenblick.ui.workingYear;Notenblick.ui.class='';Notenblick.ui.course='';Notenblick.normalizeContext();Notenblick.rendered={};Notenblick.renderNotes();Notenblick.remember();Notenblick.$('#class').focus();break;
       case 'assessment-list': Notenblick.returnToAssessmentList(); break;
       case 'next-empty': {
-        const w=Notenblick.W(),record=Notenblick.data.assessments.find(x=>x.id===w.selected[kind]),list=Notenblick.entryList(record);
+        const w=Notenblick.W(),record=Notenblick.data.assessments.find(x=>x.id===w.selected[kind]),list=Notenblick.pointEntryList(record);
         if(!record||!list.length)break;let next=-1;
         for(let step=1;step<=list.length;step++){const at=(w.studentIndex+step)%list.length;if(!Notenblick.N.hasEntry(record.results[list[at].id])){next=at;break;}}
         if(next>=0){w.studentIndex=next;Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.$('#entry-'+kind+'-single [data-entry=points],#entry-'+kind+'-single [data-entry=grade]')?.focus();}break;
@@ -153,7 +153,7 @@
       case 'next':
         {
           const w = Notenblick.W();
-          w.studentIndex = Math.max(0, Math.min(Notenblick.entryList(Notenblick.data.assessments.find(x=>x.id===w.selected[kind])).length - 1, w.studentIndex + (a === 'next' ? 1 : -1)));
+          w.studentIndex = Math.max(0, Math.min(Notenblick.pointEntryList(Notenblick.data.assessments.find(x=>x.id===w.selected[kind])).length - 1, w.studentIndex + (a === 'next' ? 1 : -1)));
           Notenblick.renderEntry(kind, 'single');
           Notenblick.remember();
           Notenblick.$('#singleName-' + kind)?.focus();
