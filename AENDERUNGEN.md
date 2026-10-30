@@ -1,3 +1,15 @@
+# Notenblick 1.21.1
+
+- Vorhandene Leistungen öffnen eine nicht bearbeitbare Ergebnisansicht. Noten bearbeiten und Fertig wechseln im selben Bereich; Schließen führt zur auslösenden Tabellenposition zurück. Neue Leistungen und Fortsetzen beginnen direkt mit der Bearbeitung. Genau ein unterer Arbeitsbereich, Schutz ausstehender und ungültiger Eingaben.
+- Jede neue Bearbeitung startet mit Alle Schüler. Einzeln bleibt verfügbar und wird innerhalb derselben Bearbeitung bei Aktualisierungen erhalten. Mündliche Einzelnoten nutzen dieselben Zustände im vorhandenen Dialog; Anzeigen bleibt auch bei abgeschlossenen Daten möglich.
+- Neue dauerhafte Einstellung Beim Öffnen eines Fachs: zuletzt verwendeter Bereich oder immer Übersicht. Echte Fachöffnungen und Schnellzugriffe berücksichtigen sie; Programmstart, normale Tabs, Zur Notenübersicht und Fortsetzen behalten ihre eigene Bedeutung.
+- Punkteinstellungen eingeklappt, Zusammenfassung und Notenschlüssel anzeigen bleiben erreichbar. Notenschlüssel ändern nutzt dieselben Felder, Validierung und Bestätigungen. Abbruch verändert keine Schlüssel.
+- Verständliche Tabelle Punkte / Note statt technischer Grenzintervalle. Ganze, halbe und Zehntelpunktschritte betreffen nur die Darstellung; Punktzahl prüft Zwischenwerte ohne Speicherung. Dasselbe Modell im Notenschlüssel-PDF mit natürlicher Seitenfortsetzung und wiederholten Köpfen.
+- Sofortige ungespeicherte Punkte-Notenvorschau, einschließlich berechneter und manuell festgelegter Note. Übernahme über Eingabe, Umschalt+Eingabe und Tabulator nutzt die zentrale Berechnung und eine vorhandene Statusquelle. Keine Ansage je Tastendruck.
+- Einheitliche Aktionen Noten bearbeiten / Fertig, Leistung exportieren und Schließen. Kurze Erklärungen zur Eingabeart. Fokus nach Fertig, Dialogen und Schließen stabilisiert; ungültige ARIA-Verknüpfung ausgeblendeter Leistungen entfernt.
+- Einzelberichte mit kurzen Punkten, einer Datumsangabe, ohne unnötige Noten-Überschrift und mit leerem Durchschnittspunktefeld. Filter nur bei tatsächlicher Einschränkung. Word, PDF, Druck, Excel, TXT und CSV behalten das gemeinsame Modell; ZIP-Struktur, grüne Gestaltung und gemeinsame Notenübersichten erhalten.
+- Zentrale Bruchrechnung, Punkteumrechnung, Gewichtung, Noten, JSON-/TXT-Sicherung und portable Struktur unverändert. Neue Gruppen v1211, v1211-browser und v1211-files, ausschließlich synthetische Daten. Windows-/NVDA-/Microsoft-Word-Liveabnahme gesondert offen.
+
 # Notenblick 1.21.0
 
 - Eingabeart pro Klassenarbeit, Test und mündlicher Klassen-/Einzelleistung; direkte Noten bleiben Standard. Punkte mit individuellen Maximalwerten, Linear, Mit Knick oder individuellen Mindestgrenzen und ganzen, halben, Viertel- oder Zehntelnoten. Eine zentrale exakte Bruchrechnung, genau eine Rundung, gleiche Regeln für Vorschau, Speicherung und Export.

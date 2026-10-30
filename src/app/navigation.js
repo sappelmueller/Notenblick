@@ -77,7 +77,7 @@ Notenblick.chooseContext=function({classId,courseId,historical=false,openNotes=f
  if(cl.yearId!==A.ui.year&&!historical)return false;
  if(historical){A.ui.year=cl.yearId;A.ui.historicalYear=cl.yearId===A.ui.workingYear?'':cl.yearId;}
  A.ui.class=cl.id;A.ui.course=course?.id||A.ui.selections[cl.yearId+':'+cl.id]?.course||'';A.normalizeContext();
- if(previous!==A.ui.course){A.openCourseWorkspace();A.openedNotesCourse=A.ui.course;}A.ui.selections[cl.yearId+':'+cl.id]={course:A.ui.course};A.rendered={};if(openNotes)A.activateGroup('main','notes',false,true);else A.renderNotes();A.remember();return true;
+ if(previous!==A.ui.course||openNotes&&A.ui.main!=='notes'){A.openCourseWorkspace();A.openedNotesCourse=A.ui.course;}A.ui.selections[cl.yearId+':'+cl.id]={course:A.ui.course};A.rendered={};if(openNotes)A.activateGroup('main','notes',false,true);else A.renderNotes();A.remember();return true;
 };
 Notenblick.openCourseWorkspace=function(){const A=Notenblick;A.entrySession=null;if(A.prefs.courseOpenView==='overview'){A.W().view='overview';A.W().assessmentWorkOpen=false;}};
 Notenblick.fillSelection=function(yid=Notenblick.ui.year,cid=Notenblick.ui.class,fid=Notenblick.ui.course){

@@ -21,8 +21,8 @@ DEPENDENCIES.update({
  'v1180-browser':['v1180'], 'v1190-browser':['v1190'],
  'v1170-files':['v1170','v1170-browser'], 'v1200-browser':['v1200'], 'v1200-files':['v1200','v1200-browser'],
  'v1201-storage':['native-host','v1201'], 'v1201-browser':['v1201'], 'v1201-files':['native-host','v1200','v1201','v1201-storage','v1200-browser'],
- 'v1210-storage':['native-host','v1210','v1211'], 'v1210-browser':['v1210','v1211'], 'v1210-files':['native-host','v1210','v1210-browser','v1211-browser'],
- 'v1203-storage':['native-host','v1203'], 'v1203-browser':['v1203'], 'v1203-files':['native-host','v1203','v1203-browser','v1210-browser','v1211-browser'],
+ 'v1210-storage':['native-host','v1210'], 'v1210-browser':['v1210'], 'v1210-files':['native-host','v1210','v1210-browser'],
+ 'v1203-storage':['native-host','v1203'], 'v1203-browser':['v1203'], 'v1203-files':['native-host','v1203','v1203-browser','v1210-browser'],
  'v1202-storage':['native-host','v1202'], 'v1202-browser':['v1202'], 'v1202-files':['v1202','v1202-browser'],
  'v1140-files':['v1140','v1140-browser']})
 

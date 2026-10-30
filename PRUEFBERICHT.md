@@ -1,3 +1,7 @@
+# Aktueller Stand 1.21.1
+
+Funktionsumfang, Prüfmethoden, Dokumentvergleich und Grenzen stehen in [docs/PRUEFBERICHT-1.21.1.md](docs/PRUEFBERICHT-1.21.1.md). Der abschließende Git-Commit dokumentiert den frischen vollständigen Release-Lauf, den getesteten Baum und die Archivprüfsummen. Nur ein aktueller erfolgreicher Release-Nachweis erlaubt die Auslieferung. Historische Nachweise bleiben nachfolgend erhalten.
+
 # Aktueller Stand 1.21.0
 
 Der Funktions- und Prüfumfang steht in [docs/PRUEFBERICHT-1.21.0.md](docs/PRUEFBERICHT-1.21.0.md). Der abschließende Git-Commit dokumentiert den frischen Release-Lauf und die Archivprüfsummen. Historische Nachweise bleiben erhalten.
