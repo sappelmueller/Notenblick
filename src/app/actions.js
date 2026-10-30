@@ -13,7 +13,7 @@
       case 'matrix-page':{const w=Notenblick.W();w.matrixPages[kind]=Math.max(0,(w.matrixPages[kind]||0)+Number(el.dataset.step));Notenblick.refreshTable('matrix');Notenblick.remember();const b=Notenblick.$('[data-action=matrix-page][data-step="'+el.dataset.step+'"]');(b&&!b.disabled?b:Notenblick.$('#matrixTitle'))?.focus();break;}
       case 'settings-course-weights':Notenblick.weightsDialog(Notenblick.data.courses.find(c=>c.id===Notenblick.ui.weightCourse));break;
       case 'oral-review':Notenblick.reviewOral(id||Notenblick.ui.course);break;
-      case 'edit-oral':{const a=Notenblick.data.assessments.find(a=>a.id===id);Notenblick.W().oralFocusId=id;Notenblick.quickOral(a.participantIds[0],a);break;}
+      case 'edit-oral':{const a=Notenblick.data.assessments.find(a=>a.id===id);Notenblick.W().oralFocusId=id;Notenblick.quickOral(a.participantIds[0],a,el.dataset.edit==='true');break;}
       case 'oral-student':Notenblick.openOralStudent(id,el.dataset.record);break;
       case 'return-oral':Notenblick.returnToOral();break;
       case 'oral-page':Notenblick.W().oralPage=Math.max(0,Notenblick.W().oralPage+Number(el.dataset.step));Notenblick.refreshOralTable();Notenblick.remember();Notenblick.$('#oralNotesTitle')?.focus();break;
