@@ -13,7 +13,7 @@ const server=http.createServer((req,res)=>{const p=path.resolve(root,'.'+new URL
  await page.locator('#exportOutput').focus();await page.keyboard.press('End');assert.equal(await page.locator('#exportOutput').inputValue(),'batch');assert.equal(await page.evaluate(()=>document.activeElement.id),'exportOutput');await description('Es werden 6 Schülerberichte in einem ZIP-Archiv erstellt.');
  await page.locator('#exportExited').check();await description('Es werden 8 Schülerberichte in einem ZIP-Archiv erstellt.');
  await page.locator('#exportOutput').focus();await page.keyboard.press('Home');await description('Es wird ein Bericht für den ausgewählten Schüler erstellt.');assert.equal(await page.evaluate(()=>document.activeElement.id),'exportOutput');
- assert.equal(await page.locator('#exportExitedField').isVisible(),false);assert.equal(await page.locator('#exportScopeHint').isVisible(),true);assert.equal(await page.locator('#exportGroupingHint').isVisible(),true);
+ assert.equal(await page.locator('#exportExitedField').isVisible(),true);assert.equal(await page.locator('#exportScopeHint').isVisible(),true);assert.equal(await page.locator('#exportGroupingHint').isVisible(),true);
  await page.locator('#exportGrouping').focus();await page.keyboard.press('End');assert.equal(await page.evaluate(()=>document.activeElement.id),'exportGrouping');assert.equal(await page.locator('#exportGroupingHint').textContent(),'Alle Einzelnoten werden gemeinsam nach Datum sortiert, neueste zuerst.');
  await page.locator('#exportFormat').selectOption('print');assert.equal(await page.locator('#exportPrintHint').textContent(),'Empfohlen: A4 hoch. Bitte in der Druckvorschau prüfen.');assert.equal(await page.locator('#exportFormat').getAttribute('aria-describedby'),'exportPageInfo');
  await page.addScriptTag({content:axe});for(const width of [1280,640,320])for(const zoom of [1,1.25,1.5,2]){
@@ -23,8 +23,8 @@ const server=http.createServer((req,res)=>{const p=path.resolve(root,'.'+new URL
  }
  await page.evaluate(()=>document.documentElement.style.zoom=1);await page.setViewportSize({width:1280,height:900});await page.screenshot({path:path.join(out,'dialog-single.png')});
  // Tab follows document order, including export/cancel, and stays within modal.
- await page.locator('#exportOutput').focus();const tab=[];for(let i=0;i<7;i++){tab.push(await page.evaluate(()=>(document.activeElement.id||document.activeElement.textContent.trim())));await page.keyboard.press('Tab');}
- assert.deepEqual(tab,['exportOutput','exportEntries','exportGrouping','exportRemarks','exportFormat','Abbrechen','dialogSave']);await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>document.activeElement.dataset.action),'output');
+ await page.locator('#exportOutput').focus();const tab=[];for(let i=0;i<9;i++){tab.push(await page.evaluate(()=>(document.activeElement.id||document.activeElement.textContent.trim())));await page.keyboard.press('Tab');}
+ assert.deepEqual(tab,['exportOutput','exportPupil','exportExited','exportEntries','exportGrouping','exportRemarks','exportFormat','Abbrechen','dialogSave']);await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>document.activeElement.dataset.action),'output');
  checks.push('Chromium-Accessibility-Baum: beide Ausgabe-Beschreibungen, echte Tastaturwahl, dynamisch 6/8 Schüler, stabile Fokusse und Tab-Reihenfolge; zwölf Fenster-/Zoomfälle mit axe ohne Verstöße');
  const manifest=JSON.parse(fs.readFileSync(path.join(out,'manifest.json')));
  await page.evaluate(()=>{window.print=()=>{window.printCalls=(window.printCalls||0)+1;};window.NRDesktop={available:true,call:async op=>{if(op!=='print-preview')throw Error('unexpected');window.previewCalls=(window.previewCalls||0)+1;return true;}};});
