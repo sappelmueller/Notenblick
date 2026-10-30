@@ -67,9 +67,9 @@ A.pointEntryList=a=>A.entryList(a).filter(s=>!A.N.isPoints(a)||A.matchesStudent(
 A.bindOralPoints=function(a,old,record){
  let lastMode=A.val('oralKeyMode'),directValue=(A.N.isPoints(a)?old.directGrade??old.grade:old.grade)?.replace('.',',')||'';
  const preview=()=>{const mode=A.val('oralKeyMode'),points=mode==='points';if(mode!==lastMode){if(points)directValue=A.val('q-grade');else A.$('#q-grade').value=directValue;lastMode=mode;}A.$('#q-directField').hidden=points;A.$('#q-pointField').hidden=!points;if(!record)A.$('#q-pointStatusField').hidden=!points;if(!points)return;
-  try{const {key}=A.readPointSettings('oralKey');A.$('#q-keySummary').textContent=A.N.pointKeySummary(key);const calculated=A.N.pointGrade(A.val('q-points'),key),manual=A.oralDraft?.manualEdited?(A.val('q-manual')?A.N.grade(A.val('q-manual')):null):old.manualGrade??(!A.N.isPoints(a)?old.grade:null);
+  try{const {key}=A.readPointSettings('oralKey');A.$('#q-keySummary').textContent=A.N.pointKeySummary(key);const calculated=A.N.pointGrade(A.val('q-points'),key),base=A.data.assessments.find(x=>x.id===A.oralDraft?.id)||a,projected=A.N.pointKeyImpact(base,'points',key).assessment.results[A.val('oralStudent')]||old,manual=A.oralDraft?.manualEdited?(A.val('q-manual')?A.N.grade(A.val('q-manual')):null):projected.manualGrade??null;
    A.$('#q-calculated').textContent='Berechnet: '+A.N.pointGradeText(calculated,key);A.$('#q-effective').textContent=manual!=null?'Festgelegt: '+manual.replace('.',',')+' · Manuell festgelegt':'';A.$('#q-reset').disabled=calculated===null;A.$('#q-points').removeAttribute('aria-invalid');return {calculated,manual,key};
-  }catch{A.$('#q-calculated').textContent='Bitte einen Wert zwischen 0 und '+A.val('oralKeyMaximum')+' eingeben und den Notenschlüssel prüfen.';}
+  }catch{A.$('#q-calculated').textContent=A.val('oralKeyMaximum')?'Bitte einen Wert zwischen 0 und '+A.val('oralKeyMaximum')+' eingeben und den Notenschlüssel prüfen.':'Bitte maximale Punktzahl und Notenschlüssel festlegen.';}
  };
  const snapshot=()=>({id:A.oralDraft?.id||a.id,kind:'oral',pointKey:A.readPointSettings('oralKey').key,title:A.val('q-title')||'Mündliche Note',date:A.val('q-date')||A.today()});
  const error=e=>{A.$('#dialogError').textContent=e.message;A.$('#dialogError').hidden=false;};
@@ -78,7 +78,7 @@ A.bindOralPoints=function(a,old,record){
  A.updateOralPoints=preview;
  let keyValues;A.$('#oralKeyEdit').addEventListener('click',()=>{keyValues=[...A.$('#oralKeySettings').querySelectorAll('input,select')].map(el=>el.value);A.$('#oralKeyConfiguration').hidden=false;A.$('#oralKeyMode').focus();});
  A.$('#oralKeyCancel').addEventListener('click',()=>{[...A.$('#oralKeySettings').querySelectorAll('input,select')].forEach((el,i)=>el.value=keyValues[i]);A.$('#oralKeyMode').dispatchEvent(new Event('change'));A.$('#oralKeyConfiguration').hidden=true;preview();A.$('#oralKeyEdit').focus();});
- A.$('#oralKeyApply').addEventListener('click',()=>{try{const settings=A.readPointSettings('oralKey'),impact=A.N.pointKeyImpact(a,settings.mode,settings.key);if(impact.invalid.length)throw Error('Gespeicherte Punkte liegen über dem neuen Maximum.');const apply=()=>{A.oralDraft.keyConfirmed=true;A.$('#oralKeyConfiguration').hidden=true;A.$('#oralKeyEdit').textContent=settings.mode==='points'?'Notenschlüssel ändern':'Eingabeart ändern';preview();A.$('#oralKeyEdit').focus();};if(record&&impact.occupied&&!A.oralDraft.keyConfirmed)A.confirmInDialog('Notenschlüssel ändern',A.pointImpactText(impact),apply,'Übernehmen');else apply();}catch(e){error(e);}});
+ A.$('#oralKeyApply').addEventListener('click',()=>{try{const settings=A.readPointSettings('oralKey'),base=A.data.assessments.find(x=>x.id===A.oralDraft?.id)||a,impact=A.N.pointKeyImpact(base,settings.mode,settings.key);if(impact.invalid.length)throw Error('Gespeicherte Punkte liegen über dem neuen Maximum.');const apply=()=>{A.oralDraft.keyConfirmed=true;A.$('#oralKeyConfiguration').hidden=true;A.$('#oralKeyEdit').textContent=settings.mode==='points'?'Notenschlüssel ändern':'Eingabeart ändern';preview();A.$('#oralKeyEdit').focus();};if(impact.occupied&&!A.oralDraft.keyConfirmed)A.confirmInDialog('Notenschlüssel ändern',A.pointImpactText(impact),apply,'Übernehmen');else apply();}catch(e){error(e);}});
 
  for(const el of A.$('#oralKeySettings').querySelectorAll('input,select'))el.addEventListener('change',()=>{if(A.oralDraft)A.oralDraft.keyConfirmed=false;preview();});
  A.$('#q-points').addEventListener('input',preview);
@@ -88,7 +88,19 @@ A.bindOralPoints=function(a,old,record){
  A.$('#q-manual').addEventListener('input',()=>{if(A.oralDraft)A.oralDraft.manualEdited=true;});A.$('#q-manual').addEventListener('change',preview);
  A.$('#q-reset').addEventListener('click',()=>{A.$('#q-manual').value='';A.oralDraft.manualEdited=true;preview();A.$('#q-points').focus();});
  A.$('#q-points').addEventListener('keydown',async e=>{if(e.key!=='Enter')return;e.preventDefault();e.stopPropagation();if(!preview()){A.$('#q-points').setAttribute('aria-invalid','true');A.$('#dialogError').textContent='Bitte einen Wert zwischen 0 und '+A.val('oralKeyMaximum')+' eingeben und den Notenschlüssel prüfen.';A.$('#dialogError').hidden=false;return;}await A.submitModal(e.shiftKey?'previous':true);});
- for(const el of A.$('#dialogContent').querySelectorAll('input,select,textarea'))el.addEventListener('input',()=>{if(A.oralDraft?.committed){if(el.id==='oralStudent'){A.oralDraft={id:A.N.id(),committed:false};A.$('#q-points').value='';A.$('#q-grade').value='';A.$('#q-note').value='';A.$('#q-manual').value='';A.$('#q-manualField').hidden=true;preview();}else{A.oralDraft.committed=false;A.oralDraft.editExisting=true;}}});
+ // A captured new note keeps its original pupil even when the capture dialog
+ // stays open after Tab or at the list boundary. Commit pending edits before
+ // starting another pupil; reuse the same transaction and retain invalid input.
+ for(const el of A.$('#dialogContent').querySelectorAll('input,select,textarea'))el.addEventListener('input',()=>{
+  const draft=A.oralDraft;if(!draft)return;
+  if(el.id==='oralStudent'&&A.data.assessments.some(x=>x.id===draft.id)){
+   const chosen=el.value;el.value=draft.student;
+   const begin=()=>{if(A.oralDraft!==draft||!draft.committed||!A.$('#dialog').open)return;A.oralDraft={id:A.N.id(),committed:false};el.value=chosen;A.$('#q-points').value='';A.$('#q-grade').value='';A.$('#q-note').value='';A.$('#q-manual').value='';A.$('#q-manualField').hidden=true;A.updateOralNext();preview();};
+   if(draft.committed)begin();else A.submitModal('stay').then(begin);return;
+  }
+  if(draft.committed){draft.committed=false;draft.editExisting=true;}
+ });
+
  if(A.readonly()){A.$('#q-change').disabled=true;A.$('#q-reset').disabled=true;}
  preview();
 };

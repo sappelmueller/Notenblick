@@ -14,7 +14,7 @@ Notenblick.origin = function origin(el) {
 };
 Notenblick.setDialogSize=size=>{Notenblick.$('#dialog').dataset.size=['small','medium','wide'].includes(size)?size:'medium';};
 Notenblick.modal = function modal(title, content, fn, label = 'Speichern', options = {}) {
-  Notenblick.opener = {
+  if(!options.reuse)Notenblick.opener = {
     element: document.activeElement,
     key: Notenblick.origin(document.activeElement),
     course:Notenblick.ui.course,main:Notenblick.ui.main,windowX:window.scrollX,windowY:window.scrollY,
@@ -35,9 +35,13 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
   Notenblick.$('#dialog .dialog-actions [data-action=close]').textContent = fn ? 'Abbrechen' : 'Schließen';
   Notenblick.$('#dialogError').hidden = true;
   Notenblick.submitDialog = fn;
-  Notenblick.$('#dialog').showModal();
-  const initial=options.focus?document.getElementById(options.focus):null;
-  (initial&&!initial.disabled&&!initial.closest('[hidden]')&&Notenblick.$('#dialogContent').contains(initial)?initial:[...Notenblick.$('#dialogContent').querySelectorAll('input:not([type=checkbox]):not([type=hidden]):not(:disabled),select:not(:disabled),textarea:not(:disabled)')].find(el=>!el.closest('[hidden]'))||Notenblick.$('#dialog .close')).focus();
+  const dialog=Notenblick.$('#dialog'),initial=options.focus?document.getElementById(options.focus):null;
+  if(options.focus==='dialogTitle')initial.tabIndex=-1;
+  const target=initial&&!initial.disabled&&!initial.closest('[hidden]')&&(Notenblick.$('#dialogContent').contains(initial)||initial===Notenblick.$('#dialogTitle'))?initial:[...Notenblick.$('#dialogContent').querySelectorAll('input:not([type=checkbox]):not([type=hidden]):not(:disabled),select:not(:disabled),textarea:not(:disabled)')].find(el=>!el.closest('[hidden]'))||Notenblick.$('#dialog .close');
+  const autofocus=!!options.focus&&!target.hasAttribute('autofocus');if(autofocus)target.setAttribute('autofocus','');
+  if(options.reuse){Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=false;Notenblick.$('#dialogNext').disabled=false;}
+  if(!options.reuse||!dialog.open)dialog.showModal();
+  target.focus();if(autofocus)target.removeAttribute('autofocus');
 };
 Notenblick.closeModal = function closeModal(options={}) {
   if(!Notenblick.$('#dialog').open)return;
