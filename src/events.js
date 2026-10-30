@@ -48,7 +48,7 @@ document.addEventListener('focusin',e=>{if(e.target.dataset.entry){const s=Noten
 document.addEventListener('input', e => {
   const el = e.target;
   if (el.dataset.entry) {
-    Notenblick.pending.add(el.id);
+    Notenblick.pending.add(el.id);if(el.dataset.entry==='points')Notenblick.previewPoints(el);
     return;
   }
   if (el.dataset.filter === 'search') {

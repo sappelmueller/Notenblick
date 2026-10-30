@@ -20,7 +20,7 @@
       case 'choose-shortcuts':Notenblick.shortcutDialog();break;
       case 'quick-course':{if(Notenblick.chooseContext({courseId:id,historical:true,openNotes:true})){const link=Notenblick.$('#quick-'+id);if(link&&!link.closest('[hidden]'))link.focus();else Notenblick.$('#noteTabs [aria-selected=true]')?.focus();}break;}
       case 'home-all-courses':Notenblick.activateGroup('main','notes',false,true);Notenblick.$('#allSelection').open=true;(Notenblick.$('#class').options[0]?.value?Notenblick.$('#class'):Notenblick.$('#noteTabs [aria-selected=true]'))?.focus();break;
-      case 'resume-assessment':{const record=Notenblick.data.assessments.find(a=>a.id===id);if(record){Notenblick.courseNotes(record.courseId);Notenblick.W().assessmentFilter=record.kind;Notenblick.W().view=Notenblick.assessmentView(record.kind);if(record.kind==='oral')Notenblick.W().oralView='classes';Notenblick.openAssessment(id,true);}break;}
+      case 'resume-assessment':{const record=Notenblick.data.assessments.find(a=>a.id===id);if(record){Notenblick.courseNotes(record.courseId);Notenblick.W().assessmentFilter=record.kind;Notenblick.W().view=Notenblick.assessmentView(record.kind);if(record.kind==='oral')Notenblick.W().oralView='classes';Notenblick.openAssessment(id,true,true);}break;}
       case 'dismiss-errors': Notenblick.errors.clear();Notenblick.error();break;
       case 'preview-names':Notenblick.previewNames(el.dataset.prefix);break;
       case 'oral-save-next':await Notenblick.submitModal(true);break;
@@ -37,6 +37,9 @@
         for(let step=1;step<=list.length;step++){const at=(w.studentIndex+step)%list.length;if(!Notenblick.N.hasEntry(record.results[list[at].id])){next=at;break;}}
         if(next>=0){w.studentIndex=next;Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.$('#entry-'+kind+'-single [data-entry=points],#entry-'+kind+'-single [data-entry=grade]')?.focus();}break;
       }
+      case 'assessment-edit': Notenblick.editAssessment(); break;
+      case 'assessment-done': Notenblick.finishAssessment(); break;
+      case 'point-settings': Notenblick.editPointSettings(); break;
       case 'open-assessment': Notenblick.openAssessment(id,true); break;
       case 'oral-picker': Notenblick.oralPicker(); break;
       case 'final-dialog': Notenblick.finalDialog(id,el.dataset.period||'annual'); break;
