@@ -1,4 +1,4 @@
-# Exportentwicklung und Prüfgrenzen – 1.20.3
+# Exportentwicklung und Prüfgrenzen – 1.21.0
 
 Alle Ausgaben werden im Programm lokal erzeugt. Für die Dateierstellung braucht Windows weder Python, Java, Office noch einen PDF-Drucker. Mitgeliefert werden PDFKit 0.20.2 (MIT) und DejaVu Sans einschließlich Lizenzen und ergänzenden Drittbibliotheks-Hinweisen. Die unveränderten Bibliotheksdateien und Schriftdateien sind in `dev/export-assets-lock.json` mit SHA-256 gesperrt.
 
@@ -65,3 +65,7 @@ Heterogene CSV-Berichte besitzen das lange Schema Abschnitt/Schüler/Bezug/Angab
 ## Ergänzungen 1.20.3
 
 Die vier Gruppen v1203 prüfen gefilterte Gesamtexporte, unabhängige Schülerauswahl, mündliche Besetzungsfälle und gemeinsame Daten in allen Formaten. Fachinformationen ohne Tabellen benötigen ein gültiges Excel-Blatt und eine CSV-Hinweiszeile. Gleichnamige Leistungen erhalten fachweit stabile Zuordnungen. PDF-/Word-Seitentext wird einschließlich mehrseitiger Bemerkungen verglichen; ausschließlich bekannte Seitenkopf-/Fußzeilen dürfen aus dem linearen Vergleich entfernt werden. Native ZIP-Sicherheitsprüfungen bleiben vollständig aktiv. Konkrete Referenzzahlen und Nachweisgrenzen stehen in PRUEFBERICHT-1.20.3.md.
+
+## Ergänzungen 1.21.0
+
+Einzelne Leistungsberichte verwenden weiterhin das gemeinsame Modell und alle sechs Ausgaben. Der Kontext enthält genau eine assessmentId und eine unabhängige Datenkopie; aktuelle Filter betreffen die sichtbare Teilnehmerliste. Punkte stehen ausschließlich in Einzelberichten beziehungsweise optional kompakt in Schülernotenzellen. Normale TXT-Leistungsberichte sind linear, ohne künstliche Tabellen. CSV-Einzelberichte mit Punkten führen die einmaligen Schlüsselhinweise vor dem gleichbreiten Datenschema auf. Die v1210-Dateiprüfung öffnet 15 Fälle in fünf Formaten und drei vollständige ZIPs, vergleicht Zellinhalte, prüft 41 Open-XML-Pakete und 26 PDF/UA-Dateien sowie die native ZIP-Schreibkette. Der zusätzliche Chromium-Druck wird anhand desselben Modells geprüft. Keine allgemeinen Layout- oder Rendereränderungen.

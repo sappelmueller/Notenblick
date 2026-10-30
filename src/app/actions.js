@@ -35,7 +35,7 @@
         const w=Notenblick.W(),record=Notenblick.data.assessments.find(x=>x.id===w.selected[kind]),list=Notenblick.entryList(record);
         if(!record||!list.length)break;let next=-1;
         for(let step=1;step<=list.length;step++){const at=(w.studentIndex+step)%list.length;if(!Notenblick.N.hasEntry(record.results[list[at].id])){next=at;break;}}
-        if(next>=0){w.studentIndex=next;Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.$('#entry-'+kind+'-single [data-entry=grade]')?.focus();}break;
+        if(next>=0){w.studentIndex=next;Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.$('#entry-'+kind+'-single [data-entry=points],#entry-'+kind+'-single [data-entry=grade]')?.focus();}break;
       }
       case 'open-assessment': Notenblick.openAssessment(id,true); break;
       case 'oral-picker': Notenblick.oralPicker(); break;
@@ -231,6 +231,11 @@
           Notenblick.announce('Die letzte Änderung wurde zurückgenommen.');
           break;
         }
+      case 'oral-record-export':{const aid=id;if(Notenblick.readonly())Notenblick.closeModal();else await Notenblick.submitModal();if(!Notenblick.$('#dialog').open){const record=Notenblick.data.assessments.find(x=>x.id===aid);Notenblick.output('oral',Notenblick.singleAssessmentContext(record));}break;}
+      case 'assessment-export':{const record=Notenblick.data.assessments.find(x=>x.id===id);Notenblick.output(record.kind,Notenblick.singleAssessmentContext(record));break;}
+      case 'point-key':Notenblick.showPointKey(Notenblick.data.assessments.find(x=>x.id===id));break;
+      case 'point-key-pdf':{const r=Notenblick.pointKeyReport(Notenblick.data.assessments.find(x=>x.id===id));await Notenblick.exportFile({}, {}, 'pdf',r);break;}
+      case 'point-manual':Notenblick.manualPointGrade(Notenblick.data.assessments.find(x=>x.id===id),el.dataset.student);break;
       case 'output':
         Notenblick.output(kind);
         break;

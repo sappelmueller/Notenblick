@@ -80,7 +80,7 @@ Notenblick.mutate = function mutate(fn, {
   if (Notenblick.mode === 'none') Notenblick.mode = 'working';
   const next = Notenblick.N.clone(Notenblick.data);
   fn(next);
-  if(next.courses.some(c=>c.calculationMode==='direct')||next.assessments.some(a=>a.participantIds||a.oralEntry))next.appVersion=Notenblick.version;
+  if(next.courses.some(c=>c.calculationMode==='direct')||next.assessments.some(a=>a.participantIds||a.oralEntry||a.pointKey||a.inputMode))next.appVersion=Notenblick.version;
   try{Notenblick.N.validate(next);}catch(e){throw Error(e.message.replace(/^Ungültige Datendatei: /,''));}
   if (record) {
     Notenblick.undo.push(Notenblick.N.clone(Notenblick.data));

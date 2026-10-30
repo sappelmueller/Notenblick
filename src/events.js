@@ -116,29 +116,18 @@ document.addEventListener('keydown', e => {
   const el = e.target;
   if(e.defaultPrevented)return;
   if(e.key==='Escape'){const details=el.closest('details[open]');if(details&&(details.hasAttribute('data-view-options')||details.id==='oralSettings'||details.id==='pupilHistory'||details.classList.contains('result-note'))){details.open=false;details.querySelector('summary').focus();e.preventDefault();return;}}
-  if (e.key === 'Enter' && el.dataset.entry === 'grade') {
+  if (e.key === 'Enter' && ['grade','points'].includes(el.dataset.entry)) {
     e.preventDefault();
-    Notenblick.entryChange(el);
-    if (el.getAttribute('aria-invalid') === 'true') return;
-    const {
-      kind,
-      mode: type
-    } = el.dataset;
-    if (type === 'single') {
-      const w = Notenblick.W(),
-        list = Notenblick.entryList(Notenblick.data.assessments.find(a=>a.id===el.dataset.assessment));
-      if (w.studentIndex < list.length - 1) {
-        w.studentIndex++;
-        Notenblick.renderEntry(kind, type);
-        Notenblick.remember();
-        Notenblick.$('#entry-' + kind + '-single [data-entry=grade]')?.focus();
-      }
-    } else {
-      const inputs = [...document.querySelectorAll('#entry-' + kind + '-table [data-entry=grade]')],
-        at = inputs.indexOf(el),
-        next = inputs[at + (e.shiftKey ? -1 : 1)];
-      next?.focus();
+    const result=Notenblick.entryChange(el,{announce:false});
+    if (el.getAttribute('aria-invalid') === 'true') {el.focus();return;}
+    const {kind,mode:type,entry}=el.dataset;
+    if(type==='single'){
+      const w=Notenblick.W(),list=Notenblick.entryList(Notenblick.data.assessments.find(a=>a.id===el.dataset.assessment)),next=w.studentIndex+(e.shiftKey?-1:1);
+      if(next>=0&&next<list.length){w.studentIndex=next;Notenblick.renderEntry(kind,type);Notenblick.remember();Notenblick.$('#entry-'+kind+'-single [data-entry='+entry+']')?.focus();}
+    }else{
+      const inputs=[...document.querySelectorAll('#entry-'+kind+'-table [data-entry='+entry+']')],at=inputs.indexOf(el);inputs[at+(e.shiftKey?-1:1)]?.focus();
     }
+    if(entry==='points'&&result?.changed)Notenblick.announcePoints(result.assessment,result.result);
   }
   if(e.key==='Escape'){for(const[id,summary]of [['allSelection','allSelectionSummary'],['adminViewDetails','adminViewSummary']])if(Notenblick.$('#'+id)?.open&&!Notenblick.$('#'+summary)?.hidden){Notenblick.$('#'+id).open=false;Notenblick.$('#'+summary).focus();e.preventDefault();return;}}
   if (e.key === 'Escape' && Notenblick.$('#viewDetails')?.open) {

@@ -52,6 +52,6 @@ NR.sorted = function sorted(students, by = 'last', dir = 'asc') {
   });
   return [...students].sort((a, b) => (collator.compare(a[by], b[by]) || collator.compare(a[by === 'last' ? 'first' : 'last'], b[by === 'last' ? 'first' : 'last']) || a.id.localeCompare(b.id)) * (dir === 'desc' ? -1 : 1));
 };
-NR.hasEntry = r => !!r && (r.status === 'graded' ? r.grade !== null && r.grade !== undefined : Object.hasOwn(NR.STATUS,r.status) && r.status !== 'open');
+NR.hasEntry = r => !!r && (r.points!=null || (r.status === 'graded' ? r.grade !== null && r.grade !== undefined : Object.hasOwn(NR.STATUS,r.status) && r.status !== 'open'));
 NR.name = (s,format='first-last') => (format==='last-first'?s.last+', '+s.first:s.first+' '+s.last)+(s.alias?' ('+s.alias+')':'');
 })(globalThis.NR = globalThis.NR || {});

@@ -85,6 +85,7 @@
       if (w.cmp(0) <= 0n || w.cmp(100) > 0n) fail('Ungültiger Leistungsfaktor.');
       if (!a.results || typeof a.results !== 'object' || Array.isArray(a.results)) fail('Leistungen fehlen.');
       const course = maps.courses.get(a.courseId);
+      NR.validatePointRecord(a);
       if(a.oralEntry!==undefined&&(a.kind!=='oral'||!['individual','class'].includes(a.oralEntry)||a.oralEntry==='individual'&&(!Array.isArray(a.participantIds)||a.participantIds.length!==1)))fail('Ungültige mündliche Erfassungsart.');
       if(a.participantIds!==undefined&&(!Array.isArray(a.participantIds)||!a.participantIds.length||new Set(a.participantIds).size!==a.participantIds.length||a.participantIds.some(id=>!safeId(id)||!memberships.get(course.id).has(id))||Object.keys(a.results).some(id=>!a.participantIds.includes(id))))fail('Ungültige Teilnahme an der Leistung.');
       for (const [sid, r] of Object.entries(a.results)) {
@@ -93,6 +94,7 @@
           if (typeof r.grade !== 'string') fail('Noten müssen als Dezimaltext gespeichert sein.');
           NR.grade(r.grade);
         }
+        NR.validatePointRecord(a,r);
         if (r.status === 'graded' && r.grade === null) fail('Bewertete Leistung ohne Note.');
         if (r.status !== 'graded' && r.grade !== null) fail('Nicht gewertete Leistung mit aktiver Note.');
       }

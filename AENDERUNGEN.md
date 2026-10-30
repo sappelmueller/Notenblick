@@ -1,3 +1,14 @@
+# Notenblick 1.21.0
+
+- Eingabeart pro Klassenarbeit, Test und mündlicher Klassen-/Einzelleistung; direkte Noten bleiben Standard. Punkte mit individuellen Maximalwerten, Linear, Mit Knick oder individuellen Mindestgrenzen und ganzen, halben, Viertel- oder Zehntelnoten. Eine zentrale exakte Bruchrechnung, genau eine Rundung, gleiche Regeln für Vorschau, Speicherung und Export.
+- Eingabe/Umschalt+Eingabe übernehmen Punkte und führen zum nächsten/vorherigen sichtbaren Schüler. Die bestehende Statusquelle meldet Punkte und Note nach dem Fokuswechsel; im modalen mündlichen Dialog bleibt sie im zugänglichen Dialogbaum. Tabellen- und Einzelansicht, Suche, Sortierung und Status bleiben erhalten.
+- Punkte, berechnete Note, manuelle Leistungsnote und aufbewahrte direkte Eingaben getrennt gesichert. Manuelle Noten ausdrücklich übernehmen/zurücknehmen. Nachträgliche Schlüsseländerungen zeigen Auswirkungen und werden bei vorhandenen Daten bestätigt; kleinere Maxima dürfen gespeicherte Punkte nicht ungültig machen. Letzten Fachschlüssel ohne Maximalpunkte vorschlagen.
+- Geltende exakte Grenzen im vorhandenen Dialog anzeigen und über den bestehenden PDF-Renderer speichern. Exakte Bruchgrenzen bleiben nachvollziehbar; keine zusätzliche Verwaltung.
+- „Diese Leistung exportieren“ verwendet den gemeinsamen Exportdialog für genau diese Klassenarbeit, diesen Test oder diese mündliche Klassen-/Einzelbewertung. Einzelberichte mit Schlüssel enthalten Punkte und Note sowie eine einmalige Zusammenfassung. Gemeinsame Übersichten und Fachberichte behalten ihre Notenspalten. Schülerberichte erhalten eine optionale, zunächst ausgeschaltete Punktdarstellung, auch im Sammelexport.
+- Vollständige TXT-/Word-/PDF-ZIPs behalten denselben Plan und dieselben Pfade; Punkte ausschließlich in den einzelnen Leistungsdokumenten. Automatische TXT-Notfalllisten ergänzen die neuen Sicherungsangaben; bestehende Inhalte ohne Punkte bleiben gleich. JSON-Datenformat und portable Struktur bleiben erhalten.
+- Einzelne mündliche Berichte zeigen Klassendurchschnitte erst ab zwei benoteten Personen. Normale TXT-Leistungsberichte verwenden eine Zeile je Schüler und zugeordnete Bemerkungszeilen. Bestehende Word-/PDF-Gestaltung und Seitenaufteilung unverändert.
+- Neue dauerhafte Gruppen v1210, v1210-storage, v1210-browser und v1210-files: ausschließlich synthetische Daten, 158.484 exakte Referenzumrechnungen, echte Dateiformate und ZIPs, native Speicherung/Wiederherstellung, Browser/Tastatur/Fokus/axe, Open XML und PDF/UA. Tatsächliche Windows-/NVDA-Liveabnahme gesondert offen.
+
 # Notenblick 1.20.3
 
 - Nach Leistungsarten zeigt ausschließlich Übersicht, aktivierte Leistungsarten und Schüler. Leistungen bleibt der kompakten Ansicht vorbehalten. Vorhandene ausgeblendete Leistungen sind über die Übersicht erreichbar; Tastatur und Fokus bleiben gültig.

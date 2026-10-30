@@ -47,6 +47,7 @@ Notenblick.closeModal = function closeModal(options={}) {
   const cancel=Notenblick.migrationCancel;Notenblick.migrationCancel=null;
   const onClose=Notenblick.dialogOnClose;Notenblick.dialogOnClose=null;
   const previous = Notenblick.opener;
+  Notenblick.restorePointAnnouncement?.();
   Notenblick.$('#dialog').close();
   Notenblick.submitDialog = null;
   Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=false;Notenblick.$('#dialogNext').disabled=false;
