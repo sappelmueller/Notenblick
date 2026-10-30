@@ -32,7 +32,7 @@ Notenblick.remember=function(){
  Notenblick.workspacePromise=Notenblick.workspacePromise.catch(()=>{}).then(async()=>{await(store?store.saveWorkspace(workspace):window.NRSession.saveWorkspace(workspace));Notenblick.workspaceFailed=false;if(Notenblick.ui.main==='backup')Notenblick.updateSaveDetails();}).catch(e=>{Notenblick.error('Die letzte Ansicht konnte nicht gespeichert werden. '+e.message,'storage');Notenblick.workspaceFailed=true;if(Notenblick.ui.main==='backup')Notenblick.updateSaveDetails();});
 };
 Notenblick.restoreWorkspace = function restoreWorkspace(source=Notenblick.workspace||{}) {
-  const a=source;Notenblick.restorePreferences(source);
+  const a=source;Notenblick.entrySession=null;Notenblick.openedNotesCourse=null;Notenblick.restorePreferences(source);
   Notenblick.workspace=source;
   Notenblick.ui.workingYear=typeof a.workingYear==='string'?a.workingYear:a.year||'';
   Notenblick.ui.historicalYear=typeof a.historicalYear==='string'?a.historicalYear:'';

@@ -40,6 +40,7 @@ Notenblick.assessmentDialog = function assessmentDialog(a = null, kind = 'exam',
       }
       const saved=d.assessments.find(x=>x.id===newId);if(kind==='oral'){if(!a||a.kind!=='oral'||a.oralEntry==='individual'&&(!participantIds||participantIds.length!==1))saved.oralEntry='class';}else delete saved.oralEntry;if(participantIds)saved.participantIds=participantIds;else delete saved.participantIds;
       if(kind==='oral')Notenblick.W().oralView='classes';
+      if(!a){Notenblick.entrySession={id:newId,editing:true};Notenblick.W().entryMode='table';}
       Notenblick.W().assessmentWorkOpen=true;
       Notenblick.W().selected[kind] = newId;
       Notenblick.W().view = Notenblick.assessmentView(kind);

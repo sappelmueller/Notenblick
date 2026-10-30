@@ -1,7 +1,8 @@
 /* Notenblick – app/navigation.js. Shared application API: Notenblick. */
 (function (Notenblick) {
 'use strict';
-Notenblick.canLeave = function canLeave() {
+Notenblick.canLeave = function canLeave({pointSettings=false}={}) {
+ if(!pointSettings&&Notenblick.pointSettingsDirty?.()){Notenblick.error('Bitte übernimm die geänderten Notenschlüsseleinstellungen oder wähle Abbrechen.');Notenblick.$('#pointApply')?.focus();return false;}
   if(Notenblick.checkSettingsDraft&&!Notenblick.checkSettingsDraft())return false;
   for(const id of [...Notenblick.pending]){const el=document.getElementById(id);if(el?.dataset.entry)Notenblick.entryChange(el);}
   const el = document.querySelector('[data-entry][aria-invalid=true]');
@@ -71,13 +72,14 @@ Notenblick.normalizeContext = function normalizeContext() {
 };
 Notenblick.courseChoices=function(yid=Notenblick.ui.year){const collator=new Intl.Collator('de',{numeric:true,sensitivity:'base'}),classes=new Map(Notenblick.data.classes.filter(c=>c.yearId===yid&&!c.archived).map(c=>[c.id,c]));return Notenblick.data.courses.filter(c=>classes.has(c.classId)&&!c.archived).sort((a,b)=>collator.compare(classes.get(a.classId).name,classes.get(b.classId).name)||collator.compare(a.name,b.name)||a.id.localeCompare(b.id));};
 Notenblick.chooseContext=function({classId,courseId,historical=false,openNotes=false}={}){
- const A=Notenblick;if(!A.canLeave())return false;
+ const A=Notenblick;if(!A.canLeave())return false;const previous=A.ui.course;
  const course=courseId&&A.data.courses.find(c=>c.id===courseId),cl=A.data.classes.find(c=>c.id===(course?.classId||classId||A.ui.class));if(!cl)return false;
  if(cl.yearId!==A.ui.year&&!historical)return false;
  if(historical){A.ui.year=cl.yearId;A.ui.historicalYear=cl.yearId===A.ui.workingYear?'':cl.yearId;}
  A.ui.class=cl.id;A.ui.course=course?.id||A.ui.selections[cl.yearId+':'+cl.id]?.course||'';A.normalizeContext();
- A.ui.selections[cl.yearId+':'+cl.id]={course:A.ui.course};A.rendered={};if(openNotes)A.activateGroup('main','notes',false,true);else A.renderNotes();A.remember();return true;
+ if(previous!==A.ui.course){A.openCourseWorkspace();A.openedNotesCourse=A.ui.course;}A.ui.selections[cl.yearId+':'+cl.id]={course:A.ui.course};A.rendered={};if(openNotes)A.activateGroup('main','notes',false,true);else A.renderNotes();A.remember();return true;
 };
+Notenblick.openCourseWorkspace=function(){const A=Notenblick;A.entrySession=null;if(A.prefs.courseOpenView==='overview'){A.W().view='overview';A.W().assessmentWorkOpen=false;}};
 Notenblick.fillSelection=function(yid=Notenblick.ui.year,cid=Notenblick.ui.class,fid=Notenblick.ui.course){
  const A=Notenblick,collator=new Intl.Collator('de',{numeric:true,sensitivity:'base'}),cs=A.data.classes.filter(c=>c.yearId===yid).sort((a,b)=>collator.compare(a.name,b.name)),fs=A.data.courses.filter(c=>c.classId===cid).sort((a,b)=>collator.compare(a.name,b.name));
  A.$('#class').innerHTML=cs.map(c=>A.opt(c.id,c.name+(c.archived?' (ausgeblendet)':''),cid)).join('')||A.opt('','Keine Klasse','');

@@ -8,7 +8,7 @@
     Notenblick.fillSelection();
     const c = Notenblick.getCourse(),
       cl = Notenblick.getClass();
-    if(c)Notenblick.ui.lastNotesCourse=c.id;
+    if(c){if(Notenblick.openedNotesCourse&&Notenblick.openedNotesCourse!==c.id)Notenblick.openCourseWorkspace();Notenblick.openedNotesCourse=c.id;Notenblick.ui.lastNotesCourse=c.id;}
     Notenblick.$('#subjectTitle').textContent = c ? c.name + ' – Klasse ' + cl.name : 'Noten';
     const year=Notenblick.getYear();Notenblick.$('#subjectYear').textContent=year?(Notenblick.schoolYear(year)+(year.archived?' · Abgeschlossen':'')):'';
     Notenblick.$('#historicalAction').innerHTML=Notenblick.ui.historicalYear?Notenblick.b('current-year','Zum Arbeitsjahr','','text-button'):'';
@@ -61,22 +61,21 @@
   };
   Notenblick.renderKind = function renderKind(kind) {
     if (!Notenblick.getCourse()) return;
-    const key = kind + ':' + Notenblick.ui.course + ':' + Notenblick.seq;
-    if (Notenblick.rendered[kind] === key) return;
-    const c = Notenblick.getCourse(), w = Notenblick.W(), selected = Notenblick.data.assessments.find(a=>a.id===w.selected[kind] && a.courseId===c.id);
-    if (!selected) return;
-    Notenblick.$('#' + kind).innerHTML = `<div class="entry-heading"><div><h3 id="assessmentWorkTitle" tabindex="-1">Noteneingabe</h3><p class="assessment-name">${Notenblick.performanceLabel(selected)}: ${Notenblick.esc(selected.title)}</p><p class="assessment-meta"><span class="sr-only">, </span>${Notenblick.date(selected.date)} · <span id="entry-summary-${kind}">${Notenblick.progressText(selected)}</span>${Notenblick.performanceFlags(selected)?' · '+Notenblick.performanceFlags(selected):''}</p></div><div class="button-row">${['exam','test','oral'].includes(kind)?Notenblick.b('assessment-export','Diese Leistung exportieren',`data-id="${selected.id}"`,'button'):''}${Notenblick.b('assessment-list','Eingabe schließen','','text-button')}</div></div>${Notenblick.pointSettingsMarkup(selected)}<ul class="tabs small-tabs entry-tabs" id="entryTabs-${kind}"><li><a href="#entry-${kind}-table" id="entry-tab-${kind}-table" data-key="table">Alle Schüler</a></li><li><a href="#entry-${kind}-single" id="entry-tab-${kind}-single" data-key="single">Einzeln</a></li></ul><p id="currentEntryPupil" class="hint" hidden></p><div id="entry-${kind}-table"></div><div id="entry-${kind}-single" hidden></div>`;
-    if (selected) {
-      Notenblick.groups['entry-' + kind] = Notenblick.bind('entryTabs-' + kind, ['table', 'single'], (type, update) => {
-        Notenblick.W().entryMode = type;
-        Notenblick.renderEntry(kind, type);
-        if (update) Notenblick.remember();
-      });
-      Notenblick.groups['entry-' + kind].activate(Notenblick.$('#entry-tab-' + kind + '-' + w.entryMode), false, false);
-      Notenblick.updateEntrySummary(kind);
-      Notenblick.bindPointSettings(selected);
+    const A=Notenblick,c=A.getCourse(),w=A.W(),selected=A.data.assessments.find(a=>a.id===w.selected[kind]&&a.courseId===c.id);
+    if(!selected)return;
+    if(A.entrySession?.id!==selected.id)A.entrySession={id:selected.id,editing:false};
+    const editing=A.entrySession.editing&&!A.readonly(),key=kind+':'+c.id+':'+A.seq+':'+selected.id+':'+editing;
+    if(A.rendered[kind]===key)return;
+    A.$('#'+kind).innerHTML=`<div class="entry-heading"><div><h3 id="assessmentWorkTitle" tabindex="-1">${A.esc(selected.title)}</h3><p class="assessment-meta">${A.esc(c.name)} · Klasse ${A.esc(A.getClass().name)} · ${A.date(selected.date)}</p><p class="assessment-meta" id="entry-summary-${kind}">${A.progressText(selected)}</p>${A.performanceFlags(selected)?'<p class="hint">'+A.performanceFlags(selected)+'</p>':''}</div><div class="button-row">${A.readonly()?'':A.b(editing?'assessment-done':'assessment-edit',editing?'Fertig':'Noten bearbeiten','','button primary')}${A.b('assessment-export','Leistung exportieren',`data-id="${selected.id}"`)}${A.b('assessment-list','Schließen','','button')}</div></div>${A.pointSummaryMarkup(selected,editing)}${editing?`<div id="pointConfiguration"${A.entrySession.settings?'':' hidden'}>${A.pointSettingsMarkup(selected)}</div><ul class="tabs small-tabs entry-tabs" id="entryTabs-${kind}"><li><a href="#entry-${kind}-table" id="entry-tab-${kind}-table" data-key="table">Alle Schüler</a></li><li><a href="#entry-${kind}-single" id="entry-tab-${kind}-single" data-key="single">Einzeln</a></li></ul><p id="currentEntryPupil" class="hint" hidden></p><div id="entry-${kind}-table"></div><div id="entry-${kind}-single" hidden></div>`:A.assessmentResultsMarkup(selected)}`;
+    if(editing){
+      A.groups['entry-'+kind]=A.bind('entryTabs-'+kind,['table','single'],(type,update)=>{w.entryMode=type;A.renderEntry(kind,type);if(update)A.remember();});
+      A.groups['entry-'+kind].activate(A.$('#entry-tab-'+kind+'-'+w.entryMode),false,false);A.bindPointSettings(selected);
     }
-    Notenblick.rendered[kind] = key;
+    A.updateEntrySummary(kind);A.rendered[kind]=key;
+  };
+  Notenblick.assessmentResultsMarkup=function(a){
+    const A=Notenblick,list=A.entryList(a),points=A.N.isPoints(a),status=list.some(s=>a.results[s.id]?.status&&a.results[s.id].status!=='graded'&&A.N.hasEntry(a.results[s.id])),notes=list.some(s=>a.results[s.id]?.note);
+    return `<div class="table-wrap"><table class="entry-results" aria-labelledby="assessmentWorkTitle"><thead><tr><th scope="col">Schüler</th>${points?'<th scope="col">Punkte</th>':''}<th scope="col">Note</th>${status?'<th scope="col">Status</th>':''}${notes?'<th scope="col">Bemerkung</th>':''}</tr></thead><tbody>${list.map(s=>{const r=a.results[s.id]||{};return `<tr><th scope="row">${A.rowName(s)}</th>${points?'<td>'+(r.points?.replace('.',',')??'–')+'</td>':''}<td>${r.grade!=null?A.esc(points?A.N.pointGradeText(r.grade,a.pointKey):r.grade.replace('.',',')):'–'}${r.manualGrade!=null&&points?'<span class="secondary">Manuell festgelegt</span>':''}</td>${status?'<td>'+A.esc(A.N.STATUS[r.status||'open'])+'</td>':''}${notes?'<td class="wrap-cell">'+A.esc(r.note||'')+'</td>':''}</tr>`;}).join('')||'<tr><td colspan="'+(2+Number(points)+Number(status)+Number(notes))+'">Keine teilnehmenden Schüler.</td></tr>'}</tbody></table></div>`;
   };
   Notenblick.entryList = function entryList(a=null) {
     const w = Notenblick.W();
