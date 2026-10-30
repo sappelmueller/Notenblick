@@ -64,7 +64,7 @@ Notenblick.entryChange = function entryChange(el,{announce=true}={}) {
     if (!document.querySelector('[data-entry][aria-invalid=true]')) Notenblick.error();
     Notenblick.updateEntrySummary(kind);
     if(Notenblick.N.isPoints(a)){
-      const cell=Notenblick.$('#pointNote-'+prefix);if(cell)cell.innerHTML=Notenblick.pointNoteMarkup(a,r,student);
+      const cell=Notenblick.$('#pointNote-'+prefix);if(cell)cell.innerHTML=Notenblick.pointNoteMarkup(a,r,student,entryMode);
       if(entry==='points'&&changed&&announce)Notenblick.announcePoints(a,r);
     }
     return {changed,assessment:a,result:r};
