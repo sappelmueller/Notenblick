@@ -11,13 +11,13 @@ Ausgangsstand: privates Repository `sappelmueller/Notenblick`, ID 1432518047, Ve
 - Im Notenschlüsseldialog steht der bestehende PDF-Export vor Prüffeld und Notentabelle. Ganze, halbe und Zehntelpunktschritte, sämtliche Schlüssel und Notenabstufungen unverändert. Keine zusätzliche Grenzwerttabelle.
 - Die Einzelansicht fasst Namen und Position zusammen. Berechnete Vorschau und gespeicherte Note sind getrennt beschriftet. Manuelle und tatsächlich gewertete Werte werden unterschieden, auch bei ausgeschlossenen Einträgen. Die zentrale Punkteübernahme setzt offene Ergebnisse weiterhin über `pointResult` auf Bewertet; bewusst abweichende Status bleiben erhalten. Keine Speicherung durch Vorschau.
 - `chooseContext` führt auch das erneute ausdrückliche Öffnen desselben Fachs durch `openCourseWorkspace`. Reines Rendern und normale Registerkarten wenden die Öffnungsregel nicht an. Programmstart verwendet ausschließlich `startupView`. Ausdrückliche Übersicht, Fortsetzen sowie Schüler- und Leistungsaufrufe haben Vorrang; die Einstellung selbst wird nicht verändert.
-- Die Punktebearbeitung aus Schülernoten verwendet die vorhandene Einzelansicht. Beim Bearbeiten direkter Noten bleiben aufbewahrte Punktfelder erhalten. Keine neue Speicherarchitektur oder Migration.
+- Die Punktebearbeitung aus Schülernoten verwendet die vorhandene Einzelansicht. Beim Bearbeiten direkter Noten bleiben aufbewahrte Punktfelder erhalten. Keine neue Speicherarchitektur oder Migration. Die vorhandene Liste unterstützter Datenversionen enthält auch 1.22.0; sonstige Domänenregeln bleiben unverändert.
 
 ## Fokus und Rückmeldungen
 
 Die gemeinsame Komponente `focusTarget` prüft vorhandene, verbundene, sichtbare und aktivierbare Ziele, einschließlich geschlossener Dialoge/Details und deaktivierter Steuerelemente. Überschriften erhalten ausschließlich für den gezielten Fokus `tabindex=-1`. Die vorhandenen Navigationen, manuellen ARIA-Tabs, Fehler- und Rückkehrmechanismen bleiben maßgeblich; kein zweiter Fokusmanager.
 
-- Hauptnavigation bleibt auf dem gewählten Link, echte Tabs auf dem aktivierten Tab.
+- Hauptnavigation bleibt auf dem gewählten Link, echte Tabs auf dem aktivierten Tab. Hilfe und Rückkehr erhalten dieselben Eingabeknoten einschließlich ungültiger Punkte und ungespeicherter Einstellungsvorgaben; Fehler bleiben erreichbar.
 - Neu geöffnete Leistungen, Bearbeitung, neue Leistungen, Schüler- und Verwaltungsbereiche erschließen ihren Kontext über die Überschrift.
 - Dialoge beginnen grundsätzlich beim Dialogtitel, auch Abschlussnoten und Ersteinrichtung. Bewusste schnelle Fortsetzungen behalten ihren Eingabefokus.
 - Schülerauswahl und andere Auswahl-/Filterfelder behalten den entsprechenden Auswahlfokus. Vorheriger/Nächster Schüler und Nächster ohne Eintrag führen zur neuen Orientierung. Eingabe/Umschalt+Eingabe bleiben unmittelbar in der passenden Noten-/Punkteeingabe.

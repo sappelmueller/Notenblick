@@ -28,14 +28,17 @@ Notenblick.bind = function bind(id, keys, onActivate, before = Notenblick.canLea
 };
 Notenblick.initTabs = function initTabs() {
   const links = [...Notenblick.$('#mainTabs').querySelectorAll('a')];
+  const show=key=>{for(const item of links){const active=item.dataset.key===key;if(active)item.setAttribute('aria-current','page');else item.removeAttribute('aria-current');Notenblick.$('#'+item.dataset.key).hidden=!active;}Notenblick.ui.main=key;};
   Notenblick.groups.main = {activate(link, focus = false, update = false) {
-    if (link.dataset.key!=='help'&&!Notenblick.canLeave()) return false;
-    Notenblick.closeMenu?.(false);Notenblick.clearAnnouncement();
-    const key = link.dataset.key;
-    links.forEach(item => {if (item === link) item.setAttribute('aria-current','page'); else item.removeAttribute('aria-current'); Notenblick.$('#'+item.dataset.key).hidden = item !== link;});
-    Notenblick.ui.main = key;
+    const key=link.dataset.key,origin=Notenblick.helpOrigin,returning=Notenblick.ui.main==='help'&&!!origin;
+    // Help may be read with an invalid entry or an unsaved settings draft.
+    // Return to those same mounted controls before validation; never rebuild them.
+    if(returning)show(origin);
+    if(key!=='help'&&!(returning&&key===origin)&&!Notenblick.canLeave())return false;
+    if(key==='help'&&Notenblick.ui.main!=='help')Notenblick.helpOrigin=Notenblick.ui.main;else if(key!=='help')Notenblick.helpOrigin=null;
+    Notenblick.closeMenu?.(false);Notenblick.clearAnnouncement();show(key);
     if(update)Notenblick.$('#actionFeedback').hidden=true;
-    Notenblick.refreshCurrent();
+    if(!(returning&&key===origin))Notenblick.refreshCurrent();
     if (focus) link.focus();
     if (update) Notenblick.remember();
     return true;

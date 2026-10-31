@@ -2,6 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),N=require('../src/core.js');
 const checks=[];let ctx,A;
 (async()=>{
+ assert.equal(N.isCurrentData({appVersion:'1.22.0'}),true);
  ctx=await require('./load.cjs').load({cache:new Map()});A=ctx.q;const w=ctx.w,$=s=>w.document.querySelector(s),data=require('./v1210-fixture.cjs')(N),cid=data.courses[0].id,ids=data.courses[0].studentIds;
  A.data=w.NR.clone(data);A.mode='demo';A.normalizeContext();A.courseNotes(cid);const original=JSON.stringify(A.data);
  const change=(id,value)=>{const el=$('#'+id);el.value=value;el.dispatchEvent(new w.Event('change',{bubbles:true}));};
@@ -39,6 +40,10 @@ const checks=[];let ctx,A;
  checks.push('Neustart aus tatsächlich gespeicherter Browser-Arbeitsansicht: Startseite/Letzte Ansicht unabhängig von Fachregel, kein Notendatenverlust');
  fresh();A.openAssessment('points-0',true,true);A.groups['entry-exam'].activate($('#entry-tab-exam-single'),false,false);const box=$('#entry-exam-single [data-entry=points]'),before=JSON.stringify(A.data);box.value='14';A.previewPoints(box);assert.match($('#pointNote-exam-single-'+box.dataset.student).textContent,/Vorschau: Note/);assert.equal(JSON.stringify(A.data),before);A.announcePoints(source,{points:'14',grade:'4.5'});A.clearAnnouncement();await new Promise(r=>setTimeout(r,45));assert.equal($('#announcement').textContent,'');
  const directBefore=JSON.stringify(A.data.assessments.find(x=>x.id==='points-0').results);A.resultDialog('points-0',ids[1]);assert.equal(JSON.stringify(A.data.assessments.find(x=>x.id==='points-0').results),directBefore);assert.equal(A.W().entryMode,'single');assert.equal(w.document.activeElement.id,'assessmentWorkTitle');
+
+ const inactive=w.NR.pointResult(A.data.assessments[0],{grade:null,status:'excluded',manualGrade:'2',note:''},'20'),markup=A.pointNoteMarkup(A.data.assessments[0],inactive,ids[0]);assert.match(markup,/Festgelegt: 2,00/);assert.match(markup,/Nicht gewertet/);assert.doesNotMatch(markup,/Gewertet:/);
+ A.manualPointGrade(A.data.assessments[0],ids[0]);$('#manualPointGrade').value='9';await A.submitModal();assert.equal(w.document.activeElement.id,'manualPointGrade');assert.equal($('#dialog').open,true);A.closeModal();
+ const hidden=w.document.createElement('button');hidden.hidden=true;w.document.body.append(hidden);const active=w.document.activeElement;assert.equal(A.focusTarget(hidden),false);hidden.hidden=false;hidden.disabled=true;assert.equal(A.focusTarget(hidden),false);hidden.remove();assert.equal(A.focusTarget(hidden),false);assert.equal(w.document.activeElement,active);
  checks.push('Reine Punktvorschau ohne Speicherung, alte/noch ausstehende Meldungen bereinigt, Punktebearbeitung aus Schüleransicht erhält sämtliche Punktfelder');
  // Large class selection is alphabetic independently of the preferred view sort.
  fresh();A.prefs.sortBy='first';A.prefs.sortDir='desc';for(let i=0;i<250;i++){const id='synthetic-large-'+i;A.data.students.push({id,classId:A.getCourse().classId,first:'Kind '+i,last:'Probe '+String(250-i).padStart(3,'0'),archived:false});A.getCourse().studentIds.push(id);}A.assessmentDialog();change('a-scope','selected');$('#participantAll').click();assert.match($('#participantCount').textContent,/256 von 256/);const selected=[...w.document.querySelectorAll('[name=participant]')].map(e=>A.getStudent(e.value));assert.deepEqual(selected.map(s=>s.id),Array.from(N.sorted(N.clone(selected),'last','asc'),s=>s.id));A.closeModal();checks.push('256 synthetische Schüler: Gesamtaktionen, alphabetische Reihenfolge unabhängig von Ansichtspräferenzen');
