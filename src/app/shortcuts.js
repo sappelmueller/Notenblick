@@ -51,7 +51,7 @@ A.handleShortcut=function(e){
   if(A.ui.main==='notes'&&A.getCourse()){
    const record=A.W().assessmentWorkOpen&&A.data.assessments.find(a=>a.id===A.W().assessmentId);
    if(record)A.output(record.kind,A.singleAssessmentContext(record));else A.output(A.W().view==='assessments'?'all':A.W().view);
-  }else{A.activateGroup('main','backup',true,true);A.activateGroup('backup','export',true,true);}return true;
+  }else{A.activateGroup('main','backup',false,true);A.activateGroup('backup','export',true,true);}return true;
  }
  if(key==='escape')return false;
  return false;
