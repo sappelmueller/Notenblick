@@ -18,5 +18,5 @@ A.classNotes=function(id){const cl=A.data.classes.find(x=>x.id===id),list=A.data
  if(list.length===1){A.courseNotes(list[0].id);return;}
  A.modal('Zur Notenübersicht – Klasse '+cl.name,`<div class="field"><label for="notesCourse">Fach</label><select id="notesCourse">${list.map(c=>A.opt(c.id,c.name,'')).join('')}</select></div>`,()=>{const cid=A.val('notesCourse');A.afterClose=()=>A.courseNotes(cid);},'Öffnen');
 };
-A.courseNotes=function(id){if(!A.chooseContext({courseId:id,historical:true,openNotes:true,view:'overview'}))return false;A.W().assessmentWorkOpen=false;A.activateGroup('notes','overview');A.remember();A.focusTarget('overviewTitle');return true;};
+A.courseNotes=function(id,{focus=true}={}){if(!A.chooseContext({courseId:id,historical:true,openNotes:true,view:'overview'}))return false;A.W().assessmentWorkOpen=false;A.activateGroup('notes','overview');A.remember();if(focus)A.focusTarget('overviewTitle');return true;};
 })(globalThis.Notenblick);

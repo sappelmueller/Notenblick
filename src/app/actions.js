@@ -20,7 +20,7 @@
       case 'choose-shortcuts':Notenblick.shortcutDialog();break;
       case 'quick-course':{if(Notenblick.chooseContext({courseId:id,historical:true,openNotes:true})){Notenblick.focusTarget('subjectTitle');}break;}
       case 'home-all-courses':Notenblick.activateGroup('main','notes',false,true);Notenblick.$('#allSelection').open=true;Notenblick.focusTarget('subjectTitle');break;
-      case 'resume-assessment':{const record=Notenblick.data.assessments.find(a=>a.id===id);if(record){Notenblick.courseNotes(record.courseId);Notenblick.W().assessmentFilter=record.kind;Notenblick.W().view=Notenblick.assessmentView(record.kind);if(record.kind==='oral')Notenblick.W().oralView='classes';Notenblick.openAssessment(id,true,true);}break;}
+      case 'resume-assessment':{const record=Notenblick.data.assessments.find(a=>a.id===id);if(record){Notenblick.courseNotes(record.courseId,{focus:false});Notenblick.W().assessmentFilter=record.kind;Notenblick.W().view=Notenblick.assessmentView(record.kind);if(record.kind==='oral')Notenblick.W().oralView='classes';Notenblick.openAssessment(id,true,true);}break;}
       case 'dismiss-errors': Notenblick.errors.clear();Notenblick.error();break;
       case 'preview-names':Notenblick.previewNames(el.dataset.prefix);break;
       case 'oral-save-next':await Notenblick.submitModal(true);break;
@@ -162,7 +162,7 @@
           Notenblick.focusTarget('singleName-' + kind);
           break;
         }
-      case 'student-notes':{const s=Notenblick.getStudent(id),courses=Notenblick.data.courses.filter(c=>c.studentIds.includes(id)),c=courses.find(c=>c.id===Notenblick.ui.course)||courses.find(c=>!c.archived)||courses[0];if(!c)throw Error('Bitte ordne den Schüler zuerst einem Fach zu.');Notenblick.courseNotes(c.id);Notenblick.W().pupil=s.id;Notenblick.activateGroup('notes','pupil',false,true);Notenblick.focusTarget('pupilContextTitle');break;}
+      case 'student-notes':{const s=Notenblick.getStudent(id),courses=Notenblick.data.courses.filter(c=>c.studentIds.includes(id)),c=courses.find(c=>c.id===Notenblick.ui.course)||courses.find(c=>!c.archived)||courses[0];if(!c)throw Error('Bitte ordne den Schüler zuerst einem Fach zu.');Notenblick.courseNotes(c.id,{focus:false});Notenblick.W().pupil=s.id;Notenblick.activateGroup('notes','pupil',false,true);Notenblick.focusTarget('pupilContextTitle');break;}
       case 'student':
         Notenblick.clearAnnouncement();Notenblick.W().pupil=id; Notenblick.activateGroup('notes','pupil',false,true);Notenblick.focusTarget('pupilContextTitle');
         break;

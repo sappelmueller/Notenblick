@@ -19,7 +19,7 @@ Die gemeinsame Komponente `focusTarget` prüft vorhandene, verbundene, sichtbare
 
 - Hauptnavigation bleibt auf dem gewählten Link, echte Tabs auf dem aktivierten Tab. Hilfe und Rückkehr erhalten dieselben Eingabeknoten einschließlich ungültiger Punkte und ungespeicherter Einstellungsvorgaben; Fehler bleiben erreichbar.
 - Neu geöffnete Leistungen, Bearbeitung, neue Leistungen, Schüler- und Verwaltungsbereiche erschließen ihren Kontext über die Überschrift.
-- Dialoge beginnen grundsätzlich beim Dialogtitel, auch Abschlussnoten und Ersteinrichtung. Bewusste schnelle Fortsetzungen behalten ihren Eingabefokus.
+- Dialoge beginnen grundsätzlich beim Dialogtitel, auch Abschlussnoten und Ersteinrichtung. Bewusste schnelle Fortsetzungen behalten ihren Eingabefokus. Fortsetzen und Schülerlinks erzeugen keinen überflüssigen Zwischenfokus auf der Notenübersicht.
 - Schülerauswahl und andere Auswahl-/Filterfelder behalten den entsprechenden Auswahlfokus. Vorheriger/Nächster Schüler und Nächster ohne Eintrag führen zur neuen Orientierung. Eingabe/Umschalt+Eingabe bleiben unmittelbar in der passenden Noten-/Punkteeingabe.
 - Fertig, Schließen, Escape, Abbrechen und erfolgreiche Übernahmen kehren zum passenden Auslöser oder nachvollziehbaren Ersatz zurück. Fehler führen zum betroffenen Feld und erhalten den Entwurf.
 - Die vorhandene eine Livequelle meldet ausschließlich übernommene Punktwerte. Kontextwechsel und neue Vorschauen verwerfen alte/noch ausstehende Punkteansagen. Verarbeitete Meldungen werden zeitversetzt entfernt. Keine Meldung je Tastendruck und keine zweite Livequelle in den Tabellen.
