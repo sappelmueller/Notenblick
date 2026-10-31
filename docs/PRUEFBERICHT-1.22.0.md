@@ -1,0 +1,43 @@
+# Notenblick 1.22.0 – Prüfbericht
+
+Ausgangsstand: privates Repository `sappelmueller/Notenblick`, ID 1432518047, Version 1.21.1, Commit `f4c1fdd38d510f5f53de50d5bfa6fa6a149126e1`, Baum `ff8f3c13207b265bdf7dcfacdd0e3d1519a2a28b`. Sämtliche 273 Quelldateien wurden bytegenau mit dem GitHub-Baum verglichen. Ausschließlich synthetische Prüfdaten. GitHub Actions bleiben deaktiviert; die ausgewählte Option „Disable actions“ wurde in den Repository-Einstellungen kontrolliert.
+
+## Umsetzung und geschützte Verträge
+
+- `participantIds` bleibt unverändert. Die Teilnehmerauswahl bietet ganze Klasse oder ausgewählte Schüler, Suche, Gesamtzähler und Aktionen für die gesamte Liste. Alphabetisch nach Nachname, unabhängig von der Darstellungssortierung. Vorhandene Ergebnisdatensätze einschließlich Status, Bemerkung, manueller Note oder aufbewahrter Punktdaten bleiben ausgewählt und werden unmittelbar als gesperrt erklärt. Filtern verändert keine Auswahl. Die begrenzte Liste ist bei Überlauf auch selbst per Tastatur scrollbar.
+- „Gewichtung der Leistung“ ersetzt die Feldbezeichnung „Faktor“, auch bei neu angelegten mündlichen Einzelnoten. Standard 1; dezimale Eingaben und bisherige Grenzen unverändert. `weight`, Fachgewichtung und zentrale Mathematik behalten ihre Bedeutung.
+- Ein einziger Leistungsarbeitsbereich: Kontextüberschrift, Aktionen, Fach/Klasse/Datum, Bewertungsstand und zentraler Durchschnitt, danach gegebenenfalls Schlüsselzusammenfassung und Tabelle. Neue Bearbeitungen starten bei Alle Schüler. Die zusätzliche letzte Tabellenzeile nutzt ausschließlich `assessmentStats`/`assessmentProgress`, gilt für die ganze Leistung auch bei Suche und erscheint erst ab zwei gewerteten Noten; die Punktezelle bleibt leer.
+- Schlüsseländerungen verwenden weiterhin `pointKeyImpact`. Kurze situationsabhängige Texte für null/eine/mehrere Änderungen; direkte Noten werden nur bei tatsächlichem Vorhandensein gesondert erklärt. Punkte, manuelle Werte und frühere Eingaben bleiben geschützt. Leere Leistungen werden ohne unnötige Bestätigung übernommen. Abbrechen verändert keine Daten.
+- Im Notenschlüsseldialog steht der bestehende PDF-Export vor Prüffeld und Notentabelle. Ganze, halbe und Zehntelpunktschritte, sämtliche Schlüssel und Notenabstufungen unverändert. Keine zusätzliche Grenzwerttabelle.
+- Die Einzelansicht fasst Namen und Position zusammen. Berechnete Vorschau und gespeicherte Note sind getrennt beschriftet. Manuelle und tatsächlich gewertete Werte werden unterschieden, auch bei ausgeschlossenen Einträgen. Die zentrale Punkteübernahme setzt offene Ergebnisse weiterhin über `pointResult` auf Bewertet; bewusst abweichende Status bleiben erhalten. Keine Speicherung durch Vorschau.
+- `chooseContext` führt auch das erneute ausdrückliche Öffnen desselben Fachs durch `openCourseWorkspace`. Reines Rendern und normale Registerkarten wenden die Öffnungsregel nicht an. Programmstart verwendet ausschließlich `startupView`. Ausdrückliche Übersicht, Fortsetzen sowie Schüler- und Leistungsaufrufe haben Vorrang; die Einstellung selbst wird nicht verändert.
+- Die Punktebearbeitung aus Schülernoten verwendet die vorhandene Einzelansicht. Beim Bearbeiten direkter Noten bleiben aufbewahrte Punktfelder erhalten. Keine neue Speicherarchitektur oder Migration.
+
+## Fokus und Rückmeldungen
+
+Die gemeinsame Komponente `focusTarget` prüft vorhandene, verbundene, sichtbare und aktivierbare Ziele, einschließlich geschlossener Dialoge/Details und deaktivierter Steuerelemente. Überschriften erhalten ausschließlich für den gezielten Fokus `tabindex=-1`. Die vorhandenen Navigationen, manuellen ARIA-Tabs, Fehler- und Rückkehrmechanismen bleiben maßgeblich; kein zweiter Fokusmanager.
+
+- Hauptnavigation bleibt auf dem gewählten Link, echte Tabs auf dem aktivierten Tab.
+- Neu geöffnete Leistungen, Bearbeitung, neue Leistungen, Schüler- und Verwaltungsbereiche erschließen ihren Kontext über die Überschrift.
+- Dialoge beginnen grundsätzlich beim Dialogtitel, auch Abschlussnoten und Ersteinrichtung. Bewusste schnelle Fortsetzungen behalten ihren Eingabefokus.
+- Schülerauswahl und andere Auswahl-/Filterfelder behalten den entsprechenden Auswahlfokus. Vorheriger/Nächster Schüler und Nächster ohne Eintrag führen zur neuen Orientierung. Eingabe/Umschalt+Eingabe bleiben unmittelbar in der passenden Noten-/Punkteeingabe.
+- Fertig, Schließen, Escape, Abbrechen und erfolgreiche Übernahmen kehren zum passenden Auslöser oder nachvollziehbaren Ersatz zurück. Fehler führen zum betroffenen Feld und erhalten den Entwurf.
+- Die vorhandene eine Livequelle meldet ausschließlich übernommene Punktwerte. Kontextwechsel und neue Vorschauen verwerfen alte/noch ausstehende Punkteansagen. Verarbeitete Meldungen werden zeitversetzt entfernt. Keine Meldung je Tastendruck und keine zweite Livequelle in den Tabellen.
+
+## Automatisierte Prüfungen
+
+Die neuen Gruppen `v1220` und `v1220-browser` sind im bestehenden Testkatalog dauerhaft registriert. Historische Fokus-/Textprüfungen wurden ausschließlich an ausdrücklich verlangte neue Abläufe angepasst; Rechenreferenzen, Speicherintegrität und Dateivalidatoren werden nicht abgeschwächt.
+
+`v1220` prüft alle fünf Leistungsarten, Auswahl/Filter/Sammelaktionen, geschützte Ergebnisse, Dezimalgewichte, neue Leistungen und mündliche Einzelnoten, dynamische Fußzeilen, null/eine/mehrere Noten, manuelle und ausgeschlossene Werte, Schlüsseländerungstexte, Datenunveränderlichkeit der Vorschau, beide Fachöffnungsregeln einschließlich desselben Fachs und echte Wiederöffnung gespeicherter Browser-Arbeitsansichten. Große Teilnehmerliste mit 256 synthetischen Schülern. Die alten Punkte-/Speichertests prüfen zusätzlich den produktiven nativen Speicherpfad und den Neustart.
+
+`v1220-browser` prüft in echtem lokalem Chromium alle sechs Hauptlinks, sämtliche betroffenen Tabgruppen samt Pfeilen/Pos1/Ende/Enter/Leertaste, Leistungs- und Dialogüberschriften, Schülerwechsel und Auswahlfelder, schnelle Eingabe, Fehlerfokus, Fertig/Schließen/Escape, geschützte Auswahl, PDF-Reihenfolge, Schlüsselbestätigungen samt Abbruch, Fortsetzen, Verwaltung und die eine Livequelle. 54 Axe-Fälle einschließlich 25 Kombinationen aus Ergebnisansicht, Alle Schüler, Einzeln, Teilnehmerdialog und Notenschlüsseldialog bei 1280/800/640/320 Pixeln und CSS-Zoom 100/150/200 Prozent. Repräsentative synthetische Ansichten werden zusätzlich visuell kontrolliert. Der Chromium-Accessibility-Baum enthält Leistungsüberschrift und Durchschnitt als Tabellenzeilenkopf.
+
+Verbindliche Endprüfung: `TZ=UTC python3 dev/manage.py release`, vollständig frisch ohne übernommene Testergebnisse. Der Katalog umfasst 83 Gruppen und insgesamt 90 Schritte einschließlich zweier sauberer bytegleicher Windows-Builds, Assembly-Lader, vollständiger ZIP-Prüfung und automatisiertem Start der entpackten Weboberfläche. Die unveränderten bisherigen Tests umfassen exakte Noten-/Punkteumrechnung, 180.000 synthetische Ergebnisse, JSON/Sicherungen/Wiederherstellung/TXT, echte native Datei-/ZIP-Prüfer, Word/Excel/Open XML, CSV, PDF/UA, LibreOffice-Render und Chromium-Druck.
+
+Der abschließende Release-Commit dokumentiert den tatsächlich erfolgreichen Lauf, aktuellen getesteten Baum, Inhalts-/Werkzeugfingerprints und beide Archivprüfsummen. Der lokale `status --report reports/<Lauf>/summary.json` muss `release_current`, `source_current`, `tools_current`, `runtime_current` und `index_matches_tested_files` bestätigen. Fehlgeschlagene oder durch spätere Änderungen ungültige Entwicklungsprüfungen sind keine Freigabe.
+
+## Grenzen und Auslieferung
+
+Keine tatsächlichen Windows-x64-/ARM64-GUI-Starttests, UIA-Livetests, NVDA-Sprach-/Brailleprüfungen, reale Windows-DPI-Skalierung, Microsoft Word unter Windows oder physische Drucke. Linux-/Chromium-/Axe-/LibreOffice-Ergebnisse ersetzen diese Abnahme nicht. Das erzeugte Windows-Programm wird lokal kompiliert und sein vollständiger Lader geprüft; der Entpack-Starttest betrifft die ausgelieferte Weboberfläche, keinen nativen Windows-GUI-Start.
+
+Unverändert: Offline-Betrieb, EXE/Programm/Daten, zentrale rationale Mathematik, zwölf Schlüssel-/Notenstufenkombinationen, individuelle Fach-/Leistungsgewichtung, GFS, manuelle Abschlussnoten, automatische atomare Speicherung, JSON-Sicherungen, TXT-Notfalllisten und alle Exportformate. Die bestehende Begrenzung sehr großer angezeigter Notenschlüsseltabellen auf 100.001 Werte bleibt bestehen; gültige Punkteberechnungen bleiben uneingeschränkt. Keine Codesignierung ergänzt. Beim Update den vorhandenen Ordner Daten erhalten.

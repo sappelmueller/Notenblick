@@ -36,8 +36,10 @@ A.setPreference=function(key,value){
  if(key==='areaView'&&A.ui.main==='notes'){const w=A.W(),kind=A.kinds.includes(w.view)?w.view:w.assessmentFilter;if(kind!=='oral'){w.assessmentWorkOpen=false;A.renderAssessments(A.kinds.includes(w.view)?w.view:'');const details=document.getElementById('areaViewDetails');if(details)details.open=true;document.getElementById('areaView')?.focus();}}
  if(['pupilOrder','pupilEntries'].includes(key)&&A.ui.main==='notes'&&A.W().view==='pupil'){const id=document.activeElement?.id;A.renderPupil();const details=document.getElementById("pupilViewDetails");if(details)details.open=true;document.getElementById(id)?.focus();}
  if(['sortBy','sortDir','nameFormat'].includes(key)){
+  const focused=document.activeElement,id=focused?.id,details=focused?.closest('details[open]')?.id;
   if(A.ui.main==='notes'){if(A.W().view==='overview')A.refreshTable('overview');else A.renderNotes();}
   if(A.ui.main==='admin'&&A.ui.adminView==='students')A.$('#adminStudentsTable').innerHTML=A.studentsTable(A.adminClass());
+  if(id&&!focused.isConnected){const panel=details&&document.getElementById(details);if(panel)panel.open=true;A.focusTarget(id,{preventScroll:true});}
  }
  return true;
 };

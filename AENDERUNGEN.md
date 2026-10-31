@@ -1,3 +1,16 @@
+# Notenblick 1.22.0
+
+- Einheitlicher Kontextfokus: neue Arbeitsbereiche und Dialoge beginnen bei ihrer Überschrift. Hauptlinks, Tabs und Auswahlfelder behalten ihren Fokus; schnelle Eingabe/Umschalt+Eingabe bleibt direkt. Fertig, Schließen, Escape und Abbrechen führen zum passenden Auslöser zurück. Gemeinsame Zielprüfung schützt unsichtbare oder deaktivierte Elemente.
+- Fachöffnungsregel bei allen ausdrücklichen Öffnungen, einschließlich desselben Fachs. Programmstart und normale Tabs unabhängig. Zur Notenübersicht, Fortsetzen und bewusste Schüler-/Leistungsansichten behalten Vorrang.
+- Teilnehmer auswählen: Ganze Klasse oder Nur ausgewählte Schüler, Suche, Gesamtzähler und Sammelaktionen. Alphabetische begrenzte Liste, responsive Spalten. Gespeicherte Einträge bleiben unmittelbar erkennbar gesperrt; Suchfilter und Abbruch verlieren keine Zuordnungen.
+- Gewichtung der Leistung mit kurzer Erklärung statt Faktor, einschließlich neuer mündlicher Einzelnoten. Standard 1, Dezimalwerte, Grenzen und Mathematik unverändert.
+- Ruhiger Leistungsarbeitsbereich mit eindeutiger Überschrift, Aktionen, Kontext, Bewertungsstand und Klassendurchschnitt. Zusätzliche letzte Durchschnittszeile in Ergebnisansicht und Alle Schüler, ab zwei gewerteten Noten, auch bei Suchfiltern; Punktezelle bewusst leer.
+- Kurze natürliche Schlüsselbestätigungen auf Basis der vorhandenen Änderungsberechnung; korrekte null/eine/mehrere Auswirkungen und gezielter Hinweis auf direkte Noten. PDF im Schlüsseldialog direkt oben, danach Prüffeld und Punktetabelle.
+- Einzelansicht mit Name und Position, Note anpassen, eindeutiger Vorschau/Übernahme und Kennzeichnung manueller/nicht gewerteter Werte. Eine zentrale Punkteansage je erfolgter Übernahme; veraltete/ausstehende Meldungen werden beim Kontextwechsel oder neuen Eingaben bereinigt.
+- Punktebearbeitung aus Schülernoten verwendet dieselbe geschützte Eingabekomponente. Aufbewahrte Punktfelder bleiben auch bei direkter Notenbearbeitung erhalten. Fehlerfokus bei ungültigen Noten, Gewichten und Schlüsselfeldern verbessert.
+- Datumseingaben, Dialogüberschriften, Teilnehmerliste, Aktionen und Einzelansicht bei sehr schmalen/zoomvergrößerten Fenstern verbessert. Keine neue Abhängigkeit oder Speicherarchitektur; Domänenmathematik, Speicherung, Sicherungen und Exportrenderer unverändert.
+- Neue dauerhafte Gruppen v1220/v1220-browser, synthetische Großklasse und gespeicherte Neustartansichten. Vollständige frische lokale Freigabe mit 83 Testgruppen/90 Schritten erforderlich. Windows-/UIA-/NVDA-/Microsoft-Word-Liveabnahme bleibt separat offen. Details in docs/PRUEFBERICHT-1.22.0.md.
+
 # Notenblick 1.21.1
 
 - Vorhandene Leistungen öffnen eine nicht bearbeitbare Ergebnisansicht. Noten bearbeiten und Fertig wechseln im selben Bereich; Schließen führt zur auslösenden Tabellenposition zurück. Neue Leistungen und Fortsetzen beginnen direkt mit der Bearbeitung. Genau ein unterer Arbeitsbereich, Schutz ausstehender und ungültiger Eingaben.

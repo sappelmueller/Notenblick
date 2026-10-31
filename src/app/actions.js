@@ -18,8 +18,8 @@
       case 'return-oral':Notenblick.returnToOral();break;
       case 'oral-page':Notenblick.W().oralPage=Math.max(0,Notenblick.W().oralPage+Number(el.dataset.step));Notenblick.refreshOralTable();Notenblick.remember();Notenblick.$('#oralNotesTitle')?.focus();break;
       case 'choose-shortcuts':Notenblick.shortcutDialog();break;
-      case 'quick-course':{if(Notenblick.chooseContext({courseId:id,historical:true,openNotes:true})){const link=Notenblick.$('#quick-'+id);if(link&&!link.closest('[hidden]'))link.focus();else Notenblick.$('#noteTabs [aria-selected=true]')?.focus();}break;}
-      case 'home-all-courses':Notenblick.activateGroup('main','notes',false,true);Notenblick.$('#allSelection').open=true;(Notenblick.$('#class').options[0]?.value?Notenblick.$('#class'):Notenblick.$('#noteTabs [aria-selected=true]'))?.focus();break;
+      case 'quick-course':{if(Notenblick.chooseContext({courseId:id,historical:true,openNotes:true})){Notenblick.focusTarget('subjectTitle');}break;}
+      case 'home-all-courses':Notenblick.activateGroup('main','notes',false,true);Notenblick.$('#allSelection').open=true;Notenblick.focusTarget('subjectTitle');break;
       case 'resume-assessment':{const record=Notenblick.data.assessments.find(a=>a.id===id);if(record){Notenblick.courseNotes(record.courseId);Notenblick.W().assessmentFilter=record.kind;Notenblick.W().view=Notenblick.assessmentView(record.kind);if(record.kind==='oral')Notenblick.W().oralView='classes';Notenblick.openAssessment(id,true,true);}break;}
       case 'dismiss-errors': Notenblick.errors.clear();Notenblick.error();break;
       case 'preview-names':Notenblick.previewNames(el.dataset.prefix);break;
@@ -28,14 +28,14 @@
       case 'legacy-review':Notenblick.legacyDialog(id||Notenblick.ui.course);break;
       case 'legacy-preview':Notenblick.legacyPreview?.();break;
       case 'work-year':{const y=Notenblick.data.years.find(y=>y.id===id);if(!y)throw Error('Dieses Schuljahr ist nicht mehr vorhanden.');Object.assign(Notenblick.ui,{workingYear:id,historicalYear:'',year:id,class:'',course:''});Notenblick.normalizeContext();Notenblick.renderAdmin();Notenblick.remember();Notenblick.$('[data-menu-key=year-'+id+']')?.focus();break;}
-      case 'year-notes':Notenblick.ui.historicalYear=id===Notenblick.ui.workingYear?'':id;Notenblick.ui.year=id;Notenblick.ui.class='';Notenblick.ui.course='';Notenblick.normalizeContext();Notenblick.rendered={};Notenblick.activateGroup('main','notes',false,true);Notenblick.$('#class').focus();break;
-      case 'current-year':Notenblick.ui.historicalYear='';Notenblick.ui.year=Notenblick.ui.workingYear;Notenblick.ui.class='';Notenblick.ui.course='';Notenblick.normalizeContext();Notenblick.rendered={};Notenblick.renderNotes();Notenblick.remember();Notenblick.$('#class').focus();break;
+      case 'year-notes':Notenblick.ui.historicalYear=id===Notenblick.ui.workingYear?'':id;Notenblick.ui.year=id;Notenblick.ui.class='';Notenblick.ui.course='';Notenblick.normalizeContext();Notenblick.rendered={};Notenblick.openCourseWorkspace({view:'overview'});Notenblick.activateGroup('main','notes',false,true);Notenblick.focusTarget('overviewTitle');break;
+      case 'current-year':Notenblick.ui.historicalYear='';Notenblick.ui.year=Notenblick.ui.workingYear;Notenblick.ui.class='';Notenblick.ui.course='';Notenblick.normalizeContext();Notenblick.rendered={};Notenblick.openCourseWorkspace({view:'overview'});Notenblick.renderNotes();Notenblick.remember();Notenblick.focusTarget('overviewTitle');break;
       case 'assessment-list': Notenblick.returnToAssessmentList(); break;
       case 'next-empty': {
         const w=Notenblick.W(),record=Notenblick.data.assessments.find(x=>x.id===w.selected[kind]),list=Notenblick.pointEntryList(record);
         if(!record||!list.length)break;let next=-1;
         for(let step=1;step<=list.length;step++){const at=(w.studentIndex+step)%list.length;if(!Notenblick.N.hasEntry(record.results[list[at].id])){next=at;break;}}
-        if(next>=0){w.studentIndex=next;Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.$('#entry-'+kind+'-single [data-entry=points],#entry-'+kind+'-single [data-entry=grade]')?.focus();}break;
+        if(next>=0){w.studentIndex=next;Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.focusTarget('singleName-'+kind);}break;
       }
       case 'assessment-edit': Notenblick.editAssessment(); break;
       case 'assessment-done': Notenblick.finishAssessment(); break;
@@ -47,12 +47,12 @@
       case 'edit-result': Notenblick.resultDialog(id,el.dataset.student); break;
       case 'transfer-student': Notenblick.transferDialog(id); break;
       case 'copy-course': Notenblick.copyCourseDialog(); break;
-      case 'course-notes': Notenblick.courseNotes(id); break;
+      case 'course-notes': if(Notenblick.chooseContext({courseId:id,historical:true,openNotes:true,view:el.dataset.view==='overview'?'overview':null}))Notenblick.focusTarget(el.dataset.view==='overview'?'overviewTitle':'subjectTitle'); break;
       case 'class-notes': Notenblick.classNotes(id); break;
-      case 'class-subjects': Notenblick.ui.adminClass=id; Notenblick.ui.adminView='subjects'; Notenblick.renderAdmin(); Notenblick.remember(); Notenblick.$('#tab-subjects').focus(); break;
-      case 'year-classes': Notenblick.ui.adminYear=id; Notenblick.ui.adminView='classes'; Notenblick.renderAdmin(); Notenblick.remember(); Notenblick.$('#tab-classes').focus(); break;
+      case 'class-subjects': Notenblick.ui.adminClass=id; Notenblick.ui.adminView='subjects'; Notenblick.renderAdmin(); Notenblick.remember(); Notenblick.focusTarget('subjectsTitle'); break;
+      case 'year-classes': Notenblick.ui.adminYear=id; Notenblick.ui.adminView='classes'; Notenblick.renderAdmin(); Notenblick.remember(); Notenblick.focusTarget('classesTitle'); break;
       case 'pupil-prev':
-      case 'pupil-next': {const list=Notenblick.sorted(Notenblick.N.activeStudents(Notenblick.data,Notenblick.getCourse(),true),Notenblick.W().sortBy,Notenblick.W().sortDir),i=list.findIndex(s=>s.id===Notenblick.W().pupil);Notenblick.W().pupil=list[i+(a==='pupil-next'?1:-1)]?.id||Notenblick.W().pupil;Notenblick.renderPupil();Notenblick.remember();Notenblick.$('#pupilSelect').focus();break;}
+      case 'pupil-next': {const list=Notenblick.sorted(Notenblick.N.activeStudents(Notenblick.data,Notenblick.getCourse(),true),Notenblick.W().sortBy,Notenblick.W().sortDir),i=list.findIndex(s=>s.id===Notenblick.W().pupil);Notenblick.W().pupil=list[i+(a==='pupil-next'?1:-1)]?.id||Notenblick.W().pupil;Notenblick.renderPupil();Notenblick.remember();Notenblick.focusTarget('pupilContextTitle');break;}
       case 'open-folder': await window.NRDesktop.call('open-folder'); break;
       case 'csv': if(!Notenblick.getCourse()) throw Error('Bitte wähle unter „Noten“ zuerst ein Fach.'); await Notenblick.tableExport('overview'); break;
       case 'help':
@@ -77,14 +77,14 @@
         Notenblick.ui.adminView = 'classes';
         Notenblick.renderAdmin();
         Notenblick.remember();
-        Notenblick.$('#adminYear')?.focus();
+        Notenblick.focusTarget('classesTitle');
         break;
       case 'manage-class':
         Notenblick.ui.adminClass = id;
         Notenblick.ui.adminView = 'students';
         Notenblick.renderAdmin();
         Notenblick.remember();
-        Notenblick.$('#tab-students').focus();
+        Notenblick.focusTarget('studentsTitle');
         break;
       case 'new-year':
         if (Notenblick.ui.main !== 'admin') Notenblick.activateGroup('main', 'admin', false, false);
@@ -159,12 +159,12 @@
           w.studentIndex = Math.max(0, Math.min(Notenblick.pointEntryList(Notenblick.data.assessments.find(x=>x.id===w.selected[kind])).length - 1, w.studentIndex + (a === 'next' ? 1 : -1)));
           Notenblick.renderEntry(kind, 'single');
           Notenblick.remember();
-          Notenblick.$('#singleName-' + kind)?.focus();
+          Notenblick.focusTarget('singleName-' + kind);
           break;
         }
-      case 'student-notes':{const s=Notenblick.getStudent(id),courses=Notenblick.data.courses.filter(c=>c.studentIds.includes(id)),c=courses.find(c=>c.id===Notenblick.ui.course)||courses.find(c=>!c.archived)||courses[0];if(!c)throw Error('Bitte ordne den Schüler zuerst einem Fach zu.');Notenblick.courseNotes(c.id);Notenblick.W().pupil=s.id;Notenblick.activateGroup('notes','pupil',true,true);break;}
+      case 'student-notes':{const s=Notenblick.getStudent(id),courses=Notenblick.data.courses.filter(c=>c.studentIds.includes(id)),c=courses.find(c=>c.id===Notenblick.ui.course)||courses.find(c=>!c.archived)||courses[0];if(!c)throw Error('Bitte ordne den Schüler zuerst einem Fach zu.');Notenblick.courseNotes(c.id);Notenblick.W().pupil=s.id;Notenblick.activateGroup('notes','pupil',false,true);Notenblick.focusTarget('pupilContextTitle');break;}
       case 'student':
-        Notenblick.W().pupil=id; Notenblick.activateGroup('notes','pupil',true,true);
+        Notenblick.clearAnnouncement();Notenblick.W().pupil=id; Notenblick.activateGroup('notes','pupil',false,true);Notenblick.focusTarget('pupilContextTitle');
         break;
       case 'quick-oral':
         Notenblick.quickOral(id);
@@ -191,7 +191,7 @@
       case 'cleanup':await Notenblick.openCleanup();break;
       case 'selected-export':{const s=Notenblick.backupExportSelection;Notenblick.output(s.content,Notenblick.independentExportContext(s.course,s.content));break;}
       case 'all-notes':await Notenblick.openAllNotesExport(Notenblick.val('allNotesFormat'));break;
-      case 'restored-notes':Notenblick.activateGroup('main','notes',false,true);Notenblick.activateGroup('notes','overview',true,true);break;
+      case 'restored-notes':Notenblick.openCourseWorkspace({view:'overview'});Notenblick.activateGroup('main','notes',false,true);Notenblick.activateGroup('notes','overview',false,true);Notenblick.focusTarget('overviewTitle');break;
       case 'all-text':await Notenblick.openAllNotesExport('txt');break;
       case 'backup':
         await Notenblick.backup();

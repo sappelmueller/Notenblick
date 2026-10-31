@@ -1,3 +1,7 @@
+# Aktueller Stand 1.22.0
+
+Umsetzung, Fokusvertrag, Testumfang und tatsächliche Prüfgrenzen stehen in [docs/PRUEFBERICHT-1.22.0.md](docs/PRUEFBERICHT-1.22.0.md). Der abschließende Release-Commit hält den erfolgreichen frischen vollständigen Lauf, getesteten Baum und die Archivprüfsummen fest. Nur ein aktueller erfolgreicher Release-Nachweis erlaubt die Auslieferung. Historische Nachweise folgen unverändert.
+
 # Aktueller Stand 1.21.1
 
 Funktionsumfang, Prüfmethoden, Dokumentvergleich und Grenzen stehen in [docs/PRUEFBERICHT-1.21.1.md](docs/PRUEFBERICHT-1.21.1.md). Der abschließende Git-Commit dokumentiert den frischen vollständigen Release-Lauf, den getesteten Baum und die Archivprüfsummen. Nur ein aktueller erfolgreicher Release-Nachweis erlaubt die Auslieferung. Historische Nachweise bleiben nachfolgend erhalten.

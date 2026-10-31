@@ -12,6 +12,6 @@ A.renderOralNotes=function(target,fixedKind){
 A.refreshOralTable=function(){const el=A.$('#oralNotesTable');if(el)el.innerHTML=A.oralTable();};
 A.showOral=function(view){const w=A.W();w.oralView=view;w.assessmentFilter='oral';w.view=A.assessmentView('oral');w.assessmentWorkOpen=false;A.activateGroup('notes',w.view);A.remember();};
 A.oralReturns=new Map();
-A.openOralStudent=function(sid,aid){const w=A.W();w.oralFocusId=aid;A.oralReturns.set(A.ui.course,{view:w.view,windowY:window.scrollY});w.pupil=sid;A.activateGroup('notes','pupil',true,true);};
+A.openOralStudent=function(sid,aid){const w=A.W();w.oralFocusId=aid;A.oralReturns.set(A.ui.course,{view:w.view,windowY:window.scrollY});w.pupil=sid;A.activateGroup('notes','pupil',false,true);A.focusTarget('pupilContextTitle');};
 A.returnToOral=function(){const origin=A.oralReturns.get(A.ui.course);A.showOral('individual');const target=A.$('#oral-student-'+A.W().oralFocusId)||A.$('#oralNotesTitle');target?.focus({preventScroll:true});if(origin)window.scrollTo?.(0,origin.windowY);A.oralReturns.delete(A.ui.course);};
 })(globalThis.Notenblick);

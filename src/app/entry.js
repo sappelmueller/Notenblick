@@ -1,7 +1,7 @@
 /* Notenblick – app/entry.js. Shared application API: Notenblick. */
 (function (Notenblick) {
 'use strict';
-Notenblick.entryDescription=function(el,invalid=false){const ids=[el.dataset.mode==='single'?'singleName-'+el.dataset.kind:'',invalid?'error':''].filter(Boolean);if(ids.length)el.setAttribute('aria-describedby',ids.join(' '));else el.removeAttribute('aria-describedby');};
+Notenblick.entryDescription=function(el,invalid=false){const ids=[invalid?'error':''].filter(Boolean);if(ids.length)el.setAttribute('aria-describedby',ids.join(' '));else el.removeAttribute('aria-describedby');};
 Notenblick.entryChange = function entryChange(el,{announce=true}={}) {
   const {
     entry,

@@ -30,7 +30,7 @@ Notenblick.initTabs = function initTabs() {
   const links = [...Notenblick.$('#mainTabs').querySelectorAll('a')];
   Notenblick.groups.main = {activate(link, focus = false, update = false) {
     if (link.dataset.key!=='help'&&!Notenblick.canLeave()) return false;
-    Notenblick.closeMenu?.(false);
+    Notenblick.closeMenu?.(false);Notenblick.clearAnnouncement();
     const key = link.dataset.key;
     links.forEach(item => {if (item === link) item.setAttribute('aria-current','page'); else item.removeAttribute('aria-current'); Notenblick.$('#'+item.dataset.key).hidden = item !== link;});
     Notenblick.ui.main = key;
@@ -71,15 +71,15 @@ Notenblick.normalizeContext = function normalizeContext() {
   if (!Notenblick.data.years.some(y => y.id === Notenblick.ui.adminYear)) Notenblick.ui.adminYear = Notenblick.ui.year;
 };
 Notenblick.courseChoices=function(yid=Notenblick.ui.year){const collator=new Intl.Collator('de',{numeric:true,sensitivity:'base'}),classes=new Map(Notenblick.data.classes.filter(c=>c.yearId===yid&&!c.archived).map(c=>[c.id,c]));return Notenblick.data.courses.filter(c=>classes.has(c.classId)&&!c.archived).sort((a,b)=>collator.compare(classes.get(a.classId).name,classes.get(b.classId).name)||collator.compare(a.name,b.name)||a.id.localeCompare(b.id));};
-Notenblick.chooseContext=function({classId,courseId,historical=false,openNotes=false}={}){
- const A=Notenblick;if(!A.canLeave())return false;const previous=A.ui.course;
+Notenblick.chooseContext=function({classId,courseId,historical=false,openNotes=false,view=null}={}){
+ const A=Notenblick;if(!A.canLeave())return false;
  const course=courseId&&A.data.courses.find(c=>c.id===courseId),cl=A.data.classes.find(c=>c.id===(course?.classId||classId||A.ui.class));if(!cl)return false;
  if(cl.yearId!==A.ui.year&&!historical)return false;
  if(historical){A.ui.year=cl.yearId;A.ui.historicalYear=cl.yearId===A.ui.workingYear?'':cl.yearId;}
  A.ui.class=cl.id;A.ui.course=course?.id||A.ui.selections[cl.yearId+':'+cl.id]?.course||'';A.normalizeContext();
- if(previous!==A.ui.course||openNotes&&A.ui.main!=='notes'){A.openCourseWorkspace();A.openedNotesCourse=A.ui.course;}A.ui.selections[cl.yearId+':'+cl.id]={course:A.ui.course};A.rendered={};if(openNotes)A.activateGroup('main','notes',false,true);else A.renderNotes();A.remember();return true;
+ A.openCourseWorkspace({view});A.openedNotesCourse=A.ui.course;A.ui.selections[cl.yearId+':'+cl.id]={course:A.ui.course};A.rendered={};if(openNotes)A.activateGroup('main','notes',false,true);else A.renderNotes();A.remember();return true;
 };
-Notenblick.openCourseWorkspace=function(){const A=Notenblick;A.entrySession=null;if(A.prefs.courseOpenView==='overview'){A.W().view='overview';A.W().assessmentWorkOpen=false;}};
+Notenblick.openCourseWorkspace=function({view=null}={}){const A=Notenblick;A.clearAnnouncement();A.entrySession=null;if(view||A.prefs.courseOpenView==='overview'){A.W().view=view||'overview';A.W().assessmentWorkOpen=false;}};
 Notenblick.fillSelection=function(yid=Notenblick.ui.year,cid=Notenblick.ui.class,fid=Notenblick.ui.course){
  const A=Notenblick,collator=new Intl.Collator('de',{numeric:true,sensitivity:'base'}),cs=A.data.classes.filter(c=>c.yearId===yid).sort((a,b)=>collator.compare(a.name,b.name)),fs=A.data.courses.filter(c=>c.classId===cid).sort((a,b)=>collator.compare(a.name,b.name));
  A.$('#class').innerHTML=cs.map(c=>A.opt(c.id,c.name+(c.archived?' (ausgeblendet)':''),cid)).join('')||A.opt('','Keine Klasse','');
@@ -104,7 +104,7 @@ Notenblick.ensureNoteTabs=function(){
  const keys=A.noteTabKeys(),labels={overview:'Übersicht',assessments:'Leistungen',pupil:'Schüler',...A.N.KINDS};
  for(const key of ['overview','assessments',...A.kinds,'pupil']){const panel=A.$('#'+A.notePanel(key));panel.hidden=true;panel.removeAttribute('role');panel.removeAttribute('aria-labelledby');if(key==='assessments'||A.kinds.includes(key))panel.innerHTML='';}
  list.innerHTML=keys.map(key=>`<li><a id="tab-${key}" href="#${A.notePanel(key)}" data-key="${key}">${labels[key]}</a></li>`).join('');list.dataset.layout=layout;
- A.groups.notes=A.bind('noteTabs',keys,(key,update)=>{A.W().view=key;A.showNotesPane(key);if(update)A.remember();});
+ A.groups.notes=A.bind('noteTabs',keys,(key,update)=>{A.clearAnnouncement();A.W().view=key;A.showNotesPane(key);if(update)A.remember();});
 };
 Notenblick.refreshCurrent = function refreshCurrent() {
   Notenblick.normalizeContext();

@@ -35,13 +35,14 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
   Notenblick.$('#dialog .dialog-actions [data-action=close]').textContent = fn ? 'Abbrechen' : 'Schließen';
   Notenblick.$('#dialogError').hidden = true;
   Notenblick.submitDialog = fn;
-  const dialog=Notenblick.$('#dialog'),initial=options.focus?document.getElementById(options.focus):null;
-  if(options.focus==='dialogTitle')initial.tabIndex=-1;
-  const target=initial&&!initial.disabled&&!initial.closest('[hidden]')&&(Notenblick.$('#dialogContent').contains(initial)||initial===Notenblick.$('#dialogTitle'))?initial:[...Notenblick.$('#dialogContent').querySelectorAll('input:not([type=checkbox]):not([type=hidden]):not(:disabled),select:not(:disabled),textarea:not(:disabled)')].find(el=>!el.closest('[hidden]'))||Notenblick.$('#dialog .close');
-  const autofocus=!!options.focus&&!target.hasAttribute('autofocus');if(autofocus)target.setAttribute('autofocus','');
+  Notenblick.clearAnnouncement();
+  const dialog=Notenblick.$('#dialog'),heading=Notenblick.$('#dialogTitle');heading.tabIndex=-1;
+  const initial=options.focus?document.getElementById(options.focus):heading;
+  const target=initial&&!initial.disabled&&!initial.closest('[hidden]')&&(dialog.contains(initial))?initial:heading;
+  const autofocus=!target.hasAttribute('autofocus');if(autofocus)target.setAttribute('autofocus','');
   if(options.reuse){Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=false;Notenblick.$('#dialogNext').disabled=false;}
   if(!options.reuse||!dialog.open)dialog.showModal();
-  target.focus();if(autofocus)target.removeAttribute('autofocus');
+  Notenblick.focusTarget(target);if(autofocus)target.removeAttribute('autofocus');
 };
 Notenblick.closeModal = function closeModal(options={}) {
   if(!Notenblick.$('#dialog').open)return;
@@ -51,7 +52,7 @@ Notenblick.closeModal = function closeModal(options={}) {
   const cancel=Notenblick.migrationCancel;Notenblick.migrationCancel=null;
   const onClose=Notenblick.dialogOnClose;Notenblick.dialogOnClose=null;
   const previous = Notenblick.opener;
-  Notenblick.restorePointAnnouncement?.();
+  Notenblick.clearAnnouncement();Notenblick.restorePointAnnouncement?.();
   Notenblick.$('#dialog').close();
   Notenblick.submitDialog = null;
   Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=false;Notenblick.$('#dialogNext').disabled=false;
@@ -65,9 +66,9 @@ Notenblick.closeModal = function closeModal(options={}) {
     }
   }
   if(previous?.main===Notenblick.ui.main&&previous?.course===Notenblick.ui.course)for(const id of previous.details||[]){const el=document.getElementById(id);if(el)el.open=true;}
-  if (target && !target.closest('[hidden]')) target.focus({preventScroll:true});else {
+  if (!Notenblick.focusTarget(target,{preventScroll:true})) {
     const tab = document.querySelector('#' + (Notenblick.ui.main === 'notes' ? 'noteTabs' : Notenblick.ui.main === 'admin' && Notenblick.ui.adminClass ? 'adminTabs' : 'mainTabs') + ' [aria-selected=true]');
-    (tab || document.querySelector('#mainTabs [aria-current=page]'))?.focus();
+    Notenblick.focusTarget(tab || document.querySelector('#mainTabs [aria-current=page]'),{preventScroll:true});
   }
   if(previous?.main===Notenblick.ui.main&&previous?.course===Notenblick.ui.course){for(const pos of previous.wraps||[]){const el=document.getElementById(pos.id);if(el){el.scrollLeft=pos.x;el.scrollTop=pos.y;}}window.scrollTo?.(previous.windowX,previous.windowY);}
   Notenblick.oralDraft=null;Notenblick.legacyPreview=null;if(cancel)cancel();
