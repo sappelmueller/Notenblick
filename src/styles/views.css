@@ -545,3 +545,6 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 #dialog .text-button{white-space:normal;overflow-wrap:anywhere;max-width:100%}
 @media(max-width:740px){#dialog .form-grid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:420px){#dialog{max-height:calc(100% - 16px)}}
+/* Help remains readable even at an effective width of 160 CSS pixels. */
+.help-intro,.help-topic,#help h1,#help h2,#help h3{overflow-wrap:anywhere}
+.help-tabs{min-width:0}.help-tabs li{min-width:0;max-width:100%}.help-tabs a{min-width:0;max-width:100%}
