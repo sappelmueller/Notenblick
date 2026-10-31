@@ -6,7 +6,7 @@
 - Startseite behält drei Karten: Weiterarbeiten führt zum letzten Fachbereich, ausdrückliche Übersicht bleibt erreichbar, offene Leistungen werden gezählt und über fünf hinaus eingeblendet.
 - Klassenreihenfolge Aufsteigend/Absteigend als reine Darstellungseinstellung; natürliche Zahlenordnung und alphabetische Fächer, passende Nummerierung der ersten neun Fachzugriffe.
 - Gemeinsame mündliche Bewertungen und mündliche Einzelnoten eindeutig getrennt benannt. Doppeltes q-weight-Feld/Faktor bei vorhandenen mündlichen Einzelnoten beseitigt; bisherige Gewichte und Ergebnisse bleiben erhalten.
-- Escape wird nicht mehr von Hintergrund-Details vor einem offenen Dialog abgefangen. Mündliche Dialoge bleiben auch bei sehr schmalen Fenstern und hohem Zoom innerhalb des Fensters.
+- Escape wird nicht mehr von Hintergrund-Details vor einem offenen Dialog abgefangen. Mündliche Dialoge bleiben auch bei sehr schmalen Fenstern und hohem Zoom innerhalb des Fensters. Die Hilfe bleibt auch bei 320 Pixeln/200 Prozent Zoom ohne horizontalen Seitenüberlauf.
 - Neue dauerhafte Gruppen v1230/v1230-storage/v1230-browser; wortgetreuer Hilfevergleich, 49 F1-Kontexte, 63 Axe-Fälle und produktive native Speicherung. Vollständige frische lokale Release-Prüfung erforderlich. Windows/WebView2/NVDA/Braille/UIA-Liveabnahme separat offen; bis dahin Build-Kandidat. Details: docs/PRUEFBERICHT-1.23.0.md.
 
 # Notenblick 1.22.0
