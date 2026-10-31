@@ -22,7 +22,7 @@
       case 'oral-page':Notenblick.W().oralPage=Math.max(0,Notenblick.W().oralPage+Number(el.dataset.step));Notenblick.refreshOralTable();Notenblick.remember();Notenblick.$('#oralNotesTitle')?.focus();break;
       case 'choose-shortcuts':Notenblick.shortcutDialog();break;
       case 'quick-course':{if(Notenblick.chooseContext({courseId:id,historical:true,openNotes:true})){Notenblick.focusTarget('subjectTitle');}break;}
-      case 'home-all-courses':Notenblick.activateGroup('main','notes',false,true);Notenblick.$('#allSelection').open=true;Notenblick.focusTarget('subjectTitle');break;
+      case 'home-all-courses':Notenblick.activateGroup('main','notes',false,true);Notenblick.$('#allSelection').open=true;Notenblick.focusTarget(Notenblick.$('#allSelectionSummary').hidden?'class':'allSelectionSummary');break;
       case 'resume-assessment':{const record=Notenblick.data.assessments.find(a=>a.id===id);if(record){Notenblick.courseNotes(record.courseId,{focus:false});Notenblick.W().assessmentFilter=record.kind;Notenblick.W().view=Notenblick.assessmentView(record.kind);if(record.kind==='oral')Notenblick.W().oralView='classes';Notenblick.openAssessment(id,true,true);}break;}
       case 'dismiss-errors': Notenblick.errors.clear();Notenblick.error();break;
       case 'preview-names':Notenblick.previewNames(el.dataset.prefix);break;
