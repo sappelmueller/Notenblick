@@ -1,3 +1,7 @@
+# Aktueller Stand 1.23.0
+
+Umsetzung, zwei Hilfeabgleiche, neue Regressionen und offene Windows-/NVDA-Abnahme: [Prüfbericht 1.23.0](docs/PRUEFBERICHT-1.23.0.md). Der finale Commit dokumentiert den erfolgreichen frischen Release-Lauf und die Archivprüfsummen.
+
 # Aktueller Stand 1.22.0
 
 Umsetzung, Fokusvertrag, Testumfang und tatsächliche Prüfgrenzen stehen in [docs/PRUEFBERICHT-1.22.0.md](docs/PRUEFBERICHT-1.22.0.md). Der abschließende Release-Commit hält den erfolgreichen frischen vollständigen Lauf, getesteten Baum und die Archivprüfsummen fest. Nur ein aktueller erfolgreicher Release-Nachweis erlaubt die Auslieferung. Historische Nachweise folgen unverändert.

@@ -35,10 +35,11 @@
   Notenblick.addPerformanceMenu=()=>Notenblick.menu('add-performance','',[
     {action:'new-assessment',label:'Klassenarbeit',attrs:'data-kind="exam" data-fixed="true"'},
     {action:'new-assessment',label:'Test',attrs:'data-kind="test" data-fixed="true"'},
-    {action:'oral-picker',label:'Mündliche Note'},
+    {action:'new-assessment',label:'Mündliche Noten für mehrere Schüler',attrs:'data-kind="oral" data-fixed="true"'},
+    {action:'oral-picker',label:'Mündliche Einzelnote'},
     {action:'new-assessment',label:'Hausaufgabe',attrs:'data-kind="homework" data-fixed="true"'},
     {action:'new-assessment',label:'Heftbewertung',attrs:'data-kind="notebook" data-fixed="true"'}
-  ],'Leistung hinzufügen','button primary').replace('data-menu-toggle', 'data-menu-toggle'+(Notenblick.readonly()?' disabled':''));
+  ],'Leistung hinzufügen','button primary').replace('data-menu-toggle', 'aria-keyshortcuts="Control+n" data-menu-toggle').replace('data-menu-toggle', 'data-menu-toggle'+(Notenblick.readonly()?' disabled':''));
   Notenblick.renderOverview = function renderOverview() {
     const A=Notenblick,c=A.getCourse(),w=A.W(),hidden=A.prefs.notesLayout==='kinds'?A.selectAssessments(A.data,c.id).filter(a=>!A.prefs.visibleKinds.includes(a.kind)):[],selected=w.assessmentWorkOpen&&hidden.find(a=>a.id===w.assessmentId&&!A.N.isOralIndividual(a)),key=A.seq+':'+c.id+':'+A.prefs.notesLayout+':'+A.prefs.visibleKinds.join(',')+':'+(selected?.id||'');
     if(A.rendered.overview!==key){

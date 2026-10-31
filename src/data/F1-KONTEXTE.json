@@ -1,0 +1,250 @@
+{
+  "description": "Kontext-Zuordnungen für F1 (Priorität: Dialog > Unteransicht > Hauptbereich). Keine zusätzlichen Benutzertexte.",
+  "contexts": [
+    {
+      "context": "Willkommensseite und Einrichtungsassistent",
+      "topic": "Einstieg",
+      "section_id": "einstieg-notenblick-zum-ersten-mal-einrichten"
+    },
+    {
+      "context": "Startseite",
+      "topic": "Einstieg",
+      "section_id": "einstieg-die-startseite"
+    },
+    {
+      "context": "Fach-/Klassenauswahl",
+      "topic": "Einstieg",
+      "section_id": "einstieg-ein-fach-offnen"
+    },
+    {
+      "context": "Verwaltung: Schuljahre",
+      "topic": "Verwaltung",
+      "section_id": "verwaltung-schuljahre-und-arbeitsjahr"
+    },
+    {
+      "context": "Verwaltung: Klassen und Klassenübernahme",
+      "topic": "Verwaltung",
+      "section_id": "verwaltung-klassen-und-facher"
+    },
+    {
+      "context": "Verwaltung: Neues Schuljahr / Klasse übernehmen",
+      "topic": "Verwaltung",
+      "section_id": "verwaltung-neues-schuljahr-ubernehmen"
+    },
+    {
+      "context": "Verwaltung: Fach anlegen, übernehmen, bearbeiten",
+      "topic": "Verwaltung",
+      "section_id": "verwaltung-klassen-und-facher"
+    },
+    {
+      "context": "Verwaltung: Schüler hinzufügen oder bearbeiten",
+      "topic": "Verwaltung",
+      "section_id": "verwaltung-schuler-hinzufugen"
+    },
+    {
+      "context": "Verwaltung: Schülerliste übernehmen",
+      "topic": "Verwaltung",
+      "section_id": "verwaltung-schulerliste-ubernehmen"
+    },
+    {
+      "context": "Verwaltung: Schüler versetzen",
+      "topic": "Verwaltung",
+      "section_id": "verwaltung-fachteilnahmen-und-klassenwechsel"
+    },
+    {
+      "context": "Verwaltung: Teilnahme beenden/wieder aufnehmen",
+      "topic": "Verwaltung",
+      "section_id": "verwaltung-wenn-ein-schuler-die-klasse-verlasst"
+    },
+    {
+      "context": "Notenübersicht",
+      "topic": "Noten",
+      "section_id": "noten-klasse-fach-und-ansicht-wahlen"
+    },
+    {
+      "context": "Leistung anlegen/bearbeiten: Stammdaten",
+      "topic": "Noten",
+      "section_id": "noten-eine-leistung-anlegen"
+    },
+    {
+      "context": "Leistung anlegen/bearbeiten: Teilnehmer",
+      "topic": "Noten",
+      "section_id": "noten-teilnehmer-auswahlen"
+    },
+    {
+      "context": "Leistung anlegen/bearbeiten: Gewichtung und GFS",
+      "topic": "Noten",
+      "section_id": "noten-gewichtung-einer-einzelnen-leistung-und-gfs"
+    },
+    {
+      "context": "Leistung: Noten eingeben, Tabelle",
+      "topic": "Noten",
+      "section_id": "noten-noten-fur-alle-schuler-eingeben"
+    },
+    {
+      "context": "Leistung: Noten eingeben, Einzeln",
+      "topic": "Noten",
+      "section_id": "noten-einen-schuler-einzeln-bewerten"
+    },
+    {
+      "context": "Leistung: Noten ansehen, Fertig/Schließen",
+      "topic": "Noten",
+      "section_id": "noten-leistungen-ansehen-bearbeiten-und-schliessen"
+    },
+    {
+      "context": "Mündlich: Klassenübersicht",
+      "topic": "Noten",
+      "section_id": "noten-mundliche-noten-erfassen"
+    },
+    {
+      "context": "Mündlich: Einzelnote",
+      "topic": "Noten",
+      "section_id": "noten-mundliche-noten-erfassen"
+    },
+    {
+      "context": "Mündlich: Einzelnotenliste",
+      "topic": "Noten",
+      "section_id": "noten-mundliche-bewertungen-wiederfinden"
+    },
+    {
+      "context": "Leistungsart: Notentabelle/Leistungsliste",
+      "topic": "Noten",
+      "section_id": "noten-notentabelle-und-leistungsliste"
+    },
+    {
+      "context": "Schüleransicht",
+      "topic": "Noten",
+      "section_id": "noten-die-schuleransicht"
+    },
+    {
+      "context": "Eingabeart ändern/Notenschlüssel ändern",
+      "topic": "Punkte",
+      "section_id": "punkte-punktebewertung-einschalten"
+    },
+    {
+      "context": "Punktetabelle ansehen / PDF speichern",
+      "topic": "Punkte",
+      "section_id": "punkte-notenschlussel-anzeigen-und-ausgeben"
+    },
+    {
+      "context": "Punkte: Note anpassen",
+      "topic": "Punkte",
+      "section_id": "punkte-eine-berechnete-note-anpassen"
+    },
+    {
+      "context": "Punkte: Eingabe der Punktzahl",
+      "topic": "Punkte",
+      "section_id": "punkte-punkte-eintragen"
+    },
+    {
+      "context": "Notengewichtung",
+      "topic": "Berechnung",
+      "section_id": "berechnung-die-standardgewichtung"
+    },
+    {
+      "context": "Notengewichtung: Fach übernehmen",
+      "topic": "Berechnung",
+      "section_id": "berechnung-gewichtung-aus-einem-anderen-fach-ubernehmen"
+    },
+    {
+      "context": "Notengewichtung: Rundung",
+      "topic": "Berechnung",
+      "section_id": "berechnung-runden-oder-kurzen"
+    },
+    {
+      "context": "Abschlussnoten: Klasse oder einzeln",
+      "topic": "Berechnung",
+      "section_id": "berechnung-abschlussnoten-festlegen"
+    },
+    {
+      "context": "Exportdialog",
+      "topic": "Export",
+      "section_id": "export-einen-bericht-offnen"
+    },
+    {
+      "context": "Exportdialog: Schülerberichte",
+      "topic": "Export",
+      "section_id": "export-einzelne-oder-alle-schulerberichte"
+    },
+    {
+      "context": "Exportdialog: Ausgabeformat",
+      "topic": "Export",
+      "section_id": "export-ausgabeformat-wahlen"
+    },
+    {
+      "context": "Exportdialog: Umfang / Filter",
+      "topic": "Export",
+      "section_id": "export-aktuelle-filter-oder-alle-eintrage"
+    },
+    {
+      "context": "Exportdialog: Bemerkungen / Punktzahlen",
+      "topic": "Export",
+      "section_id": "export-bemerkungen-und-punktzahlen"
+    },
+    {
+      "context": "Sicherung: Exportieren",
+      "topic": "Export",
+      "section_id": "export-alle-noten-exportieren"
+    },
+    {
+      "context": "Sicherung: Speicherstatus",
+      "topic": "Sicherung",
+      "section_id": "sicherung-speicherstatus-prufen"
+    },
+    {
+      "context": "Sicherung: Automatische Notenlisten prüfen",
+      "topic": "Sicherung",
+      "section_id": "sicherung-automatische-notenlisten"
+    },
+    {
+      "context": "Sicherung: Sicherung erstellen",
+      "topic": "Sicherung",
+      "section_id": "sicherung-vollstandige-sicherung-erstellen"
+    },
+    {
+      "context": "Sicherung: Alte Sicherungen bereinigen",
+      "topic": "Sicherung",
+      "section_id": "sicherung-alte-sicherungen-bereinigen"
+    },
+    {
+      "context": "Sicherung: Wiederherstellen",
+      "topic": "Sicherung",
+      "section_id": "sicherung-sicherung-aus-datei-wiederherstellen"
+    },
+    {
+      "context": "Sicherung: Wiederherstellen früheren Stands",
+      "topic": "Sicherung",
+      "section_id": "sicherung-einen-fruheren-speicherstand-offnen"
+    },
+    {
+      "context": "Einstellungen: Allgemein",
+      "topic": "Einstellungen",
+      "section_id": "einstellungen-allgemein"
+    },
+    {
+      "context": "Einstellungen: Darstellung",
+      "topic": "Einstellungen",
+      "section_id": "einstellungen-die-notenansicht-einstellen"
+    },
+    {
+      "context": "Einstellungen: Klassenreihenfolge",
+      "topic": "Einstellungen",
+      "section_id": "einstellungen-klassenreihenfolge"
+    },
+    {
+      "context": "Einstellungen: Schnellzugriffe",
+      "topic": "Einstellungen",
+      "section_id": "einstellungen-schnellzugriffe-auswahlen"
+    },
+    {
+      "context": "Einstellungen: Notenberechnung",
+      "topic": "Einstellungen",
+      "section_id": "einstellungen-vorgaben-fur-neue-facher"
+    },
+    {
+      "context": "Hilfe selbst",
+      "topic": "Tastatur",
+      "section_id": "tastatur-so-bewegst-du-dich-durch-notenblick"
+    }
+  ]
+}

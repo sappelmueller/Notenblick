@@ -1,11 +1,11 @@
 /* One authoritative set of presentation preferences, persisted only in Ansicht.json. */
 (function(A){'use strict';
-A.preferenceDefaults=()=>({version:1,startupView:'last',courseOpenView:'last',nameFormat:'first-last',sortBy:'last',sortDir:'asc',selectionMode:'quick',notesLayout:'kinds',areaView:'matrix',visibleKinds:[...A.kinds],pupilOrder:'kind',pupilEntries:'all',defaultPrecision:2,defaultRounding:'truncate',defaultCalculationMode:'grouped',defaultWeights:A.N.defaultWeights(),quickIds:null,courseCodes:{}});
+A.preferenceDefaults=()=>({version:1,classOrder:'asc',startupView:'last',courseOpenView:'last',nameFormat:'first-last',sortBy:'last',sortDir:'asc',selectionMode:'quick',notesLayout:'kinds',areaView:'matrix',visibleKinds:[...A.kinds],pupilOrder:'kind',pupilEntries:'all',defaultPrecision:2,defaultRounding:'truncate',defaultCalculationMode:'grouped',defaultWeights:A.N.defaultWeights(),quickIds:null,courseCodes:{}});
 A.prefs=A.preferenceDefaults();
 A.restorePreferences=function(workspace){
  const source=workspace.settings||{},old=workspace.workspaces?.[workspace.course]||{},p=A.preferenceDefaults();
  if(A.firstRun===false){p.notesLayout='compact';p.defaultRounding='round';if(!Object.hasOwn(source,'selectionMode'))p.selectionMode='select';}
- for(const[k,values]of Object.entries({startupView:['last','home'],courseOpenView:['last','overview'],nameFormat:['first-last','last-first'],sortBy:['first','last'],sortDir:['asc','desc'],selectionMode:['select','quick'],notesLayout:['compact','kinds'],areaView:['matrix','list'],pupilOrder:['kind','date'],pupilEntries:['all','entered'],defaultRounding:['round','truncate']}))if(values.includes(source[k]))p[k]=source[k];
+ for(const[k,values]of Object.entries({classOrder:['asc','desc'],startupView:['last','home'],courseOpenView:['last','overview'],nameFormat:['first-last','last-first'],sortBy:['first','last'],sortDir:['asc','desc'],selectionMode:['select','quick'],notesLayout:['compact','kinds'],areaView:['matrix','list'],pupilOrder:['kind','date'],pupilEntries:['all','entered'],defaultRounding:['round','truncate']}))if(values.includes(source[k]))p[k]=source[k];
  if(!workspace.settings){p.sortBy=workspace.main==='admin'?(workspace.adminSort||old.sortBy||'last'):(old.sortBy||workspace.adminSort||'last');p.sortDir=workspace.main==='admin'?(workspace.adminDir||old.sortDir||'asc'):(old.sortDir||workspace.adminDir||'asc');if(!['first','last'].includes(p.sortBy))p.sortBy='last';if(!['asc','desc'].includes(p.sortDir))p.sortDir='asc';}
  if(Array.isArray(source.visibleKinds))p.visibleKinds=A.kinds.filter(k=>source.visibleKinds.includes(k));
  if([0,1,2].includes(source.defaultPrecision))p.defaultPrecision=source.defaultPrecision;
@@ -23,7 +23,7 @@ A.setPreference=function(key,value){
  if(!A.canLeave())return false;
  const p={...A.prefs,[key]:value};
  if(key==='defaultPrecision')p[key]=Number(value);
- const allowed={startupView:['last','home'],courseOpenView:['last','overview'],nameFormat:['first-last','last-first'],sortBy:['first','last'],sortDir:['asc','desc'],selectionMode:['select','quick'],notesLayout:['compact','kinds'],areaView:['matrix','list'],pupilOrder:['kind','date'],pupilEntries:['all','entered'],defaultPrecision:[0,1,2],defaultRounding:['round','truncate']};
+ const allowed={classOrder:['asc','desc'],startupView:['last','home'],courseOpenView:['last','overview'],nameFormat:['first-last','last-first'],sortBy:['first','last'],sortDir:['asc','desc'],selectionMode:['select','quick'],notesLayout:['compact','kinds'],areaView:['matrix','list'],pupilOrder:['kind','date'],pupilEntries:['all','entered'],defaultPrecision:[0,1,2],defaultRounding:['round','truncate']};
  if(key==='visibleKinds'){if(!Array.isArray(value)||value.some(k=>!A.kinds.includes(k)))throw Error('Bitte gültige Leistungsarten wählen.');p.visibleKinds=A.kinds.filter(k=>value.includes(k));}
  else if(!allowed[key]?.includes(p[key]))throw Error('Bitte eine gültige Einstellung wählen.');
  A.prefs=p;A.rendered={};A.remember();
@@ -32,6 +32,7 @@ A.setPreference=function(key,value){
  for(const el of document.querySelectorAll('[data-setting="'+key+'"]')){if(key==='visibleKinds')el.checked=p.visibleKinds.includes(el.value);else el.value=String(p[key]);}
  if(['defaultPrecision','defaultRounding'].includes(key)&&A.$('#defaultWeightEditor')?.isConnected){A.settingsWeights.load(A.newCourseConfig());A.settingsWeights.saved();}
  A.updateSettingsVisibility?.();if(key==='courseOpenView'){const hint=A.$('#setting-courseOpenView-hint');if(hint)hint.textContent=value==='overview'?'Zeigt beim Öffnen eines Fachs zuerst die Notenübersicht.':'Öffnet den Bereich, den du in diesem Fach zuletzt verwendet hast.';}
+ if(key==='classOrder'){if(A.ui.main==='notes')A.fillSelection();if(A.ui.main==='home')A.renderHome();if(A.ui.main==='admin')A.renderAdmin();}
  if(key==='selectionMode'&&A.ui.main==='notes')A.fillSelection();
  if(key==='areaView'&&A.ui.main==='notes'){const w=A.W(),kind=A.kinds.includes(w.view)?w.view:w.assessmentFilter;if(kind!=='oral'){w.assessmentWorkOpen=false;A.renderAssessments(A.kinds.includes(w.view)?w.view:'');const details=document.getElementById('areaViewDetails');if(details)details.open=true;document.getElementById('areaView')?.focus();}}
  if(['pupilOrder','pupilEntries'].includes(key)&&A.ui.main==='notes'&&A.W().view==='pupil'){const id=document.activeElement?.id;A.renderPupil();const details=document.getElementById("pupilViewDetails");if(details)details.open=true;document.getElementById(id)?.focus();}
@@ -51,6 +52,8 @@ A.suggestSubjectCode=function(name){const clean=x=>x.toLocaleLowerCase('de').nor
 A.copyCoursePresentation=function(sourceId,targetId){if(Object.hasOwn(A.prefs.courseCodes,sourceId))A.prefs.courseCodes[targetId]=A.prefs.courseCodes[sourceId];};
 A.copyClassPresentation=function(sourceId,targetId,d=A.data){for(const c of d.courses.filter(c=>c.classId===sourceId)){const target=d.courses.find(x=>x.classId===targetId&&x.name===c.name);if(target)A.copyCoursePresentation(c.id,target.id);}};
 A.newCourseConfig=(p=A.prefs)=>({calculationMode:p.defaultCalculationMode,weights:A.N.clone(p.defaultWeights),precision:p.defaultPrecision,rounding:p.defaultRounding});
-A.classesByYear=list=>[...list].sort((a,b)=>A.N.compareSchoolYears(A.data.years.find(y=>y.id===a.yearId),A.data.years.find(y=>y.id===b.yearId))||a.name.localeCompare(b.name,'de',{numeric:true,sensitivity:'base'}));
+A.compareClasses=(a,b)=>(A.prefs.classOrder==='desc'?-1:1)*a.name.localeCompare(b.name,'de',{numeric:true,sensitivity:'base'})||a.id.localeCompare(b.id);
+A.sortedClasses=list=>[...list].sort(A.compareClasses);
+A.classesByYear=list=>[...list].sort((a,b)=>A.N.compareSchoolYears(A.data.years.find(y=>y.id===a.yearId),A.data.years.find(y=>y.id===b.yearId))||A.compareClasses(a,b));
 A.schoolYear=y=>/^Schuljahr\b/i.test(y.label)?y.label:'Schuljahr '+y.label;
 })(globalThis.Notenblick);

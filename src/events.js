@@ -116,6 +116,9 @@ document.addEventListener('keydown', e => {
   const el = e.target;
   if(e.defaultPrevented)return;
   if(e.key==='Escape'){const details=el.closest('details[open]');if(details&&(details.hasAttribute('data-view-options')||details.id==='oralSettings'||details.id==='pupilHistory'||details.classList.contains('result-note'))){details.open=false;details.querySelector('summary').focus();e.preventDefault();return;}}
+  // A modal owns Escape and its own input keys. Background details must not
+  // consume the native cancel event while a dialog is open.
+  if(Notenblick.$('#dialog').open)return;
   if (e.key === 'Enter' && ['grade','points'].includes(el.dataset.entry)) {
     e.preventDefault();
     const result=Notenblick.entryChange(el,{announce:false});
@@ -134,12 +137,7 @@ document.addEventListener('keydown', e => {
     Notenblick.$('#viewDetails').open = false;
     Notenblick.$('#viewSummary').focus();
   }
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
-    e.preventDefault();
-    if (Notenblick.canLeave()) {
-      if (Notenblick.store) {Notenblick.remember();Notenblick.save();}else if (Notenblick.mode !== 'none') Notenblick.backup().catch(e=>Notenblick.error(e.message,'storage'));
-    }
-  }
+
 });
 Notenblick.$('#importFile').addEventListener('change', async e => {
   try {
