@@ -50,11 +50,13 @@
   "exports/pdf.js",
   "exports/dialog.js",
   "exports/collection.js",
+  "help-data.js",
   "views/help.js",
   "app/actions.js",
   "app/points.js",
   "app/entry.js",
   "app/migration.js",
   "app/startup.js",
+  "app/shortcuts.js",
   "events.js"
 ]

@@ -14,6 +14,8 @@ Notenblick.origin = function origin(el) {
 };
 Notenblick.setDialogSize=size=>{Notenblick.$('#dialog').dataset.size=['small','medium','wide'].includes(size)?size:'medium';};
 Notenblick.modal = function modal(title, content, fn, label = 'Speichern', options = {}) {
+  if(Notenblick.contextHelp)Notenblick.closeContextHelp();
+  Notenblick.dialogHelpContext=options.helpContext??null;
   if(!options.reuse)Notenblick.opener = {
     element: document.activeElement,
     key: Notenblick.origin(document.activeElement),
@@ -45,6 +47,7 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
   Notenblick.focusTarget(target);if(autofocus)target.removeAttribute('autofocus');
 };
 Notenblick.closeModal = function closeModal(options={}) {
+  if(Notenblick.closeContextHelp?.())return;
   if(!Notenblick.$('#dialog').open)return;
   if(Notenblick.dialogReturn){const back=Notenblick.dialogReturn;Notenblick.dialogReturn=null;back();return;}
   if(!options.submitted&&Notenblick.dialogBeforeClose?.()===false)return;
@@ -76,33 +79,33 @@ Notenblick.closeModal = function closeModal(options={}) {
   const next=Notenblick.afterClose; Notenblick.afterClose=null; if(next)next();
 };
 Notenblick.submitModal=async function(next=false){
- if(Notenblick.dialogBusy||!Notenblick.submitDialog)return;
+ if(Notenblick.contextHelp||Notenblick.dialogBusy||!Notenblick.submitDialog)return;
  Notenblick.dialogBusy=true;const fn=Notenblick.submitDialog;let result;
  Notenblick.$('#dialogSave').disabled=true;Notenblick.$('#dialogNext').disabled=true;Notenblick.$('#dialogError').hidden=true;
  try{result=await fn(next);if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open&&!result?.keepOpen)Notenblick.closeModal({submitted:true});}
  catch(e){if(Notenblick.submitDialog!==fn||!Notenblick.$('#dialog').open)return;const el=Notenblick.$('#dialogError');el.textContent=e.message;el.hidden=false;if(document.activeElement===Notenblick.$('#dialogTitle'))result={keepOpen:true,focus:'dialogSave'};}
  finally{if(Notenblick.submitDialog===fn||!Notenblick.$('#dialog').open){Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=false;Notenblick.$('#dialogNext').disabled=false;Notenblick.updateOralNext?.();if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open){if(result?.focus)document.getElementById(result.focus)?.focus();else if(!Notenblick.$('#dialog').contains(document.activeElement))Notenblick.$('#dialogSave').focus();}}}
 };
-Notenblick.confirm = function confirm(title, text, fn, label = 'Bestätigen') {
-  Notenblick.modal(title, '<p>' + Notenblick.esc(text) + '</p>', fn, label,{size:'small'});
+Notenblick.confirm = function confirm(title, text, fn, label = 'Bestätigen', options = {}) {
+  Notenblick.modal(title, '<p>' + Notenblick.esc(text) + '</p>', fn, label,{size:'small',...options});
 };
 // Suspend the current form in the shared dialog, preserving nodes/listeners,
 // invalid input, selection and focus. Cancel/Escape restores without closing it.
-Notenblick.confirmInDialog=function(title,text,fn,label='Bestätigen',cancelLabel='Abbrechen'){
+Notenblick.confirmInDialog=function(title,text,fn,label='Bestätigen',cancelLabel='Abbrechen',helpContext=null){
  const A=Notenblick;if(A.dialogReturn)return;
  const content=A.$('#dialogContent'),save=A.$('#dialogSave'),cancel=A.$('#dialog .dialog-actions [data-action=close]'),next=A.$('#dialogNext'),error=A.$('#dialogError'),focus=document.activeElement;
  // Commit the focused control's native change while all form fields are still
  // connected. Detaching it first can dispatch change during partial removal.
  cancel.focus({preventScroll:true});
- const state={title:A.$('#dialogTitle').textContent,size:A.$('#dialog').dataset.size,submit:A.submitDialog,onClose:A.dialogOnClose,beforeClose:A.dialogBeforeClose,afterClose:A.afterClose,opener:A.opener,cancellable:A.dialogCancellable,save:save.textContent,hidden:save.hidden,cancel:cancel.textContent,nextHidden:next.hidden,error:error.textContent,errorHidden:error.hidden,footerHidden:A.$('#setupFooterSlot').hidden,scroll:content.scrollTop,dialogScroll:A.$('#dialog').scrollTop};
+ const state={helpContext:A.dialogHelpContext,title:A.$('#dialogTitle').textContent,size:A.$('#dialog').dataset.size,submit:A.submitDialog,onClose:A.dialogOnClose,beforeClose:A.dialogBeforeClose,afterClose:A.afterClose,opener:A.opener,cancellable:A.dialogCancellable,save:save.textContent,hidden:save.hidden,cancel:cancel.textContent,nextHidden:next.hidden,error:error.textContent,errorHidden:error.hidden,footerHidden:A.$('#setupFooterSlot').hidden,scroll:content.scrollTop,dialogScroll:A.$('#dialog').scrollTop};
  const nodes=document.createDocumentFragment();while(content.firstChild)nodes.append(content.firstChild);
  const restore=()=>{
-  A.dialogReturn=null;A.$('#dialogTitle').textContent=state.title;A.setDialogSize(state.size);content.replaceChildren(nodes);content.scrollTop=state.scroll;A.$('#dialog').scrollTop=state.dialogScroll;
+  A.dialogHelpContext=state.helpContext;A.dialogReturn=null;A.$('#dialogTitle').textContent=state.title;A.setDialogSize(state.size);content.replaceChildren(nodes);content.scrollTop=state.scroll;A.$('#dialog').scrollTop=state.dialogScroll;
   A.$('#setupFooterSlot').hidden=state.footerHidden;A.submitDialog=state.submit;A.dialogOnClose=state.onClose;A.dialogBeforeClose=state.beforeClose;A.afterClose=state.afterClose;A.opener=state.opener;A.dialogCancellable=state.cancellable;A.dialogBusy=false;
   save.textContent=state.save;save.hidden=state.hidden;save.disabled=false;cancel.textContent=state.cancel;next.hidden=state.nextHidden;next.disabled=false;error.textContent=state.error;error.hidden=state.errorHidden;
   (focus?.isConnected?focus:save).focus({preventScroll:true});
  };
- A.dialogReturn=restore;A.dialogBeforeClose=null;A.dialogOnClose=null;A.afterClose=null;A.setDialogSize('small');A.$('#dialogTitle').textContent=title;
+ A.dialogHelpContext=helpContext??A.dialogHelpContext;A.dialogReturn=restore;A.dialogBeforeClose=null;A.dialogOnClose=null;A.afterClose=null;A.setDialogSize('small');A.$('#dialogTitle').textContent=title;
  A.$('#setupFooterSlot').hidden=true;content.innerHTML='<p>'+A.esc(text)+'</p>';A.$('#dialog').scrollTop=0;error.hidden=true;save.textContent=label;save.hidden=false;cancel.textContent=cancelLabel;next.hidden=true;
  A.submitDialog=async()=>{restore();try{await fn();}catch(e){error.textContent=e.message;error.hidden=false;}return{keepOpen:true};};
  cancel.focus();

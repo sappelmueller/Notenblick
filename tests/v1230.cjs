@@ -1,0 +1,47 @@
+'use strict';
+const crypto=require('node:crypto'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+(async()=>{
+const ctx=await require('./load.cjs').load({cache:new Map()}),{q:A,w}=ctx,$=s=>w.document.querySelector(s),N=w.NR,checks=[];
+try{
+ const help=JSON.parse(fs.readFileSync(path.join(__dirname,'../src/data/HILFE-1.23.0.json'))),contexts=JSON.parse(fs.readFileSync(path.join(__dirname,'../src/data/F1-KONTEXTE.json'))).contexts;
+ for(const [name,hash]of Object.entries({'HILFE-1.23.0.json':'c906ac40a73489416471d019eb4d9975ddf8a97fbf86c3f0e36fcd6a07d59b35','F1-KONTEXTE.json':'17cd2e66d1570a39d6e0a4303d2ae13c58215290be691566028fe9ffa5fcf4dc'}))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'../src/data',name))).digest('hex'),hash);
+ assert.equal(help.topics.length,9);assert.equal(help.topics.reduce((n,t)=>n+t.sections.length,0),77);assert.equal(contexts.length,49);
+ A.activateGroup('main','help');assert.equal($('#help .help-intro').textContent,help.intro);assert.equal(w.document.querySelectorAll('#help [role=tab]').length,9);
+ for(const t of help.topics){assert.equal($('#help-tab-'+t.id).textContent,t.title);for(const s of t.sections){const h=$('#'+s.id);assert.equal(h.textContent,s.heading);assert.deepEqual(Array.from(h.parentElement.querySelectorAll('p'),p=>p.textContent),s.paragraphs);}}
+ checks.push('JSON wortgetreu: Einleitung, 9 Tabs, 77 H3-Abschnitte und alle Absätze; keine alte Hilfe');
+ const fixture=require('./v1210-fixture.cjs')(N),base=fixture.courses[0];fixture.courses.push({...N.clone(base),id:'synthetic-other',name:'Weiteres Fach'});fixture.classes.push({...N.clone(fixture.classes[0]),id:'synthetic-target-class',name:'7z'});
+ w.contextFixture=fixture;w.eval('globalThis.prepareContext='+require('./v1230-contexts.cjs').toString());
+ const key=(key,extras={})=>w.document.activeElement.dispatchEvent(new w.KeyboardEvent('keydown',{key,bubbles:true,cancelable:true,...extras}));
+ const rows=[];
+ for(let index=0;index<contexts.length;index++){
+  const origin=await w.prepareContext(index),raw=JSON.stringify(A.data),controls=Array.from(w.document.querySelectorAll('#dialogForm input,#dialogForm textarea,#dialogForm select')).map(el=>[el,el.value,el.checked]),node=origin;
+  assert.equal(A.helpContext(origin),index,'context '+index+' '+contexts[index].context);
+  key('F1');if(index===48){assert.equal(!!A.contextHelp,false);continue;}
+  const {section}=A.helpSection(index);assert.equal(w.document.activeElement.id,index===24||$('#dialog').open?'contextHelpTitle':section.id);assert.equal(A.contextHelp.index,index);
+  if($('#dialog').open){assert.equal($('#contextHelpTitle').textContent,section.heading);assert.deepEqual(Array.from($('#contextHelp').querySelectorAll('p'),p=>p.textContent),Array.from(section.paragraphs));for(const[el,v,c]of controls){assert.equal(el.isConnected,true);assert.equal(el.value,v);assert.equal(el.checked,c);}}
+  assert.equal(JSON.stringify(A.data),raw);key('Escape');assert.equal(w.document.activeElement,node,'return context '+index);assert.equal(JSON.stringify(A.data),raw);for(const[el,v]of controls)assert.equal(el.value,v);
+  rows.push({context:contexts[index].context,section:section.id,focusReturned:true,formNodesRetained:true});
+ }
+ checks.push('49 reale Ansichten/Formulare: exakte F1-Zuordnung, Abschnitt, Wortlaut, Escape, identische Formknoten/Eingaben und Rückkehrfokus');
+ await w.prepareContext(19);assert.equal(w.document.querySelectorAll('#q-weight').length,1);assert.equal($('label[for=q-weight]').textContent,'Gewichtung der Leistung');assert.equal($('#q-weight').value,'1.5');$('#q-weight').value='2,25';await A.submitModal();assert.equal(A.data.assessments.find(a=>a.id==='synthetic-context-oral').weight,'2.25');A.closeModal({submitted:true});
+ checks.push('Mündliche Einzelnote: genau eine ID/Label, vorhandenes Gewicht 1,5 erhalten, 2,25 korrekt gespeichert');
+ await w.prepareContext(11);const raw=JSON.stringify(A.data);A.prefs.quickIds=null;const c=A.getCourse(),cl=A.getClass();for(let i=0;i<14;i++){A.data.classes.push({...N.clone(cl),id:'class-'+i,name:String(i+2)+'a'});A.data.courses.push({...N.clone(c),id:'course-'+i,classId:'class-'+i,name:'Fach '+i,studentIds:[]});}A.prefs.quickIds=A.courseChoices().map(c=>c.id).slice(0,16);
+ for(const order of ['asc','desc']){assert.equal(A.setPreference('classOrder',order),true);const choices=A.shortcutChoices(A.ui.workingYear).chosen;A.activateGroup('main','home');const links=Array.from(w.document.querySelectorAll('#home [data-action=quick-course]'));assert.deepEqual(links.map(l=>l.dataset.id),Array.from(choices,c=>c.id));assert.equal(links.filter(l=>l.hasAttribute('aria-keyshortcuts')).length,9);for(let i=0;i<9;i++){A.activateGroup('main','home');key(String(i+1),{altKey:true});assert.equal(A.ui.course,choices[i].id);}}
+ key('0',{altKey:true});assert.equal($('#allSelection').open,true);assert.equal(w.document.activeElement.id,'subjectTitle');
+ checks.push('Alt+1–9 folgt 16 konkreten Klasse-Fach-Paaren in beiden Klassenreihenfolgen; Alt+0 öffnet vollständige Auswahl');
+ await w.prepareContext(11);A.prefs.notesLayout='compact';A.renderNotes();for(const n of [1,2,3]){key(String(n),{ctrlKey:true});assert.equal(w.document.activeElement.id,['tab-overview','tab-assessments','tab-pupil'][n-1]);}const before=A.W().view;key('9',{ctrlKey:true});assert.equal(A.W().view,before);A.openAssessment('points-0',true,true);key('Tab',{ctrlKey:true});assert.equal(A.W().entryMode,'single');key('Tab',{ctrlKey:true,shiftKey:true});assert.equal(A.W().entryMode,'table');
+ const route={s:'home',n:'notes',v:'admin',i:'backup',e:'settings',h:'help'};for(const[k,v]of Object.entries(route)){key(k,{altKey:true});assert.equal(A.ui.main,v);assert.equal(w.document.activeElement.id,'tab-'+v);}
+ A.activateGroup('main','notes');key('n',{ctrlKey:true});const items=Array.from(w.document.querySelectorAll('[role=menu]:not([hidden]) [role=menuitem]'),e=>e.textContent);assert.ok(items.includes('Mündliche Noten für mehrere Schüler'));assert.ok(items.includes('Mündliche Einzelnote'));key('Escape');for(const[k,kind]of Object.entries({k:'exam',t:'test',m:'oral'})){key(k,{ctrlKey:true,shiftKey:true});assert.equal($('#a-kind').value,kind);A.closeModal();}
+ key('g',{ctrlKey:true});assert.ok($('#weightEditor'));A.closeModal();key('e',{ctrlKey:true});assert.ok($('#exportFormat'));A.closeModal();const active=A.ui.main;key('s',{altKey:true,ctrlKey:true});assert.equal(A.ui.main,active);
+
+ await w.prepareContext(11);
+ for(const main of ['notes','admin','backup','settings','help']){A.activateGroup('main',main);const id={notes:'noteTabs',admin:'adminTabs',backup:'backupTabs',settings:'settingsTabs',help:'helpTabs'}[main],tabs=Array.from($('#'+id).querySelectorAll('[role=tab]'));for(let n=1;n<=9;n++){const before=tabs.find(t=>t.getAttribute('aria-selected')==='true');key(String(n),{ctrlKey:true});assert.equal(tabs.find(t=>t.getAttribute('aria-selected')==='true'),tabs[n-1]||before,main+' Ctrl+'+n);if(tabs[n-1])assert.equal(w.document.activeElement,tabs[n-1]);}}
+ await w.prepareContext(11);A.setPreference('visibleKinds',['test','oral']);const tabs=Array.from($('#noteTabs').querySelectorAll('[role=tab]'));assert.equal(tabs.length,4);for(let n=1;n<=9;n++){const before=A.W().view;key(String(n),{ctrlKey:true});assert.equal(A.W().view,tabs[n-1]?.dataset.key||before);}
+ await w.prepareContext(26);const bad=$('[data-entry=points]');bad.value='999';bad.dispatchEvent(new w.Event('input',{bubbles:true}));for(const [k,extras]of [['s',{altKey:true}],['n',{ctrlKey:true}],['e',{ctrlKey:true}],['g',{ctrlKey:true}],['m',{ctrlKey:true,shiftKey:true}]]){key(k,extras);assert.equal(A.ui.main,'notes');assert.equal(w.document.activeElement,bad);assert.equal(bad.value,'999');assert.equal($('#dialog').open,false);}
+ await w.prepareContext(11);A.data.years[0].archived=true;A.rendered={};A.renderNotes();const closed=JSON.stringify(A.data);for(const[k,extra]of [['n',{ctrlKey:true}],['k',{ctrlKey:true,shiftKey:true}],['t',{ctrlKey:true,shiftKey:true}],['m',{ctrlKey:true,shiftKey:true}]]){key(k,extra);assert.equal($('#dialog').open,false);}assert.equal(JSON.stringify(A.data),closed);
+ A.data=N.blank();A.ui.course='';A.ui.class='';A.rendered={};A.renderNotes();for(const[k,extra]of [['n',{ctrlKey:true}],['k',{ctrlKey:true,shiftKey:true}],['g',{ctrlKey:true}]]){key(k,extra);assert.equal($('#dialog').open,false);}
+ checks.push('Alle sichtbaren Tabpositionen in fünf Hauptbereichen, ausgeblendete Arten, fehlende Positionen; ungültige Punkte, abgeschlossene Jahre und fehlendes Fach blockieren unerlaubte Aktionen');
+ checks.push('Zentraler Shortcut-Router: sichtbare Tabpositionen ohne 9-Sonderfall, innere Eingabetabs, alle Hauptbereiche, beide mündlichen Menüaktionen, K/T/M/G/E, AltGr-Schutz');
+ assert.deepEqual(ctx.errors,[]);await A.workspacePromise;fs.writeFileSync(path.join(__dirname,'v1230-results.json'),JSON.stringify({checks,contexts:rows,helpSelfNoNavigation:true,windows:false,nvda:false,syntheticOnly:true},null,2));console.log('1.23:',checks.length,'Gruppen; 49 F1-Kontexte');
+}finally{w.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});

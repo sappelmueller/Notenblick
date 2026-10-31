@@ -1,3 +1,14 @@
+# Notenblick 1.23.0
+
+- Vollständig ersetzte Benutzerhilfe: neun echte Registerkarten, 77 wortgetreue Abschnitte aus der gelieferten JSON und 49 konkrete F1-Kontexte. Dialoghilfe erhält dieselben Formknoten, Entwürfe und den Rückkehrfokus; Escape schließt zuerst die Hilfe.
+- Ein zentraler Shortcut-Router für Hauptbereiche, tatsächliche Klasse-Fach-Zugriffe, sichtbare Tabs, innere Eingabetabs, Leistungsmenü, direkte K/T/M-Aktionen, Gewichtung, Export und Speicherung. AltGr, Dialoge, Fehler und vorhandene Schnell-Eingabe bleiben geschützt. WebView2 reicht Strg+Tab an denselben Router weiter; Windows-Liveabnahme steht aus.
+- Teilnehmerliste einspaltig mit nebeneinander angeordnetem Kontrollfeld und Namen, anklickbarer Zeile und allen vorhandenen Such-, Auswahl- und Schutzfunktionen.
+- Startseite behält drei Karten: Weiterarbeiten führt zum letzten Fachbereich, ausdrückliche Übersicht bleibt erreichbar, offene Leistungen werden gezählt und über fünf hinaus eingeblendet.
+- Klassenreihenfolge Aufsteigend/Absteigend als reine Darstellungseinstellung; natürliche Zahlenordnung und alphabetische Fächer, passende Nummerierung der ersten neun Fachzugriffe.
+- Gemeinsame mündliche Bewertungen und mündliche Einzelnoten eindeutig getrennt benannt. Doppeltes q-weight-Feld/Faktor bei vorhandenen mündlichen Einzelnoten beseitigt; bisherige Gewichte und Ergebnisse bleiben erhalten.
+- Escape wird nicht mehr von Hintergrund-Details vor einem offenen Dialog abgefangen. Mündliche Dialoge bleiben auch bei sehr schmalen Fenstern und hohem Zoom innerhalb des Fensters.
+- Neue dauerhafte Gruppen v1230/v1230-storage/v1230-browser; wortgetreuer Hilfevergleich, 49 F1-Kontexte, 63 Axe-Fälle und produktive native Speicherung. Vollständige frische lokale Release-Prüfung erforderlich. Windows/WebView2/NVDA/Braille/UIA-Liveabnahme separat offen; bis dahin Build-Kandidat. Details: docs/PRUEFBERICHT-1.23.0.md.
+
 # Notenblick 1.22.0
 
 - Einheitlicher Kontextfokus: neue Arbeitsbereiche und Dialoge beginnen bei ihrer Überschrift. Hauptlinks, Tabs und Auswahlfelder behalten ihren Fokus; schnelle Eingabe/Umschalt+Eingabe bleibt direkt. Fertig, Schließen, Escape und Abbrechen führen zum passenden Auslöser zurück. Gemeinsame Zielprüfung schützt unsichtbare oder deaktivierte Elemente.

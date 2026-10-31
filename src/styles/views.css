@@ -522,8 +522,8 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 .entry-result{font-weight:600}.entry-results tfoot th,.entry-results tfoot td,.entry-table tfoot th,.entry-table tfoot td{background:var(--soft);font-weight:600;border-top:2px solid var(--line)}
 .participation-options>summary{font-weight:650;cursor:pointer;padding:10px 0}.participation-options>.field{margin:12px 0}
 #a-participants{min-width:0}#a-participants>.field{margin:14px 0}#a-participants>.button-row{margin:12px 0}
-.participant-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));gap:12px 18px;max-height:19rem;overflow:auto;padding:16px;border:1px solid var(--line);border-radius:6px;background:var(--soft);margin:14px 0}
-.participant-list .check{margin:0;min-width:0;overflow-wrap:anywhere}.participant-list small{display:block;color:var(--muted);margin-top:3px}.participant-list input:disabled{opacity:1}
+.participant-list{display:grid;grid-template-columns:1fr;gap:12px 18px;max-height:19rem;overflow:auto;padding:16px;border:1px solid var(--line);border-radius:6px;background:var(--soft);margin:14px 0}
+.participant-list .check{display:flex;align-items:flex-start;gap:10px;padding:8px;cursor:pointer;margin:0;min-width:0;overflow-wrap:anywhere}.participant-list small{display:block;color:var(--muted);margin-top:3px}.participant-list input{width:auto;flex:0 0 auto;margin:3px 0 0}.participant-list input:disabled{opacity:1}
 .single{max-width:42rem;padding:24px}.single .single-orientation{font-size:1.1rem;line-height:1.5;margin:20px 0}.single .field{margin-bottom:18px}.single .field-label{font-size:.8rem;font-weight:650}.single .point-preview{font-size:1.35rem;font-weight:650;line-height:1.5}.single .point-error{font-size:1rem}.single .computed-grade{margin-top:6px;display:block}.single .computed-grade:empty{display:none}.single .button-row{gap:10px}.single button{white-space:normal;overflow-wrap:anywhere}
 .key-export{margin:18px 0 22px}.key-check{margin:0 0 22px;padding:14px 0;border:0}.key-check legend{font-weight:650}.key-check .field{max-width:22rem}.key-check p{margin:8px 0}#keyTableTitle{font-size:1.05rem;margin:20px 0 14px}#keyTable{margin-top:16px}#keyTable .table-wrap{max-height:none}#dialogContent>p{white-space:pre-line}
 .point-settings h3{margin:0 0 16px;font-size:1rem}.field-label{font-weight:650}
@@ -531,3 +531,17 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 @media(forced-colors:active){.participant-list,.entry-table tfoot th,.entry-table tfoot td{border-color:CanvasText}}
 
 #dialogTitle{overflow-wrap:anywhere}
+
+.help-tabs{flex-wrap:wrap;gap:4px}.help-tabs a{white-space:normal;overflow-wrap:anywhere}
+.help-topic,.help-intro,.help-context{max-width:72ch;line-height:1.65}.help-passage{margin-block:24px}.help-passage h3{margin-bottom:8px}.help-passage p{margin-block:8px 14px}
+.help-return{margin-block:12px}.quick-number{display:inline-block;min-width:1.3em;margin-right:6px;font-weight:700;color:var(--muted)}
+.shortcut-menu{margin-block:16px}.participant-list .check:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+
+.quick-links [aria-current=page] .quick-number{color:inherit}
+/* Intrinsic select/button widths must not stretch the oral dialog at high zoom. */
+#dialog .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#dialog .form-grid>*{min-width:0}
+#dialog .form-grid input:not([type=checkbox]),#dialog .form-grid select,#dialog .form-grid textarea{width:100%;min-width:0}
+#dialog .text-button{white-space:normal;overflow-wrap:anywhere;max-width:100%}
+@media(max-width:740px){#dialog .form-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:420px){#dialog{max-height:calc(100% - 16px)}}

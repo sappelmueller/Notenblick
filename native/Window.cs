@@ -25,6 +25,18 @@ namespace Notenblick.Native {
    var profile=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Notenblick","Ansicht",digest);
    var env=await CoreWebView2Environment.CreateAsync(null,profile);await view.EnsureCoreWebView2Async(env);var core=view.CoreWebView2;
    core.SetVirtualHostNameToFolderMapping("notenblick.invalid",Path.Combine(program,"Programm"),CoreWebView2HostResourceAccessKind.DenyCors);
+   // App commands are routed by the page, never browser window shortcuts.
+   core.Settings.AreBrowserAcceleratorKeysEnabled=false;
+   view.KeyDown+=(s,e)=>{
+    // Ctrl+Tab is otherwise a WebView host focus-navigation key. Consume it
+    // once and post to the same page router; AltGr/system/window keys remain native.
+    var modifiers=Control.ModifierKeys;
+    if(e.KeyCode==Keys.Tab&&(modifiers&Keys.Control)!=0&&(modifiers&Keys.Alt)==0){
+     e.Handled=true;e.SuppressKeyPress=true;
+     bool shift=(modifiers&Keys.Shift)!=0;
+     BeginInvoke(new Action(async()=>{if(view.CoreWebView2!=null)await view.CoreWebView2.ExecuteScriptAsync("if(window.Notenblick){Notenblick.handleShortcut({key:'Tab',ctrlKey:true,shiftKey:"+(shift?"true":"false")+",preventDefault:function(){}});}");}));
+    }
+   };
    core.Settings.IsStatusBarEnabled=false;core.Settings.IsWebMessageEnabled=true;
    core.AddWebResourceRequestedFilter("*",CoreWebView2WebResourceContext.All);
    core.WebResourceRequested+=(s,e)=>{if(!Local(e.Request.Uri)&&!e.Request.Uri.StartsWith("data:",StringComparison.OrdinalIgnoreCase)&&!e.Request.Uri.StartsWith("blob:"+Origin,StringComparison.OrdinalIgnoreCase))e.Response=env.CreateWebResourceResponse(new MemoryStream(),403,"Offline","");};
