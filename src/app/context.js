@@ -65,7 +65,9 @@ Notenblick.error=function(message='',kind='input'){
   if(box.dataset.message===text)return;box.dataset.message=text;box.hidden=!text;
   box.innerHTML=text?`<div>${[...Notenblick.errors.values()].map(x=>`<p>${Notenblick.esc(x)}</p>`).join('')}</div>${Notenblick.b('dismiss-errors','Meldung schließen','','text-button')}`:'';
 };
-Notenblick.announce=function(text){const A=Notenblick,el=A.$('#announcement');clearTimeout(A.announcementTimer);if(el.textContent===text){el.textContent='';A.announcementTimer=setTimeout(()=>el.textContent=text,30);}else el.textContent=text;};
+Notenblick.announcementEpoch=0;
+Notenblick.clearAnnouncement=function(){const A=Notenblick;A.announcementEpoch++;clearTimeout(A.announcementTimer);clearTimeout(A.announcementClearTimer);A.$('#announcement').textContent='';};
+Notenblick.announce=function(text){const A=Notenblick,el=A.$('#announcement'),same=el.textContent===text;A.clearAnnouncement();const epoch=A.announcementEpoch;const write=()=>{if(epoch!==A.announcementEpoch)return;el.textContent=text;A.announcementClearTimer=setTimeout(()=>{if(epoch===A.announcementEpoch)el.textContent='';},Math.max(15000,text.length*100));};if(same)A.announcementTimer=setTimeout(write,30);else write();};
 // Visible messages have no live semantics. The existing single status source
 // announces each completed action, including a repeated deliberate action.
 Notenblick.feedbacks={};
@@ -74,6 +76,7 @@ Notenblick.paintFeedback=function(key){const el=Notenblick.$('#backup-message-'+
 Notenblick.status=function(text,state=''){Notenblick.saveState=state||'saved';if(Notenblick.ui.main==='backup')Notenblick.updateSaveDetails?.();};
 Notenblick.weightsText = c => Object.keys(Notenblick.N.overallLabels(c)).filter(k => Notenblick.N.Q.from(c.weights.overall[k]).n).map(k => Notenblick.N.overallLabels(c)[k] + ' ' + c.weights.overall[k] + ' %').join(' · ');
 Notenblick.val = id => Notenblick.$('#'+id).dataset.dateValue!==undefined?Notenblick.readDate(id):Notenblick.$('#'+id).value.trim();
+Notenblick.readGrade=function(id){const A=Notenblick,el=A.$('#'+id);try{const grade=el.value.trim()?A.N.grade(el.value):null;el.removeAttribute('aria-invalid');return grade;}catch(e){el.setAttribute('aria-invalid','true');A.focusTarget(el);throw e;}};
 Notenblick.required = (id, label) => {
   const v = Notenblick.val(id);
   if (!v) {
