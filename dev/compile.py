@@ -33,5 +33,5 @@ files=settled_files(r/'dist/Programm')
 generated='// Generated release file allowlist.\nnamespace Notenblick.Native {internal static class ReleaseFiles {internal static readonly ProgramLibraries.ProgramFileSpec[] Files={\n'
 for p in files:generated+='new ProgramLibraries.ProgramFileSpec("'+p.relative_to(r/'dist/Programm').as_posix()+'","'+hashlib.sha256(p.read_bytes()).hexdigest().upper()+'"),\n'
 generated+='};}}\n';(generated_root/'ReleaseFiles.g.cs').write_text(generated)
-compile('Notenblick.exe',['Launcher.cs','ProgramLibraries.cs','ReleaseLibraries.g.cs','ReleaseFiles.g.cs'],exe=True)
+compile('Notenblick.exe',['Launcher.cs','ProcessArchitecture.cs','ProgramLibraries.cs','ReleaseLibraries.g.cs','ReleaseFiles.g.cs'],exe=True)
 print('Windows launcher, complete release file verification and storage compiled.')

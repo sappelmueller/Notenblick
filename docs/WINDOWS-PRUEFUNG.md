@@ -117,3 +117,7 @@ Diese Punkte sind keine bereits ausgeführten Windows-/NVDA-Livetests. Automatis
 ## 1.21.0 Punktebewertung Liveabnahme offen
 
 Unter echtem Windows mit NVDA prüfen: direkte Eingabe als Standard; alle drei Schlüssel und vier Stufen; Komma/Null/leere/ungültige Punkte; Eingabe und Umschalt+Eingabe in beiden Ansichten mit Suche und Sortierung; jeweils eine vollständige Ansage nach dem Fokuswechsel. Mündliche Klassen- und Einzelnoten einschließlich Speichern/Weiter/Zurück am Listenrand, modale Livequelle und Escape. Manuelle Festlegung und Rücknahme, Status Nicht gewertet, nachträglicher Schlüsselwechsel mit Vorschau/Abbruch, kleinere Maxima und wiederhergestellte Sicherungen. Einzel- und Sammelausgaben, native Speicherdialoge, Druck und Microsoft Word/Adobe Reader; mehrere reale Windows-Skalierungen. Die Linux-/Chromium-/axe-Prüfungen ersetzen diese Abnahme nicht.
+
+## Ergänzung 1.23.2 – Prozessarchitektur messen
+
+Für native ARM64-Ausführung Windows 11 ab 24H2 mit .NET Framework 4.8.1 und ARM64-WebView2 verwenden. Dieselbe ZIP zusätzlich auf x64 und möglichst x86 prüfen. `dev/windows-qa.ps1 -Archive <ZIP> -Launch` in 64-Bit-PowerShell misst auf Windows 11 die tatsächliche Prozessarchitektur über ProcessMachineTypeInfo und erfasst geladenen CLR-/Loaderpfad. Auf ARM64 muss der Prozess arm64 und der Loader aus Programm/Windows/arm64 stammen; auf x64 entsprechend x64. Fehlende Messwerte sind kein erfolgreicher Nachweis. Die Testkopie bleibt für die manuelle Abnahme geöffnet. Details und Grenzen: PRUEFBERICHT-1.23.2.md.

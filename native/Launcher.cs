@@ -31,14 +31,18 @@ public static class Launcher
             libraries.ValidateProgramFiles();
             libraries.LoadAll();
 
-            var machine = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE") ?? "";
-            var arch = machine.Equals("ARM64", StringComparison.OrdinalIgnoreCase)
-                ? "arm64" : Environment.Is64BitProcess ? "x64" : "x86";
+            var arch = Notenblick.Native.ProcessArchitecture.Current();
             var nativeFolder = Path.Combine(root, "Programm", "Windows", arch);
             if (!File.Exists(Path.Combine(nativeFolder, "WebView2Loader.dll")))
                 throw new FileNotFoundException("Eine benötigte Programmdatei fehlt. Bitte entpacke den vollständigen Ordner der Version @VERSION@ erneut.");
             if (!SetDllDirectory(nativeFolder))
                 throw new IOException("Die Programmdateien konnten nicht geöffnet werden.");
+
+            // Pin the verified matching loader before any WebView2 API runs.
+            libraries.Get("Microsoft.Web.WebView2.Core")
+                .GetType("Microsoft.Web.WebView2.Core.CoreWebView2Environment", true)
+                .GetMethod("SetLoaderDllFolderPath", new Type[] { typeof(string) })
+                .Invoke(null, new object[] { nativeFolder });
 
             libraries.Get("Notenblick.Fenster")
                 .GetType("Notenblick.Native.Window", true)

@@ -1,6 +1,6 @@
 # Notenblick
 
-Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.23.1**.
+Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.23.2**.
 
 Die Benutzerhilfe enthält neun echte Registerkarten und 77 wortgetreue Abschnitte aus der verbindlichen Textquelle. F1 öffnet eine von 49 konkreten Hilfestellen; Dialoge behalten dabei ihre Formularfelder, Eingaben und den Rückkehrfokus. Ein gemeinsamer Shortcut-Router ergänzt die vorhandenen Tastaturabläufe. Die ersten neun angezeigten Klasse-Fach-Paare sind über Alt+Ziffer erreichbar. Klassen können auf- oder absteigend angeordnet werden. Die Startseite behält ihre drei Karten, setzt den letzten Fachbereich fort und kann weitere offene Leistungen einblenden.
 
@@ -67,10 +67,10 @@ TrainScope ist ein anderes Projekt. Die Prüfung vor Commit/Push akzeptiert auss
 
 Vor einem Git-Push verlangt die Prüfung eine live bestätigte private Repository-ID und deaktivierte Actions. Dafür wird ein bereits angemeldetes `gh` oder ein vorhandenes `GH_TOKEN`/`GITHUB_TOKEN` benötigt; Zugangsdaten werden nicht im Projekt gespeichert. Bei Verwendung der GitHub-Anbindung dieselben Prüfungen unmittelbar vor dem Schreiben durchführen. Keine erzwungenen Pushes, keine Änderungen an TrainScope und keine globalen Kontoeinstellungen.
 
-Aktueller Funktions- und Prüfbericht: [Notenblick 1.23.1](docs/PRUEFBERICHT-1.23.1.md).
+Aktueller Funktions- und Prüfbericht: [Notenblick 1.23.2](docs/PRUEFBERICHT-1.23.2.md).
 
 ## Windows-Auslieferung
 
-Ziel bleibt .NET Framework 4.8, WinForms und WebView2. Das .NET SDK 8.0.426 dient nur dem Compiler und den Linux-Speichertests. Die Linux-Ausgabe liefert keine .NET-8-Laufzeit für Windows mit. Enthalten sind Newtonsoft.Json 13.0.3, WebView2 SDK 1.0.2903.40 und WebView2Loader für x86/x64/ARM64. Auf dem Windows-Rechner müssen .NET Framework 4.8 und die WebView2-Laufzeit vorhanden sein. Die ZIP enthält ausschließlich `Notenblick.exe` und `Programm`; `Daten` entsteht beim ersten Start.
+Ziel bleibt .NET Framework 4.8, WinForms und WebView2. Das .NET SDK 8.0.426 dient nur dem Compiler und den Linux-Speichertests. Die Linux-Ausgabe liefert keine .NET-8-Laufzeit für Windows mit. Enthalten sind Newtonsoft.Json 13.0.3, WebView2 SDK 1.0.2903.40 und WebView2Loader für x86/x64/ARM64. Auf x86/x64 müssen .NET Framework 4.8 oder neuer und die passende WebView2-Laufzeit vorhanden sein. Native ARM64-Ausführung derselben AnyCPU-EXE ist für Windows 11 ab 24H2 mit .NET Framework 4.8.1 und ARM64-WebView2 vorgesehen. Ältere ARM64-Windows-Versionen erhalten durch diesen Manifest-Eintrag keine Zusage nativer Ausführung. Es gibt keinen erzwungenen Emulationsmodus. Die ZIP enthält ausschließlich `Notenblick.exe` und `Programm`; `Daten` entsteht beim ersten Start.
 
 Windows-Start, WebView2/UI Automation, NVDA und Windows-Skalierung sind auf einem Windows-Rechner gesondert zu prüfen. Dafür gibt es `dev/windows-qa.ps1` und [docs/WINDOWS-PRUEFUNG.md](docs/WINDOWS-PRUEFUNG.md). Kein Codesignierungszertifikat ist enthalten; SmartScreen wird nicht umgangen. Ohne Windows-Prüfung bleibt das Ergebnis ein unter Linux geprüfter Build-Kandidat.
