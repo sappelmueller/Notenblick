@@ -7,6 +7,9 @@ sys.path.insert(0,str(ROOT/'dev'))
 import guard,manage,testplan,evidence,bootstrap
 
 class Infrastructure(unittest.TestCase):
+    def test_current_release_recognizes_own_data_without_migration(self):
+        subprocess.run(['node','-e',"const a=require('node:assert/strict'),N=require('./src/core.js'),v=require('./package.json').version,d=N.blank();d.appVersion=v;a.equal(N.isCurrentData(d),true);a.deepEqual(N.upgrade(d),d);"],cwd=ROOT,check=True)
+
     def test_calculation_and_native_storage_contract_unchanged(self):
         # The setup-only whole-application freeze is replaced for the authorized
         # 1.9 feature work. These mathematical/storage modules remain byte-identical.
