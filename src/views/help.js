@@ -1,7 +1,7 @@
 /* Authoritative offline help; one source for the full help and short F1 excerpts. */
 (function(A){'use strict';
 const text=globalThis.NRHelp,contexts=globalThis.NRHelpContexts.contexts;
-A.helpSection=function(index){const route=contexts[index];if(!route)throw Error('Unbekannter Hilfekontext.');for(const topic of text.topics){const section=topic.sections.find(s=>s.id===route.section_id);if(section)return{topic,section,route};}throw Error('Hilfestelle fehlt.');};
+A.helpSection=function(index){const route=typeof index==='string'?{section_id:index}:contexts[index];if(!route)throw Error('Unbekannter Hilfekontext.');for(const topic of text.topics){const section=topic.sections.find(s=>s.id===route.section_id);if(section)return{topic,section,route};}throw Error('Hilfestelle fehlt.');};
 A.helpParagraphs=s=>s.paragraphs.map(p=>'<p>'+A.esc(p)+'</p>').join('');
 A.renderHelp=function(){
  const root=A.$('#help');if(!root.querySelector('#helpTabs')){
@@ -16,12 +16,13 @@ A.helpContext=function(el=document.activeElement){
  const within=s=>!!el?.closest?.(s),dialog=A.$('#dialog'),has=s=>!!dialog.querySelector(s);
  if(A.contextHelp)return A.contextHelp.index;
  if(dialog.open){
-  if(A.dialogHelpContext!=null)return A.dialogHelpContext;
   if(A.setupDraft)return 0;
+  if(within('#halfYearReport,#confirmHalfYearChange,#halfYearWarning')&&has('#className'))return 'berechnung-halbjahresinformation-und-zeugnisse';
   if(within('.participation-options'))return 13;
   if(within('#a-weight,#a-gfs,#q-weight,#q-gfs'))return 14;
   if(within('#oralKeySettings,#oralKeyEdit,#oralKeyApply,#oralKeyCancel'))return 23;
   if(within('#q-points'))return 26;
+  if(within('[data-date-part]'))return 'noten-ein-datum-eingeben';
   if(within('#q-change,#q-manualField'))return 25;
   if(has('#keyCheck'))return 24;
   if(has('#manualPointGrade'))return 25;
@@ -38,6 +39,10 @@ A.helpContext=function(el=document.activeElement){
    return 27;
   }
   if(has('#finalStatus,#final-grade,#final-note,#halfYearReport')&&!has('#className'))return 30;
+  if(within('#q-keyShow,#q-keyPdf,#oralReadKey'))return 24;
+  if(within('#oralEditButton')||has('#oralStudent')&&within('#dialogSave,[data-action=close]'))return 17;
+  if(within('[data-action=oral-record-export]'))return 31;
+  if(within('#q-reset'))return 25;
   if(has('#a-title'))return 12;
   if(has('#oralStudent'))return 19;
   if(has('#sourceClass'))return 5;
@@ -53,9 +58,23 @@ A.helpContext=function(el=document.activeElement){
   if(has('#cleanupImpact'))return 40;
   if(has('#shortcutChoices'))return 46;
   if(A.dialogHelpContext!=null)return A.dialogHelpContext;
+  // A dialog without a declared context must never inherit controls behind it.
+  return 1;
  }
  if(A.ui.main==='help')return 48;
+ const action=el?.closest?.('[data-action]')?.dataset.action,menu=el?.closest?.('[data-menu-key]')?.dataset.menuKey;
+ if(menu==='add-performance'||['new-assessment','quick-oral'].includes(action))return 12;
+ if(menu==='finals'||['final-dialog','finals-class'].includes(action))return 30;
+ if(['weights','settings-course-weights'].includes(action)||within('.weight-action'))return 27;
+ if(['output','assessment-export','oral-record-export','selected-export'].includes(action))return 31;
+ if(['assessment-edit','assessment-done','assessment-list','open-assessment'].includes(action))return 17;
+ if(action==='delete-assessment')return 'noten-eine-leistung-nachtraglich-andern-oder-loschen';
+ if(action==='all-notes')return 'export-alle-noten-exportieren';
+ if(['exit-student','unexit-student'].includes(action))return 10;
+ if(action==='choose-shortcuts')return 46;
+
  if(within('#class,#course,#quickSelection,#allSelection'))return 2;
+ if(within('#allNotesFormat'))return 33;
  if(within('[data-action=regenerate]'))return 38;
  if(within('[data-action=cleanup]'))return 40;
  if(within('#setting-classOrder'))return 45;
@@ -79,8 +98,8 @@ A.helpContext=function(el=document.activeElement){
 };
 A.openContextHelp=function(index=A.helpContext()){
  if(A.contextHelp||A.ui.main==='help'&&!A.$('#dialog').open)return;
- const {topic,section}=A.helpSection(index),focus=document.activeElement,dialog=A.$('#dialog');
- A.closeMenu?.(false);
+ const {topic,section}=A.helpSection(index),focus=document.activeElement,dialog=A.$('#dialog'),menuToggle=focus?.closest('[role=menu]')?.parentElement.querySelector('[data-menu-toggle]');
+ A.closeMenu?.(false,true);
  if(dialog.open){
   if(A.dialogBusy)return;
   const form=A.$('#dialogForm'),nodes=[...form.children].map(el=>({el,hidden:el.hidden,inert:el.inert})),label=dialog.getAttribute('aria-labelledby'),description=dialog.getAttribute('aria-describedby'),scroll=dialog.scrollTop;
@@ -89,7 +108,7 @@ A.openContextHelp=function(index=A.helpContext()){
   A.contextHelp={index,focus,dialog:true,pane,nodes,label,description,scroll};
   for(const {el}of nodes){el.hidden=true;el.inert=true;}form.append(pane);dialog.setAttribute('aria-labelledby','contextHelpTitle');dialog.removeAttribute('aria-describedby');A.focusTarget('contextHelpTitle');
  }else{
-  const state={index,focus,dialog:false,main:A.ui.main,helpView:A.ui.helpView,scrollX:window.scrollX,scrollY:window.scrollY};
+  const state={index,focus,menuToggle,dialog:false,main:A.ui.main,helpView:A.ui.helpView,scrollX:window.scrollX,scrollY:window.scrollY};
   A.activateGroup('main','help',false,false);A.groups.help.activate(A.$('#help-tab-'+topic.id),false,false);A.focusTarget(section.id);
   const back=document.createElement('button');back.type='button';back.className='button help-return';back.dataset.action='help-close';back.textContent='Zurück';A.$('#helpTabs').before(back);A.contextHelp={...state,pane:back};
  }
@@ -98,6 +117,7 @@ A.closeContextHelp=function(){
  const state=A.contextHelp;if(!state)return false;A.contextHelp=null;state.pane.remove();
  if(state.dialog){for(const {el,hidden,inert}of state.nodes){el.hidden=hidden;el.inert=inert;}const d=A.$('#dialog');d.setAttribute('aria-labelledby',state.label);if(state.description)d.setAttribute('aria-describedby',state.description);else d.removeAttribute('aria-describedby');d.scrollTop=state.scroll;}
  else{A.ui.helpView=state.helpView;A.activateGroup('main',state.main,false,false);window.scrollTo?.(state.scrollX,state.scrollY);}
+ if(state.menuToggle?.isConnected)A.openMenu(state.menuToggle,false,false);
  if(!A.focusTarget(state.focus,{preventScroll:true}))A.focusTarget(state.dialog?'dialogTitle':A.$('#mainTabs [aria-current=page]'));
  return true;
 };

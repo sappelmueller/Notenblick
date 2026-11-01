@@ -96,8 +96,8 @@ Notenblick.confirmInDialog=function(title,text,fn,label='Bestätigen',cancelLabe
  const content=A.$('#dialogContent'),save=A.$('#dialogSave'),cancel=A.$('#dialog .dialog-actions [data-action=close]'),next=A.$('#dialogNext'),error=A.$('#dialogError'),focus=document.activeElement;
  // Commit the focused control's native change while all form fields are still
  // connected. Detaching it first can dispatch change during partial removal.
- cancel.focus({preventScroll:true});
- const state={helpContext:A.dialogHelpContext,title:A.$('#dialogTitle').textContent,size:A.$('#dialog').dataset.size,submit:A.submitDialog,onClose:A.dialogOnClose,beforeClose:A.dialogBeforeClose,afterClose:A.afterClose,opener:A.opener,cancellable:A.dialogCancellable,save:save.textContent,hidden:save.hidden,cancel:cancel.textContent,nextHidden:next.hidden,error:error.textContent,errorHidden:error.hidden,footerHidden:A.$('#setupFooterSlot').hidden,scroll:content.scrollTop,dialogScroll:A.$('#dialog').scrollTop};
+ const previousTitle=A.$('#dialogTitle').textContent;A.$('#dialogTitle').textContent=title;A.focusTarget('dialogTitle',{preventScroll:true});
+ const state={helpContext:A.dialogHelpContext,title:previousTitle,size:A.$('#dialog').dataset.size,submit:A.submitDialog,onClose:A.dialogOnClose,beforeClose:A.dialogBeforeClose,afterClose:A.afterClose,opener:A.opener,cancellable:A.dialogCancellable,save:save.textContent,hidden:save.hidden,cancel:cancel.textContent,nextHidden:next.hidden,error:error.textContent,errorHidden:error.hidden,footerHidden:A.$('#setupFooterSlot').hidden,scroll:content.scrollTop,dialogScroll:A.$('#dialog').scrollTop};
  const nodes=document.createDocumentFragment();while(content.firstChild)nodes.append(content.firstChild);
  const restore=()=>{
   A.dialogHelpContext=state.helpContext;A.dialogReturn=null;A.$('#dialogTitle').textContent=state.title;A.setDialogSize(state.size);content.replaceChildren(nodes);content.scrollTop=state.scroll;A.$('#dialog').scrollTop=state.dialogScroll;
@@ -108,7 +108,6 @@ Notenblick.confirmInDialog=function(title,text,fn,label='Bestätigen',cancelLabe
  A.dialogHelpContext=helpContext??A.dialogHelpContext;A.dialogReturn=restore;A.dialogBeforeClose=null;A.dialogOnClose=null;A.afterClose=null;A.setDialogSize('small');A.$('#dialogTitle').textContent=title;
  A.$('#setupFooterSlot').hidden=true;content.innerHTML='<p>'+A.esc(text)+'</p>';A.$('#dialog').scrollTop=0;error.hidden=true;save.textContent=label;save.hidden=false;cancel.textContent=cancelLabel;next.hidden=true;
  A.submitDialog=async()=>{restore();try{await fn();}catch(e){error.textContent=e.message;error.hidden=false;}return{keepOpen:true};};
- cancel.focus();
 };
 Notenblick.ensureClassEdit=function(cl){if(cl?.archived||Notenblick.data.years.find(y=>y.id===cl?.yearId)?.archived)throw Error('Bitte öffne das Schuljahr und die Klasse zuerst wieder.');};
 Notenblick.ensureEdit = function ensureEdit(c = Notenblick.getCourse()) {

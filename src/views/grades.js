@@ -17,6 +17,7 @@
     Notenblick.activateGroup('notes', Notenblick.W().view);
   };
   Notenblick.showNotesPane = function showNotesPane(key) {
+    Notenblick.$('#subjectTitle').removeAttribute('aria-label');
     if(key!=='overview')Notenblick.$('#hiddenAssessmentWorkspace')?.remove();
     if (!Notenblick.getCourse()) {
       Notenblick.setContent(Notenblick.notePanel(key), `<div class="blank"><h2>${!Notenblick.data.years.length ? 'Notenverwaltung einrichten' : !Notenblick.getClass() ? 'Klasse anlegen' : 'Fach anlegen'}</h2><p>${!Notenblick.data.years.length ? 'Beginne mit deinem ersten Schuljahr.' : 'Ergänze die Klasse und ihre Fächer in der Verwaltung.'}</p>${!Notenblick.data.years.length ? (Notenblick.firstRun?Notenblick.b('setup','Jetzt einrichten','','button primary'):Notenblick.b('new-year','Schuljahr anlegen','','button primary')) : Notenblick.b('open-admin','Zur Verwaltung','','button primary')}</div>`,'Notenübersicht');return;

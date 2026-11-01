@@ -61,7 +61,7 @@ Notenblick.activateGroup = function activateGroup(group, key, focus = false, upd
       settings:'settingsTabs',backup:'backupTabs',help:'helpTabs'
     },
     tab = Notenblick.$('#' + map[group]).querySelector(`[data-key="${key}"]`);
-  if (tab) Notenblick.groups[group].activate(tab, focus, update);
+  return tab ? Notenblick.groups[group].activate(tab, focus, update) : false;
 };
 Notenblick.normalizeContext = function normalizeContext() {
   const u=Notenblick.ui,ys=Notenblick.data.years;

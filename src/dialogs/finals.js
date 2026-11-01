@@ -1,10 +1,10 @@
 /* One dialog and one transaction for individual and class final grades. */
 (function(A){'use strict';
 const N=A.N;
-A.finalMenu=()=>A.menu('finals','',[
- {action:'finals-class',label:N.finalLabel(A.data,A.getCourse(),'half')+' festlegen',attrs:'data-period="half"'},
- {action:'finals-class',label:'Zeugnisnoten festlegen',attrs:'data-period="annual"'}
-],'Abschlussnoten','button');
+A.finalMenu=()=>{const verb=A.readonly()?' anzeigen':' festlegen';return A.menu('finals','',[
+ {action:'finals-class',label:N.finalLabel(A.data,A.getCourse(),'half')+verb,attrs:'data-period="half"'},
+ {action:'finals-class',label:'Zeugnisnoten'+verb,attrs:'data-period="annual"'}
+],'Abschlussnoten','button');};
 A.finalCell=function(s,period){const c=A.getCourse(),f=N.finalFor(A.data,c.id,s.id,period),type=N.finalType(A.data,c,period);return A.b('final-dialog',f?A.esc(N.finalText(f.grade,f.reportType||type)):'Festlegen',`id="final-${period}-${s.id}" data-id="${s.id}" data-period="${period}"${f?' aria-label="'+A.esc(N.finalText(f.grade,f.reportType||type,true))+'"':''}`,'text-button')+(N.finalConflict(f,type)?'<span class="secondary">Bisherige Note prüfen</span>':'');};
 A.finalCard=function(s,period){const c=A.getCourse(),f=N.finalFor(A.data,c.id,s.id,period),type=N.finalType(A.data,c,period);return `<div class="result-card"><h4>${N.FINAL_TYPES[type]}</h4><p class="result-origin">Manuell festgelegt</p><div class="result-value final-value">${f?A.esc(N.finalText(f.grade,f.reportType||type)):'–'}</div>${N.finalConflict(f,type)?'<p class="final-compatibility">Bisherige Note prüfen</p>':''}${A.b('final-dialog',f?'Bearbeiten':'Festlegen',`id="pupil-final-${period}-${s.id}" data-id="${s.id}" data-period="${period}"`)}${f?.note?`<details class="result-note"><summary>Bemerkung</summary><p>${A.esc(f.note)}</p></details>`:''}</div>`;};
 A.assessmentPeriod=function(c,date,old=null){const p=N.datePeriod(A.data,c,date);if(p)return p;if(old?.date===date)return old.period;(A.$('#a-date-day')||A.$('#q-date-day'))?.focus();throw Error(N.courseRange(A.data,c)?'Das Leistungsdatum liegt außerhalb des zugeordneten Schuljahres. Bitte Datum oder Schuljahr prüfen.':'Bitte den Beginn des Schuljahres in der Abschlussnotenverwaltung festlegen.');};
@@ -32,7 +32,7 @@ A.finalDialog=function(id=null,period='annual'){
  }else content+=`${explanation}<p class="final-status" id="finalStatus"></p><div class="final-tools">${A.b('final-fill','Offene Vorschläge übernehmen',readonly||rows[0].basis.orientation?'disabled':'')}<label class="check"><input type="checkbox" id="finalOpenOnly">Nur offene Noten anzeigen</label></div><h3 id="finalClassHeading">Noten der Klasse</h3><div class="table-wrap final-table-wrap" id="finalTableWrap" tabindex="0"><table class="final-table" aria-labelledby="finalClassHeading"><thead><tr><th scope="col">Schüler</th><th scope="col">Durchschnitt</th><th scope="col">Vorschlag</th><th scope="col">Festgelegte Note</th></tr></thead><tbody>${rows.map((r,i)=>`<tr id="final-row-${i}"><th scope="row">${A.esc(A.studentName(r.s))}</th><td>${r.basis.average?r.basis.average.fixed(2):'–'}</td><td>${N.finalText(r.basis.suggestion,type)}</td><td>${select(r,i)}${r.note?`<details class="result-note"><summary>Bemerkung</summary><p>${A.esc(r.note)}</p></details>`:''}</td></tr>`).join('')}<tr id="finalNoOpen" hidden><td colspan="4">Keine offenen Noten.</td></tr></tbody></table></div>${remove}`;
  const field=i=>A.$(single?'#final-grade':'#final-grade-'+i);
  const harvest=()=>{rows.forEach((r,i)=>{const v=field(i).value;if(v!==r.value){r.value=v;r.touched=true;}});if(single){rows[0].note=A.val('final-note');if(A.$('#finalAdoptType')?.checked)rows[0].touched=true;}};
- A.modal((!single&&period==='annual'?'Zeugnisnoten':label)+' festlegen',content,readonly?null:async()=>{
+ A.modal((!single&&period==='annual'?'Zeugnisnoten':label)+(readonly?' anzeigen':' festlegen'),content,readonly?null:async()=>{
   harvest();const removals=rows.filter(r=>r.prior&&!r.value);if(removals.length&&!A.$('#finalRemoveConfirm').checked){A.$('#finalRemoval').hidden=false;A.$('#finalRemoveConfirm').focus();throw Error('Bitte das Entfernen der bisherigen Noten bestätigen.');}
   for(let i=0;i<rows.length;i++){const r=rows[i];r.remove=!!r.prior&&!r.value;if(r.value&&(r.touched||!r.prior))try{N.finalGrade(r.value,type);}catch(e){field(i).focus();throw e;}}
   const before=A.data;

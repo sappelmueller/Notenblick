@@ -522,8 +522,8 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 .entry-result{font-weight:600}.entry-results tfoot th,.entry-results tfoot td,.entry-table tfoot th,.entry-table tfoot td{background:var(--soft);font-weight:600;border-top:2px solid var(--line)}
 .participation-options>summary{font-weight:650;cursor:pointer;padding:10px 0}.participation-options>.field{margin:12px 0}
 #a-participants{min-width:0}#a-participants>.field{margin:14px 0}#a-participants>.button-row{margin:12px 0}
-.participant-list{display:grid;grid-template-columns:1fr;gap:12px 18px;max-height:19rem;overflow:auto;padding:16px;border:1px solid var(--line);border-radius:6px;background:var(--soft);margin:14px 0}
-.participant-list .check{display:flex;align-items:flex-start;gap:10px;padding:8px;cursor:pointer;margin:0;min-width:0;overflow-wrap:anywhere}.participant-list small{display:block;color:var(--muted);margin-top:3px}.participant-list input{width:auto;flex:0 0 auto;margin:3px 0 0}.participant-list input:disabled{opacity:1}
+.participant-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 18px;max-height:19rem;overflow:auto;padding:16px;border:1px solid var(--line);border-radius:6px;background:var(--soft);margin:14px 0}
+.participant-list .check{display:grid;grid-template-columns:1.1rem minmax(0,1fr);align-items:start;column-gap:8px;padding:8px;cursor:pointer;margin:0;min-width:0;overflow-wrap:anywhere}.participant-list input{width:1rem;height:1rem;justify-self:start;margin:3px 0 0}.participant-list input:disabled{opacity:1}
 .single{max-width:42rem;padding:24px}.single .single-orientation{font-size:1.1rem;line-height:1.5;margin:20px 0}.single .field{margin-bottom:18px}.single .field-label{font-size:.8rem;font-weight:650}.single .point-preview{font-size:1.35rem;font-weight:650;line-height:1.5}.single .point-error{font-size:1rem}.single .computed-grade{margin-top:6px;display:block}.single .computed-grade:empty{display:none}.single .button-row{gap:10px}.single button{white-space:normal;overflow-wrap:anywhere}
 .key-export{margin:18px 0 22px}.key-check{margin:0 0 22px;padding:14px 0;border:0}.key-check legend{font-weight:650}.key-check .field{max-width:22rem}.key-check p{margin:8px 0}#keyTableTitle{font-size:1.05rem;margin:20px 0 14px}#keyTable{margin-top:16px}#keyTable .table-wrap{max-height:none}#dialogContent>p{white-space:pre-line}
 .point-settings h3{margin:0 0 16px;font-size:1rem}.field-label{font-weight:650}
@@ -548,3 +548,5 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 /* Help remains readable even at an effective width of 160 CSS pixels. */
 .help-intro,.help-topic,#help h1,#help h2,#help h3{overflow-wrap:anywhere}
 .help-tabs{min-width:0}.help-tabs li{min-width:0;max-width:100%}.help-tabs a{min-width:0;max-width:100%}
+
+@media(max-width:400px){.participant-list{padding:8px}.participant-list .check{padding:4px 0;column-gap:6px}}
