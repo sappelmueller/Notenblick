@@ -146,7 +146,7 @@
           if(Notenblick.$('#dialog').open)Notenblick.closeModal();
           const year=key==='years',title=year?(archived?'Schuljahr abschließen':'Schuljahr wieder öffnen'):(archived?'Ausblenden':'Wieder anzeigen');
           const text=year?(archived?'Das '+Notenblick.schoolYear(x)+' wird abgeschlossen. Alle Klassen, Schüler und Noten bleiben erhalten, können anschließend aber nicht mehr bearbeitet werden. Du kannst das Schuljahr später wieder öffnen.':'Das '+Notenblick.schoolYear(x)+' wird wieder geöffnet. Klassen, Schüler und Noten bleiben erhalten und können wieder bearbeitet werden.'):(key==='classes'?'Die Klasse ':'Das Fach ')+x.name+(archived?' wird in der Auswahl ausgeblendet. Alle Schülerzuordnungen, Leistungen und Noten bleiben erhalten. Du kannst den Eintrag später wieder anzeigen.':' wird wieder in der Auswahl angezeigt. Alle bisherigen Daten bleiben erhalten.');
-          Notenblick.confirm(title,text,()=>Notenblick.mutate(d=>{d[key].find(x=>x.id===id).archived=archived;}),title);
+          Notenblick.confirm(title,text,()=>Notenblick.mutate(d=>{d[key].find(x=>x.id===id).archived=archived;}),title,{helpContext:year?3:4});
           break;
         }
       case 'new-assessment':
@@ -183,7 +183,7 @@
               Notenblick.W().selected[item.kind] = 'all';
             });
             Notenblick.remember();
-          }, 'Entfernen');
+          }, 'Entfernen',{helpContext:'noten-eine-leistung-nachtraglich-andern-oder-loschen'});
           break;
         }
       case 'copy-weights':Notenblick.openWeightCopy();break;

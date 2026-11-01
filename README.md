@@ -1,6 +1,6 @@
 # Notenblick
 
-Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.23.0**.
+Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.23.1**.
 
 Die Benutzerhilfe enthält neun echte Registerkarten und 77 wortgetreue Abschnitte aus der verbindlichen Textquelle. F1 öffnet eine von 49 konkreten Hilfestellen; Dialoge behalten dabei ihre Formularfelder, Eingaben und den Rückkehrfokus. Ein gemeinsamer Shortcut-Router ergänzt die vorhandenen Tastaturabläufe. Die ersten neun angezeigten Klasse-Fach-Paare sind über Alt+Ziffer erreichbar. Klassen können auf- oder absteigend angeordnet werden. Die Startseite behält ihre drei Karten, setzt den letzten Fachbereich fort und kann weitere offene Leistungen einblenden.
 
@@ -67,7 +67,7 @@ TrainScope ist ein anderes Projekt. Die Prüfung vor Commit/Push akzeptiert auss
 
 Vor einem Git-Push verlangt die Prüfung eine live bestätigte private Repository-ID und deaktivierte Actions. Dafür wird ein bereits angemeldetes `gh` oder ein vorhandenes `GH_TOKEN`/`GITHUB_TOKEN` benötigt; Zugangsdaten werden nicht im Projekt gespeichert. Bei Verwendung der GitHub-Anbindung dieselben Prüfungen unmittelbar vor dem Schreiben durchführen. Keine erzwungenen Pushes, keine Änderungen an TrainScope und keine globalen Kontoeinstellungen.
 
-Aktueller Funktions- und Prüfbericht: [Notenblick 1.23.0](docs/PRUEFBERICHT-1.23.0.md).
+Aktueller Funktions- und Prüfbericht: [Notenblick 1.23.1](docs/PRUEFBERICHT-1.23.1.md).
 
 ## Windows-Auslieferung
 

@@ -1,11 +1,10 @@
 /* Compact work overview. Selection and progress reuse the existing shared functions. */
 (function(A){'use strict';
 A.shortcutChoices=function(yearId,activeId=''){
- const collator=new Intl.Collator('de',{numeric:true,sensitivity:'base'}),classes=new Map(A.data.classes.filter(c=>c.yearId===yearId).map(c=>[c.id,c])),list=A.courseChoices(yearId),active=A.data.courses.find(c=>c.id===activeId);
- const compare=(a,b)=>A.compareClasses(classes.get(a.classId),classes.get(b.classId))||collator.compare(a.name,b.name)||a.id.localeCompare(b.id);
- if(active&&classes.has(active.classId)&&!list.some(c=>c.id===activeId)){list.push(active);list.sort(compare);}
+ // The displayed numbers depend only on explicit preferences and class order.
+ const list=A.courseChoices(yearId);
  const chosen=A.prefs.quickIds===null?list.slice(0,12):list.filter(c=>A.prefs.quickIds.includes(c.id));
- if(active&&list.includes(active)&&!chosen.includes(active)){if(chosen.length===16)chosen.pop();chosen.push(active);chosen.sort(compare);}return {list,chosen};
+ return {list,chosen};
 };
 A.quickLinks=function(chosen,{prefix='quick-',activeId=''}={}){
  const classes=new Map(A.data.classes.map(c=>[c.id,c])),labels=new Map(chosen.map(c=>[c.id,classes.get(c.classId).name+'/'+(A.subjectCode(c)||c.name)])),counts=new Map();for(const label of labels.values())counts.set(label.toLocaleLowerCase('de'),(counts.get(label.toLocaleLowerCase('de'))||0)+1);

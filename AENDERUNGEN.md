@@ -1,3 +1,13 @@
+# Notenblick 1.23.1
+
+- Hauptbereiche/Fächer per Alt-Kurzbefehlen erschließen die vorhandene H1; Fachüberschrift bleibt unter der Auswahl und nennt zugänglich einmal den aktiven Notenbereich. Fachöffnungsregel gilt auch für Alt+N.
+- Stabile nummerierte Fachzugriffe ohne Einfügen des aktiven Fremdfachs; Alt+0 öffnet/schließt die Auswahl. Unbelegte Ziffern melden kurz ihren Zustand ohne Fokuswechsel.
+- Strg+1–9 und Strg+Tab wechseln die Hauptregister mit Inhaltsfokus; normale Registerbedienung bleibt erhalten. Strg+Umschalt+1/2 öffnet Alle Schüler/Einzeln, auch mit deutschen Umschalt-Ziffern. Strg+Umschalt+A öffnet das bestehende Abschlussnotenmenü; abgeschlossene Daten bieten nur Anzeigen an.
+- Teilnehmer erhalten native explizite Checkboxlabels mit unmittelbar folgendem Inline-Namen, ohne blockweise getrennte Namen. Responsive ein-/zweispaltig; Auswahl-, Such-, Schutzfunktionen erhalten.
+- Kompakte automatische TXT-Leistungslisten und Schülerberichte mit einer Zeile je Ergebnis. Schlüssel einmal im Leistungskopf; manuelle Abweichungen, relevante historische Werte, Status, Bemerkungen und Gewichte bleiben lesbar. Nur TXT-Darstellung und Verzeichnisversion 19, keine Daten-/Berechnungsänderung.
+- Neun Hilfethemen/77 Abschnitte wortgetreu aus der verbindlichen 1.23.1-Fassung; 49 bestehende F1-Kontexte mit konkreter Feld-/Aktionspriorität und Rückkehr zu erhaltenen Formularen beziehungsweise Menüaktionen.
+- Zielgerichtete dauerhafte Regressionen und vollständiger frischer lokaler Release-Lauf vorgeschrieben. Reale Windows/WebView2/NVDA/Braille/UIA-Abnahme bleibt getrennt offen. Details: docs/PRUEFBERICHT-1.23.1.md.
+
 # Notenblick 1.23.0
 
 - Vollständig ersetzte Benutzerhilfe: neun echte Registerkarten, 77 wortgetreue Abschnitte aus der gelieferten JSON und 49 konkrete F1-Kontexte. Dialoghilfe erhält dieselben Formknoten, Entwürfe und den Rückkehrfokus; Escape schließt zuerst die Hilfe.

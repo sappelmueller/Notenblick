@@ -47,7 +47,7 @@ module.exports=async function prepare(index){
  case 33:A.output('overview');return select('#exportFormat');
  case 34:A.output('overview');return select('#exportScope');
  case 35:A.output('pupil');return select('#exportRemarks');
- case 36:backup('export');return select('#allNotesFormat');
+ case 36:backup('export');return select('#backup-export h2');
  case 37:backup('status');return select('#tab-backup-status');
  case 38:{const old=A.store;A.store={root:{name:'Synthetische Testdaten'}};backup('status');A.store=old;}return select('[data-action=regenerate]');
  case 39:backup('create');return select('#tab-backup-create');

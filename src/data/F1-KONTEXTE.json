@@ -1,5 +1,5 @@
 {
-  "description": "Kontext-Zuordnungen für F1 (Priorität: Dialog > Unteransicht > Hauptbereich). Keine zusätzlichen Benutzertexte.",
+  "description": "Kontext-Zuordnungen für F1 (Priorität: aktiver Dialog, fokussiertes Feld oder Aktion, Unteransicht, Hauptbereich). Keine zusätzlichen Benutzertexte.",
   "contexts": [
     {
       "context": "Willkommensseite und Einrichtungsassistent",
@@ -139,7 +139,7 @@
     {
       "context": "Notengewichtung",
       "topic": "Berechnung",
-      "section_id": "berechnung-die-standardgewichtung"
+      "section_id": "berechnung-berechnungsart-und-individuelle-anteile"
     },
     {
       "context": "Notengewichtung: Fach übernehmen",
@@ -184,7 +184,7 @@
     {
       "context": "Sicherung: Exportieren",
       "topic": "Export",
-      "section_id": "export-alle-noten-exportieren"
+      "section_id": "export-einen-bericht-offnen"
     },
     {
       "context": "Sicherung: Speicherstatus",
