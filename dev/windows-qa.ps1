@@ -43,9 +43,61 @@ $report = [ordered]@{
 }
 if ($webview.Count -eq 0) { Write-Warning 'Keine registrierte WebView2-Laufzeit gefunden. Ein tatsächlicher Programmstart muss die Verfügbarkeit prüfen.' }
 if ($Launch) {
-    $process = Start-Process -FilePath (Join-Path $app 'Notenblick.exe') -WorkingDirectory $app -PassThru -Wait
-    $report['exit_code'] = $process.ExitCode
-    Write-Host 'Der Prozess wurde ausgeführt. GUI, Fokus und NVDA sind damit noch nicht als geprüft bestätigt.'
+    if (-not [Environment]::Is64BitProcess) { throw 'Für die Prozessprüfung bitte 64-Bit-PowerShell verwenden.' }
+    Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public static class NotenblickProcessProbe {
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MachineInfo { public ushort Machine, Reserved; public uint Attributes; }
+    [DllImport("kernel32.dll", SetLastError=true)]
+    public static extern bool GetProcessInformation(IntPtr process, int informationClass, out MachineInfo info, uint size);
+    [DllImport("kernel32.dll", SetLastError=true)]
+    public static extern bool IsWow64Process2(IntPtr process, out ushort processMachine, out ushort nativeMachine);
+}
+'@
+    $process = Start-Process -FilePath (Join-Path $app 'Notenblick.exe') -WorkingDirectory $app -PassThru
+    $report['process_id'] = $process.Id
+    $report['process_architecture'] = 'Nicht ermittelt'
+    $report['native_arm64_confirmed'] = $false
+    $report['matching_loader_confirmed'] = $false
+    try {
+        $info = New-Object NotenblickProcessProbe+MachineInfo
+        if (-not [NotenblickProcessProbe]::GetProcessInformation($process.Handle, 9, [ref]$info, 8)) {
+            throw 'ProcessMachineTypeInfo nicht verfügbar; kein Architekturnachweis.'
+        }
+        $architectures = @{ 0x014c='x86'; 0x8664='x64'; 0xaa64='arm64' }
+        $actual = $architectures[[int]$info.Machine]
+        if (-not $actual) { throw 'Unbekannte Prozessarchitektur.' }
+        $report['process_architecture'] = $actual
+        [ushort]$guest = 0; [ushort]$hostMachine = 0
+        if ([NotenblickProcessProbe]::IsWow64Process2($process.Handle, [ref]$guest, [ref]$hostMachine)) {
+            $report['host_architecture'] = $architectures[[int]$hostMachine]
+        }
+        $deadline = [DateTime]::UtcNow.AddSeconds(20)
+        $loader = $null; $clr = $null
+        do {
+            $process.Refresh()
+            if ($process.HasExited) { throw 'Notenblick wurde vor dem Architekturnachweis beendet.' }
+            $modules = @($process.Modules)
+            $loader = $modules | Where-Object { $_.ModuleName -ieq 'WebView2Loader.dll' } | Select-Object -First 1
+            $clr = $modules | Where-Object { $_.ModuleName -ieq 'clr.dll' } | Select-Object -First 1
+            if (-not $loader -or -not $clr) { Start-Sleep -Milliseconds 200 }
+        } while ((-not $loader -or -not $clr) -and [DateTime]::UtcNow -lt $deadline)
+        if (-not $loader -or -not $clr) { throw 'Loader/CLR nicht im laufenden Prozess nachgewiesen.' }
+        $expectedLoader = Join-Path $app ('Programm/Windows/' + $actual + '/WebView2Loader.dll')
+        $report['loader_path'] = $loader.FileName
+        $report['clr_path'] = $clr.FileName
+        $report['matching_loader_confirmed'] = [string]::Equals($loader.FileName, $expectedLoader, [StringComparison]::OrdinalIgnoreCase) -and
+            ((Get-FileHash -LiteralPath $loader.FileName).Hash -eq (Get-FileHash -LiteralPath $expectedLoader).Hash)
+        if (-not $report['matching_loader_confirmed']) { throw 'Geladener Loader passt nicht zum Prozess.' }
+        $report['native_arm64_confirmed'] = ($actual -eq 'arm64' -and $framework.Release -ge 533320)
+        Write-Host ('Gemessene Prozessarchitektur: ' + $actual + '; passender Loader geladen.')
+    } catch {
+        $report['architecture_error'] = $_.Exception.Message
+        Write-Warning $_.Exception.Message
+    }
+    Write-Host 'Die Testkopie bleibt geöffnet. Nach der manuellen Prüfung schließen. GUI, Fokus und NVDA bleiben gesondert zu prüfen.'
 }
 $report | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $target 'Windows-Pruefung.json') -Encoding UTF8
 Write-Host "Prüfordner: $target"

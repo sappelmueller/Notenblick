@@ -1,3 +1,9 @@
+# 1.23.2
+
+- Native ARM64-Ausführung derselben portablen AnyCPU-EXE für Windows 11 ab 24H2 vorbereitet: Manifest für amd64/arm64, .NET Framework 4.8.1 auf ARM64.
+- WebView2-Loader nach tatsächlicher Prozess-Ausführungsumgebung statt Umgebungsvariable auswählen; x86/x64/ARM64-Dateien unverändert erhalten.
+- Architektur-/Manifest-/Bibliotheksprüfungen und Windows-Praxisprüfweg ergänzt. Keine Änderungen an Oberfläche, Berechnungen oder Daten. Reale Windows-/ARM64-/NVDA-Abnahme noch offen.
+
 # Notenblick 1.23.1
 
 - Hauptbereiche/Fächer per Alt-Kurzbefehlen erschließen die vorhandene H1; Fachüberschrift bleibt unter der Auswahl und nennt zugänglich einmal den aktiven Notenbereich. Fachöffnungsregel gilt auch für Alt+N.

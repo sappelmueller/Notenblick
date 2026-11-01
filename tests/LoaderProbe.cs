@@ -29,6 +29,11 @@ public static class LoaderProbe
             if (loader.Resolve(null, new ResolveEventArgs("Newtonsoft.Json, Version=99.0.0.0, Culture=neutral, PublicKeyToken=null")) != null)
                 throw new Exception("Different assembly identity accepted.");
             loader.LoadAll(); // Re-entry must preserve each loaded instance.
+            var environment = loader.Get("Microsoft.Web.WebView2.Core")
+                .GetType("Microsoft.Web.WebView2.Core.CoreWebView2Environment", true);
+            var setLoader = environment.GetMethod("SetLoaderDllFolderPath", new Type[] { typeof(string) });
+            if (setLoader == null || !setLoader.IsStatic || setLoader.ReturnType != typeof(void))
+                throw new Exception("Pinned WebView2 SDK lacks explicit loader selection.");
             // Execute a real dependent DLL, including its JSON dependency.
             var temporary = Path.Combine(Path.GetTempPath(), "notenblick-loader-write-" + Guid.NewGuid().ToString("N"));
             try
