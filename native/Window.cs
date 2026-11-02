@@ -15,12 +15,12 @@ namespace Notenblick.Native {
   readonly SemaphoreSlim fileGate=new SemaphoreSlim(1,1);
   readonly string program;readonly Storage storage;readonly WebView2 view;FileStream ownership;bool mayClose,initializing=true,closingRequest;
   public static void Run(string program){Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);using(var form=new Window(program))Application.Run(form);}
-  Window(string root){program=root;storage=new Storage(root);storage.VerifyWritable();Text="Notenblick";Icon=System.Drawing.Icon.ExtractAssociatedIcon(Path.Combine(program,"Notenblick.exe"));Width=1280;Height=860;MinimumSize=new System.Drawing.Size(320,240);StartPosition=FormStartPosition.CenterScreen;AutoScaleMode=AutoScaleMode.Dpi;
+  Window(string root){program=root;storage=new Storage(root);storage.VerifyWritable();Text="Notenblick";Icon=System.Drawing.Icon.ExtractAssociatedIcon(Path.Combine(program,"Notenblick.exe"));AutoScaleMode=AutoScaleMode.Dpi;var area=SystemInformation.WorkingArea;MinimumSize=new System.Drawing.Size(Math.Min(320,area.Width),Math.Min(240,area.Height));Size=new System.Drawing.Size(Math.Min(1280,area.Width),Math.Min(860,area.Height));StartPosition=FormStartPosition.CenterScreen;WindowState=FormWindowState.Maximized;
    var data=storage.Root;Directory.CreateDirectory(data);try{ownership=new FileStream(Path.Combine(data,"InBenutzung.lock"),FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None);}catch(IOException){throw new IOException("Dieser Notenbestand ist bereits in einem anderen Notenblick-Fenster geöffnet. Bitte schließe es zuerst.");}
    view=new WebView2{Dock=DockStyle.Fill,AccessibleName="Notenblick"};Controls.Add(view);Shown+=async(s,e)=>await Start();FormClosing+=OnClosing;
    FormClosed+=(s,e)=>{view.Dispose();ownership.Dispose();try{File.Delete(Path.Combine(data,"InBenutzung.lock"));}catch{}};
   }
-  async Task Start(){try{var area=Screen.FromControl(this).WorkingArea;MinimumSize=new System.Drawing.Size(Math.Min(320,area.Width),Math.Min(240,area.Height));if(Width>area.Width||Height>area.Height){Size=new System.Drawing.Size(Math.Min(Width,area.Width),Math.Min(Height,area.Height));Location=area.Location;}if(!File.Exists(Path.Combine(program,"Programm","Notenblick.html")))throw new FileNotFoundException("Die Datei Notenblick.html fehlt.");
+  async Task Start(){try{if(!File.Exists(Path.Combine(program,"Programm","Notenblick.html")))throw new FileNotFoundException("Die Datei Notenblick.html fehlt.");
    string digest;using(var sha=SHA256.Create())digest=BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(Path.GetFullPath(program).ToLowerInvariant()))).Replace("-","").Substring(0,24);
    var profile=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Notenblick","Ansicht",digest);
    var env=await CoreWebView2Environment.CreateAsync(null,profile);await view.EnsureCoreWebView2Async(env);var core=view.CoreWebView2;

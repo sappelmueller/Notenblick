@@ -1,5 +1,7 @@
 # Open-Source-Prüfung vom 2. November 2026
 
+**Einordnung:** Die folgenden Abschnitte dokumentieren den damaligen Bereinigungs- und Lizenzprüfverlauf. Der bereinigte aktuelle Hauptstand bleibt erhalten; drei historische PR-Referenzen liegen weiter beim GitHub-Support. Die ergänzte Nutzerabnahme mit Braille und nachgewiesener nativer ARM64-Ausführung sowie die Testversion 1.23.3 stehen im [aktuellen Versionsbericht](PRUEFBERICHT-1.23.3.md). Ältere Aussagen zu offenen Einzeltests sind historische Prüfstände.
+
 ## Gesicherter Ausgangsstand
 
 Repository `sappelmueller/Notenblick`, ID `1432518047`, privat. Ausgangscommit `cf77c7c2237c646ab7d42f09af4149910057e030`. Vor Änderungen wurden alle 70 Commits, sechs Branches, acht Tags, 401 Baumobjekte und 1.285 Dateiobjekte mit ihren ursprünglichen Git-SHAs wiederhergestellt und mit `git fsck --full` geprüft. Ein vollständiges Bundle wurde in einen frischen Checkout zurückgespielt und als private Sicherung außerhalb des Repositorys abgelegt.

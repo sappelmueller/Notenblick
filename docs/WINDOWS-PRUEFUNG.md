@@ -1,5 +1,7 @@
 # Windows-Prüfung vor Freigabe
 
+**Stand 2. November 2026:** Sebastian Müller hat 1.23.2 auf einem Windows-PC und unter Windows auf ARM in Parallels mit NVDA und Braille praktisch getestet. PowerShell bestätigte ARM64-Prozess und ARM64-WebView2-Loader. Die folgenden älteren Checklisten bleiben historische Prüfpläne; daraus wird keine vollständige Abnahme jedes Einzelpunkts abgeleitet. Für 1.23.3 gelten die zusätzlichen Prüfpunkte am Ende.
+
 Ein Linux-Build ersetzt diese Prüfung nicht. Unter Windows 11 zunächst die ZIP-Prüfsumme mit der erzeugten Prüfsummendatei vergleichen. Die Anwendung in einen neuen Ordner ohne bestehende Schülerdaten entpacken. `dev/windows-qa.ps1 -Archive <ZIP-Pfad>` prüft Entpackung, Grundstruktur, .NET-Voraussetzung und vorhandene WebView2-Registrierung. `-Launch` startet ausschließlich diese frisch entpackte Kopie; die folgenden Punkte bleiben manuell zu bestätigen.
 
 - EXE direkt nach dem Entpacken starten; Fehlermeldungen, fehlende Bibliotheken und .NET-Ladefehler prüfen. Reguläre Windows-Sicherheitswarnungen nicht umgehen oder abschalten.
@@ -121,3 +123,12 @@ Unter echtem Windows mit NVDA prüfen: direkte Eingabe als Standard; alle drei S
 ## Ergänzung 1.23.2 – Prozessarchitektur messen
 
 Für native ARM64-Ausführung Windows 11 ab 24H2 mit .NET Framework 4.8.1 und ARM64-WebView2 verwenden. Dieselbe ZIP zusätzlich auf x64 und möglichst x86 prüfen. `dev/windows-qa.ps1 -Archive <ZIP> -Launch` in 64-Bit-PowerShell misst auf Windows 11 die tatsächliche Prozessarchitektur über ProcessMachineTypeInfo und erfasst geladenen CLR-/Loaderpfad. Auf ARM64 muss der Prozess arm64 und der Loader aus Programm/Windows/arm64 stammen; auf x64 entsprechend x64. Fehlende Messwerte sind kein erfolgreicher Nachweis. Die Testkopie bleibt für die manuelle Abnahme geöffnet. Details und Grenzen: PRUEFBERICHT-1.23.2.md.
+
+## 1.23.3 – geänderte Abläufe erneut abnehmen
+
+- Auf Windows x64 und ARM64 direkt maximierter Start, sichtbare Taskleiste, mehrere Monitore und 100/150/200 Prozent Skalierung. Verkleinern, Verschieben, Minimieren und Wiederherstellen; kein späteres automatisches Maximieren.
+- Strg+1 bis Strg+6 sowie belegte Alt+1 bis Alt+9 mehrfach bewusst drücken: jedes Mal genau eine kurze Bestätigung, passende Überschrift, kein Blur/Refokus oder NVDA-Moduswechsel. Auch unbesetzte Alt-/Strg-Ziffern mehrfach prüfen.
+- Unter beiden Fachöffnungsregeln Eingaben und Scrollposition kontrollieren. Ungültige Werte dürfen keine Navigation erlauben. Normale Registerkarten behalten den Fokus; Eingabe/Umschalt+Eingabe und F1/Escape erhalten Eingaben und Rückkehrfokus.
+- Großes und kleines Fenster mit NVDA-Sprache und Braille verwenden; schnelle Größenänderungen, Eingaben und Fachwechsel ohne Verzögerung oder Fokusverlust. Verbliebene Verzögerungen mit reproduzierbaren Schritten melden.
+
+Dies ist der offene Prüfplan für 1.23.3, kein hier ausgeführter Windows-/NVDA-Livetest. Die bestätigte Abnahme von 1.23.2 bleibt davon getrennt. Einzelheiten: [Versionsbericht 1.23.3](PRUEFBERICHT-1.23.3.md).

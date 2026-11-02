@@ -52,10 +52,12 @@ checks.append('Actual EXE RT_MANIFEST/1: WindowsSettings 2024 amd64 arm64; DPI a
 with tempfile.TemporaryDirectory(prefix='notenblick-loader-') as temp:
     temp=Path(temp); probe=temp/'LoaderProbe.exe'
     architecture=temp/'ArchitectureProbe.exe'
-    subprocess.run(compiler()+['-nologo','-nostdlib+','-target:exe','-out:'+str(architecture)]+['-r:'+str(refs/(name+'.dll')) for name in ['mscorlib','System']]+[str(root/'native/ProcessArchitecture.cs'),str(root/'tests/ArchitectureProbe.cs')],check=True)
+    probe_refs=sorted((dotnet.parent/'packs/Microsoft.NETCore.App.Ref').glob('*/ref/net8.0'))[-1]
+    subprocess.run(compiler()+['-nologo','-nostdlib+','-target:exe','-out:'+str(architecture)]+['-r:'+str(p) for p in probe_refs.glob('*.dll')]+[str(root/'native/ProcessArchitecture.cs'),str(root/'tests/ArchitectureProbe.cs')],check=True)
     (temp/'ArchitectureProbe.runtimeconfig.json').write_text(json.dumps({'runtimeOptions':{'tfm':'net8.0','framework':{'name':'Microsoft.NETCore.App','version':'8.0.15'}}}))
-    subprocess.run([str(dotnet),str(architecture)],check=True)
+    subprocess.run([str(dotnet),str(architecture),str(root/'dist/Programm/Windows/Notenblick.Fenster.dll')],check=True)
     checks.append('Compiled production architecture selector: native and emulated process cases; no Windows API execution on Linux')
+    checks.append('Compiled Windows DLL IL: startup Maximized before Shown, no delayed resize, standard window controls retained; no real Windows GUI execution')
     subprocess.run(compiler()+['-nologo','-nostdlib+','-target:exe','-out:'+str(probe)]+['-r:'+str(refs/(name+'.dll')) for name in ['mscorlib','System','System.Core']]+[str(root/'native/ProgramLibraries.cs'),str(root/'.build/generated/ReleaseLibraries.g.cs'),str(root/'.build/generated/ReleaseFiles.g.cs'),str(root/'tests/LoaderProbe.cs')],check=True)
     (temp/'LoaderProbe.runtimeconfig.json').write_text(json.dumps({'runtimeOptions':{'tfm':'net8.0','framework':{'name':'Microsoft.NETCore.App','version':'8.0.15'}}}))
     def run(mode,folder,label):

@@ -8,13 +8,15 @@ A.shortcutTabs=function(){
 A.focusCourseHeading=function(){
  const h=A.$('#subjectTitle'),tab=A.$('#noteTabs [aria-selected=true]');
  // One focus announcement, including the active area; the visible H1 stays intact.
- h.setAttribute('aria-label',h.textContent+(tab?', '+tab.textContent:''));
- A.focusTarget(h);
+ const label=h.textContent+(tab?', '+tab.textContent:'');
+ if(h.getAttribute('aria-label')!==label)h.setAttribute('aria-label',label);
+ A.focusTarget(h,{announceIfFocused:true});
 };
 A.activateShortcutTab=function(list,target){
- if(!target){A.announce('Keine Registerkarte vorhanden.');return;}
+ if(!target){A.announce('Keine Registerkarte vorhanden.',{defer:true});return;}
  const group=list.id.startsWith('entryTabs-')?'entry-'+list.id.slice(10):{noteTabs:'notes',adminTabs:'class',settingsTabs:'settings',backupTabs:'backup',helpTabs:'help'}[list.id];
- const done=ok=>{if(!ok)return;const panel=document.getElementById(target.getAttribute('aria-controls')),heading=[...panel.querySelectorAll('h2,h3,h4')].find(visible);A.focusTarget(heading);};
+ const done=ok=>{if(!ok)return;const panel=document.getElementById(target.getAttribute('aria-controls')),heading=[...panel.querySelectorAll('h2,h3,h4')].find(visible);A.focusTarget(heading,{announceIfFocused:true});};
+ if(target.getAttribute('aria-selected')==='true'){if(A.canLeave())done(true);return;}
  const result=A.groups[group].activate(target,false,true);if(result?.then)result.then(done);else done(result);
 };
 A.handleShortcut=function(e){
@@ -28,7 +30,7 @@ A.handleShortcut=function(e){
   const main={s:'home',n:'notes',v:'admin',i:'backup',e:'settings',h:'help'}[key];
   if(main){consume();
    if(main==='notes'&&A.getCourse()){if(A.chooseContext({courseId:A.ui.course,historical:true,openNotes:true}))A.focusCourseHeading();}
-   else if(A.activateGroup('main',main,false,true))A.focusTarget(A.$('#'+main+' h1'));
+   else if(A.activateGroup('main',main,false,true))A.focusTarget(A.$('#'+main+' h1'),{announceIfFocused:true});
    return true;
   }
   if(digit!==null){
@@ -41,7 +43,7 @@ A.handleShortcut=function(e){
     else{all.open=!wasNotes||!all.open;A.focusTarget('allSelectionSummary');}return true;
    }
    const year=A.ui.main==='notes'?A.ui.year:A.ui.workingYear,chosen=A.shortcutChoices(year).chosen[Number(digit)-1];
-   if(!chosen){A.announce('Kein Fach zugeordnet.');return true;}
+   if(!chosen){A.announce('Kein Fach zugeordnet.',{defer:true});return true;}
    if(A.chooseContext({courseId:chosen.id,historical:true,openNotes:true}))A.focusCourseHeading();return true;
   }
  }

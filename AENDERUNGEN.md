@@ -1,14 +1,23 @@
-# Open-Source-Vorbereitung von 1.23.2
+# Änderungen
+
+## 1.23.3 – Testversion
+
+- Startet maximiert; Verkleinern, Verschieben und Wiederherstellen bleiben möglich.
+- Wiederholte Fach- und Registerkurzbefehle bestätigen den Bereich; unbesetzte Ziffern melden sich zuverlässig über die zentrale Statusquelle.
+- Derselbe Fachbereich bleibt erhalten; Fenstergrößenänderungen verursachen weniger unnötige Aktualisierungen.
+- GitHub-Texte zeigen den vollständigen Funktionsumfang. Windows-, NVDA-, Braille- und native ARM64-Praxistests von 1.23.2 sind dokumentiert; die geänderten Abläufe von 1.23.3 benötigen eine erneute Nutzerabnahme.
+
+## Open-Source-Vorbereitung von 1.23.2
 
 GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln für private wie öffentliche Repositories. Keine Änderungen an Notenberechnung, Oberfläche oder Datenspeicherung. Die lizenzierte Paketfassung verwendet den ergänzenden Tag `v1.23.2-oss.1`; der ursprüngliche Tag und Download bleiben als historischer Build-Kandidat erhalten.
 
-# 1.23.2
+## 1.23.2
 
 - Native ARM64-Ausführung derselben portablen AnyCPU-EXE für Windows 11 ab 24H2 vorbereitet: Manifest für amd64/arm64, .NET Framework 4.8.1 auf ARM64.
 - WebView2-Loader nach tatsächlicher Prozess-Ausführungsumgebung statt Umgebungsvariable auswählen; x86/x64/ARM64-Dateien unverändert erhalten.
 - Architektur-/Manifest-/Bibliotheksprüfungen und Windows-Praxisprüfweg ergänzt. Keine Änderungen an Oberfläche, Berechnungen oder Daten. Reale Windows-/ARM64-/NVDA-Abnahme noch offen.
 
-# Notenblick 1.23.1
+## Notenblick 1.23.1
 
 - Hauptbereiche/Fächer per Alt-Kurzbefehlen erschließen die vorhandene H1; Fachüberschrift bleibt unter der Auswahl und nennt zugänglich einmal den aktiven Notenbereich. Fachöffnungsregel gilt auch für Alt+N.
 - Stabile nummerierte Fachzugriffe ohne Einfügen des aktiven Fremdfachs; Alt+0 öffnet/schließt die Auswahl. Unbelegte Ziffern melden kurz ihren Zustand ohne Fokuswechsel.
@@ -18,7 +27,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Neun Hilfethemen/77 Abschnitte wortgetreu aus der verbindlichen 1.23.1-Fassung; 49 bestehende F1-Kontexte mit konkreter Feld-/Aktionspriorität und Rückkehr zu erhaltenen Formularen beziehungsweise Menüaktionen.
 - Zielgerichtete dauerhafte Regressionen und vollständiger frischer lokaler Release-Lauf vorgeschrieben. Reale Windows/WebView2/NVDA/Braille/UIA-Abnahme bleibt getrennt offen. Details: docs/PRUEFBERICHT-1.23.1.md.
 
-# Notenblick 1.23.0
+## Notenblick 1.23.0
 
 - Vollständig ersetzte Benutzerhilfe: neun echte Registerkarten, 77 wortgetreue Abschnitte aus der gelieferten JSON und 49 konkrete F1-Kontexte. Dialoghilfe erhält dieselben Formknoten, Entwürfe und den Rückkehrfokus; Escape schließt zuerst die Hilfe.
 - Ein zentraler Shortcut-Router für Hauptbereiche, tatsächliche Klasse-Fach-Zugriffe, sichtbare Tabs, innere Eingabetabs, Leistungsmenü, direkte K/T/M-Aktionen, Gewichtung, Export und Speicherung. AltGr, Dialoge, Fehler und vorhandene Schnell-Eingabe bleiben geschützt. WebView2 reicht Strg+Tab an denselben Router weiter; Windows-Liveabnahme steht aus.
@@ -29,7 +38,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Escape wird nicht mehr von Hintergrund-Details vor einem offenen Dialog abgefangen. Mündliche Dialoge bleiben auch bei sehr schmalen Fenstern und hohem Zoom innerhalb des Fensters. Die Hilfe bleibt auch bei 320 Pixeln/200 Prozent Zoom ohne horizontalen Seitenüberlauf.
 - Neue dauerhafte Gruppen v1230/v1230-storage/v1230-browser; wortgetreuer Hilfevergleich, 49 F1-Kontexte, 63 Axe-Fälle und produktive native Speicherung. Vollständige frische lokale Release-Prüfung erforderlich. Windows/WebView2/NVDA/Braille/UIA-Liveabnahme separat offen; bis dahin Build-Kandidat. Details: docs/PRUEFBERICHT-1.23.0.md.
 
-# Notenblick 1.22.0
+## Notenblick 1.22.0
 
 - Einheitlicher Kontextfokus: neue Arbeitsbereiche und Dialoge beginnen bei ihrer Überschrift. Hauptlinks, Tabs und Auswahlfelder behalten ihren Fokus; schnelle Eingabe/Umschalt+Eingabe bleibt direkt. Fertig, Schließen, Escape und Abbrechen führen zum passenden Auslöser zurück. Gemeinsame Zielprüfung schützt unsichtbare oder deaktivierte Elemente.
 - Fachöffnungsregel bei allen ausdrücklichen Öffnungen, einschließlich desselben Fachs. Programmstart und normale Tabs unabhängig. Zur Notenübersicht, Fortsetzen und bewusste Schüler-/Leistungsansichten behalten Vorrang.
@@ -42,7 +51,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Datumseingaben, Dialogüberschriften, Teilnehmerliste, Aktionen und Einzelansicht bei sehr schmalen/zoomvergrößerten Fenstern verbessert. Keine neue Abhängigkeit oder Speicherarchitektur; Domänenmathematik, Speicherung, Sicherungen und Exportrenderer unverändert.
 - Neue dauerhafte Gruppen v1220/v1220-browser, synthetische Großklasse und gespeicherte Neustartansichten. Vollständige frische lokale Freigabe mit 83 Testgruppen/90 Schritten erforderlich. Windows-/UIA-/NVDA-/Microsoft-Word-Liveabnahme bleibt separat offen. Details in docs/PRUEFBERICHT-1.22.0.md.
 
-# Notenblick 1.21.1
+## Notenblick 1.21.1
 
 - Vorhandene Leistungen öffnen eine nicht bearbeitbare Ergebnisansicht. Noten bearbeiten und Fertig wechseln im selben Bereich; Schließen führt zur auslösenden Tabellenposition zurück. Neue Leistungen und Fortsetzen beginnen direkt mit der Bearbeitung. Genau ein unterer Arbeitsbereich, Schutz ausstehender und ungültiger Eingaben.
 - Jede neue Bearbeitung startet mit Alle Schüler. Einzeln bleibt verfügbar und wird innerhalb derselben Bearbeitung bei Aktualisierungen erhalten. Mündliche Einzelnoten nutzen dieselben Zustände im vorhandenen Dialog; Anzeigen bleibt auch bei abgeschlossenen Daten möglich.
@@ -55,7 +64,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Bereits mit Tab erfasste neue mündliche Noten behalten Punkte und direkte Eingaben bei späterem Eingabeartwechsel. Zusatzangaben bleiben beim ursprünglichen Schüler; ungültige Eingaben blockieren einen Schülerwechsel. Die Vorschau zeigt nur tatsächlich vorhandene manuelle Festlegungen.
 - Zentrale Bruchrechnung, Punkteumrechnung, Gewichtung, Noten, JSON-/TXT-Sicherung und portable Struktur unverändert. Neue Gruppen v1211, v1211-browser und v1211-files, ausschließlich synthetische Daten. Windows-/NVDA-/Microsoft-Word-Liveabnahme gesondert offen.
 
-# Notenblick 1.21.0
+## Notenblick 1.21.0
 
 - Eingabeart pro Klassenarbeit, Test und mündlicher Klassen-/Einzelleistung; direkte Noten bleiben Standard. Punkte mit individuellen Maximalwerten, Linear, Mit Knick oder individuellen Mindestgrenzen und ganzen, halben, Viertel- oder Zehntelnoten. Eine zentrale exakte Bruchrechnung, genau eine Rundung, gleiche Regeln für Vorschau, Speicherung und Export.
 - Eingabe/Umschalt+Eingabe übernehmen Punkte und führen zum nächsten/vorherigen sichtbaren Schüler. Die bestehende Statusquelle meldet Punkte und Note nach dem Fokuswechsel; im modalen mündlichen Dialog bleibt sie im zugänglichen Dialogbaum. Tabellen- und Einzelansicht, Suche, Sortierung und Status bleiben erhalten.
@@ -66,7 +75,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Einzelne mündliche Berichte zeigen Klassendurchschnitte erst ab zwei benoteten Personen. Normale TXT-Leistungsberichte verwenden eine Zeile je Schüler und zugeordnete Bemerkungszeilen. Bestehende Word-/PDF-Gestaltung und Seitenaufteilung unverändert.
 - Neue dauerhafte Gruppen v1210, v1210-storage, v1210-browser und v1210-files: ausschließlich synthetische Daten, 158.484 exakte Referenzumrechnungen, echte Dateiformate und ZIPs, native Speicherung/Wiederherstellung, Browser/Tastatur/Fokus/axe, Open XML und PDF/UA. Tatsächliche Windows-/NVDA-Liveabnahme gesondert offen.
 
-# Notenblick 1.20.3
+## Notenblick 1.20.3
 
 - Nach Leistungsarten zeigt ausschließlich Übersicht, aktivierte Leistungsarten und Schüler. Leistungen bleibt der kompakten Ansicht vorbehalten. Vorhandene ausgeblendete Leistungen sind über die Übersicht erreichbar; Tastatur und Fokus bleiben gültig.
 - Der zentrale Exportdialog ergänzt eine alphabetische, vom Arbeitskontext unabhängige Schülerauswahl. Gleiche Namen werden unterschieden, ehemalige Schüler ausdrücklich einbezogen; ohne Auswahl kein Export. Ausgabewechsel erhalten Eingaben.
@@ -76,7 +85,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Schülerlisten ohne falsche Fachbezeichnung; gültiger Excel-Export und sinnvolle CSV-Ausgabe auch für kurze Fachinformationen. Automatische TXT-Notfalllisten, Noten-JSON und Sicherungen unverändert.
 - Referenzvergleich: je 167 zu 51 Dokumente, 139 zu 23 Schülerberichte, 191 zu 51 PDF-Seiten und 169 zu 53 gerenderte Word-Seiten. Alle 236 Einzelnoteneinträge und 40 manuellen Abschlussnoten erhalten. Dauerhafte Tests ausschließlich synthetisch; vollständiger Nachweis und Liveprüfgrenzen im Prüfbericht.
 
-# Notenblick 1.20.2
+## Notenblick 1.20.2
 
 - „Fachbericht mit Einzelnoten“ ersetzt den überladenen vollständigen Fachbericht: eine Fachübersicht, gemeinsame Tabellen je tatsächlich verwendeter Leistungsart, kompakte mündliche Einzelnoten und einmalige tatsächliche Bemerkungen. Eigenständige Schülerberichte bleiben verfügbar; nur vorhandene Einträge sind dort vorausgewählt.
 - Notenübersichten bleiben immer eine zusammenhängende Tabelle. Acht wesentliche Spalten passen gemeinsam auf A4 quer; ausschließlich vertikale Fortsetzung mit wiederholtem Tabellenkopf. Kurze eindeutige Spaltennamen, dynamische Leistungsarten und gezielt begrenzte Übersicht bei zusätzlichen Arten; sämtliche Details bleiben in den Leistungstabellen.
@@ -86,7 +95,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - „Inhalt“ erläutert Notenübersicht, Leistungsliste, Fachbericht und Schülerberichte dynamisch über eine zugeordnete Beschreibung. Gesamtexporte behalten identische ZIP-Pfade und die produktive native Prüfung für TXT, Word und PDF. Automatische TXT-Notfalllisten und gespeicherte Daten bleiben unverändert.
 - Dauerhafte synthetische Qualitätsregressionen für 23 Schüler/wenige Leistungen, große Klassen, lange/gleiche Namen, Status, GFS, Bemerkungen, Abschlussnoten und Historie. Tatsächliche Dokumente unabhängig geöffnet, gerendert und validiert; Windows-/NVDA-Liveprüfungen separat ausstehend. Einzelheiten im Prüfbericht.
 
-# Notenblick 1.20.1
+## Notenblick 1.20.1
 
 - Kritischen Windows-Gesamtexportfehler behoben: sichere Unterordner werden akzeptiert, vollständige Archivpfade und einzelne Dateinamen getrennt geprüft. Dieselbe Struktur nach Schuljahr/Klasse/Fach für TXT, Word und PDF; flache Schüler-ZIPs bleiben möglich.
 - Pfadsegmente, reservierte Windows-Namen, Groß-/Kleinschreibung und Unicode-Namenskollisionen, Datei-/Ordnerkonflikte, lokale/zentral abgeglichene ZIP-Daten, CRC, Inhalt und Grenzen geprüft. Keine Prüfung deaktiviert. ZIP-Dateifilter heißt einheitlich „ZIP-Archiv“.
@@ -95,7 +104,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Kritische Übergabe gegen wiederholtes Escape geschützt; nach korrigierbaren Fehlern wieder bedienbarer Dialog mit sinnvoller Fokusrückgabe. Eine sichtbare Erfolgsmeldung über die vorhandene Statusquelle.
 - Dauerhafte native Tests akzeptieren echte verschachtelte Archive; vollständige erzeugte TXT-/Word-/PDF-ZIPs durchlaufen produktive Validierung und atomare Erst-/Ersetzungsspeicherung. JS-Download/Bridge zusätzlich gegen C#-Host, Sicherheitskorpus, Inhalts-/Layoutvergleich, Open XML, veraPDF und Chromium ergänzt. Windows-/NVDA-Liveprüfung bleibt gesondert offen.
 
-# Notenblick 1.20.0
+## Notenblick 1.20.0
 
 - Einrichtung abschließen: neue Abschlussbeschriftung, eindeutige sichtbare Bestätigung und erste Notenübersicht.
 - Speicherstatus mit drei erklärten Aktionen und einmaligen tatsächlichen Rückmeldungen. JSON-Speicherung, TXT-Reparatur und offene Einstellungen bleiben klar getrennt.
@@ -107,7 +116,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Begrenzte sequenzielle Dokumenterstellung, echter Fortschritt, Abbruch ohne Teilarchiv; bestehende Grenzen 64 MB/4096 Dokumente mit verständlicher Meldung. Keine zweite Berechnungs- oder Speicherarchitektur.
 - Betroffene Hilfe und neue dauerhafte Funktions-, Speicher-, Chromium- und unabhängige Exportprüfungen ergänzt. Tatsächliche Windows-/NVDA-Liveabnahme bleibt gesondert offen; siehe docs/PRUEFBERICHT-1.20.0.md.
 
-# Notenblick 1.19.0
+## Notenblick 1.19.0
 
 - Neue Standards nur für neue Bestände: Kürzen und Notenansicht nach Leistungsarten. Gespeicherte Entscheidungen sowie bisherige implizite Standards alter Bestände bleiben erhalten; exakte Rechnungen und Zeugnisnotenvorschläge unverändert.
 - Ersteinrichtung mit Zurück, Einrichtung beenden und Weiter beziehungsweise Notenblick einrichten in einer gemeinsamen Fußzeile. Fünf Schritte, Fokus, Scrollposition und Verwerfschutz erhalten.
@@ -121,7 +130,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Gezielter Umbruch langer Sicherungsaktionen und Texte; Dialoge aus Sicherung bei kleiner effektiver Breite erreichbar. Die bestehende Scrollprüfung reagiert zusätzlich auf Layout-/Zoomänderungen, damit auch leere scrollbare Tabellen tastaturerreichbar bleiben.
 - Dauerhafte v1190-Funktions-, produktive C#-Speicher- und Chromium/axe-Prüfungen mit 65 Fenster-/CSS-Zoomfällen. Hilfe-Textdigest, Altstand 1.18.0 bytegleich, Fehler-/Abbruch-/Wiederherstellungsfälle. Infrastrukturprüfung unterstützt Abschlusscommits mit identischem Quellbaum.
 
-# Notenblick 1.18.0
+## Notenblick 1.18.0
 
 - Ersteinrichtung gezielt vereinfacht: Halbjahresoptionen nennen Viertelnoten beziehungsweise ganze Noten direkt; doppelte Erklärungen entfallen.
 - Fachliste ohne wiederholte Klassenüberschrift/Anzahl, dauerhaftes Feldlabel „Fachname“ und eindeutige dynamische Entfernen-Aktionen. Leere Entwürfe sind weiterhin keine eingerichteten Fächer.
@@ -131,7 +140,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Bestehende atomare Abschlussspeicherung und Abbruchbestätigungen bleiben erhalten. Berechnung, Abschlussnoten, Exporte, TXT-Verzeichnisversion 17, Datenformat und native Speicherung unverändert.
 - Dauerhafte Funktions-/Browserregressionen, zusätzliche bytegleiche Öffnungsprüfung von 1.17.0 und vollständiger lokaler Release-Ablauf. Windows-/NVDA-/Braille-/Microsoft-Office-Liveabnahme bleibt separat erforderlich.
 
-# Notenblick 1.17.0
+## Notenblick 1.17.0
 
 - Fehler in der Notenübersicht behoben: Die beiden Abschlussnoten-Klassendurchschnitte waren bisher fest als Striche ausgegeben. Jetzt zählen bereits teilweise festgelegte passende Noten aktiver Fachschüler; keine Nullwerte für fehlende Noten, keine Veränderung gespeicherter Entscheidungen. Bildschirm, TXT-Übersicht und gemeinsame Exportmodelle verwenden dieselbe exakte Berechnung. Suche, angezeigte Seite und Exportumfang beeinflussen die Grundlage nicht.
 - TXT-Schülerberichte ohne technische normale Zeitabschnitte oder wiederholten Faktor 1. Abweichende Faktoren direkt bei Leistungen, GFS weiterhin deutlich. Abweichende historische Halbjahre und frühere Zeugnisnoten verständlich benannt. Ordnerstruktur, Vollständigkeit, SHA-256, Inhaltsreparatur und geschützte Bereinigung bleiben erhalten; Verzeichnisversion 17.
@@ -141,7 +150,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Schnellzugriff standardmäßig bei neuen Datenbeständen, einschließlich Ersteinrichtung. Gespeicherte Darstellungen und ältere implizite Auswahlfelder bleiben erhalten; vollständige Auswahl und Darstellungswechsel bestehen weiter.
 - Neue Domänen-, produktive C#-Speicher-, Chromium-/axe-/Tastatur-/Zoom- und unabhängige Office-/PDF-/Druckregressionen. Tatsächliche Windows-/NVDA-/Microsoft-Office-/Druckabnahme bleibt gesondert erforderlich.
 
-# Notenblick 1.16.0
+## Notenblick 1.16.0
 
 - TXT-Notfalllisten: Halbjahres- und Zeugnisnote immer sichtbar, offene Werte als „–“, genau ein berechneter Gesamtdurchschnitt pro Schüler. Gewichtungen, Bemerkungen, ehemalige Schüler und historische Noten erhalten; lesbare Übersichten auch ohne Leistungen. Zusätzliche eindeutige Windows-kompatible TXT-Dateien unter „Schülernoten“ für jeden Fachschüler.
 - TXT-Aktualisierung prüft tatsächliche Inhalte und liest geschriebene Dateien zurück. SHA-Verzeichnis unterscheidet vollständig/unterbrochen. Fehlende oder geänderte Listen werden sicher erneuert, alte Dateien erst danach und nur bei nachgewiesen unverändertem eigenen Inhalt bereinigt. TXT-only-Wiederholung verändert gespeicherte JSON-Noten nicht.
@@ -150,7 +159,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Abschlussnoten: sichtbaren Tastaturhinweis entfernt; Strg+Enter bleibt erhalten und in der Hilfe erklärt. Auswahlfelder nennen zentral Schüler und vorhandenen passenden Durchschnitt, ohne zusätzliche Live-Region. Native Enter-/Pfeiltastenbedienung bleibt erhalten.
 - Versionierte Struktur-, Browser-/axe-, Speicher-/Fehler-/Update-Regressionen ergänzt. Rechenmodule, atomarer C#-Speicherkern, Exporte und portable Struktur bleiben erhalten. Tatsächliche Windows-/NVDA-/Office-Abnahme weiterhin gesondert erforderlich.
 
-# Notenblick 1.15.0 – Abschlussnoten einfacher bedienen
+## Notenblick 1.15.0 – Abschlussnoten einfacher bedienen
 
 - „Halbjahresausgabe festlegen“ mit Klassen-/Jahreskontext und dynamisch zugeordneter Erklärung; Einstellungen und Bestandsnotenschutz bleiben erhalten.
 - Einheitliche Einzel-/Klassendialoge mit kurzen Überschriften, Fach/Klasse/Jahr und Zeitraum; Schülername als H3, Durchschnitt und Vorschlag kompakt nebeneinander, wichtigste Noteneingabe darunter.
@@ -161,7 +170,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Anfangsfokus direkt auf erste offene Note; keine vorangehende Fokussierung eines anderen Notenfelds. Escape/Abbrechen, Fehlerfokus und Rückkehrfokus bleiben erhalten.
 - Neue Struktur-/Browserregressionen und erweiterte unabhängige Export-/Updateprüfungen; keine Migration oder Änderung am produktiven Speicherkern.
 
-# Notenblick 1.14.0 – Abschlussnoten
+## Notenblick 1.14.0 – Abschlussnoten
 
 - Ausgabe zum Halbjahr einmal je Klasse/Schuljahr festlegen: Viertelnoten oder ganze Noten; spätere Änderungen lassen Bestandsnoten unverändert.
 - „Abschlussnoten“ über der Notenübersicht: vollständige Klassenliste, Vorschläge nur für unberührte leere Felder, Filter für offene Noten und gemeinsames Speichern.
@@ -172,7 +181,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Atomare Speicherung über den vorhandenen Speicherkern; Dialogentwürfe bleiben bei Fehlern erhalten. JSON-Sicherungen, TXT-Listen sowie Word/PDF/Excel/Text/CSV/Druck vollständig ergänzt.
 - Automatische Rechen-, Kompatibilitäts-, native Speicher-, Browser-/Tastatur-/axe- und unabhängige Exportprüfungen ergänzt. Tatsächliche Windows-/NVDA-Abnahme bleibt gesondert erforderlich.
 
-# Notenblick 1.13.0
+## Notenblick 1.13.0
 
 - Schülerexport: beide Ausgabeoptionen haben eine sichtbare, dynamisch zugeordnete Erklärung. Die tatsächliche ZIP-Berichtszahl bleibt erhalten; kein zusätzlicher Live-Bereich oder Fokuswechsel.
 - Drucken: vorhandene A4-Ausrichtung aus der gemeinsamen Seitenplanung, ausdrücklicher Aufruf der WebView2-Browser-Druckvorschau, Fallback für ältere Laufzeiten und kurze Empfehlung im Exportdialog. Druckvorschau und Druckerauswahl bleiben erhalten; keine stille Ausgabe. ShowPrintUI kann keine PrintSettings entgegennehmen, deshalb bleibt die tatsächliche Windows-Vorbelegung manuell zu prüfen.
@@ -180,7 +189,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Ergebniszeile bleibt nach Möglichkeit beim letzten Schüler; wiederholte Tabellenköpfe und statische Fortsetzungsköpfe bleiben erhalten. Unveränderte sichere PAGE-/NUMPAGES-Felder, keine globale Word-Feldaktualisierung oder externen Verknüpfungen.
 - Gezielte Regressions-, Update-, Accessibility-, Schema-, PDF/UA- und Renderprüfungen ergänzt. Keine Änderung am Notendatenformat, den mathematischen Domänenmodulen oder der produktiven Datenspeicherung. Windows/WebView2/Office/NVDA und physischer Druck bleiben gesonderte manuelle Abnahmen.
 
-# Notenblick 1.12.0
+## Notenblick 1.12.0
 
 - Schüleransicht: ausgewählten Schüler oder alle aktiven Schüler einzeln exportieren. PDF, Word, Excel, Text oder CSV werden pro Schüler als eigene Datei in einem ZIP gespeichert. Ausgeschiedene Schüler nur auf Wunsch; historische Fachzuordnungen bleiben erhalten.
 - Exportdialog: einheitliche Reihenfolge, dynamische Erklärung der Anordnung, tatsächliche Berichtszahl, gedrosselter Fortschritt und sicherer Abbruch. Die sechs bisherigen Einzelexporte bleiben erhalten.
@@ -188,7 +197,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - ZIP-Erstellung und native Speicherung: eindeutige Windows-Dateinamen, CRC-/Inhaltsprüfung jedes Eintrags, ein Format pro Archiv, 64-MiB-Grenze, atomare Speicherung und Bereinigung temporärer Dateien. Keine Änderung an Notenberechnung oder Datenformat.
 - Vollständige Open-XML-, PDF/UA-, Browser-, Speicher- und Regressionstests erweitert. Microsoft-Office-, Windows-, NVDA- und physische Druckabnahme bleiben gesondert erforderlich.
 
-# Notenblick 1.11.0
+## Notenblick 1.11.0
 
 - Word erzwingt beim Öffnen keine globale Feldaktualisierung mehr. Lokale PAGE-/NUMPAGES-Felder bleiben erhalten; keine externen Beziehungen. Fehlerhafte OOXML-Reihenfolgen und fehlende Pflichtattribute korrigiert, vollständige SDK-Schemavalidierung ergänzt.
 - Gemeinsame inhaltsabhängige Seiten- und Spaltenplanung für Word, PDF und Druck: zuerst lesbares Hochformat, dann Querformat, 10 beziehungsweise mindestens 9 Punkt. Übliche sieben bis zehn Spalten bleiben zusammen; erst tatsächlicher Platzmangel erzeugt eindeutig bezeichnete Teile mit wiederholten Schülernamen. Excel und CSV behalten sämtliche zusammengehörigen Spalten.
@@ -199,7 +208,7 @@ GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln
 - Versionszeile unverändert dezent. Der einmalig gemeldete Effekt darunter war unter Chromium nicht reproduzierbar. Bei extremer Vergrößerung wurde ein unabhängig gefundener Überlauf des Programmkopfs korrigiert.
 - Berechnungs- und Speicherkern unverändert; keine Migration. Update von 1.10.0, Sicherung und Wiederherstellung werden mit synthetischen Daten geprüft.
 
-## Update auf 1.11.0
+### Update auf 1.11.0
 
 Notenblick schließen. Nur Notenblick.exe und den vollständigen Ordner Programm ersetzen. Daten mit Noten, Ansicht.json, Sicherungen und Notenlisten vollständig erhalten.
 
@@ -207,7 +216,7 @@ Prüfergebnisse und offene tatsächliche Windows-/Word-/NVDA-Abnahme: docs/PRUEF
 
 ---
 
-# Notenblick 1.10.0
+## Notenblick 1.10.0
 
 - Einheitliche H2-Überschriften und gemeinsame responsive Aktionsleisten in allen Notenansichten; Hauptaktion links, Exportieren rechts. Suche bleibt sichtbar, seltene Optionen unter Ansicht anpassen.
 - Dezente Versionsanzeige unten auf Start. Anwendung, Starter und Paketmetadaten beziehen die Version aus package.json.
@@ -217,7 +226,7 @@ Prüfergebnisse und offene tatsächliche Windows-/Word-/NVDA-Abnahme: docs/PRUEF
 - Binärdateien werden unverändert über den Windows-Speicherdialog atomar geschrieben; Abbruch erhält die Auswahl. CSV-Injection-Schutz erweitert, sichere begrenzte Dateinamen.
 - Berechnungen und Datenformat unverändert; keine Migration, keine doppelten Noten. Automatische TXT-Notenlisten bleiben erhalten.
 
-## Update auf 1.10.0
+### Update auf 1.10.0
 
 Notenblick schließen. Nur Notenblick.exe und den vollständigen Ordner Programm ersetzen. Den vorhandenen Ordner Daten einschließlich Noten, Ansicht.json, Sicherungen und Notenlisten unverändert behalten. Keine Office-Installation oder Netzwerkverbindung zur Dateierstellung erforderlich.
 
@@ -225,7 +234,7 @@ Automatisierte und tatsächliche manuelle Prüfungen sowie offene Windows-/NVDA-
 
 ---
 
-# Notenblick 1.9.0
+## Notenblick 1.9.0
 
 1. Start bleibt bei Weiterarbeiten, Meine Fächer und Offene Noteneingaben. Kompaktere Bereiche, gleichmäßige Fachflächen und klar getrennte Leistungsbezeichnung/Erfassungsstand. Historische Weiterarbeitsfächer zeigen ihr tatsächliches Schuljahr und öffnen ihre letzte Fachansicht.
 2. Mündliche Erfassung heißt einheitlich Klassenübersicht | Einzelnoten. Unter H2 Mündliche Noten steht nur die zur Ansicht passende Hauptaktion: Noten für Klasse erfassen beziehungsweise Einzelnote eintragen. Andere Bereiche behalten Mündliche Note eintragen.
@@ -238,7 +247,7 @@ Automatisierte und tatsächliche manuelle Prüfungen sowie offene Windows-/NVDA-
 9. Berechnungskern, Gewichtung, Teilnahme, Status, GFS, Zeugnisnoten, portable Ablage, automatische Speicherung, Sicherung, TXT/CSV und Verwaltung bleiben erhalten. Der produktive C#-Speicherkern und die Berechnungsmodule sind gegenüber 1.8.0 bytegleich.
 10. Lokale Prüfungen um 1.9-Abläufe, Update-/Speichertests und Chromium-Prüfungen mit 40, 100 und 250 Einzelnoten, 60 Schülern, historischen Schuljahren, langen Texten und hohem Browserzoom erweitert. Tatsächliche Windows-/NVDA-Prüfungen bleiben ausdrücklich gesondert.
 
-## Update auf 1.9.0
+### Update auf 1.9.0
 
 Notenblick schließen. Ausschließlich Notenblick.exe und den vollständigen Ordner Programm ersetzen. Den vorhandenen Ordner Daten unverändert behalten. Das Programmarchiv enthält keine Nutzerdaten; bei einer Neuinstallation entsteht Daten beim ersten Start.
 
@@ -246,7 +255,7 @@ Die Auslieferung ist ein lokal unter Linux und Chromium geprüfter Windows-Build
 
 ---
 
-# Notenblick 1.8.0
+## Notenblick 1.8.0
 
 1. Neue Startseite mit Weiterarbeiten, gemeinsamen Fach-Schnellzugriffen und höchstens fünf tatsächlich offenen Noteneingaben. Fünf echte Hauptlinks: Start, Noten, Verwaltung, Sicherung, Einstellungen.
 2. Einstellungen → Allgemein: Startseite oder letzte Ansicht öffnen. Standard bleibt die letzte Ansicht; Fach, Registerkarte und mündliche Auswahl werden wiederhergestellt.
@@ -260,7 +269,7 @@ Die Auslieferung ist ein lokal unter Linux und Chromium geprüfter Windows-Build
 10. Behoben: falsche offene Aufgaben für gezielte Einzelnoten, zahlreiche leere mündliche Spalten bei neuen Einzelnoten, fehlender Fokus-Rückweg aus dem Startseiten-Einstieg und nicht erreichbare Schutzstände der mündlichen Zuordnung. Schutzstände sind in der Wiederherstellung eindeutig beschriftet.
 11. Automatische Speicherung, Sicherungen, Wiederherstellung, TXT/CSV, Verwaltung, Übernahmen, Import, Gewichtungsmodelle und vorhandene Darstellungsoptionen bleiben erhalten. Reine Navigation ändert keine Notendaten.
 
-## Update
+### Update
 
 Notenblick schließen. Ausschließlich Notenblick.exe und den vollständigen Ordner Programm ersetzen. Den vorhandenen Ordner Daten behalten. Das Programmarchiv enthält keine Nutzerdaten; bei einer Neuinstallation wird Daten automatisch angelegt.
 
