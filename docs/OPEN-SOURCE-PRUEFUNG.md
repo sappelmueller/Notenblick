@@ -22,6 +22,12 @@ Die Schutzskripte akzeptieren weiterhin nur den festen Repository-Namen und die 
 
 Eigene Quellen: **GPLv3 mit standardisierter Bibliotheksausnahme gemäß §7** (`GPL-3.0-only WITH GPL-3.0-linking-exception`). Die Ausnahme nennt WebView2 SDK, Newtonsoft.Json und das unveränderte PDFKit-Bundle ausdrücklich; die eigenen Quellen bleiben unter GPLv3. Sie vermeidet unklare Quellpflichten für vorgefertigte Drittkomponenten. Vollständiger GPL-Text, Ausnahme, Copyright und Drittanbieterübersicht gehören in Quellcode und Windows-Paket. Die fehlende MIT-Lizenz der .NET-Referenzassemblies wurde anhand ihres offiziellen Lizenzverweises ergänzt. Bestehende Lizenztexte und Bibliotheken bleiben erhalten.
 
+### Nachkontrolle der Python-Prüfwerkzeuge
+
+Nach Aktivierung der GitHub-Abhängigkeitsprüfung wurden 49 offene Hinweise zu `pypdf==6.10.0` sichtbar. Die erste npm-/NuGet-Prüfung deckte diese Python-Abhängigkeit nicht ab. Alle 49 betreffen `dev/export-qa-requirements.txt`; GitHub nennt 6.21.4 als gemeinsame korrigierte Version. Die Datei legt jetzt genau `pypdf==6.21.4` fest. Das Paket ist ein unabhängiger PDF-Leser für Entwicklertests und gehört nicht zum Windows-Download. Die Hinweise werden durch die Aktualisierung behoben, nicht als unbeachtlich geschlossen.
+
+Die Wartung folgt dem vollständigen Ablauf `release --check-only`. Der vorherige Release-Prüfnachweis bleibt dem unveränderten Tag `v1.23.2-oss.1` zugeordnet. Er bescheinigt keinen Scan der damaligen Python-Abhängigkeiten. Neue Prüfwerte werden im zugehörigen Wartungs-Pull-Request dokumentiert; weder alte Tags noch Download-Dateien werden ersetzt. Die Datenschutz- und Livetestgrenzen bleiben bestehen.
+
 ## Organisation und Veröffentlichungen
 
 Die fünf zusätzlichen Ausgangsbranches sind vollständig in `main` enthalten. Ihre Spitzen und historischen Stände bleiben in Historie und privater Sicherung erhalten. Alte Versions-Tags und historische Release-Nachweise werden bewahrt. 31 ältere Dokumente liegen gebündelt unter `docs/archiv/`; aktive Anleitungen verweisen auf den aktuellen Ablauf.
