@@ -8,7 +8,7 @@ Notenblick wird für blinde und sehende Lehrkräfte entwickelt. Tastatur, NVDA u
 - **Registerkarten:** Pfeiltasten, Pos1 und Ende wählen eine Registerkarte; Eingabe oder Leertaste aktiviert sie. Dabei bleibt der Fokus auf der Registerkarte. Direkte Strg-Ziffern führen zur Inhaltsüberschrift. Ein bewusst wiederholter Kurzbefehl bestätigt den Bereich kurz, auch wenn die Überschrift bereits fokussiert ist.
 - **Dialoge und Hilfe:** Neue Arbeitsbereiche und Dialoge beginnen an einer Überschrift. Escape schließt geeignete Dialoge und führt zum Auslöser zurück. F1 erklärt den aktuellen Arbeitsschritt; Eingaben und vorheriger Fokus bleiben erhalten.
 - **Noteneingabe:** Eingabe und Umschalt+Eingabe führen unmittelbar zur nächsten beziehungsweise vorherigen Eingabe. Fehler bleiben am betroffenen Feld nachvollziehbar.
-- **Fenster:** 1.23.3 startet maximiert. Verkleinern, Verschieben und Wiederherstellen bleiben möglich; die Fokusregeln gelten auch im kleineren Fenster.
+- **Fenster:** 1.23.3 startet maximiert. Verkleinern, Verschieben und Wiederherstellen bleiben möglich; die Fokusregeln gelten auch im kleineren Fenster. Schließt sich dabei ein geöffnetes Menü, kehrt dessen Fokus zum Auslöser zurück.
 
 ## Bestätigte Praxistests
 

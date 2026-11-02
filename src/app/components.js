@@ -35,7 +35,7 @@ A.syncScrollTables=function(){
 };
 let scrollSyncPending=false;
 A.queueScrollSync=function(){if(scrollSyncPending)return;scrollSyncPending=true;requestAnimationFrame(()=>{scrollSyncPending=false;A.syncScrollTables();});};
-window.addEventListener('resize',()=>{A.queueScrollSync();if(currentMenu)A.closeMenu(false);});
+window.addEventListener('resize',()=>{A.queueScrollSync();if(currentMenu)A.closeMenu(currentMenu.menu.contains(document.activeElement));});
 // Layout/zoom can change scrollability without a window resize or new nodes.
 if(window.ResizeObserver){const observer=new ResizeObserver(A.queueScrollSync);observer.observe(A.$('#main'));observer.observe(A.$('#dialogContent'));}
 })(globalThis.Notenblick);

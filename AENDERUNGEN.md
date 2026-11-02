@@ -4,7 +4,7 @@
 
 - Startet maximiert; Verkleinern, Verschieben und Wiederherstellen bleiben möglich.
 - Wiederholte Fach- und Registerkurzbefehle bestätigen den Bereich; unbesetzte Ziffern melden sich zuverlässig über die zentrale Statusquelle.
-- Derselbe Fachbereich bleibt erhalten; Fenstergrößenänderungen verursachen weniger unnötige Aktualisierungen.
+- Derselbe Fachbereich bleibt erhalten; Fenstergrößenänderungen verursachen weniger unnötige Aktualisierungen. Geöffnete Menüs geben den Fokus sicher zurück.
 - GitHub-Texte zeigen den vollständigen Funktionsumfang. Windows-, NVDA-, Braille- und native ARM64-Praxistests von 1.23.2 sind dokumentiert; die geänderten Abläufe von 1.23.3 benötigen eine erneute Nutzerabnahme.
 
 ## Open-Source-Vorbereitung von 1.23.2

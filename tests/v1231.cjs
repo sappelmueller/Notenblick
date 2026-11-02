@@ -62,7 +62,10 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
  A.syncScrollTables();A.syncScrollTables();await settle();assert.equal(attributeChanges.length,0,'unchanged scrollability must not churn AX attributes');
  let scans=0;const sync=A.syncScrollTables;A.syncScrollTables=()=>{scans++;sync();};for(let i=0;i<20;i++)w.dispatchEvent(new w.Event('resize'));await settle();A.syncScrollTables=sync;
  assert.equal(scans,1);assert.equal(w.document.activeElement,stableInput);assert.equal($('[data-entry=grade]'),stableInput);attributes.disconnect();
- checks.push('1.23.3: unveränderte Scrollfähigkeit ohne tabindex-Mutationen, 20 Resize-Ereignisse gebündelt, Eingaben und Fokus erhalten');
- assert.deepEqual(ctx.errors,[]);await A.workspacePromise;fs.writeFileSync(path.join(__dirname,'v1231-results.json'),JSON.stringify({checks,syntheticOnly:true,windows:false,nvda:false},null,2));console.log('1.23.1–1.23.3:',checks.length,'gezielte Gruppen');
- }finally{w.close();}
+ await prepare(21);const menuOrigin=w.document.activeElement;key('n',{ctrlKey:true});assert.equal(w.document.activeElement.getAttribute('role'),'menuitem');w.dispatchEvent(new w.Event('resize'));assert.equal(w.document.activeElement,menuOrigin);assert.equal($('#shortcutAddMenu'),null);
+ await prepare(11);const toggle=$('[data-menu-key=add-performance]');A.openMenu(toggle);w.dispatchEvent(new w.Event('resize'));assert.equal(w.document.activeElement,toggle);assert.equal(toggle.getAttribute('aria-expanded'),'false');
+ A.openMenu(toggle);const outside=$('#overview-search');outside.focus();w.dispatchEvent(new w.Event('resize'));assert.equal(w.document.activeElement,outside);assert.equal(outside.closest('[hidden]'),null);
+ checks.push('1.23.3: unveränderte Scrollfähigkeit ohne tabindex-Mutationen, 20 Resize-Ereignisse gebündelt, Eingaben/Fokus erhalten; Größenänderung schließt beide Menüarten mit sicherer Fokusrückkehr und ohne Fokusraub außerhalb des Menüs');
+ await settle();assert.deepEqual(ctx.errors,[]);await A.workspacePromise;fs.writeFileSync(path.join(__dirname,'v1231-results.json'),JSON.stringify({checks,syntheticOnly:true,windows:false,nvda:false},null,2));console.log('1.23.1–1.23.3:',checks.length,'gezielte Gruppen');
+ }finally{await settle();w.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
