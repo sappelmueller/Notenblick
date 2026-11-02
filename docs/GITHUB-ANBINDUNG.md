@@ -1,20 +1,20 @@
 # Arbeit über die verbundene GitHub-Anbindung
 
-Ziel ausschließlich `sappelmueller/Notenblick`, private Repository-ID `1432518047`. `main` ist der aktuelle Stand; `baseline-1.8.0` bewahrt den vollständigen ursprünglichen Quellstand. Neue Versionen werden als Folgecommits auf main gesichert; vor dem Aktualisieren muss der vollständige entfernte Quellbaum mit dem lokal geprüften Baum übereinstimmen.
+Ziel ausschließlich `sappelmueller/Notenblick`, Repository-ID `1432518047`. `main` ist der aktuelle Stand; Der ursprüngliche Quellstand bleibt in der Git-Historie erhalten. Neue Versionen werden auf Entwicklungsbranches geprüft und anschließend nach main übernommen; vor dem Aktualisieren muss der vollständige entfernte Quellbaum mit dem lokal geprüften Baum übereinstimmen.
 
 Die Git-CLI dieser Ausführungsumgebung hat keine eigenen GitHub-Anmeldedaten. Die bereits verbundene GitHub-Anbindung kann Quellcode lesen und schreiben; die Browser-Anmeldung wird für Repository-Verwaltung und gegebenenfalls den vollständigen Abruf benötigt. Es werden keine zusätzlichen Schlüssel erzeugt oder Passwörter im Projekt gespeichert.
 
 ## Eine neue Sitzung beginnen
 
 1. Zuerst das vorhandene Notenblick-Arbeitsverzeichnis prüfen. Bei vorhandenem aktuellem Checkout keine Archive erneut suchen oder entpacken.
-2. Fehlt der Checkout: das festgelegte private Repository über die GitHub-Anbindung auflösen und seine ID/Privatsphäre prüfen. Falls eine authentifizierte Git-CLI verfügbar ist, normal klonen.
+2. Fehlt der Checkout: das festgelegte Repository über die GitHub-Anbindung auflösen und seine ID/Sichtbarkeit prüfen. Falls eine authentifizierte Git-CLI verfügbar ist, normal klonen.
 3. Die Anbindung liefert große Bibliotheksdateien nicht vollständig; auch Base64 über die Contents-API liefert oberhalb ihrer Größenbegrenzung leere Inhalte. In diesem Fall direkt im bestätigten Repository unter Code → Download ZIP den aktuellen Stand abrufen. Anschließend sämtliche Dateien einschließlich Binärdateien anhand der Git-Blob-SHAs und Dateimodi mit dem aktuellen entfernten Quellbaum vergleichen. Am 28. Oktober 2026 wurden so alle 224 Dateien des Stands 3adf2c93f5a2d606c88a639eede9f6570aed1aba byteweise bestätigt. Keine Suche nach früheren Notenblick-ZIPs und kein Zugriff auf TrainScope.
 4. In ein neues isoliertes Arbeitsverzeichnis entpacken. Falls die Git-Metadaten fehlen, Git lokal initialisieren; als einzige entfernte Quelle die kanonische Notenblick-URL setzen. Den über die Anbindung bestätigten Commit und Quellbaum als Grundlage verwenden. Für die vorhandene inkrementelle Exportregression müssen zusätzlich mindestens der tatsächliche Vorgängercommit, dessen vollständiger Quellbaum und sämtliche referenzierten Blobs vorhanden sein; ein einzelner flacher Import ohne HEAD^ genügt nicht. Bei bytegleicher Commit-Rekonstruktion auch ursprüngliche Zeitzonen und den exakten Nachrichtenabschluss erhalten und die Commit-SHA bestätigen. Einen separat erzeugten lokalen Import-Commit nicht ungeprüft auf die entfernte Hauptversion pushen.
 5. `python3 dev/manage.py setup` und die benötigte Testgruppe ausführen. Versionssperren, Bibliotheken und sämtliche Tests sind bereits im Quellstand enthalten.
 
 ## Änderungen sichern
 
-Unmittelbar davor Repository-Name, ID und private Sichtbarkeit über die Anbindung prüfen. Die Einstellung Disable actions anhand der gespeicherten GitHub-Einstellungen bestätigen. Ein vorhandenes authentifiziertes `gh` bzw. Token ermöglicht alternativ die vollständige API-Prüfung mit `python3 dev/guard.py --remote`. Fehlende CLI-Authentifizierung ist keine Erlaubnis, die Prüfung abzuschalten.
+Unmittelbar davor Repository-Name, ID und zulässige private oder öffentliche Sichtbarkeit über die Anbindung prüfen. Die Einstellung Disable actions anhand der gespeicherten GitHub-Einstellungen bestätigen. Ein vorhandenes authentifiziertes `gh` bzw. Token ermöglicht alternativ die vollständige API-Prüfung mit `python3 dev/guard.py --remote`. Fehlende CLI-Authentifizierung ist keine Erlaubnis, die Prüfung abzuschalten.
 
 Mit den GitHub-Werkzeugen neue Blob-/Baum-/Commit-Objekte ausschließlich im festgelegten Repository erstellen. Für neue Bibliotheken `create_blob` mit Base64 verwenden; Textdateien können über `create_tree` übertragen werden. Bereits vorhandene unveränderte Blobs erneut verwenden. Die gesamte erzeugte Baum-SHA muss vor dem Aktualisieren von `main` mit der lokal geprüften Baum-SHA übereinstimmen. Einen normalen Folgecommit auf den zuvor gelesenen entfernten Commit setzen und `update_ref` mit `expected_sha` und `force: false` ausführen. Bei gleichzeitig veränderter Hauptversion neu lesen und zusammenführen.
 

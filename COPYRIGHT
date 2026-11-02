@@ -1,0 +1,15 @@
+Notenblick
+Copyright (C) 2026 Sebastian Müller
+
+Die eigenen Quellen und Beiträge stehen unter GNU GPL Version 3
+(SPDX: GPL-3.0-only WITH GPL-3.0-linking-exception). Der vollständige Text steht in LICENSE.
+Dies gilt für die eigenen Notenblick-Quellen aller hier enthaltenen Versionen.
+Drittanbieterdateien behalten ihre eigenen Lizenzen und Copyright-Vermerke;
+siehe THIRD-PARTY-NOTICES.md.
+
+Das Programm wird ohne Gewährleistung bereitgestellt.
+
+Zusätzliche Erlaubnisse gemäß GPLv3 §7 stehen in LICENSE-EXCEPTION.
+Sie gelten für alle eigenen Notenblick-Quellen in diesem Repository.
+Die eigenen Quellen bleiben vollständig unter GPLv3; die Ausnahme betrifft
+nur die ausdrücklich genannten Drittbibliotheken.

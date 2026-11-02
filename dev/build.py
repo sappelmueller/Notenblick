@@ -19,3 +19,8 @@ for folder in ['fonts','vendor']:
  for source in (ROOT/'src'/folder).glob('*'):
   if source.is_file() and source.suffix!='.js':
    dest=target/folder/source.name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,dest)
+
+# License information is part of the integrity-checked portable program.
+legal=target/"Lizenzen";legal.mkdir(exist_ok=True)
+for name in ["LICENSE","LICENSE-EXCEPTION","COPYRIGHT","THIRD-PARTY-NOTICES.md"]:
+ shutil.copy2(ROOT/name,legal/name)

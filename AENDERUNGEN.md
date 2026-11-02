@@ -1,3 +1,7 @@
+# Open-Source-Vorbereitung von 1.23.2
+
+GPLv3, vollständige Lizenzbeigaben, kurze Projektdokumentation und Schutzregeln für private wie öffentliche Repositories. Keine Änderungen an Notenberechnung, Oberfläche oder Datenspeicherung. Die lizenzierte Paketfassung verwendet den ergänzenden Tag `v1.23.2-oss.1`; der ursprüngliche Tag und Download bleiben als historischer Build-Kandidat erhalten.
+
 # 1.23.2
 
 - Native ARM64-Ausführung derselben portablen AnyCPU-EXE für Windows 11 ab 24H2 vorbereitet: Manifest für amd64/arm64, .NET Framework 4.8.1 auf ARM64.

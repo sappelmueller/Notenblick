@@ -1,76 +1,43 @@
 # Notenblick
 
-Lokaler, vollständig offline arbeitender Windows-Notenrechner für Lehrkräfte. Aktuelle Programmversion: **1.23.2**.
+Notenblick ist eine portable Notenverwaltung für Windows. Lehrkräfte verwalten Schuljahre, Klassen, Fächer und Schüler, tragen Noten oder Punkte ein und erstellen kompakte Berichte. Das Programm arbeitet vollständig offline und speichert alle Daten lokal.
 
-Die Benutzerhilfe enthält neun echte Registerkarten und 77 wortgetreue Abschnitte aus der verbindlichen Textquelle. F1 öffnet eine von 49 konkreten Hilfestellen; Dialoge behalten dabei ihre Formularfelder, Eingaben und den Rückkehrfokus. Ein gemeinsamer Shortcut-Router ergänzt die vorhandenen Tastaturabläufe. Die ersten neun angezeigten Klasse-Fach-Paare sind über Alt+Ziffer erreichbar. Klassen können auf- oder absteigend angeordnet werden. Die Startseite behält ihre drei Karten, setzt den letzten Fachbereich fort und kann weitere offene Leistungen einblenden.
+Aktuelle Version: **1.23.2**. Echte Windows-, ARM64-, NVDA- und Braille-Livetests stehen noch aus; der Download bleibt deshalb eine Vorabversion.
 
-Teilnehmerlisten sind einspaltig mit anklickbaren Kontrollfeld-/Namenszeilen. Gemeinsame mündliche Bewertungen und Einzelnoten sind eindeutig getrennt; das doppelte Gewichtungsfeld bei vorhandenen mündlichen Einzelnoten ist beseitigt. Einheitlicher Kontextfokus, direkte und punktebasierte Noteneingabe, drei exakte Notenschlüssel mit vier Abstufungen, individuelle Gewichtungen, GFS, unabhängige Abschlussnoten und sämtliche bisherigen Export- und Sicherungsfunktionen bleiben erhalten. Automatische Speicherung und lesbare TXT-Notfalllisten verwenden weiterhin die bestehende portable Ablage EXE/Programm/Daten.
+## Download und Start
 
-Die Windows-Ausgabe ist bis zur gesonderten Windows-/WebView2-/NVDA-/Braille-/UIA-Liveabnahme ein Build-Kandidat. Automatisierte Linux-/Chromium-/Dateiprüfungen ersetzen diese Abnahme nicht.
+1. Unter [Releases](https://github.com/sappelmueller/Notenblick/releases/tag/v1.23.2-oss.1) **Notenblick_1.23.2.zip** herunterladen. Dort stehen auch Quellcode und SHA-256-Prüfsummen.
+2. Das ZIP vollständig in einen beschreibbaren Ordner entpacken.
+3. **Notenblick.exe** starten. Der Ordner **Programm** muss daneben liegen. **Daten** wird beim ersten Start angelegt.
 
-## Sofort weiterarbeiten
+Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digital signiert; Windows kann deshalb einen Sicherheitshinweis anzeigen.
 
-Nur das private Repository `sappelmueller/Notenblick` abrufen. Nach dem Abrufen im Repository ausführen:
+## Voraussetzungen
 
-```sh
-python3 dev/manage.py setup
-python3 dev/manage.py plan
-python3 dev/manage.py test changed
-```
+- Windows mit .NET Framework 4.8 oder neuer und Microsoft Edge WebView2 Runtime; x86 und x64 werden berücksichtigt.
+- Für native ARM64-Ausführung: Windows 11 ab 24H2, .NET Framework 4.8.1 und ARM64-WebView2. Dieselbe EXE ist dafür vorbereitet; die tatsächliche native Ausführung muss noch auf einem ARM64-Gerät bestätigt werden.
+- Ein beschreibbarer Programmordner. macOS und Linux sind keine unterstützten Anwendersysteme.
 
-Falls die Git-CLI hier keine Anmeldung besitzt, beschreibt [docs/GITHUB-ANBINDUNG.md](docs/GITHUB-ANBINDUNG.md) den bereits geprüften Abruf und die Sicherung über die verbundene GitHub-Anbindung.
+## Funktionen
 
-Die Einrichtung lädt das festgelegte .NET SDK und die gesperrten Testabhängigkeiten. Bereits vorhandene passende Werkzeuge werden wiederverwendet. Nach einem vollständigen Zurücksetzen müssen die Werkzeuge erneut heruntergeladen werden; Quellcode, Konfiguration, Tests und Anleitungen bleiben im Repository erhalten.
+- Direkte Noten oder Punkte mit Notenschlüssel, individuelle Gewichtungen und getrennt festgelegte Abschlussnoten.
+- Schriftliche und mündliche Leistungen, Klassenrunden und einzelne Bewertungen.
+- Automatische Speicherung, Sicherungen und lesbare TXT-Notenlisten für den Notfall.
+- Berichte als PDF, Word, Excel, CSV und TXT, Druckvorschau und ZIP-Gesamtexport.
+- Tastaturbedienung, kurze Beschriftungen, klare Fokusführung und Hilfe mit F1.
 
-Benötigt: Python ab 3.12, Git und Node.js (getestet mit der Version in `.node-version`). Für vollständige Exportprüfungen werden zusätzlich die in `dev/export-qa-requirements.txt` gesperrten Python-Pakete, Java und veraPDF 1.30.3 benötigt; siehe [docs/EXPORT-PRUEFUNG.md](docs/EXPORT-PRUEFUNG.md). SDK, Compiler und Linux-Testbrowser werden projektspezifisch eingerichtet. Bibliotheksdateien für den Windows-Build sind inklusive SHA-256-Prüfsummen enthalten. Es wird kein globales System umkonfiguriert.
+## Daten, Sicherung und Updates
 
-Kurzer technischer Einstieg und verbindlicher Arbeitsablauf: [Projektübersicht](docs/PROJEKTUEBERSICHT.md). Einzelheiten zur effizienten Prüfsteuerung und Messungen: [Entwicklungsoptimierung](docs/ENTWICKLUNGSOPTIMIERUNG.md).
+Schülerdaten bleiben im Ordner **Daten**. Notenblick überträgt sie nicht an externe Dienste. Sichere diesen Ordner regelmäßig zusätzlich auf einem anderen Datenträger. Die TXT-Listen lassen sich auch ohne Notenblick lesen; sie ersetzen keine vollständige Sicherung.
 
-## Befehle
+Updates werden manuell aus einem offiziellen GitHub-Release geladen. **Notenblick schließen, Daten sichern und ausschließlich Notenblick.exe sowie den vollständigen Ordner Programm ersetzen. Daten behalten.** Ein automatischer Updater ist noch nicht enthalten.
 
-| Aufgabe | Befehl |
-| --- | --- |
-| Einmalige bzw. wiederholbare Einrichtung | `python3 dev/manage.py setup` |
-| Werkzeugdiagnose | `python3 dev/manage.py doctor` |
-| Änderungsplan | `python3 dev/manage.py plan` |
-| Gezielte Entwicklungsprüfung | `python3 dev/manage.py test changed` |
-| Integration betroffener Bereiche | `python3 dev/manage.py test changed --stage integration` |
-| Unveränderte bisherige Standardsammlung | `python3 dev/manage.py test quick` |
-| Produktiver C#-Speicherkern | `python3 dev/manage.py test storage` |
-| Tastatur, Fokus, Browser und axe | `python3 dev/manage.py test browser` |
-| Großer Datenbestand | `python3 dev/manage.py test stress` |
-| Alle Prüfungen | `python3 dev/manage.py test full` |
-| Windows-Programm bauen | `python3 dev/manage.py build` |
-| ZIP mit Integritäts- und Entpackprüfung | `python3 dev/manage.py package` |
-| Vollständige Infrastrukturabnahme ohne neuen Download | `python3 dev/manage.py release --check-only` |
-| Vollständiger Prüf-, Build- und ZIP-Ablauf | `python3 dev/manage.py release` |
+Änderungen stehen in [AENDERUNGEN.md](AENDERUNGEN.md). Bedienhinweise und Prüfgrenzen enthält [BARRIEREFREIHEIT.md](BARRIEREFREIHEIT.md).
 
-`release` baut sauber, führt alle Tests aus, wiederholt den Build und verlangt bytegleiche Programmdateien. Danach werden vollständige Programm- und Quellcode-ZIPs samt Prüfsummen unter `artifacts` erzeugt und die entpackte Anwendung im Testhost geprüft. Ein Fehler stoppt den Ablauf. Kein Befehl führt einen Push, eine GitHub-Veröffentlichung oder einen GitHub-Runner aus. `package` ist für lokale Paketprüfungen; vor einer Veröffentlichung ist `release` erforderlich.
+## Lizenz und Mitarbeit
 
-Berichte, Ausgaben und vollständige Testprotokolle stehen unter `reports/<Zeitpunkt>`. `summary.json` unterscheidet laufende, erfolgreiche und fehlgeschlagene Durchläufe. Vollständige Läufe entfernen vorherige generierte Testausgaben; gezielte Läufe nutzen nur nachgewiesene gültige Ergebnisse. `--retry reports/<Lauf>` wiederholt den ursprünglichen Plan samt neu betroffenen Bereichen. `status --report reports/<Lauf>/summary.json` erkennt ungültig gewordene Freigaben. Eine erfolgreiche Linux-Prüfung ist keine Windows-/NVDA-Freigabe.
+Copyright © 2026 Sebastian Müller. Die eigenen Notenblick-Quellen stehen unter **GNU GPL Version 3** ([LICENSE](LICENSE), `GPL-3.0-only WITH GPL-3.0-linking-exception`). Die [zusätzliche Erlaubnis](LICENSE-EXCEPTION) ermöglicht die Weitergabe mit den genannten Bibliotheken; Notenblick selbst bleibt unter GPLv3. Drittanbieter behalten ihre [eigenen Lizenzen](THIRD-PARTY-NOTICES.md). Windows, .NET Framework und WebView2 Runtime werden separat von Microsoft bereitgestellt.
 
-## Architektur und Ablage
+Fehler und Vorschläge können über GitHub Issues gemeldet werden. Bitte niemals echte Schülerdaten, Notenlisten, Sicherungen oder Zugangsdaten hochladen. Sicherheitslücken gemäß [SECURITY.md](SECURITY.md) melden.
 
-- `src`: modulare Anwendung mit zentraler Berechnung und gemeinsamen Oberflächenkomponenten.
-- `native`: Windows-Starter, WebView2-Fenster und C#-Speicherung.
-- `tests`: bestehende Tests und zusätzliche Entwicklungsregressionen; ausschließlich synthetische Testdaten.
-- `dev`: Build-, Einrichtungs- und Paketwerkzeuge sowie benötigte Bibliotheken und Versions-/Prüfsummensperren.
-- `.githooks`: lokale Prüfungen vor Commit und Push; werden von `setup` im aktuellen Repository aktiviert.
-- `docs`: Einrichtung, Prüfgrenzen, Veröffentlichungsablauf und Windows-Prüfplan.
-- `.tools`, `.build`, `dist`, `artifacts`, `reports`: erzeugte, nicht versionierte Arbeitsdateien.
-
-Details zur unveränderten Facharchitektur: [ENTWICKLUNG.md](ENTWICKLUNG.md). Aktueller Einrichtungsbericht: [docs/EINRICHTUNGSBERICHT.md](docs/EINRICHTUNGSBERICHT.md).
-
-## Projekte und persönliche Daten schützen
-
-TrainScope ist ein anderes Projekt. Die Prüfung vor Commit/Push akzeptiert ausschließlich `sappelmueller/Notenblick`. Effektive Fetch- und Push-URLs werden geprüft; private Datenordner, Sicherungen, Notenlisten, bekannte Geheimnisse und Actions-Workflows werden abgewiesen. Die Schutzskripte sind eine Unfallbarriere; sie ersetzen keine inhaltliche Prüfung neuer Dateien. Echte Schülerdaten dürfen auch nicht unter anderen Dateinamen oder in Beispielen abgelegt werden.
-
-Vor einem Git-Push verlangt die Prüfung eine live bestätigte private Repository-ID und deaktivierte Actions. Dafür wird ein bereits angemeldetes `gh` oder ein vorhandenes `GH_TOKEN`/`GITHUB_TOKEN` benötigt; Zugangsdaten werden nicht im Projekt gespeichert. Bei Verwendung der GitHub-Anbindung dieselben Prüfungen unmittelbar vor dem Schreiben durchführen. Keine erzwungenen Pushes, keine Änderungen an TrainScope und keine globalen Kontoeinstellungen.
-
-Aktueller Funktions- und Prüfbericht: [Notenblick 1.23.2](docs/PRUEFBERICHT-1.23.2.md).
-
-## Windows-Auslieferung
-
-Ziel bleibt .NET Framework 4.8, WinForms und WebView2. Das .NET SDK 8.0.426 dient nur dem Compiler und den Linux-Speichertests. Die Linux-Ausgabe liefert keine .NET-8-Laufzeit für Windows mit. Enthalten sind Newtonsoft.Json 13.0.3, WebView2 SDK 1.0.2903.40 und WebView2Loader für x86/x64/ARM64. Auf x86/x64 müssen .NET Framework 4.8 oder neuer und die passende WebView2-Laufzeit vorhanden sein. Native ARM64-Ausführung derselben AnyCPU-EXE ist für Windows 11 ab 24H2 mit .NET Framework 4.8.1 und ARM64-WebView2 vorgesehen. Ältere ARM64-Windows-Versionen erhalten durch diesen Manifest-Eintrag keine Zusage nativer Ausführung. Es gibt keinen erzwungenen Emulationsmodus. Die ZIP enthält ausschließlich `Notenblick.exe` und `Programm`; `Daten` entsteht beim ersten Start.
-
-Windows-Start, WebView2/UI Automation, NVDA und Windows-Skalierung sind auf einem Windows-Rechner gesondert zu prüfen. Dafür gibt es `dev/windows-qa.ps1` und [docs/WINDOWS-PRUEFUNG.md](docs/WINDOWS-PRUEFUNG.md). Kein Codesignierungszertifikat ist enthalten; SmartScreen wird nicht umgangen. Ohne Windows-Prüfung bleibt das Ergebnis ein unter Linux geprüfter Build-Kandidat.
+Für Entwicklung und Beiträge: [CONTRIBUTING.md](CONTRIBUTING.md), [Projektübersicht](docs/PROJEKTUEBERSICHT.md) und [Prüfberichte](PRUEFBERICHT.md).
