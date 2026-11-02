@@ -1,13 +1,19 @@
-# Entwicklungs- und Sicherungsablauf
+# Versionen veröffentlichen
 
-1. Das private Repository abrufen, Ziel und aktuellen Arbeitsstand prüfen. Nur im Notenblick-Ordner arbeiten.
-2. `python3 dev/manage.py setup` ausführen. Der Befehl ist wiederholbar; eine vollständig zurückgesetzte Umgebung braucht erneute Downloads. Diese Einschränkung kann ein Quellcode-Repository nicht beseitigen.
-3. Änderungen umsetzen; passende Tests aus der dauerhaften Sammlung ergänzen und ausführen.
-4. Vor einer neuen Version `python3 dev/manage.py release` ausführen. Jeder fehlgeschlagene Test stoppt den Ablauf. ZIPs und Protokolle können aus früheren Versuchen vorhanden sein; ausschließlich die Prüfsummen und Dateien des aktuellen erfolgreichen Laufs verwenden.
-5. Windows-/NVDA-Prüfung mit dem mitgelieferten Plan dokumentieren. Bei fehlender Windows-Prüfung nur als Build-Kandidat ausgeben.
-6. Dokumentation, Programmversion und Änderungsübersicht aktualisieren. `git status`, `git diff --check` und die gesamte vorgesehene Dateiauswahl prüfen. Keine echten Daten übernehmen.
-7. Quellcode und Prüfbericht committen, etwa mit einem fachlich passenden Committext. Für neue Programmversionen einen eindeutigen Tag `vX.Y.Z` setzen; bestehende Tags nicht überschreiben.
-8. Direkt vor entfernten Schreibvorgängen `python3 dev/guard.py --remote` ausführen (authentifiziertes gh oder vorhandenes Token nötig). Vollständigen Namen, gespeicherte Repository-ID, private Sichtbarkeit und Actions `enabled: false` bestätigen. Bei Connector-Schreibvorgängen dieselben Einstellungen prüfen. Anschließend Branch/Tag ausschließlich im Zielrepository sichern. Keine Actions auslösen.
-9. Portables ZIP und kurze verständliche Änderungen bereitstellen. GitHub dient dem Quellcode einschließlich Bibliotheken, Konfiguration und Versionsgeschichte; Build-ZIPs und Daten nicht in Git einchecken.
+1. Auf einem Entwicklungsbranch arbeiten. Name und ID des Zielrepositorys sowie deaktivierte Actions prüfen. Die Sichtbarkeit darf privat oder öffentlich sein. Keine Daten oder Zugangsdaten einchecken.
+2. Änderungen, Hilfe und Versionsangaben abschließen. Betroffene Tests ausführen. Alle vorgesehenen Dateien stagen, dann frisch `python3 dev/manage.py release`. Der Lauf prüft alle Testgruppen, große Datenbestände, Exporte, zwei bytegleiche Builds und vollständige ZIPs. Fehler stoppen die Freigabe.
+3. `python3 dev/manage.py status --report reports/<Lauf>/summary.json` auswerten. Nur passende aktuelle Dateien und Prüfsummen verwenden. Windows-/ARM64-/NVDA-/Braille- und Office-Livetests gesondert dokumentieren.
+4. Geprüfte Quellen committen und eine **Testversion** auf dem Entwicklungsbranch bereitstellen. Sie ist keine offizielle Freigabe.
+5. **Sebastian Müller gibt die konkrete Version ausdrücklich frei.** Danach den geprüften Branch nach `main` übernehmen. Vor entfernten Änderungen Name, feste ID, Sichtbarkeit und deaktivierte Actions erneut live prüfen. Bei CLI-Anmeldung `dev/guard.py --remote`; bei GitHub-Anbindung dieselben Werte über Anbindung und Einstellungen bestätigen.
+6. Einen eindeutigen Tag `vX.Y.Z` am freigegebenen Commit setzen. Offizielles GitHub-Release mit kurzen Änderungen, Windows-ZIP, vollständigem passenden Quellcode und SHA-256-Prüfsummen erstellen. Fehlende Livetests nennen; bei ausstehender Windows-Abnahme die Testversion als Prerelease belassen. Vorhandene Tags und Downloads im normalen Ablauf nicht ersetzen.
+7. Downloads erneut abrufen und Hashes, Tag, Quellbaum, Dateivollständigkeit und Lizenztexte abgleichen. Den tatsächlichen GitHub-Stand prüfen. Erst danach vollständig übernommene Entwicklungsbranches löschen.
 
-Die ausgeführten Tests erzeugen Linux-/Chromium-Berichte. Ihre historischen Ausgaben sind keine neue Prüfung. Der archivierte ursprüngliche Bericht zur Version 1.8.0 bleibt unter docs/PRUEFBERICHT-1.8.0.md erhalten; die Einrichtung wird unter docs/EINRICHTUNGSBERICHT.md dokumentiert.
+Bei reiner Infrastrukturpflege ohne neue Programmausgabe `release --check-only` verwenden. Sobald sich Lizenzdateien der Windows-Ausgabe ändern, ein vollständiges neues Paket mit passender Integritätsliste erzeugen. Keine zusätzlichen Dateien ungeprüft in den streng geprüften Programmordner legen.
+
+## main schützen
+
+Für `main` ist ein aktiver Branch-Regelsatz vorgesehen: Änderungen über Pull Requests, keine Löschung, keine erzwungenen Pushes. Keine nicht vorhandenen Actions-Statusprüfungen verlangen. Bei einem einzelnen Maintainer keine unerfüllbare Fremdfreigabe erzwingen. Die ausdrückliche Release-Freigabe bleibt separat erforderlich.
+
+Der Regelsatz „main schützen“ ist mit Status Active für den Standardbranch gespeichert. GitHub setzt ihn im aktuellen kostenlosen Privat-Repository noch nicht durch. Bei öffentlicher Sichtbarkeit kann er ohne kostenpflichtige Umstellung greifen. Nach dem Wechsel die wirksame Regel kontrollieren. Lokale Hooks schützen bereits vorher gegen falsche Ziele und private Dateien; sie ersetzen keinen serverseitigen Branchschutz.
+
+GitHub Actions bleiben aus. Ein automatischer Updater ist noch nicht enthalten. Ein späterer Updater darf ausschließlich freigegebene Releases verwenden und nur EXE sowie vollständigen Programmordner ersetzen. Daten bleiben erhalten.
