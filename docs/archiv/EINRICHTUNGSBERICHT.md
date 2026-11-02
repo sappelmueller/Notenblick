@@ -1,3 +1,5 @@
+> Historischer Nachweis. Für neue Arbeit gelten AGENTS.md und docs/VEROEFFENTLICHUNG.md.
+
 # Einrichtung der Entwicklungsbasis
 
 Stand: 24. Oktober 2026. Programmversion weiterhin **1.8.0**, keine neuen Programmfunktionen.

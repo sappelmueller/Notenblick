@@ -1,0 +1,19 @@
+Additional permission under GNU GPL version 3 section 7
+
+If you modify this Program, or any covered work, by linking or combining it
+with Microsoft.Web.WebView2 SDK (or a modified version of that library),
+containing parts covered by the terms of the BSD 3-Clause License, the
+licensors of this Program grant you additional permission to convey the
+resulting work.
+
+If you modify this Program, or any covered work, by linking or combining it
+with Newtonsoft.Json (or a modified version of that library), containing
+parts covered by the terms of the MIT License, the licensors of this Program
+grant you additional permission to convey the resulting work.
+
+If you modify this Program, or any covered work, by linking or combining it
+with PDFKit and its bundled third-party components identified in
+src/vendor/THIRD-PARTY-NOTICES.txt (or a modified version of those libraries),
+containing parts covered by the terms of the MIT License, BSD licenses,
+Apache License 2.0 or Zero-Clause BSD License, the licensors of this Program
+grant you additional permission to convey the resulting work.

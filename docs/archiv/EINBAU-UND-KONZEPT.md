@@ -1,3 +1,5 @@
+> Historischer Nachweis. Für neue Arbeit gelten AGENTS.md und docs/VEROEFFENTLICHUNG.md.
+
 # Notenblick 1.23.0 – Verbindliches Konzept zur Hilfe und Tastatursteuerung
 
 ## Quelle und Umsetzung

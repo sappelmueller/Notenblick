@@ -1,3 +1,5 @@
+> Historischer Hintergrund zur Datumseingabe. Aktueller Einstieg: docs/PROJEKTUEBERSICHT.md; Bibliotheksquellen: THIRD-PARTY-NOTICES.md.
+
 # Quellen und Datumsbeschriftung – Notenblick 1.7.0
 
 Quellenstand aus Version 1.5.0 unverändert übernommen. Die externe Quellenprüfung wurde für 1.6.0 nicht erneut ausgeführt; die lokale Datumslogik und der Chromium-Accessibility-Baum wurden erneut geprüft.

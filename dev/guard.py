@@ -17,7 +17,9 @@ def valid_url(url):
 def check_root():
     assert Path(git('rev-parse', '--show-toplevel')).resolve() == ROOT, 'Falsches Git-Arbeitsverzeichnis'
     config = json.loads((ROOT/'dev/repository.json').read_text())
-    assert config['full_name'] == EXPECTED and config['private'] is True
+    assert config['full_name'] == EXPECTED
+    assert config['repository_id'] == 1432518047, 'Falsche gespeicherte Repository-ID'
+    assert config['allowed_visibilities'] == ['private', 'public'], 'Unzulässige Sichtbarkeitskonfiguration'
     assert config['actions_enabled'] is False
     for remote in git('remote').splitlines():
         for mode in [[], ['--push']]:
@@ -40,7 +42,15 @@ def check_paths(paths, staged=False):
         assert not p.is_symlink(), 'Verknüpfung nicht erlaubt: '+name
         if p.suffix not in {'.dll','.ico','.ttf'}:
             text = subprocess.check_output(['git','-C',str(ROOT),'show',':'+name]).decode('utf-8',errors='replace') if staged else p.read_text(encoding='utf-8', errors='replace')
-            assert not re.search(r'(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)', text), 'Mögliches Geheimnis: '+name
+            assert not re.search(SECRET_PATTERN, text), 'Mögliches Geheimnis: '+name
+
+SECRET_PATTERN = r'(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,}|AKIA[0-9A-Z]{16}|sk-proj-[A-Za-z0-9_-]{40,}|xox[baprs]-[A-Za-z0-9-]{20,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)'
+
+def validate_remote(config, repo, actions):
+    assert repo['full_name'] == EXPECTED and repo['id'] == config['repository_id'], 'Repository-ID stimmt nicht'
+    assert repo.get('visibility') in config['allowed_visibilities'], 'Unzulässige Sichtbarkeit'
+    assert repo.get('private') is (repo['visibility'] == 'private'), 'Widersprüchliche Sichtbarkeit'
+    assert actions['enabled'] is False, 'Actions müssen deaktiviert sein'
 
 def remote_state():
     config = check_root()
@@ -54,8 +64,7 @@ def remote_state():
                 return json.load(response)
         return json.loads(subprocess.check_output(['gh','api',path], text=True))
     repo = get('repos/'+EXPECTED)
-    assert repo['full_name'] == EXPECTED and repo['id'] == config['repository_id'] and repo['private'], 'Repository/Privatsphäre stimmt nicht'
-    assert get('repos/'+EXPECTED+'/actions/permissions')['enabled'] is False, 'Actions müssen deaktiviert sein'
+    validate_remote(config, repo, get('repos/'+EXPECTED+'/actions/permissions'))
 
 def main():
     parser = argparse.ArgumentParser()
