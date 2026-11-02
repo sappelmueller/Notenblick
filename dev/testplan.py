@@ -47,7 +47,7 @@ def changed(root,base='HEAD'):
 
 
 def area(path):
-    if path in ['README.md','AGENTS.md','AENDERUNGEN.md','ENTWICKLUNG.md','PRUEFBERICHT.md','QUELLEN.md'] or path.startswith('docs/'):return 'docs'
+    if path in ['README.md','AGENTS.md','AENDERUNGEN.md','ENTWICKLUNG.md','PRUEFBERICHT.md','QUELLEN.md','CONTRIBUTING.md','SECURITY.md','BARRIEREFREIHEIT.md'] or path.startswith('docs/'):return 'docs'
     if path.startswith('src/domain/') or path=='src/core.js':return 'math'
     if path in ['src/storage.js','src/session.js'] or path.startswith(('src/app/files','src/app/migration','src/app/changes','native/Storage','native/Migration')):return 'storage'
     if path.startswith(('native/ExportFiles','native/OfficePackage')):return 'shared'

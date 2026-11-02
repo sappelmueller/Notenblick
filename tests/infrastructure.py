@@ -7,6 +7,44 @@ sys.path.insert(0,str(ROOT/'dev'))
 import guard,manage,testplan,evidence,bootstrap
 
 class Infrastructure(unittest.TestCase):
+    def test_history_audit_finds_deleted_secret_and_redacts_it(self):
+        import importlib.util
+        spec=importlib.util.spec_from_file_location('notenblick_audit',ROOT/'dev/audit.py');audit=importlib.util.module_from_spec(spec);spec.loader.exec_module(audit)
+        with tempfile.TemporaryDirectory(prefix='notenblick-history-') as tmp:
+            folder=Path(tmp)
+            def g(*args):return subprocess.check_output(['git','-C',tmp,*args])
+            g('init','-q');secret='ghp_'+'a'*40;(folder/'example.txt').write_text(secret);g('add','.')
+            g('-c','user.name=Test','-c','user.email=test@example.invalid','commit','-qm','synthetic')
+            g('rm','example.txt');g('-c','user.name=Test','-c','user.email=test@example.invalid','commit','-qm','delete synthetic')
+            report=audit.scan_repository(folder)
+            self.assertEqual(report['commits'],2);self.assertFalse(report['content_scan_passed'])
+            self.assertEqual(report['findings'][0]['kind'],'credential');self.assertNotIn(secret,json.dumps(report))
+
+    def test_visibility_change_preserves_identity_and_actions_guards(self):
+        config=json.loads((ROOT/'dev/repository.json').read_text())
+        for visibility in ['private','public']:
+            repo={'full_name':guard.EXPECTED,'id':1432518047,'visibility':visibility,'private':visibility=='private'}
+            guard.validate_remote(config,repo,{'enabled':False})
+            for bad in [dict(repo,id=1),dict(repo,full_name='other/Notenblick'),dict(repo,visibility='internal'),dict(repo,private=not repo['private'])]:
+                with self.subTest(visibility=visibility,bad=bad),self.assertRaises(AssertionError):
+                    guard.validate_remote(config,bad,{'enabled':False})
+            with self.assertRaises(AssertionError):guard.validate_remote(config,repo,{'enabled':True})
+
+    def test_credential_patterns_reject_additional_providers(self):
+        with tempfile.TemporaryDirectory(prefix='notenblick-secret-') as tmp:
+            folder=Path(tmp);file=folder/'example.txt'
+            for secret in ['AKIA'+'A'*16,'sk-proj-'+'b'*48,'xoxb-'+'c'*24]:
+                file.write_text(secret)
+                with patch.object(guard,'ROOT',folder),self.assertRaises(AssertionError):guard.check_paths(['example.txt'])
+
+    def test_license_and_third_party_notices_are_part_of_build(self):
+        self.assertEqual(json.loads((ROOT/'package.json').read_text())['license'],'GPL-3.0-only WITH GPL-3.0-linking-exception')
+        self.assertIn('GNU GENERAL PUBLIC LICENSE',(ROOT/'LICENSE').read_text())
+        self.assertIn('Sebastian Müller',(ROOT/'COPYRIGHT').read_text())
+        build=(ROOT/'dev/build.py').read_text()
+        for name in ['LICENSE','COPYRIGHT','THIRD-PARTY-NOTICES.md']:self.assertIn(name,build)
+        self.assertTrue((ROOT/'dev/microsoft.netframework.referenceassemblies.net48/LICENSE.txt').is_file())
+
     def test_current_release_recognizes_own_data_without_migration(self):
         subprocess.run(['node','-e',"const a=require('node:assert/strict'),N=require('./src/core.js'),v=require('./package.json').version,d=N.blank();d.appVersion=v;a.equal(N.isCurrentData(d),true);a.deepEqual(N.upgrade(d),d);"],cwd=ROOT,check=True)
 
@@ -137,7 +175,8 @@ class Efficiency(unittest.TestCase):
             for dep in testplan.DEPENDENCIES.get(name,[]):self.assertLess(tests.index(dep),tests.index(name))
 
     def test_documentation_does_not_require_program_build(self):
-        self.assertEqual(testplan.select(['docs/PROJEKTUEBERSICHT.md'])['tests'],['infrastructure'])
+        for name in ['docs/PROJEKTUEBERSICHT.md','CONTRIBUTING.md','SECURITY.md','BARRIEREFREIHEIT.md']:
+            self.assertEqual(testplan.select([name])['tests'],['infrastructure'])
         self.assertFalse(testplan.select([])['release_eligible'])
 
     def test_git_change_detection_includes_index_untracked_deleted_and_renamed(self):

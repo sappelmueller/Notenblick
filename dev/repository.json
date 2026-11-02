@@ -1,6 +1,9 @@
 {
   "full_name": "sappelmueller/Notenblick",
-  "private": true,
   "actions_enabled": false,
-  "repository_id": 1432518047
+  "repository_id": 1432518047,
+  "allowed_visibilities": [
+    "private",
+    "public"
+  ]
 }
