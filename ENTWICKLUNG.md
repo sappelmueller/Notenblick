@@ -1,133 +1,33 @@
-# Notenblick 1.11.0 – Projekt und Erstellung
+# Entwicklung und Erstellung
 
-## Aufbau und zentrale Funktionen
+Technischer Stand: Notenblick 1.23.2. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
 
-`src/domain` enthält Validierung, exakte rationale Berechnung, Namensimport, Übernahmen, Altbestandsmigration und TXT-Export. `src/app` enthält gemeinsame Navigation, Ansichten, Fokus, Datumseingabe, Speicherung und Komponenten. `src/views` und `src/dialogs` verwenden diese Funktionen. `native` enthält den Windows-Starter, WebView2-Fenster, atomare Speicherung, Sperren und kontrollierte Migration. Es gibt weiterhin nur eine Leistungsverwaltung und einen Berechnungskern.
+## Werkzeuge
 
-Das Format bleibt `notenraum`, Version 1. Vorhandene Kennungen, Schüler, Klassen, Fächer, Leistungen, Noten, Faktoren, Status und manuelle Zeugnisnoten bleiben erhalten. `NR.ACTIVE_VERSIONS` erkennt 1.3.0 bis 1.11.0; ein Update aus 1.10.0 braucht keine fachliche Migration. Ein reiner Programmstart schreibt vorhandene Noten nicht um.
+Benötigt werden Python ab 3.12, Git und Node.js gemäß `.node-version`. `setup` richtet das gesperrte .NET SDK 8.0.426, npm-Testpakete, Chromium und den Open-XML-Prüfer lokal ein. Die Bibliotheksdateien sind über Prüfsummen gesperrt. Für vollständige Exportprüfungen kommen die festgelegten Python-Pakete, Java, veraPDF 1.30.3 und LibreOffice hinzu; siehe [Exportprüfung](docs/EXPORT-PRUEFUNG.md).
 
-`NR.calculateCore()` führt beide Berechnungsarten mit rationalen Zahlen aus. Fehlt `calculationMode`, gilt unverändert `grouped`. Dann entstehen zunächst Schriftlich aus Klassenarbeiten/Tests und anschließend der Gesamtdurchschnitt aus den Gesamtanteilen. Bei `direct` stehen die fünf Leistungsarten direkt in `weights.overall`. `weights.written` bleibt als historische Einstellung vorhanden. Standard ist weiterhin 50:50 mit 80:20 innerhalb Schriftlich. Fehlende Arten und Anteile 0 werden nicht als Nullnoten berücksichtigt. Nur die Anzeige wird gerundet/gekürzt. Manuelle Zeugnisnoten bleiben unabhängig.
+Das SDK dient nur der Entwicklung. Die Windows-Anwendung verwendet .NET Framework und WebView2; Node.js, Python, Office und Java werden dort nicht benötigt. Anwender-Voraussetzungen und ARM64-Grenzen stehen in der [README](README.md).
 
-Die Notentabelle und Leistungsliste verwenden dieselben Datensätze. Die Matrix enthält höchstens acht Leistungsspalten je Abschnitt; ihr Durchschnitt umfasst alle Leistungen der Art. Die bestehende Eingabe darunter heißt „Noteneingabe“ mit „Alle Schüler | Einzeln“. „Eingabe schließen“ entfernt den Arbeitsbereich in beiden Darstellungen und stellt Auswahl, Fokus und möglichst Scrollposition wieder her. Offene Eingaben werden zuerst validiert und übernommen. Schüleransichten verwenden dieselben zentralen Ergebnisse und dieselben Zeilenrenderer; historische Noten werden bei Bedarf geladen.
+## Befehle
 
-`participantIds` legt bei gezielten Leistungen ausdrücklich die Beteiligten fest. Ohne diese Eigenschaft bleibt das bisherige Klassenverhalten bestehen. Neue schnelle mündliche Einzelnoten betreffen genau eine Person. Validator, Fortschritt, Eingabe, Matrix, Schüleransicht und Export verwenden dieselbe Zuordnung; alte mehrdeutige Leistungen werden nicht automatisch umgedeutet.
-
-## Startseite und mündliche Erfassungsart
-
-`views/home.js` verwendet dieselben `courseChoices`, `shortcutChoices` und `quickLinks` wie die bisherige Fachauswahl. Offene Aufgaben verwenden `NR.assessmentProgress` und berücksichtigen aktive Teilnahme und ausdrücklich gesetzte Statusangaben. Höchstens fünf echte offene Klassen-/Gruppenleistungen erscheinen. Individuelle sowie nicht eindeutig zugeordnete alte mündliche Einträge werden nicht als offene Klassenaufgaben ausgegeben. Geschlossene Schuljahre und ausgeblendete Klassen/Fächer erzeugen keine Aufgaben.
-
-Die optionale Eigenschaft `oralEntry` eines mündlichen Leistungsdatensatzes hat ausschließlich die Werte `individual` oder `class`. Sie ist eine Erfassungsinformation, kein weiterer Notendatensatz. Neue schnelle Einzelnoten erhalten `individual` und genau eine `participantIds`-Kennung. Allgemein angelegte mündliche Leistungen erhalten `class`, auch bei nur einem Teilnehmer. Ohne die neue Eigenschaft bleibt der Altbestand unverändert und wird als ungeklärt behandelt. Die Teilnehmerzahl allein beweist keine Erfassungsart. Es gibt deshalb keine automatische fachliche Migration beim Start.
-
-`domain/oral.js` enthält Erkennungs-/Validierungshilfen, ausdrückliche Zuordnung und gemeinsamen Erfassungsstand. `views/oral.js` erzeugt die Einzelnoten-Zeilen direkt aus denselben Bewertungen. Klassenmatrix und Einzelnotenansicht teilen die bisherigen Ansichts- und Navigationskomponenten. Die Klassenmatrix zeigt keine expliziten Einzelnotenspalten; ihr mündlicher Durchschnitt berücksichtigt weiterhin sämtliche Noten dieser Art. Die Berechnungsformeln wurden nicht verändert.
-
-Die alltägliche mündliche Oberfläche enthält keine Altbestandshinweise. Bei unklaren älteren Einträgen bietet ausschließlich Sicherung → Wiederherstellen → Mündliche Altbestände eine gezielte Prüfung je Fach. `dialogs/oral-review.js` erlaubt nur ausdrücklich ausgewählte Zuordnungen. Individuell kann ein Altbestand nur zugeordnet werden, wenn seine vorhandenen Teilnehmer und Einträge sicher einem Schüler zugeordnet werden können. Vorher erzeugt `FolderStore.protect` eine vollständige geprüfte JSON-Schutzkopie einschließlich Ansichtseinstellungen in Sicherungen. Fehlgeschlagene Sicherung blockiert jede Übernahme. Die Schutzkopie ist in der normalen Wiederherstellung erreichbar und von der automatischen Bereinigung ausgenommen. Beim zusätzlichen Browser-Testbetrieb wird zuvor im vorhandenen Sitzungszustand gesichert und eine vollständige JSON-Datei angeboten. Originalnoten und Faktoren bleiben erhalten.
-
-`settings.startupView` ist `last` (Standard) oder `home`. Mündliche Ansicht, Suche, Schülerfilter, Sortierung, Seite und Fokuskennung stehen in den vorhandenen fachbezogenen Workspaces in Ansicht.json. Es gibt keine zweite globale Einstellung zur mündlichen Ansicht. Die Datenbank und die zentrale Notendatei werden nicht aufgeteilt.
-
-Die Auswahl „Ansicht: Klassenübersicht | Einzelnoten“ steht unter H2 „Mündliche Noten“. Jeweils eine Hauptaktion gehört zur aktiven Fläche. „Ansicht anpassen“ ist zunächst geschlossen; in der Klassenübersicht enthält es Notentabelle/Leistungsliste, bei Einzelnoten Schülerfilter und Sortierung. Die Einzelnotensuche berücksichtigt Vorname, Nachname, beide Namensdarstellungen und Leistungsbezeichnung. Sechs Spalten trennen Datum und Bezeichnung. Umfangreiche Bemerkungen bleiben über details vollständig erreichbar.
-
-Die fachbezogenen Workspace-Felder `oralAreaView`, `oralClassSearch` und `oralListSearch` trennen mündliche Darstellung und Klassensuchen von `settings.areaView`, `search` und `assessmentSearch`. Vorhandene Einstellungen werden beim Lesen in Ansicht.json sinnvoll übernommen, ohne Noten umzuschreiben. `oralView`, `oralSearch`, `oralStudent`, `oralSort`, `oralPage` und `oralFocusId` bleiben die bisherige einzige Steuerung der Einzelnoten. Es gibt keine neue globale Standardansicht. `lastNotesCourse` hält das zuletzt tatsächlich unter Noten geöffnete Fach fest; Weiterarbeiten kennzeichnet historische Schuljahre und nutzt die vorhandene Fachnavigation.
-
-Der gemeinsame Dialog unterstützt `small`, `medium` und `wide`. Sein Inhalt scrollt vertikal, Kopf und Aktionen bleiben erreichbar. Bei sehr geringer Fensterhöhe scrollt der gesamte Dialog. Ein zusätzlicher Fokusstop wird nur bei tatsächlich scrollbarem Inhalt ohne erreichbare Steuerelemente gesetzt. Nachkommastellen und Verfahren stehen unmittelbar im gemeinsamen Gewichtungseditor; interne Kennung `truncate` und exakte Berechnung bleiben unverändert.
-
-## Gewichtungseditor und Vorgaben
-
-`app/weight-editor.js` erzeugt und bindet die gemeinsamen Prozentfelder für vorhandene Fächer und Vorgaben. `dialogs/weights.js` ergänzt den vorhandenen Fachdialog mit vollständigem Vergleich und Übernahme innerhalb desselben Dialogs. Es gibt keine zweite Gewichtungsverwaltung oder zweite Berechnung.
-
-Prozentfelder sind normale HTML-Texteingaben mit dem standardisierten ARIA-Drehfeldmuster. Dies verhindert den tatsächlich reproduzierten Chromium-Fehler, bei dem eine deutsche Kommaeingabe im nativen number-Feld zu einem anderen Wert wird. Komma und Punkt werden zentral validiert. Pfeil hoch/runter ändern exakt fünf Prozentpunkte, Pos1/Ende setzen 0/100; Auswahltasten mit Umschalt/Steuerung bleiben für die Textbearbeitung erhalten. `aria-valuenow`, Grenzen und eine kurze lokalisierte Wertdarstellung werden synchron gehalten; bei ungültiger Eingabe wird kein erfundener Zahlenwert angesagt. Keine zusätzlichen Plus-/Minus-Schalter und keine zusätzlichen Live-Regionen.
-
-Gegenwerte werden nur für Klassenarbeiten/Tests und für Schriftlich/Mündlich bei gleichzeitig 0 % Hausaufgaben/Heftführung ergänzt. Komplexere Verteilungen bleiben unverändert. Summen zeigen den Gesamtwert und fehlende beziehungsweise überzählige Anteile; vorhandene Dezimalgewichte werden nicht auf Fünferschritte gerundet.
-
-`domain/weighting.js` rechnet Gewichtsmodelle rational um. Gruppenanteil × Anteil innerhalb Schriftlich ergibt den direkten Anteil; die inverse Umrechnung bildet die Summe und anschließend das Verhältnis. Nicht ohne mehr als vier Nachkommastellen darstellbare Prozentwerte verlangen eine ausdrückliche Entscheidung über gerundete Werte. Das Verfahren erhält die Summe 100 %; gespeicherte Daten bleiben bis „Speichern“ unverändert. Bei schriftlichem Anteil 0 bleibt die bisherige innere Verteilung erhalten, weil sie nicht bestimmbar und für die Gesamtnote wirkungslos ist. Ein kurzer Hinweis erklärt diesen Fall.
-
-Der Vergleich verwendet `NR.calculate` für alle zugeordneten Schüler einschließlich ausgeschiedener Schüler. Unveränderte Zeilen werden niemals ausgeblendet. Vorherige Werte werden aus dem vorhandenen Berechnungscache gelesen; Entwurfswerte werden ohne Änderung des Datenbestands berechnet. Anzeigeänderungen und Unterschiede unterhalb der gewählten Anzeigegenauigkeit werden nachvollziehbar gekennzeichnet.
-
-„Aus anderem Fach übernehmen“ füllt nur den Entwurf. Berechnungsart und Prozentwerte werden standardmäßig übernommen; Nachkommastellen und Rundung bleiben erhalten, solange das entsprechende Kontrollkästchen nicht ausdrücklich gesetzt wird. Vor dem Ersetzen bereits geänderter Felder gibt es eine Bestätigung innerhalb des Dialogs. Escape schließt zunächst diese Bestätigung beziehungsweise den Übernahmebereich. Erst der abschließende Speichern-Schalter übernimmt die Gewichtung.
-
-Abgeschlossene Schuljahre und ausgeblendete Klassen/Fächer sind nur lesbar. Der gleiche Schutz gilt in Noten, Verwaltung und Einstellungen sowie beim Altbestandszugang. Vor dem Speichern wird die Bearbeitbarkeit erneut geprüft. Die frühere Freigabe für abgeschlossene Testklassen aus 1.6.0 ist entsprechend dem Auftrag 1.7.0 aufgehoben.
-
-## Einstellungen und portable Ablage
-
-Nur `Ansicht.json/settings` ist für Darstellung, Sortierung und allgemeine Vorgaben maßgeblich. `defaultCalculationMode` und `defaultWeights` ergänzen dort die bestehenden Werte `defaultPrecision` und `defaultRounding`. „Vorgaben speichern“ bestätigt den gesamten Entwurf; geänderte Vorgaben werden vor einem Navigationswechsel geschützt. Sie wirken nur über `newCourseConfig()` beim erstmaligen Einrichten und beim Anlegen eines neuen Fachs. Fach-/Klassenübernahmen behalten ausdrücklich ihre Quellkonfiguration. Bestehende Fächer werden nicht angepasst.
-
-Die Auswahl des vorhandenen Fachs unter Notenberechnung berücksichtigt alle Schuljahre, Klassen und Fächer. `weightClass`/`weightCourse` sind reine Navigationseinstellungen und verändern nicht den täglichen Noten-Kontext. Beide Zugänge öffnen denselben Fachdialog.
-
-Die Auslieferung enthält ausschließlich `Notenblick/Notenblick.exe` und `Notenblick/Programm`. `Daten` wird beim ersten Start daneben angelegt:
-
-- `notenverwaltung.json`: vollständiger zentraler Datenbestand.
-- `Ansicht.json`: Darstellung, Navigation, Arbeitsjahr, letzte Auswahlen und allgemeine Vorgaben.
-- `Sicherungen`: automatische und geschützte Wiederherstellungspunkte.
-- `Notenlisten`: lesbare TXT-Dateien nach Schuljahr, Klasse, Fach und Leistungsart.
-
-Vollständige JSON-Sicherungen enthalten zusätzlich eine Momentaufnahme der benötigten Ansichtseinstellungen. Reine Navigation und Vorgabenänderungen erzeugen keine Notenrevision oder vollständige Notensicherung. Beim Update die Anwendung schließen und ausschließlich EXE und den vollständigen Ordner Programm ersetzen; Daten behalten. Zum Umziehen den gesamten geschlossenen Programmordner einschließlich Daten kopieren.
-
-## Speicherung, Schutz und Kompatibilität
-
-Temporäre Dateien werden geschrieben, geflusht und geprüft; erst danach wird atomar ersetzt. Validierung prüft Kennungen, Beziehungen und fachliche Werte. Datenordnersperre sowie Daten-ID/Commit-ID verhindern konkurrierende Änderungen. Beschädigte Dateien werden nicht durch leere Daten ersetzt. Die Grenze bleibt 256 MiB je Datei. Die letzten 30 Stände plus tägliche, wöchentliche und ältere jährliche Wiederherstellungspunkte bleiben erhalten; geschützte Vorher-Stände werden nicht automatisch gelöscht. Caches vermeiden erneutes vollständiges Einlesen unveränderter Wiederherstellungspunkte und unnötige TXT-Berechnungen.
-
-Frühere Ablagen `Datensicherung/Daten/notenverwaltung.json` und flache Altordner werden weiter erkannt. Vor einer notwendigen Migration entsteht ein vollständiges geprüftes ZIP mit Prüfsummen; Kopieren und Aktivieren sind kontrolliert, Ursprungsdateien bleiben erhalten. Mehrdeutige Bestände verlangen eine Auswahl. Alte „Sonstige Leistungen“ bleiben ausschließlich im gesicherten Altbestand, niemals als neue aktive Leistungsart. Ihre ausdrücklich bestätigte Übernahme bleibt nachvollziehbar; in abgeschlossenen Schuljahren ist nur die Archivansicht erreichbar.
-
-1.8.0-Daten und frühere unterstützte Stände bleiben unverändert nutzbar. Die Quellen des alten 1.5.0-Validators unter `tests/compat150` dienen nur dem Regressionstest: Er lehnt direkte Gewichte sicher ab. Diese Testquellen gehören nicht zur Programmausgabe.
-
-## Build und Prüfungen
-
-Python 3 und .NET SDK ab Version 8 werden zum Erstellen benötigt. `NOTENBLICK_DOTNET` kann den Pfad zu dotnet festlegen. Die benötigten .NET-Framework-4.8-Referenzen, WebView2 SDK 1.0.2903.40 und Newtonsoft.Json 13.0.3 samt Lizenzen sind enthalten. Die Windows-Ausgabe verwendet net45/net462, der Linux-Testhost die net6.0-Ausgabe von Newtonsoft.Json. Für den Programm-Build ist kein Paketdownload notwendig.
-
-```text
-python dev/build.py
-python dev/compile.py
-python dev/package.py
+```sh
+python3 dev/manage.py setup
+python3 dev/manage.py doctor
+python3 dev/manage.py plan --base main
+python3 dev/manage.py test changed --base main
+python3 dev/manage.py test changed --stage integration --base main
+python3 dev/manage.py build
+python3 dev/manage.py release
 ```
 
-Der Paketbau prüft vollständige Dateien, Verweise, SHA-256-Liste und AnyCPU-Flags. Der Starter prüft alle Dateien vor dem Laden; fehlende, geänderte, zusätzliche oder verknüpfte Programminhalte werden abgelehnt. Die begrenzte Assembly-Ladelösung bleibt erhalten, ohne Root-Konfigurationsdatei oder Änderungen an Windows-Sicherheitszonen.
+Die Ausgangsbasis während einer Aufgabe nicht wechseln. Vor einer unmittelbar folgenden vollständigen Release-Prüfung ist kein doppelter Integrationslauf nötig. Unbekannte gemeinsame Änderungen werden konservativ vollständig geprüft. Fehler nicht überspringen.
 
-Node-Testabhängigkeiten stehen in package.json und gehören nicht zur Programmausgabe. `npm install` richtet die Tests ein. Für Browserprüfungen wird Chromium benötigt; `NOTENBLICK_CHROMIUM` kann den Pfad festlegen. Für native Linux-Tests wird .NET 8 verwendet.
+`release` führt sämtliche Tests, große Datenbestände, Exportvalidatoren, zwei saubere bytegleiche Builds und ZIP-/Entpackprüfungen aus. `release --check-only` prüft denselben Umfang mit temporären Archiven. Quellen und Dokumente vorher abschließen und stagen; den aktuellen Nachweis mit `status --report reports/<Lauf>/summary.json` bestätigen.
 
-```text
-python dev/test-native.py
-npm test
-node tests/view-storage.cjs
-node tests/v150-storage.cjs
-node tests/v160-storage.cjs
-node tests/v170-storage.cjs
-node tests/v180-storage.cjs
-node tests/v190.cjs
-node tests/v190-storage.cjs
-node tests/workflow.cjs
-node --max-old-space-size=4096 tests/large.cjs
-python tests/loader.py
-npm run test:browser
-```
+## Ausgabe und Zusammenarbeit
 
-Den nativen Testhost nicht während laufender Speichertests neu erstellen. Ergebnisdateien und Einzeltests sind enthalten. Tatsächliche Prüfumgebung und Grenzen stehen in PRUEFBERICHT.md.
+`dist` enthält nur EXE und Programmordner. `artifacts` enthält vollständiges Windows-ZIP, vollständiges Quellcode-ZIP und SHA-256-Prüfsummen. Eigene Lizenztexte und Drittanbieterhinweise werden vor der Integritätsliste eingebunden. Daten, Werkzeuge, Buildausgaben und vollständige Logs bleiben außerhalb von Git.
 
-## Windows-Voraussetzungen und Grenzen
+Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in [LICENSE-EXCEPTION](LICENSE-EXCEPTION). Beiträge und Freigaben: [CONTRIBUTING.md](CONTRIBUTING.md) und [Veröffentlichungsablauf](docs/VEROEFFENTLICHUNG.md). GitHub Actions bleiben deaktiviert. Für echte Windows-/NVDA-/Braille-Tests gilt der [Windows-Prüfplan](docs/WINDOWS-PRUEFUNG.md).
 
-Wie bisher werden .NET Framework 4.8 und eine installierte Microsoft-WebView2-Laufzeit benötigt. Verwaltete Bibliotheken sowie WebView2-Loader für x86, x64 und arm64 sind enthalten. Die Anwendung arbeitet lokal ohne Server oder Internet; Host und Content-Security-Policy blockieren externe Ressourcen. Der Enginecache unter LocalAppData ist keine maßgebliche Datenablage.
-
-Es liegt kein Codesignierungszertifikat vor. SmartScreen und Windows-Sicherheitsmechanismen werden nicht umgangen. Linux-.NET-, Chromium-, ARIA- und axe-Prüfungen ersetzen keinen ausgeführten Windows-Start und keinen tatsächlichen NVDA-Livetest.
-
-## Gemeinsame Berichte und Version
-
-`package.json` ist die verbindliche Programmversion. Der Build erzeugt daraus `version.js`, Starter-/Bibliotheksattribute und Windows-Manifest. `src/exports/report.js` erzeugt unveränderliche Berichtszellen aus denselben Daten und zentralen NR-Berechnungen wie die Oberfläche. Text/CSV, semantisches Druck-HTML, DOCX, XLSX und strukturierte PDF verwenden diese Grundlage. Filter werden aus einer Kopie der aktuellen Ansicht gelesen; Bildschirmpaginierung beschränkt den Export nicht. Lange Bemerkungen erhalten in Dokumenten Absätze mit Bezug zu Datum, Schüler und Leistung. Druck, Word und PDF wählen anhand von Inhalt und Mindestbreiten zunächst Hoch- beziehungsweise Querformat. Sieben bis zehn gewöhnliche Spalten bleiben als eine Tabelle erhalten; erst tatsächlicher Platzmangel erzeugt eindeutig benannte Teile mit wiederholten Namen. Excel bewahrt die breite Tabelle mit fixierter Namensspalte.
-
-PDFKit 0.20.2 (MIT) und DejaVu-Schriften werden lokal mitgeliefert und über `dev/export-assets-lock.json` gesperrt. Es gibt keine neuen Laufzeitprozesse, Office-Abhängigkeiten oder Netzwerkdienste. DOCX/XLSX entstehen mit einem kleinen zentralen OOXML-/ZIP-Schreiber. `native/ExportFiles.cs` verarbeitet Binärdaten, prüft Format und Größe und schreibt atomar nach bestätigtem Windows-Speicherdialog. Bestehende JSON-/TXT-Sicherungswege bleiben erhalten.
-
-
-## Abschlussnoten ab 1.14.0
-
-`domain/finals.js` ergänzt die bestehende Domäne. Jede Vorschlagsgrundlage kommt aus `NR.calculate`, einschließlich direkter/gruppierter Fachgewichte, Faktoren, fehlender Leistungsbereiche und Altbestandssperre. Ein rationaler Wert wird direkt auf 1/4 oder 1 gerundet; bei exakter Hälfte zur numerisch höheren Note. Anzeigepräzision und Kürzen beeinflussen Vorschläge nicht. `arithmetic.js` bleibt unverändert.
-
-Der Zeitraum wird aus dem Klassen-Schuljahr bestimmt: 1. August bis 31. Juli, erstes Halbjahr bis einschließlich 31. Januar. Eindeutige Schuljahresbezeichnungen werden ausgewertet; bei frei benannten Jahren wird der Beginn einmal ausdrücklich gespeichert (`year.startYear`, nur als Ersatz für nicht auswertbare Bezeichnungen). `datePeriod` ist für neue/geänderte Leistungsdaten maßgeblich. Alte `period`-Felder werden beim Laden weder umgeschrieben noch als zuverlässiger Datumsersatz verwendet. Alte Einträge außerhalb des Jahres bleiben vorhanden und in der bisherigen regulären Übersicht sichtbar; begrenzte Abschlussvorschläge berücksichtigen nur zugehörige Daten. Bei unbekanntem Zeitraum entsteht kein Vorschlag.
-
-`class.halfYearReport` ist optional (`information`/`certificate`). Eine fehlende Einstellung wird einmalig vor der Abschlussnotenbearbeitung gespeichert. Die Klassenverwaltung kann sie später ändern. Auch dann bleiben alle Festlegungen unverändert, mit sichtbarer Kennzeichnung abweichender Bestandswerte. Für Jahresabschlussnoten in Klassen mit Halbjahreszeugnis wird vorsorglich kein gewöhnlicher Rundungsvorschlag als Abschlussnote angeboten: der laufende Schnitt ist nur Orientierung.
-
-Die zentrale JSON-Datei und ihre Formatversion 1 bleiben erhalten. Neue Festlegungen liegen in `finals`: `reportType` (`information`, `certificate`, `annual`), bisheriges `period` (1/all), Schüler/Fach sowie ausdrückliche Klassen-/Jahreskennungen, `referenceStart/End`, `decidedAt`, `grade`, `note`, rationaler `averageAtDecision` mit Dezimaltext-Zähler/Nenner oder null. Der damalige Durchschnitt ist ein Schnappschuss. Nur ausdrückliche Festlegung ändert ihn. Eine reine Bemerkungsänderung erhält die ursprüngliche Festlegung. Die Datenvalidierung prüft Zuordnung, Notenschritte und Metadaten.
-
-Untypisierte frühere `finals` mit Abschnitt 1/2 sowie `previousFinals` sind historische Noten, niemals neue Halbjahresinformationen. Vorhandene Jahreszeugnisse auch mit Dezimalwert bleiben bytegleich erhalten. Ein kompatibler Altbestandseintrag im Auswahlfeld lässt sich unverändert behalten; erst eine ausdrückliche Neufestlegung unterliegt den neuen Notenschritten. Klassenübernahme und Versetzen kopieren keine Abschlussnoten; die bisherigen Originaldatensätze und Herkunftsverweise bleiben erhalten.
-
-`dialogs/finals.js` ersetzt den bisherigen Einzel-Zeugnisdialog und verwendet dieselbe Dialoghülle auch für die Klassenliste. Die Liste hat echte Zeilen-/Spaltenüberschriften und kurze native Auswahlfelder. Filter ändern nur `hidden`, niemals Entwurfsdaten. Sammelübernahme füllt ausschließlich leere, noch nicht bewusst bearbeitete Felder ohne gespeicherten Vorgänger. Entfernen und Änderung der Zeugnisart mit Bestandsnoten werden ausdrücklich bestätigt. Normales Speichern benötigt keine Zusatzbestätigung.
-
-`commitDraft` verwendet die vorhandene Speicherung, Sicherungen und Konflikterkennung und veröffentlicht den vollständigen validierten Entwurf erst nach angenommener JSON-Speicherung. Während der tatsächlichen Speicherung sind Eingabefelder gesperrt. Ein vorzeitiger Fehler lässt Speicherstand und Dialogentwurf unverändert. Nach angenommenem JSON mit TXT-Fehler bleibt der neue Stand sichtbar, die Meldung unterscheidet beide Ergebnisse und Wiederholen erzeugt keine doppelten Noten. Die übrige vorhandene Noteneingabe bleibt bei ihrem bisherigen Speicherablauf.
-
-Das gemeinsame Berichtsmodell erhält beide Abschlussarten in Klassen-/Schülerberichten und optionale Bemerkungen. Excel behält numerische Notenwerte und zeigt Viertelnotentendenzen über Zahlenformate. Word/PDF/Druck verwenden die bestehende Layoutplanung; lange feste Ergebnisköpfe erhalten passende Mindestbreiten. TXT-Manifestversion 14 erneuert alte Listen; alte Manifestdateien der Version 13 bleiben für die sichere Bereinigung bekannt. Datenspeicherung und Windows-C#-Kern werden nicht parallel neu implementiert.
+Die frühere ausführliche Architekturbeschreibung bis 1.14 ist als [historischer Hintergrund](docs/archiv/ENTWICKLUNG-bis-1.14.md) erhalten. Ihre damaligen Versionslisten, Beschriftungen und Befehle sind keine aktuellen Vorgaben.
