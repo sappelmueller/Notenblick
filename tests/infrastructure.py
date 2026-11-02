@@ -19,6 +19,11 @@ class Infrastructure(unittest.TestCase):
             report=audit.scan_repository(folder)
             self.assertEqual(report['commits'],2);self.assertFalse(report['content_scan_passed'])
             self.assertEqual(report['findings'][0]['kind'],'credential');self.assertNotIn(secret,json.dumps(report))
+            (folder/'.harmless.txt').write_text('synthetic identical contents')
+            (folder/'Daten').mkdir();(folder/'Daten/example.txt').write_text('synthetic identical contents');g('add','.')
+            g('-c','user.name=Test','-c','user.email=test@example.invalid','commit','-qm','duplicate synthetic data')
+            report=audit.scan_repository(folder)
+            self.assertTrue(any(x['kind']=='private_path' and x['path']=='Daten/example.txt' for x in report['findings']))
 
     def test_visibility_change_preserves_identity_and_actions_guards(self):
         config=json.loads((ROOT/'dev/repository.json').read_text())

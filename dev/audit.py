@@ -18,9 +18,17 @@ def scan_repository(root):
     kinds=subprocess.check_output(['git','-C',str(root),'cat-file','--batch-check=%(objectname) %(objecttype)'],input=('\n'.join(ids)+'\n').encode()).decode()
     blobs=[line.split()[0] for line in kinds.splitlines() if line.endswith(' blob')]
     findings=[]
+    checked=set()
+    # rev-list names each object only once. Inspect every tree as well so an
+    # identical blob at both a harmless and a private path cannot hide the latter.
+    for tree in set(git('log','--all','--format=%T').decode().splitlines()):
+        for entry in git('ls-tree','-r','-z',tree).split(b'\0'):
+            if not entry:continue
+            meta,name=entry.split(b'\t',1);path=name.decode('utf-8','surrogateescape');sha=meta.split()[2].decode()
+            if PRIVATE_PATH.search(path) and (sha,path) not in checked:
+                findings.append({'kind':'private_path','object':sha,'path':path});checked.add((sha,path))
     for sha in blobs:
         path=paths.get(sha,'[historical blob]')
-        if PRIVATE_PATH.search(path):findings.append({'kind':'private_path','object':sha,'path':path})
         if scan_bytes(git('cat-file','blob',sha)):findings.append({'kind':'credential','object':sha,'path':path})
     commits=git('rev-list','--all').decode().splitlines()
     personal=0
