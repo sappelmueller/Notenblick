@@ -1,6 +1,6 @@
 # Technischer Einstieg
 
-Notenblick 1.23.2: Windows, .NET Framework 4.8, WinForms und WebView2. Ziel ausschließlich `sappelmueller/Notenblick`, ID `1432518047`; privat oder öffentlich. Actions aus. Eigene Quellen: GPL-3.0-only. Vor Änderungen [AGENTS.md](../AGENTS.md) beachten.
+Notenblick 1.23.2: Windows, .NET Framework 4.8, WinForms und WebView2. Ziel ausschließlich `sappelmueller/Notenblick`, ID `1432518047`; privat oder öffentlich. Actions aus. Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in LICENSE-EXCEPTION. Vor Änderungen [AGENTS.md](../AGENTS.md) beachten.
 
 ## Aufbau
 

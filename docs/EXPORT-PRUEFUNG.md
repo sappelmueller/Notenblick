@@ -1,4 +1,4 @@
-# Exportentwicklung und Prüfgrenzen – 1.21.0
+# Exportentwicklung und Prüfgrenzen
 
 Alle Ausgaben werden im Programm lokal erzeugt. Für die Dateierstellung braucht Windows weder Python, Java, Office noch einen PDF-Drucker. Mitgeliefert werden PDFKit 0.20.2 (MIT) und DejaVu Sans einschließlich Lizenzen und ergänzenden Drittbibliotheks-Hinweisen. Die unveränderten Bibliotheksdateien und Schriftdateien sind in `dev/export-assets-lock.json` mit SHA-256 gesperrt.
 

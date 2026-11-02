@@ -24,7 +24,7 @@ Eigene Quellen: **GPLv3 mit standardisierter Bibliotheksausnahme gemäß §7** (
 
 ## Organisation und Veröffentlichungen
 
-Die fünf zusätzlichen Ausgangsbranches sind vollständig in `main` enthalten. Ihre Spitzen und historischen Stände bleiben in Historie und privater Sicherung erhalten. Alte Versions-Tags und historische Release-Nachweise werden bewahrt. 29 ältere Dokumente liegen gebündelt unter `docs/archiv/`; aktive Anleitungen verweisen auf den aktuellen Ablauf.
+Die fünf zusätzlichen Ausgangsbranches sind vollständig in `main` enthalten. Ihre Spitzen und historischen Stände bleiben in Historie und privater Sicherung erhalten. Alte Versions-Tags und historische Release-Nachweise werden bewahrt. 31 ältere Dokumente liegen gebündelt unter `docs/archiv/`; aktive Anleitungen verweisen auf den aktuellen Ablauf.
 
 Der ursprüngliche Tag `v1.23.2` und seine unveränderten Downloads bleiben als historischer Build-Kandidat erhalten. Die vollständig lizenzierte Paketfassung wird unter dem ergänzenden Tag **v1.23.2-oss.1** derselben Programmversion bereitgestellt. Sie erhält einen passenden Quellcode-Download und neue Prüfsummen. So werden frühere Hashes und Tags nicht still ersetzt.
 
