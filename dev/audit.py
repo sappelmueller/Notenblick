@@ -35,7 +35,7 @@ def scan_repository(root):
     for sha in commits:
         raw=git('cat-file','commit',sha).split(b'\n\n',1)[0]
         emails=re.findall(rb'^(?:author|committer) .*<([^>]+)>',raw,re.M)
-        if any(not e.endswith((b'@users.noreply.github.com',b'@example.invalid')) for e in emails):personal+=1
+        if any(e != b'noreply@github.com' and not e.endswith((b'@users.noreply.github.com',b'@example.invalid')) for e in emails):personal+=1
     return {'commits':len(commits),'blobs':len(blobs),'findings':findings,'commits_with_personal_author_email':personal,'content_scan_passed':not findings,'publication_ready':not findings and personal==0}
 
 def scan_archive(path):

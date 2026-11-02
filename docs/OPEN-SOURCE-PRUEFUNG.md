@@ -44,4 +44,10 @@ GitHub Actions sind nachweislich deaktiviert; keine Workflows oder kostenpflicht
 
 Die Infrastrukturregressionen einschließlich Sichtbarkeitswechsel, falscher ID, fremdem Repository, aktivierten Actions, weiteren Tokenformaten und gelöschten historischen Geheimnissen wurden ausgeführt. Ein frischer vollständiger Lauf von `python3 dev/manage.py release` ist für die lizenzierte Ausgabe erforderlich. Der maschinenlesbare Abschlussnachweis wird außerhalb des Quellbaums erzeugt und dem Release beigelegt; er nennt tatsächlich ausgeführte Schritte, Laufzeit, Quellbaum und Prüfsummen. `status --report reports/<Lauf>/summary.json` prüft die Übereinstimmung mit den getesteten Inhalten.
 
-Reale Windows-x86-/x64-/ARM64-Starts, WebView2/UIA, gesprochene NVDA-Ausgaben, Braille, Microsoft Office und physischer Druck wurden hier nicht live geprüft. Das Release bleibt deshalb eine Vorabversion. Linux-/Chromium-, Datei-, Export- und reproduzierbare Buildprüfungen sind keine solche Liveabnahme.
+Reale Windows-x86-/x64-/ARM64-Starts, WebView2/UIA, gesprochene NVDA-Ausgaben, Braille, Microsoft Office und physischer Druck wurden in dieser Ausführungsumgebung nicht live geprüft. Sebastian Müller hat anschließend am 2. November 2026 erfolgreiche Windows- und NVDA-Tests bestätigt und den Abschluss beauftragt. Der Nachtrag im [Versionsbericht](PRUEFBERICHT-1.23.2.md) hält diese Nutzerabnahme und ihre Grenzen fest. Nicht ausdrücklich bestätigte Einzelprüfungen bleiben offen.
+
+## Abschließende GitHub-Kontrolle
+
+GitHub hat die korrigierte PDF-Prüfbibliothek erkannt und alle 49 Dependabot-Hinweise automatisch als behoben geschlossen: keine offenen Hinweise. Die Hinweise wurden nicht manuell ausgeblendet. Neue Commits verwenden die GitHub-noreply-Adresse; die E-Mail-Privatsphäre und der Schutz vor Pushes mit persönlicher Adresse sind im GitHub-Konto aktiviert. Das ändert die alten Autorenfelder nicht. Deren vollständige Anonymisierung einschließlich Tags und GitHub-PR-Restkopien bleibt bis zur gesonderten Übertragung und entfernten Prüfung offen.
+
+Der lokale Historienprüfer unterscheidet persönliche Adressen von GitHubs öffentlicher Systemadresse `noreply@github.com`. Eine Regression bestätigt, dass die Systemadresse zusammen mit einer Nutzer-noreply-Adresse zulässig ist und eine persönliche Autorenadresse weiterhin die Veröffentlichungsfreigabe verhindert.

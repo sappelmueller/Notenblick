@@ -7,6 +7,6 @@ Notenblick wird für blinde und sehende Lehrkräfte entwickelt. Tastaturbedienun
 - Neue Arbeitsbereiche und Dialoge beginnen an einer Überschrift. Escape schließt geeignete Dialoge; der Fokus kehrt zum Auslöser zurück.
 - Die schnelle Noteneingabe verwendet Eingabe und Umschalt+Eingabe. F1 öffnet die Hilfe zum aktuellen Arbeitsschritt.
 
-Automatische Chromium-, Tastatur-, Fokus-, Layout- und axe-Prüfungen gehören zur Testsammlung. Sie bestätigen weder gesprochene NVDA-Ausgaben noch Braille oder Windows UI Automation. Diese Livetests einschließlich ARM64 stehen noch aus. Der [Windows-Prüfplan](docs/WINDOWS-PRUEFUNG.md) beschreibt sie; `dev/windows-qa.ps1` erfasst die tatsächliche Prozessarchitektur.
+Automatische Chromium-, Tastatur-, Fokus-, Layout- und axe-Prüfungen gehören zur Testsammlung. Sebastian Müller hat am 2. November 2026 erfolgreiche Windows- und NVDA-Tests zurückgemeldet. Das ist eine persönliche Abnahme, kein automatisch erhobener oder unabhängiger Nachweis vollständiger Barrierefreiheit. Braille und die tatsächliche native ARM64-Prozessarchitektur wurden nicht gesondert bestätigt. Der [Windows-Prüfplan](docs/WINDOWS-PRUEFUNG.md) beschreibt die Einzelprüfungen; `dev/windows-qa.ps1` erfasst die tatsächliche Prozessarchitektur.
 
 Probleme bitte mit Version, Tastenschritten und erwartetem Verhalten als Issue melden. Keine echten Schülerdaten hochladen.

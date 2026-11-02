@@ -2,7 +2,7 @@
 
 Notenblick ist eine portable Notenverwaltung für Windows. Lehrkräfte verwalten Schuljahre, Klassen, Fächer und Schüler, tragen Noten oder Punkte ein und erstellen kompakte Berichte. Das Programm arbeitet vollständig offline und speichert alle Daten lokal.
 
-Aktuelle Version: **1.23.2**. Echte Windows-, ARM64-, NVDA- und Braille-Livetests stehen noch aus; der Download bleibt deshalb eine Vorabversion.
+Aktuelle Version: **1.23.2**. Sebastian Müller hat die Windows- und NVDA-Tests erfolgreich bestätigt. Gesonderte Nachweise für native ARM64-Ausführung, Braille, Microsoft Office und physischen Druck stehen noch aus; siehe [Prüfbericht](docs/PRUEFBERICHT-1.23.2.md).
 
 ## Download und Start
 
