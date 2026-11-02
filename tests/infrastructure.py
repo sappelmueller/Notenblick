@@ -25,6 +25,21 @@ class Infrastructure(unittest.TestCase):
             report=audit.scan_repository(folder)
             self.assertTrue(any(x['kind']=='private_path' and x['path']=='Daten/example.txt' for x in report['findings']))
 
+    def test_history_audit_distinguishes_github_system_and_personal_email(self):
+        import importlib.util
+        spec=importlib.util.spec_from_file_location('notenblick_audit',ROOT/'dev/audit.py');audit=importlib.util.module_from_spec(spec);spec.loader.exec_module(audit)
+        with tempfile.TemporaryDirectory(prefix='notenblick-author-') as tmp:
+            folder=Path(tmp)
+            def g(*args):return subprocess.check_output(['git','-C',tmp,*args])
+            g('init','-q');(folder/'example.txt').write_text('synthetic');g('add','.')
+            g('-c','user.name=Test','-c','user.email=noreply@github.com','commit','-qm','synthetic GitHub commit','--author=Test <123+test@users.noreply.github.com>')
+            report=audit.scan_repository(folder)
+            self.assertEqual(report['commits_with_personal_author_email'],0);self.assertTrue(report['publication_ready'])
+            (folder/'example.txt').write_text('synthetic changed');g('add','.')
+            g('-c','user.name=Test','-c','user.email=owner@example.org','commit','-qm','synthetic personal commit')
+            report=audit.scan_repository(folder)
+            self.assertEqual(report['commits_with_personal_author_email'],1);self.assertFalse(report['publication_ready'])
+
     def test_visibility_change_preserves_identity_and_actions_guards(self):
         config=json.loads((ROOT/'dev/repository.json').read_text())
         for visibility in ['private','public']:

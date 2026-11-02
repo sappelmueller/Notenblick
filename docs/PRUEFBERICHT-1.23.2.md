@@ -22,6 +22,12 @@ Linux-.NET-/Chromium-Prüfungen bestätigen keine native Windows-Ausführung. Ke
 
 `dev/windows-qa.ps1 -Archive <ZIP> -Launch` startet ausschließlich eine frische temporäre Testkopie. Eine 64-Bit-PowerShell liest mit `GetProcessInformation(ProcessMachineTypeInfo)` die tatsächliche Prozessarchitektur und dokumentiert geladene CLR und WebView2Loader.dll samt Pfad-/Hashabgleich. Der Prozess bleibt für die manuelle Abnahme geöffnet. Fehlende Messwerte werden ausdrücklich als Fehler dokumentiert; weder Umgebungsvariable noch AnyCPU-PE-Kennung gelten als Prozessnachweis. Erwartet auf ARM64: Prozess `arm64`, Loader `Programm/Windows/arm64/WebView2Loader.dll`, Framework-Release mindestens 533320. Getrennt dieselbe ZIP auf x64 (Prozess/Loader x64) und möglichst x86 (Prozess/Loader x86) prüfen; Start, NVDA, schnelle Noteneingabe, Speicherung/Neustart, Wiederherstellung und Exporte mit synthetischen Daten abnehmen. Bei regulärem Update vorhandenen Ordner `Daten` vollständig erhalten.
 
+## Nachtrag: Windows und NVDA bestätigt
+
+Sebastian Müller hat am 2. November 2026 mitgeteilt, dass die Windows- und NVDA-Tests erfolgreich verliefen, und den Abschluss der Veröffentlichungsvorbereitung beauftragt. Diese Rückmeldung ist die Nutzerabnahme für Version 1.23.2; die oben beschriebenen automatischen Nachweise bleiben davon getrennt.
+
+Gerätearchitektur, Windows-/WebView2-/NVDA-Versionen und ein einzelnes Abnahmeprotokoll wurden nicht übermittelt. Deshalb werden daraus keine zusätzlichen Nachweise für native ARM64-Ausführung, Braille, Microsoft Office, physischen Druck oder sämtliche Einzelpunkte des Prüfplans abgeleitet. Die damaligen offenen Angaben oben dokumentieren den Stand vor dieser Rückmeldung.
+
 ## Microsoft-Quellen
 
 - https://learn.microsoft.com/windows/win32/sbscs/application-manifests#supportedarchitectures
