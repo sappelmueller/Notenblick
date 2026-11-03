@@ -17,6 +17,90 @@ namespace Notenblick.Native {
   public string Version,Url,Sha256;public long Size,ReleaseId;public string[] Notes;public List<UpdateFile> Files;
   public JObject Public(){return new JObject{{"version",Version},{"notes",new JArray(Notes)}};}
  }
+ // Diagnostic context stays in memory. Never serialize exception.Data, headers,
+ // raw response bodies, file contents, proxy addresses or file-bearing stacks.
+ public sealed class UpdateFailure:Exception {
+  public readonly string Step,Endpoint,Response;public readonly int? HttpStatus;
+  public UpdateFailure(string step,Exception cause,string endpoint=null,int? status=null,string response=null):base(step,cause){Step=step;Endpoint=endpoint;HttpStatus=status;Response=response;}
+ }
+ public static class UpdateDiagnostics {
+  public static Exception At(string step,Exception error){var cancelled=error as OperationCanceledException;var context=new UpdateFailure(step,error);return cancelled==null?(Exception)context:new OperationCanceledException(step,context,cancelled.CancellationToken);}
+  public static string Clean(string value){
+   if(string.IsNullOrEmpty(value))return "";
+   string text=value;
+   text=Regex.Replace(text,@"\b(?:Bearer|Basic)\s+[^\s,;]+","[Zugangsdaten entfernt]",RegexOptions.IgnoreCase);
+   text=Regex.Replace(text,@"\b(?:Authorization|Proxy-Authorization|Set-Cookie|Cookie|password|passwd|token|access_token|refresh_token|secret|api[_-]?key)\s*[:=]\s*(?:""[^""]*""|'[^']*'|[^\r\n,;]+)","[Zugangsdaten entfernt]",RegexOptions.IgnoreCase);
+   text=Regex.Replace(text,@"\b(?:gh[pousr]_[A-Za-z0-9]+|github_pat_[A-Za-z0-9_]+)\b","[Token entfernt]");
+   text=Regex.Replace(text,@"\b(?:https?|file|ftp)://[^\s'""<>]+","[URL entfernt]",RegexOptions.IgnoreCase);
+   text=Regex.Replace(text,@"(['""])/[^\r\n]*?\1","[Pfad entfernt]");
+   text=Regex.Replace(text,@"(?:[a-z]:[\\/]|\\\\)[^\r\n'""<>]*","[Pfad entfernt]",RegexOptions.IgnoreCase);
+   text=Regex.Replace(text,@"(?<![\w:])/(?:[^\s/'""<>]+/)+[^\s'""<>]*","[Pfad entfernt]");
+   text=Regex.Replace(text,@"\b[A-Za-z0-9_.-]+\\[^\r\n'""<>]+","[Pfad/Konto entfernt]");
+   text=Regex.Replace(text,@"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}","[E-Mail entfernt]",RegexOptions.IgnoreCase);
+   text=Regex.Replace(text,@"\b(?:\d{1,3}\.){3}\d{1,3}\b|(?<![\w:])(?:[a-f0-9]{0,4}:){2,}[a-f0-9:]+(?:%\w+)?","[Netzwerkadresse entfernt]",RegexOptions.IgnoreCase);
+   text=Regex.Replace(text,@"\b[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\b","[Kennung entfernt]",RegexOptions.IgnoreCase);
+   text=Regex.Replace(text,@"\b(?:[a-z0-9-]+\.)+[a-z]{2,}\b",m=>new[]{"api.github.com","github.com","docs.github.com","release-assets.githubusercontent.com","objects.githubusercontent.com"}.Contains(m.Value.ToLowerInvariant())?m.Value:"[Name entfernt]",RegexOptions.IgnoreCase);
+   text=Regex.Replace(text,@"((?:Remotename|remote name|proxy|host)[^'""\r\n]*['""])[^'""\r\n]+(['""])","$1[Host entfernt]$2",RegexOptions.IgnoreCase);
+   foreach(string personal in new[]{Environment.UserName,Environment.MachineName})if(!string.IsNullOrWhiteSpace(personal)&&personal.Length>2)text=Regex.Replace(text,@"\b"+Regex.Escape(personal)+@"\b","[Name entfernt]",RegexOptions.IgnoreCase);
+   return Regex.Replace(text,@"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]","");
+  }
+  public static string GitHubResponse(byte[] bytes,bool truncated=false){
+   try{
+    var json=UpdateSource.Json(bytes) as JObject;if(json==null)return "Kein GitHub-Fehlerobjekt; Antwortinhalt nicht übernommen.";
+    var lines=new List<string>();if(json["message"]?.Type==JTokenType.String)lines.Add("message: "+Clean((string)json["message"]));
+    var errors=json["errors"] as JArray;if(errors!=null)foreach(var item in errors.OfType<JObject>())foreach(string name in new[]{"resource","field","code","message"})if(item[name]?.Type==JTokenType.String)lines.Add(name+": "+Clean((string)item[name]));
+    return lines.Count==0?"GitHub-Fehlerobjekt ohne übernehmbare Fehlermeldung.":string.Join("\n",lines)+(truncated?"\nAntwort auf 16 KiB begrenzt.":"");
+   }catch{return "Fehlerantwort ist kein gültiges GitHub-JSON; Rohinhalt aus Datenschutzgründen nicht übernommen.";}
+  }
+  public static string Endpoint(Uri uri){return uri.Host=="api.github.com"?(uri.AbsolutePath.EndsWith("/releases",StringComparison.Ordinal)?"GitHub-API: Releases":"GitHub-API: Repository"):"GitHub: Update-Datei";}
+  public static async Task<UpdateFailure> Transport(WebException error,Uri uri,CancellationToken cancel){
+   int? status=null;string body=null;var http=error.Response as HttpWebResponse;
+   if(http!=null){status=(int)http.StatusCode;using(http)try{
+    using(var source=http.GetResponseStream())using(var bytes=new MemoryStream())using(var timeout=CancellationTokenSource.CreateLinkedTokenSource(cancel)){
+     timeout.CancelAfter(TimeSpan.FromSeconds(2));using(timeout.Token.Register(http.Close)){
+      var buffer=new byte[2048];int n;while(bytes.Length<16384&&(n=await source.ReadAsync(buffer,0,(int)Math.Min(buffer.Length,16384-bytes.Length),timeout.Token).ConfigureAwait(false))>0)bytes.Write(buffer,0,n);
+      body=GitHubResponse(bytes.ToArray(),bytes.Length==16384);
+     }
+    }
+   }catch(Exception readError){body="Fehlerantwort konnte nicht gelesen werden: "+readError.GetType().FullName+"; "+Clean(readError.Message);}}
+   return new UpdateFailure(cancel.IsCancellationRequested?"Verbindung: Zeitgrenze/Abbruch":"HTTPS-Verbindung",error,Endpoint(uri),status,body);
+  }
+  static IEnumerable<Exception> Causes(Exception error){
+   var pending=new Stack<Exception>();var seen=new HashSet<Exception>();pending.Push(error);
+   while(pending.Count>0){var item=pending.Pop();if(item==null||!seen.Add(item))continue;yield return item;var aggregate=item as AggregateException;if(aggregate!=null){for(int i=aggregate.InnerExceptions.Count-1;i>=0;i--)pending.Push(aggregate.InnerExceptions[i]);}else if(item.InnerException!=null)pending.Push(item.InnerException);}
+  }
+  public static string Category(Exception error){
+   var all=Causes(error).ToArray();var web=all.OfType<WebException>().FirstOrDefault();
+   if(all.OfType<UpdateFailure>().Any(f=>f.HttpStatus==407))return "Proxy/HTTP";
+   if(all.Any(e=>e is System.Security.Authentication.AuthenticationException))return "TLS/Zertifikat";
+   if(web!=null)switch(web.Status){case WebExceptionStatus.NameResolutionFailure:return "DNS";case WebExceptionStatus.ProxyNameResolutionFailure:return "Proxy/DNS";case WebExceptionStatus.TrustFailure:return "Zertifikat";case WebExceptionStatus.SecureChannelFailure:return "TLS";case WebExceptionStatus.Timeout:case WebExceptionStatus.RequestCanceled:return "Zeitüberschreitung/Abbruch";case WebExceptionStatus.ProtocolError:return "HTTP";default:return "Netzwerk ("+web.Status+")";}
+   if(all.OfType<UpdateFailure>().Any(f=>f.HttpStatus.HasValue))return "HTTP/Weiterleitung";
+   if(all.Any(e=>e is System.Security.Authentication.AuthenticationException))return "TLS/Zertifikat";
+   if(all.Any(e=>e is System.Net.Sockets.SocketException))return "Netzwerk/DNS";
+   if(all.Any(e=>e is OperationCanceledException))return "Zeitüberschreitung/Abbruch";
+   if(all.Any(e=>e is JsonException||e is DecoderFallbackException))return "JSON-Verarbeitung";
+   if(all.Any(e=>e is InvalidDataException))return "Antwort-/Sicherheitsprüfung";
+   if(all.Any(e=>e is UnauthorizedAccessException||e is IOException||e is System.Security.SecurityException))return "Dateizugriff/lokale Speicherung";
+   if(all.Any(e=>e is ArgumentException||e is FormatException||e is OverflowException))return "Wert-/Versionsauswertung";
+   return "Programmfehler";
+  }
+  public static string Report(Exception error,string version,DateTime started,string step){
+   try{
+    var all=Causes(error).ToArray();var steps=all.OfType<UpdateFailure>().Select(f=>f.Step).Where(s=>s!="Aktualisierungsprüfung").Distinct().ToArray();string actualStep=steps.Length>0?string.Join(" / ",steps):step,category=Category(error);
+    var b=new StringBuilder();b.AppendLine("Notenblick – Fehlerdiagnose der Aktualisierungsprüfung");b.AppendLine("Notenblick-Version: "+Clean(version));b.AppendLine("Zeitpunkt der Prüfung (UTC): "+started.ToUniversalTime().ToString("o"));b.AppendLine("Fehlgeschlagener Schritt: "+actualStep);b.AppendLine("Fehlerkategorie: "+category);
+    b.AppendLine("Technische Zusammenfassung: "+actualStep+" fehlgeschlagen; "+category+"; "+all.Last().GetType().FullName+".");
+    b.AppendLine("CLR-Version: "+Environment.Version+"; Prozess: "+(IntPtr.Size*8)+" Bit");
+    var target=Assembly.GetEntryAssembly()?.GetCustomAttribute<System.Runtime.Versioning.TargetFrameworkAttribute>();b.AppendLine("Deklariertes .NET-Ziel: "+(target?.FrameworkName??"nicht deklariert"));b.AppendLine("TLS-Vorgabe: "+ServicePointManager.SecurityProtocol+" (kein Nachweis des ausgehandelten Protokolls)");
+    foreach(string option in new[]{"Switch.System.Net.DontEnableSchUseStrongCrypto","Switch.System.Net.DontEnableSystemDefaultTlsVersions"}){bool value;b.AppendLine(option+": "+(AppContext.TryGetSwitch(option,out value)?value.ToString():"nicht explizit gesetzt"));}
+    b.AppendLine("Proxy: Windows-/Systemstandard; keine Adresse oder Zugangsdaten erfasst.");
+    int index=0;foreach(var cause in all){b.AppendLine();b.AppendLine("Ursache "+(++index)+": "+cause.GetType().FullName);b.AppendLine("Meldung: "+Clean(cause.Message));b.AppendLine("HResult: 0x"+cause.HResult.ToString("X8"));var context=cause as UpdateFailure;if(context!=null){b.AppendLine("Schritt: "+context.Step);if(context.Endpoint!=null)b.AppendLine("Quelle: "+context.Endpoint);if(context.HttpStatus.HasValue)b.AppendLine("HTTP-Status: "+context.HttpStatus.Value);if(context.Response!=null)b.AppendLine("GitHub-Fehlerantwort: "+context.Response);}
+     var web=cause as WebException;if(web!=null)b.AppendLine("WebExceptionStatus: "+web.Status);var socket=cause as System.Net.Sockets.SocketException;if(socket!=null)b.AppendLine("SocketError: "+socket.SocketErrorCode+"; NativeErrorCode: "+socket.NativeErrorCode);
+     var frames=new System.Diagnostics.StackTrace(cause,false).GetFrames();if(frames!=null)foreach(var frame in frames){var method=frame.GetMethod();if(method!=null)b.AppendLine("  bei "+method.DeclaringType?.FullName+"."+method.Name);}
+    }
+    b.AppendLine();b.AppendLine("Nur lokale technische Diagnose. Persönliche Angaben wurden entfernt; keine Kopfzeilen, Dateiinhalte oder Gerätekennungen erfasst.");return b.ToString();
+   }catch{return "Notenblick – Fehlerdiagnose\nSchritt: "+Clean(step)+"\nAusnahmetyp: "+error.GetType().FullName+"\nDie ausführliche Diagnose konnte nicht erstellt werden. Keine Daten wurden verändert.";}
+  }
+ }
  // No browser URLs or headers are accepted through the bridge. No credentials,
  // identifiers, installed version, data or statistics are sent to GitHub.
  public static class UpdateSource {
@@ -45,13 +129,13 @@ namespace Notenblick.Native {
     var req=Request(uri,asset);
     using(cancel.Register(req.Abort)){
      try{using(var response=(HttpWebResponse)await req.GetResponseAsync().ConfigureAwait(false)){
-      int code=(int)response.StatusCode;if(code==301||code==302||code==303||code==307||code==308){if(!asset)throw new InvalidDataException("API redirect");uri=new Uri(uri,response.Headers["Location"]);continue;}
-      if(code!=200||response.ContentLength>maximum)throw new InvalidDataException("Download size/status");
+      int code=(int)response.StatusCode;if(code==301||code==302||code==303||code==307||code==308){if(!asset)throw new UpdateFailure("API-Weiterleitung prüfen",new InvalidDataException("API redirect"),UpdateDiagnostics.Endpoint(uri),code);uri=new Uri(uri,response.Headers["Location"]);continue;}
+      if(code!=200||response.ContentLength>maximum)throw new UpdateFailure("HTTP-Antwort prüfen",new InvalidDataException("Download size/status"),UpdateDiagnostics.Endpoint(uri),code);
       using(var source=response.GetResponseStream())using(var bytes=new MemoryStream()){
        var buffer=new byte[32768];int n;long length=0;while((n=await source.ReadAsync(buffer,0,buffer.Length,cancel).ConfigureAwait(false))>0){length+=n;if(length>maximum)throw new InvalidDataException("Download limit");bytes.Write(buffer,0,n);progress?.Invoke(length,response.ContentLength);}
        if(response.ContentLength>=0&&length!=response.ContentLength)throw new InvalidDataException("Incomplete download");return bytes.ToArray();
       }
-     }}catch(WebException){cancel.ThrowIfCancellationRequested();throw;}
+     }}catch(WebException error){var failure=await UpdateDiagnostics.Transport(error,uri,cancel).ConfigureAwait(false);if(cancel.IsCancellationRequested)throw new OperationCanceledException("Update request cancelled or timed out",failure,cancel);throw failure;}
     }
    }throw new InvalidDataException("Redirect limit");
   }
@@ -79,18 +163,25 @@ namespace Notenblick.Native {
    return new UpdateOffer{Version=version,Notes=manifest["notes"].Values<string>().ToArray(),Files=files,Size=size,Sha256=hash,Url=AssetUrl(asset,version,name),ReleaseId=(long)release["id"]};
   }
   public static async Task<UpdateOffer> Discover(string installed,CancellationToken cancel,Fetch transport=null){
+   string step="Versionsvergleich";try{
    var fetch=transport??Read;
-   var repo=Json(await fetch(Api,128*1024,false,cancel,null).ConfigureAwait(false));if(repo["id"]?.Type!=JTokenType.Integer||(long)repo["id"]!=RepositoryId||(string)repo["full_name"]!=Repository)throw new InvalidDataException("Repository identity");
-   var list=Json(await fetch(Api+"/releases?per_page=100",2*1024*1024,false,cancel,null).ConfigureAwait(false)) as JArray;if(list==null||list.Any(r=>!(r is JObject)))throw new InvalidDataException("Release catalogue");
+   UpdateTransaction.VersionNumber(installed);
+   step="Repository-Abfrage";var repoBytes=await fetch(Api,128*1024,false,cancel,null).ConfigureAwait(false);
+   step="Repository-Antwort auswerten";var repo=Json(repoBytes);if(repo["id"]?.Type!=JTokenType.Integer||(long)repo["id"]!=RepositoryId||(string)repo["full_name"]!=Repository)throw new InvalidDataException("Repository identity");
+   step="Release-Abfrage";var listBytes=await fetch(Api+"/releases?per_page=100",2*1024*1024,false,cancel,null).ConfigureAwait(false);
+   step="Release-Antwort auswerten";var list=Json(listBytes) as JArray;if(list==null||list.Any(r=>!(r is JObject)))throw new InvalidDataException("Release catalogue");
+   step="Versionsvergleich";
    var candidates=new List<Tuple<Version,JObject>>();foreach(var release in list.OfType<JObject>())try{var tag=(string)release["tag_name"];if(release["draft"]?.Type==JTokenType.Boolean&&!(bool)release["draft"]&&release["prerelease"]?.Type==JTokenType.Boolean&&!(bool)release["prerelease"]&&tag!=null&&tag.StartsWith("v",StringComparison.Ordinal)){var v=UpdateTransaction.VersionNumber(tag.Substring(1));if(v>UpdateTransaction.VersionNumber(installed))candidates.Add(Tuple.Create(v,release));}}catch(InvalidDataException){}
-   bool invalid=false;foreach(var pair in candidates.OrderByDescending(p=>p.Item1).Take(10)){
+   Exception invalid=null;foreach(var pair in candidates.OrderByDescending(p=>p.Item1).Take(10)){
     string version=pair.Item1.ToString(3),name="Notenblick_"+version+"_Aktualisierung.json";var asset=Asset(pair.Item2,name);if(asset==null)continue;
     try{
-     var bytes=await fetch(AssetUrl(asset,version,name),1024*1024,true,cancel,null).ConfigureAwait(false);if(asset["digest"]?.Type==JTokenType.String&&(string)asset["digest"]!="sha256:"+UpdateTransaction.Digest(bytes))throw new InvalidDataException("Descriptor digest");
+     step="Freigabe-Datei abfragen";var bytes=await fetch(AssetUrl(asset,version,name),1024*1024,true,cancel,null).ConfigureAwait(false);
+     step="Freigabe-Datei auswerten";if(asset["digest"]?.Type==JTokenType.String&&(string)asset["digest"]!="sha256:"+UpdateTransaction.Digest(bytes))throw new InvalidDataException("Descriptor digest");
      var manifest=Json(bytes) as JObject;if(manifest==null)throw new InvalidDataException();if(manifest["approved"]?.Type==JTokenType.Boolean&&!(bool)manifest["approved"])continue;
      return Descriptor(pair.Item2,manifest,installed);
-    }catch(InvalidDataException){invalid=true;}
-   }if(invalid)throw new InvalidDataException("Invalid published update");return null;
+    }catch(InvalidDataException error){invalid=error;}
+   }if(invalid!=null){step="Freigabe-Datei auswerten";throw new InvalidDataException("Invalid published update",invalid);}return null;
+   }catch(Exception error){throw UpdateDiagnostics.At(step,error);}
   }
   public static void Extract(byte[] bytes,UpdateOffer offer,string folder,CancellationToken cancel){
    if(bytes.LongLength!=offer.Size||UpdateTransaction.Digest(bytes)!=offer.Sha256)throw new InvalidDataException("Archive hash");UpdateTransaction.FileList(offer.Files);
@@ -119,18 +210,18 @@ namespace Notenblick.Native {
  public sealed class UpdateClient:IDisposable {
   readonly string root,version,prefsPath;readonly Func<string,CancellationToken,Task<UpdateOffer>> discover;readonly Func<DateTime> now;readonly UpdateSource.Fetch fetch;readonly Func<Tuple<int,long>> identity;readonly object gate=new object();JObject prefs;Task<JObject> check;CancellationTokenSource download;FileStream preparedLock;UpdatePlan prepared;
   public UpdateClient(string root,string version,string preferences=null,Func<string,CancellationToken,Task<UpdateOffer>> discovery=null,Func<DateTime> clock=null,UpdateSource.Fetch transport=null,Func<Tuple<int,long>> processIdentity=null){
-   this.root=UpdateTransaction.RootPath(root);this.version=version;UpdateTransaction.VersionNumber(version);
+   try{this.root=UpdateTransaction.RootPath(root);this.version=version;UpdateTransaction.VersionNumber(version);}catch(Exception error){throw UpdateDiagnostics.At("Installationsordner/Version prüfen",error);}
    discover=discovery??((v,c)=>UpdateSource.Discover(v,c));now=clock??(()=>DateTime.UtcNow);fetch=transport??UpdateSource.Read;identity=processIdentity;
    var dir=preferences??Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Notenblick","Aktualisierungen",UpdateTransaction.Digest(Encoding.UTF8.GetBytes(this.root.ToUpperInvariant())).Substring(0,24));
-   dir=UpdateTransaction.RootPath(dir);if(dir.StartsWith(this.root+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))throw new IOException("Preference location");Directory.CreateDirectory(dir);prefsPath=Path.Combine(dir,"einstellungen.json");UpdateTransaction.NoLink(prefsPath);
+   try{dir=UpdateTransaction.RootPath(dir);if(dir.StartsWith(this.root+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))throw new IOException("Preference location");Directory.CreateDirectory(dir);prefsPath=Path.Combine(dir,"einstellungen.json");UpdateTransaction.NoLink(prefsPath);}catch(Exception error){throw UpdateDiagnostics.At("Lokale Update-Einstellungen öffnen",error);}
    try{prefs=File.Exists(prefsPath)&&new FileInfo(prefsPath).Length<=32768?UpdateSource.Json(File.ReadAllBytes(prefsPath)) as JObject:null;}catch{prefs=null;}if(prefs==null)prefs=new JObject();
   }
-  void Save(){UpdateTransaction.RootPath(Path.GetDirectoryName(prefsPath));UpdateTransaction.AtomicText(prefsPath,prefs.ToString(Formatting.None));}
+  void Save(){try{UpdateTransaction.RootPath(Path.GetDirectoryName(prefsPath));UpdateTransaction.AtomicText(prefsPath,prefs.ToString(Formatting.None));}catch(Exception error){throw UpdateDiagnostics.At("Lokale Speicherung der Update-Einstellungen",error);}}
   JObject PublicOffer(){try{var offer=prefs["offer"] as JObject;if(offer==null||UpdateTransaction.VersionNumber((string)offer["version"])<=UpdateTransaction.VersionNumber(version)||!UpdateSource.NotesValid(offer["notes"]))return null;return new JObject{{"version",offer["version"].DeepClone()},{"notes",offer["notes"].DeepClone()}};}catch{return null;}}
   public JObject State(){lock(gate)return new JObject{{"enabled",prefs["enabled"]?.Type==JTokenType.Boolean&&(bool)prefs["enabled"]},{"hiddenVersion",prefs["hiddenVersion"]?.Type==JTokenType.String?(string)prefs["hiddenVersion"]:""},{"offer",PublicOffer()}};}
   public JObject Preferences(JObject request){lock(gate){if(request["enabled"]!=null){if(request["enabled"].Type!=JTokenType.Boolean)throw new InvalidDataException();prefs["enabled"]=(bool)request["enabled"];}if(request["hiddenVersion"]!=null){string hidden=(string)request["hiddenVersion"];if(hidden!="")UpdateTransaction.VersionNumber(hidden);prefs["hiddenVersion"]=hidden;}Save();return State();}}
   public Task<JObject> Check(bool automatic){lock(gate){if(check!=null&&!check.IsCompleted)return check;if(automatic){DateTime previous;bool recent=DateTime.TryParse((string)prefs["lastAutomaticUtc"],System.Globalization.CultureInfo.InvariantCulture,System.Globalization.DateTimeStyles.RoundtripKind,out previous)&&now()-previous.ToUniversalTime()<TimeSpan.FromDays(1);if(!(bool)State()["enabled"]||recent){var skipped=State();skipped["checked"]=false;return Task.FromResult(skipped);}prefs["lastAutomaticUtc"]=now().ToString("o");Save();}return check=CheckNow();}}
-  async Task<JObject> CheckNow(){using(var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(45))){var offer=await discover(version,timeout.Token).ConfigureAwait(false);lock(gate){prefs["offer"]=offer?.Public();Save();var result=State();result["checked"]=true;return result;}}}
+  async Task<JObject> CheckNow(){string step="Aktualisierungsprüfung";try{using(var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(45))){var offer=await discover(version,timeout.Token).ConfigureAwait(false);step="Lokale Speicherung des Prüfergebnisses";lock(gate){prefs["offer"]=offer?.Public();Save();var result=State();result["checked"]=true;return result;}}}catch(Exception error){throw UpdateDiagnostics.At(step,error);}}
   public async Task<string> Prepare(string requested,Action<string> progress){
    lock(gate){if(download!=null||prepared!=null)throw new IOException("Update already running");download=new CancellationTokenSource(TimeSpan.FromMinutes(10));}
    UpdatePlan plan=null;FileStream ownership=null;try{

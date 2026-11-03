@@ -11,6 +11,7 @@
     if(a.startsWith('setup-')&&Notenblick.setupDraft)return Notenblick.setupAction(el);
     switch (a) {
       case 'update-check':await Notenblick.checkUpdates(false);break;
+      case 'update-copy-error':await Notenblick.copyUpdateError();break;
       case 'update-notes':Notenblick.updateDialog(true);break;
       case 'update-install':Notenblick.updateDialog(false);break;
       case 'update-later':Notenblick.dismissUpdate();break;

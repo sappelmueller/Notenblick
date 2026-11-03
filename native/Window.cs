@@ -13,7 +13,7 @@ namespace Notenblick.Native {
  public sealed class Window:Form {
   const string Origin="https://notenblick.invalid/";
   readonly SemaphoreSlim fileGate=new SemaphoreSlim(1,1);
-  readonly string program;readonly Storage storage;readonly WebView2 view;FileStream ownership;bool mayClose,initializing=true,closingRequest,updateHandoff;UpdateClient updater;
+  readonly string program;readonly Storage storage;readonly WebView2 view;FileStream ownership;bool mayClose,initializing=true,closingRequest,updateHandoff;UpdateClient updater;string updateErrorDetails;
   public static void Run(string program){Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);using(var form=new Window(program))Application.Run(form);}
   Window(string root){program=root;storage=new Storage(root);storage.VerifyWritable();Text="Notenblick";Icon=System.Drawing.Icon.ExtractAssociatedIcon(Path.Combine(program,"Notenblick.exe"));AutoScaleMode=AutoScaleMode.Dpi;var area=SystemInformation.WorkingArea;MinimumSize=new System.Drawing.Size(Math.Min(320,area.Width),Math.Min(240,area.Height));Size=new System.Drawing.Size(Math.Min(1280,area.Width),Math.Min(860,area.Height));StartPosition=FormStartPosition.CenterScreen;WindowState=FormWindowState.Maximized;
    var data=storage.Root;Directory.CreateDirectory(data);try{ownership=new FileStream(Path.Combine(data,"InBenutzung.lock"),FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None);}catch(IOException){throw new IOException("Dieser Notenbestand ist bereits in einem anderen Notenblick-Fenster geöffnet. Bitte schließe es zuerst.");}
@@ -51,9 +51,18 @@ namespace Notenblick.Native {
    JObject response;
    if(((string)req["op"]??"").StartsWith("update-",StringComparison.Ordinal)){
     response=new JObject{{"id",req["id"]},{"ok",false}};
+    bool checking=(string)req["op"]=="update-check";var checkedAt=DateTime.UtcNow;string updateVersion="nicht verfügbar";
+    if(checking)updateErrorDetails=null;
     try{
      if(updateHandoff)throw new IOException();
-     if(updater==null)updater=new UpdateClient(program,System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString(3));
+     // Use the trusted in-memory report, never text or paths supplied by the page.
+     // WebMessageReceived runs on the WinForms STA thread required by Clipboard.
+     if((string)req["op"]=="update-copy-error"){
+      if(string.IsNullOrEmpty(updateErrorDetails))throw new InvalidOperationException("No update error");
+      Clipboard.SetText(updateErrorDetails,TextDataFormat.UnicodeText);response["result"]=true;
+     }else{
+     updateVersion=System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString(3);
+     if(updater==null)updater=new UpdateClient(program,updateVersion);
      switch((string)req["op"]){
       case "update-state":response["result"]=updater.State();break;
       case "update-preferences":response["result"]=updater.Preferences(req);break;
@@ -64,9 +73,13 @@ namespace Notenblick.Native {
        await fileGate.WaitAsync();try{var plan=updater.Take((string)req["token"]);UpdateTransaction.Mark(plan,"authorized");UpdateBootstrap.Start(program,plan.Token,false);updateHandoff=true;updater.HandedOff();mayClose=true;response["result"]=true;BeginInvoke(new Action(Close));}finally{fileGate.Release();}break;
       default:throw new InvalidDataException();
      }
+     }
      response["ok"]=true;
-    }catch(OperationCanceledException){response["error"]="Die Aktualisierung wurde abgebrochen.";response["name"]="AbortError";}
-    catch{response["error"]=(string)req["op"]=="update-check"?"Die Aktualisierung konnte nicht geprüft werden. Du kannst normal weiterarbeiten.":"Die Aktualisierung konnte nicht abgeschlossen werden. Deine Noten sind unverändert.";}
+    }catch(Exception error){
+     if(checking){updateErrorDetails=UpdateDiagnostics.Report(error,updateVersion,checkedAt,"Lokale Update-Einstellungen initialisieren");response["updateDiagnostic"]=updateErrorDetails;response["error"]="Die Aktualisierung konnte nicht geprüft werden. Du kannst normal weiterarbeiten.";}
+     else if(error is OperationCanceledException){response["error"]="Die Aktualisierung wurde abgebrochen.";response["name"]="AbortError";}
+     else response["error"]=(string)req["op"]=="update-copy-error"?"Die Fehlerdetails konnten nicht kopiert werden.":"Die Aktualisierung konnte nicht abgeschlossen werden. Deine Noten sind unverändert.";
+    }
    }
    else if(updateHandoff){response=new JObject{{"id",req["id"]},{"ok",false},{"error","Notenblick wird aktualisiert. Deine Noten sind gespeichert."}};}
    else
