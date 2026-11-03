@@ -29,3 +29,5 @@ Chromium-, Tastatur-, Fokus-, Layout-, Accessibility-Baum- und axe-Prüfungen er
 Die Nutzerabnahme ist keine vollständige Barrierefreiheitszertifizierung. Nicht ausdrücklich bestätigte Einzelprüfungen – etwa mit Microsoft Office, physischem Druck oder allen Windows-Skalierungsstufen – bleiben offen. Aktueller Stand: [Prüfbericht 1.24.0](docs/PRUEFBERICHT-1.24.0.md). Weitere Schritte: [Windows-Prüfplan](docs/WINDOWS-PRUEFUNG.md).
 
 Probleme bitte mit Version, Tastenschritten und erwartetem Verhalten als Issue melden. Keine echten Schülerdaten hochladen.
+
+Version 1.24.0 wurde am 3. November 2026 ausdrücklich mit reduziertem Abschlussumfang freigegeben. Die Aktualisierungsprüfung ist unter Windows bestätigt. Die letzte Kontrolle betrifft nur „Deine Version“ und die nebeneinander angeordneten Kontrollfelder; sie ersetzt weder eine umfassende NVDA-/Braille-Abnahme noch den noch offenen praktischen Windows-Installations-/Wiederherstellungstest.

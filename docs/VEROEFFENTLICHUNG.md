@@ -11,6 +11,12 @@
 9. Veröffentlichte Downloads erneut abrufen. Hashes, vollständige Dateiliste, Version, Tag/Quellbaum und Lizenzen abgleichen. Tatsächlichen GitHub-Stand kontrollieren. Bestehende Tags und Downloads nicht ersetzen.
 10. Erst danach vollständig übernommene Entwicklungsbranches löschen. Für 1.24.0 betrifft dies `codex/1.23.3-bedienung-github` und `entwicklung/1.24.0`. 1.23.3 wird nicht separat veröffentlicht. Die drei historischen PR-Referenzen bleiben beim Support; keine weitere Historienbereinigung.
 
+## Ausdrückliche Ausnahme für 1.24.0 am 3. November 2026
+
+Sebastian Müller hat das stabile Release 1.24.0 einschließlich `approved: true` ausdrücklich mit reduziertem Abschlussumfang freigegeben. Nur „Deine Version“, beide Kontrollfeldanordnungen, Windows-Kompilierung, Version und grundlegende Archiv-/Integritätsprüfung werden neu geprüft. Kein erneuter vollständiger Release-Lauf; Windows-Installation und Wiederherstellung bleiben praktisch offen. [Verbindlicher Nachweis](PRUEFBERICHT-1.24.0.md).
+
+Für genau diese Freigabe werden die vier Dateien zunächst regulär mit `dev/package.py` erstellt. Danach wird ausschließlich der versionsgebundene Deskriptor 1.24.0 aufgrund dieser Zustimmung auf `approved: true` gesetzt und dessen neue SHA-256/Größe im Prüfverzeichnis nachgeführt. Vor Veröffentlichung werden Herkunft, Version, Datenkompatibilität, vollständige Einzeldateien und alle zusammengehörigen Hashes nochmals abgeglichen. Der normale `--approve-update`-Pfad und dessen Volltest-Anforderung werden nicht geändert; es wird kein vollständiger Testnachweis vorgetäuscht. Andere Versionen sind durch diese Ausnahme nicht freigegeben.
+
 ## Texte
 
 Release-Titel: **Notenblick X.Y.Z**. Unter **Was ist neu?** ausschließlich die gepflegten kurzen Aussagen verwenden. Unter **Download** Windows-ZIP, Quellcode und Prüfsummen verlinken. Unter **Hinweise** nur notwendige Voraussetzungen und bekannte Einschränkungen nennen. Technische Prüfergebnisse separat verlinken. Auf `main` nennt die README immer die freigegebene Version und bietet direkt nach der Vorstellung „Aktuelle Version herunterladen“ mit `/releases/latest` an.

@@ -1,6 +1,6 @@
 # Änderungen
 
-## 1.24.0 – Testversion
+## 1.24.0 – 3. November 2026
 
 - Notenblick startet maximiert; Fenster lassen sich weiterhin verkleinern und wiederherstellen.
 - Fach- und Registerkurzbefehle bestätigen den Bereich zuverlässiger. Die doppelte Fachansage beim Wechsel aus anderen Hauptbereichen wird gezielt vermieden.
@@ -8,9 +8,11 @@
 - Neuerungen stehen kurz im Programm. Hinweise können für eine Sitzung oder genau diese Version ausgeblendet werden.
 - Die GitHub-Seite erklärt Funktionen, Downloads und Datensicherung übersichtlicher.
 
-Enthält die unveröffentlichte Zwischenentwicklung 1.23.3. Windows-/NVDA-/Braille-Abnahme von 1.24.0 und ausdrückliche Freigabe stehen noch aus.
+Enthält die Zwischenentwicklung 1.23.3. Aktualisierungsprüfung unter Windows bestätigt; klare Rückmeldungen, kopierbare Fehlerdetails, versionsbezogene Hinweise und Fokus auf Weiterarbeiten ergänzt. „Deine Version“ und nebeneinander ausgerichtete Kontrollfelder schließen die Oberfläche ab.
 
-## 1.23.3 – Testversion
+Auf ausdrücklichen Wunsch mit gezielten Abschlussprüfungen veröffentlicht; kein erneuter vollständiger Release-Testlauf. Automatische Windows-Installation und Wiederherstellung bleiben praktisch offen. [Prüfumfang](docs/PRUEFBERICHT-1.24.0.md).
+
+## 1.23.3 – Zwischenentwicklung, in 1.24.0 enthalten
 
 - Startet maximiert; Verkleinern, Verschieben und Wiederherstellen bleiben möglich.
 - Wiederholte Fach- und Registerkurzbefehle bestätigen den Bereich; unbesetzte Ziffern melden sich zuverlässig über die zentrale Statusquelle.

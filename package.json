@@ -5,7 +5,8 @@
     "Notenblick startet jetzt maximiert.",
     "Tastenkombinationen werden mit NVDA zuverlässiger angesagt.",
     "Neue Versionen lassen sich direkt im Programm finden und installieren.",
-    "Die GitHub-Seite ist übersichtlicher und erklärt die Funktionen verständlicher."
+    "Aktualisierungshinweise lassen sich vorübergehend oder für eine bestimmte Version ausblenden.",
+    "Die Aktualisierungsprüfung zeigt klare Rückmeldungen und kopierbare Fehlerdetails."
   ],
   "private": true,
   "description": "Lokaler Windows-Notenrechner; Node-Abhängigkeiten ausschließlich für Entwicklungstests",

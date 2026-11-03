@@ -1,6 +1,6 @@
 # Technischer Einstieg
 
-Notenblick 1.24.0 (Testversion): Windows, .NET Framework 4.8, WinForms und WebView2. Ziel ausschließlich `sappelmueller/Notenblick`, ID `1432518047`; privat oder öffentlich. Actions aus. Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in LICENSE-EXCEPTION. Vor Änderungen [AGENTS.md](../AGENTS.md) beachten.
+Notenblick 1.24.0: Windows, .NET Framework 4.8, WinForms und WebView2. Ziel ausschließlich `sappelmueller/Notenblick`, ID `1432518047`; privat oder öffentlich. Actions aus. Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in LICENSE-EXCEPTION. Vor Änderungen [AGENTS.md](../AGENTS.md) beachten.
 
 ## Aufbau
 
@@ -38,3 +38,5 @@ Weitere Einzelheiten: [Entwicklung](../ENTWICKLUNG.md), [effiziente Prüfungen](
 1.23.3: `focusTarget(..., {announceIfFocused:true})` ergänzt nur bei direkten Kurzbefehlen eine verzögerte Bestätigung ohne Refokus. Der bestehende Announcer verwirft überholte Meldungen. Aktive Tabs und dasselbe Fach bleiben bei passender Öffnungsregel montiert; `queueScrollSync` bündelt Größenprüfungen ohne gleiche tabindex-Werte neu zu schreiben. `WindowState.Maximized` steht vor `Shown`; kein späteres Größenumschalten. Regressionen in den vorhandenen Gruppen v1231, v1230-browser und loader.
 
 1.24.0: `app/updates.js` verwendet die vorhandenen Dialog-, Fokus- und Meldungskomponenten. `UpdateClient.cs` prüft freiwillig ausschließlich die feste GitHub-Quelle, speichert Updateoptionen außerhalb von Daten und prüft Download/Dateiliste. `UpdateTransaction.cs` hält Austausch und Rückfall auf EXE/Programm begrenzt; der eingebettete AnyCPU-Helfer startet außerhalb der Installation. Der Bootstrap kann einen abgebrochenen Austausch vor dem Laden von Programmdateien wiederherstellen. Technische Grenzen und Ablauf: [Prüfbericht 1.24.0](PRUEFBERICHT-1.24.0.md).
+
+Veröffentlichung 1.24.0: ausdrücklich freigegebener reduzierter Prüfumfang, kein neuer vollständiger Release-Lauf. Die Windows-Aktualisierungsprüfung wurde bestätigt; vollständige automatische Installation/Rückfall und umfassende erneute NVDA-/Braille-/ARM64-Abnahme bleiben offen. [Nachweis](PRUEFBERICHT-1.24.0.md). Die datierten UPDATER-Berichte beschreiben historische Entwicklungsschritte.

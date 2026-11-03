@@ -1,6 +1,6 @@
 # Prüfberichte
 
-Aktuelle **Testversion: Notenblick 1.24.0**. Der [Versionsbericht](docs/PRUEFBERICHT-1.24.0.md) beschreibt Änderungen, automatische Prüfungen und noch erforderliche Praxistests. Die offizielle Veröffentlichung wartet auf Sebastian Müllers ausdrückliche Freigabe. 1.23.3 bleibt als unveröffentlichter Zwischenstand dokumentiert.
+Aktuelle offizielle Version: **Notenblick 1.24.0**. Sebastian Müller hat die Veröffentlichung am **3. November 2026** ausdrücklich mit reduziertem Prüfumfang freigegeben. Der [aktuelle Versionsbericht](docs/PRUEFBERICHT-1.24.0.md) nennt die tatsächlich neu ausgeführten Kontrollen, frühere Nachweise und die offenen Windows-Installations-/Wiederherstellungstests. Kein erneuter vollständiger Release-Testlauf. 1.23.3 ist vollständig in 1.24.0 enthalten und wird nicht separat veröffentlicht.
 
 Für **1.23.2** bestätigte Sebastian Müller am 2. November 2026 die praktische Verwendung mit **Windows, NVDA und Braille** auf einem Windows-PC und unter Windows auf ARM in Parallels. PowerShell bestätigte Prozessarchitektur ARM64 und den geladenen ARM64-WebView2-Loader. Diese Nutzerabnahme ist von automatisierten Prüfungen und der erneuten Abnahme von 1.24.0 getrennt. Der [historische Versionsbericht](docs/PRUEFBERICHT-1.23.2.md) bleibt unverändert.
 

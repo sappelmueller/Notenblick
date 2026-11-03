@@ -1,6 +1,6 @@
 # Entwicklung und Erstellung
 
-Technischer Stand: Notenblick 1.23.2. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
+Technischer Stand: Notenblick 1.24.0. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
 
 ## Werkzeuge
 
@@ -31,3 +31,5 @@ Die Ausgangsbasis während einer Aufgabe nicht wechseln. Vor einer unmittelbar f
 Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in [LICENSE-EXCEPTION](LICENSE-EXCEPTION). Beiträge und Freigaben: [CONTRIBUTING.md](CONTRIBUTING.md) und [Veröffentlichungsablauf](docs/VEROEFFENTLICHUNG.md). GitHub Actions bleiben deaktiviert. Für echte Windows-/NVDA-/Braille-Tests gilt der [Windows-Prüfplan](docs/WINDOWS-PRUEFUNG.md).
 
 Die frühere ausführliche Architekturbeschreibung bis 1.14 ist als [historischer Hintergrund](docs/archiv/ENTWICKLUNG-bis-1.14.md) erhalten. Ihre damaligen Versionslisten, Beschriftungen und Befehle sind keine aktuellen Vorgaben.
+
+Für die offizielle 1.24.0 gilt die ausdrücklich freigegebene Ausnahme mit reduziertem Prüfumfang: [Veröffentlichung und Nachweis](docs/PRUEFBERICHT-1.24.0.md). Sie ist kein vollständiger Release-Nachweis und ändert das allgemeine Prüfverfahren nicht.

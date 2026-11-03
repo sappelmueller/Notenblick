@@ -12,6 +12,21 @@ const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+new 
  await page.addScriptTag({content:'globalThis.installUpdateTestHost='+require('./update-fixture.cjs').toString()});
  await page.evaluate(async()=>{await prepareContext(11);installUpdateTestHost();Notenblick.activateGroup('main','settings');Notenblick.activateGroup('settings','general');updateTestHost.offline=true;updateTestHost.copyFails=true;});
  const focus=()=>page.evaluate(()=>document.activeElement.id);
+ if(process.argv.includes('--final-layout')){
+  await page.evaluate(async()=>{updateTestHost.offline=false;await Notenblick.checkUpdates(false);});
+  for(const [width,zoom] of [[1280,1],[640,2],[320,2]]){
+   await page.setViewportSize({width,height:900});await page.evaluate(z=>document.documentElement.style.zoom=String(z),zoom);
+   await page.evaluate(()=>Notenblick.activateGroup('main','settings'));assert.equal(await page.locator('.update-settings>p').first().textContent(),'Deine Version: 1.24.0');
+   for(const id of ['updateAuto','updateHide']){
+    if(id==='updateHide')await page.evaluate(()=>{Notenblick.updates.sessionHidden='';Notenblick.updates.hiddenVersion='';updateTestHost.state.hiddenVersion='';Notenblick.activateGroup('main','home');Notenblick.syncUpdateViews();});
+    const layout=await page.locator('#'+id).evaluate(input=>{const span=input.nextElementSibling,a=input.getBoundingClientRect(),b=span.getBoundingClientRect(),label=input.closest('label'),range=document.createRange();range.setStart(span.firstChild,0);range.setEnd(span.firstChild,Math.min(5,span.firstChild.length));const first=range.getBoundingClientRect();return {right:b.left>=a.right+4,sameLine:a.top<first.bottom&&a.bottom>first.top,fits:label.scrollWidth<=label.clientWidth+1,label:label.textContent};});
+    assert.equal(layout.right,true,id+' checkbox left of text');assert.equal(layout.sameLine,true,id+' first text line next to checkbox');assert.equal(layout.fits,true,id+' wraps only text');
+    await page.locator('#'+id).focus();await page.keyboard.press('Space');
+    if(id==='updateAuto')assert.equal(await focus(),id);else{await page.waitForFunction(()=>document.querySelector('#homeUpdateSlot').hidden);assert.equal(await focus(),'continueTitle');}
+   }
+  }
+  assert.deepEqual(errors,[]);console.log('Release UI: Deine Version, both checkbox labels on the same row, text wrapping and keyboard/focus at three widths/scales passed.');return;
+ }
  for(const [width,zoom] of [[1280,1],[640,2],[320,1]]){
   await page.setViewportSize({width,height:900});await page.evaluate(z=>document.documentElement.style.zoom=String(z),zoom);
   await page.locator('#updateCheck').focus();await page.keyboard.press('Enter');await page.waitForSelector('#updateCopyError:visible');assert.equal(await focus(),'updateCheck');
