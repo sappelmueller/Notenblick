@@ -1,6 +1,13 @@
 {
   "name": "notenblick",
-  "version": "1.23.2",
+  "version": "1.24.0",
+  "releaseNotes": [
+    "Notenblick startet jetzt maximiert.",
+    "Tastenkombinationen werden mit NVDA zuverlässiger angesagt.",
+    "Neue Versionen lassen sich direkt im Programm finden und installieren.",
+    "Aktualisierungshinweise lassen sich vorübergehend oder für eine bestimmte Version ausblenden.",
+    "Die Aktualisierungsprüfung zeigt klare Rückmeldungen und kopierbare Fehlerdetails."
+  ],
   "private": true,
   "description": "Lokaler Windows-Notenrechner; Node-Abhängigkeiten ausschließlich für Entwicklungstests",
   "devDependencies": {

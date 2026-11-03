@@ -9,6 +9,7 @@ using System.Windows.Forms;
 [assembly: AssemblyVersion("@ASSEMBLY_VERSION@")]
 [assembly: AssemblyFileVersion("@ASSEMBLY_VERSION@")]
 [assembly: AssemblyInformationalVersion("@VERSION@")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8", FrameworkDisplayName = ".NET Framework 4.8")]
 
 public static class Launcher
 {
@@ -16,11 +17,19 @@ public static class Launcher
     static extern bool SetDllDirectory(string path);
 
     [STAThread]
-    public static void Main()
+    public static void Main(string[] args)
     {
         try
         {
+            // Set before loading program assemblies/WebView2 or touching System.Net:
+            // its compatibility flags are cached at the first network initialization.
+            // SystemDefault (0) must be accepted by SslState.ValidateCreateContext.
+            AppContext.SetSwitch("Switch.System.Net.DontEnableSystemDefaultTlsVersions", false);
+            AppContext.SetSwitch("Switch.System.Net.DontEnableSchUseStrongCrypto", false);
+
             var root = AppDomain.CurrentDomain.BaseDirectory;
+            bool probe = args.Length == 1 && args[0] == "--verify-update";
+            if (!probe && Notenblick.Native.UpdateBootstrap.RecoverBeforeStart(root)) return;
             var libraries = new Notenblick.Native.ProgramLibraries(root);
             AppDomain.CurrentDomain.AssemblyResolve += libraries.Resolve;
 
@@ -44,6 +53,15 @@ public static class Launcher
                 .GetMethod("SetLoaderDllFolderPath", new Type[] { typeof(string) })
                 .Invoke(null, new object[] { nativeFolder });
 
+            // Verify the release without constructing Window/Storage or opening Daten.
+            if (probe) {
+                libraries.Get("Microsoft.Web.WebView2.Core")
+                    .GetType("Microsoft.Web.WebView2.Core.CoreWebView2Environment", true)
+                    .GetMethod("GetAvailableBrowserVersionString", new Type[] { typeof(string) })
+                    .Invoke(null, new object[] { null });
+                return;
+            }
+
             libraries.Get("Notenblick.Fenster")
                 .GetType("Notenblick.Native.Window", true)
                 .GetMethod("Run")
@@ -51,6 +69,7 @@ public static class Launcher
         }
         catch (Exception error)
         {
+            if (args.Length == 1 && args[0] == "--verify-update") { Environment.ExitCode = 1; return; }
             while (error.InnerException != null) error = error.InnerException;
             MessageBox.Show("Notenblick @VERSION@ konnte nicht geöffnet werden.\n\n" + error.Message,
                 "Notenblick @VERSION@", MessageBoxButtons.OK, MessageBoxIcon.Error);

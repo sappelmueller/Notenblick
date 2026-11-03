@@ -17,6 +17,7 @@
       const error = Error(msg.error || 'Die Datei konnte nicht geöffnet werden.');
       error.name = msg.name || 'Error';
       if(typeof msg.code==='string'&&msg.code.startsWith('export-'))error.code=msg.code;
+      if(task.op==='update-check'&&typeof msg.updateDiagnostic==='string')error.updateDiagnostic=msg.updateDiagnostic;
       task.reject(error);
     }
   });
@@ -25,11 +26,12 @@
     const id = session + '-' + (++sequence);
     return new Promise((resolve, reject) => {
       // Native save/print UI may remain open for more than two minutes.
-      const timer = op==='download'||op==='print-preview'?null:setTimeout(() => {
+      const timer = op==='download'||op==='print-preview'||op==='update-prepare'?null:setTimeout(() => {
         pending.delete(id);
         reject(Error('Das Speichern dauert länger als erwartet. Deine Eingaben bleiben geöffnet.'));
       }, op.startsWith('migration') ? 300000 : 120000);
       pending.set(id, {
+        op,
         resolve,
         reject,
         progress,

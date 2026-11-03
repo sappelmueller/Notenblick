@@ -29,7 +29,7 @@ Notenblick.bind = function bind(id, keys, onActivate, before = Notenblick.canLea
 Notenblick.initTabs = function initTabs() {
   const links = [...Notenblick.$('#mainTabs').querySelectorAll('a')];
   const show=key=>{for(const item of links){const active=item.dataset.key===key;if(active)item.setAttribute('aria-current','page');else item.removeAttribute('aria-current');Notenblick.$('#'+item.dataset.key).hidden=!active;}Notenblick.ui.main=key;};
-  Notenblick.groups.main = {activate(link, focus = false, update = false) {
+  Notenblick.groups.main = {activate(link, focus = false, update = false, {prepared=false}={}) {
     if(Notenblick.contextHelp&&!Notenblick.contextHelp.dialog)Notenblick.closeContextHelp();
     const key=link.dataset.key,origin=Notenblick.helpOrigin,returning=Notenblick.ui.main==='help'&&!!origin;
     // Help may be read with an invalid entry or an unsaved settings draft.
@@ -39,7 +39,7 @@ Notenblick.initTabs = function initTabs() {
     if(key==='help'&&Notenblick.ui.main!=='help')Notenblick.helpOrigin=Notenblick.ui.main;else if(key!=='help')Notenblick.helpOrigin=null;
     Notenblick.closeMenu?.(false);Notenblick.clearAnnouncement();show(key);
     if(update)Notenblick.$('#actionFeedback').hidden=true;
-    if(!(returning&&key===origin))Notenblick.refreshCurrent();
+    if(!prepared&&!(returning&&key===origin))Notenblick.refreshCurrent();
     if (focus) link.focus();
     if (update) Notenblick.remember();
     return true;
@@ -52,7 +52,7 @@ Notenblick.initTabs = function initTabs() {
     Notenblick.ui.adminView = key; Notenblick.renderAdminSelection(); Notenblick.renderAdminPane(key); if (update) Notenblick.remember();
   });
 };
-Notenblick.activateGroup = function activateGroup(group, key, focus = false, update = false) {
+Notenblick.activateGroup = function activateGroup(group, key, focus = false, update = false, options={}) {
   if(group==='notes'){Notenblick.ensureNoteTabs();key=Notenblick.mapNotesView(key);}
   const map = {
       main: 'mainTabs',
@@ -61,7 +61,7 @@ Notenblick.activateGroup = function activateGroup(group, key, focus = false, upd
       settings:'settingsTabs',backup:'backupTabs',help:'helpTabs'
     },
     tab = Notenblick.$('#' + map[group]).querySelector(`[data-key="${key}"]`);
-  return tab ? Notenblick.groups[group].activate(tab, focus, update) : false;
+  return tab ? Notenblick.groups[group].activate(tab, focus, update, options) : false;
 };
 Notenblick.normalizeContext = function normalizeContext() {
   const u=Notenblick.ui,ys=Notenblick.data.years;
@@ -75,13 +75,20 @@ Notenblick.normalizeContext = function normalizeContext() {
   if (!Notenblick.data.years.some(y => y.id === Notenblick.ui.adminYear)) Notenblick.ui.adminYear = Notenblick.ui.year;
 };
 Notenblick.courseChoices=function(yid=Notenblick.ui.year){const collator=new Intl.Collator('de',{numeric:true,sensitivity:'base'}),classes=new Map(Notenblick.data.classes.filter(c=>c.yearId===yid&&!c.archived).map(c=>[c.id,c]));return Notenblick.data.courses.filter(c=>classes.has(c.classId)&&!c.archived).sort((a,b)=>Notenblick.compareClasses(classes.get(a.classId),classes.get(b.classId))||collator.compare(a.name,b.name)||a.id.localeCompare(b.id));};
-Notenblick.chooseContext=function({classId,courseId,historical=false,openNotes=false,view=null}={}){
+Notenblick.chooseContext=function({classId,courseId,historical=false,openNotes=false,view=null,shortcut=false}={}){
  const A=Notenblick;if(!A.canLeave())return false;
+ const previous={main:A.ui.main,year:A.ui.year,class:A.ui.class,course:A.ui.course};
  const course=courseId&&A.data.courses.find(c=>c.id===courseId),cl=A.data.classes.find(c=>c.id===(course?.classId||classId||A.ui.class));if(!cl)return false;
  if(cl.yearId!==A.ui.year&&!historical)return false;
  if(historical){A.ui.year=cl.yearId;A.ui.historicalYear=cl.yearId===A.ui.workingYear?'':cl.yearId;}
  A.ui.class=cl.id;A.ui.course=course?.id||A.ui.selections[cl.yearId+':'+cl.id]?.course||'';A.normalizeContext();
- A.openCourseWorkspace({view});A.openedNotesCourse=A.ui.course;A.ui.selections[cl.yearId+':'+cl.id]={course:A.ui.course};A.rendered={};if(openNotes)A.activateGroup('main','notes',false,true);else A.renderNotes();A.remember();return true;
+ if(previous.main==='notes'&&previous.year===A.ui.year&&previous.class===A.ui.class&&previous.course===A.ui.course&&(view||(A.prefs.courseOpenView==='overview'?'overview':A.W().view))===A.W().view){A.clearAnnouncement();return true;}
+ A.openCourseWorkspace({view});A.openedNotesCourse=A.ui.course;A.ui.selections[cl.yearId+':'+cl.id]={course:A.ui.course};A.rendered={};
+ if(openNotes&&previous.main!=='notes'){
+  // Finish the heading and its accessible name while the destination is hidden.
+  // Exposing an old name, changing it and focusing it can produce two UIA reports.
+  A.renderNotes();if(shortcut)A.labelCourseHeading();A.activateGroup('main','notes',false,true,{prepared:true});
+ }else if(openNotes)A.activateGroup('main','notes',false,true);else A.renderNotes();A.remember();return true;
 };
 Notenblick.openCourseWorkspace=function({view=null}={}){const A=Notenblick;A.clearAnnouncement();A.entrySession=null;if(view||A.prefs.courseOpenView==='overview'){A.W().view=view||'overview';A.W().assessmentWorkOpen=false;}};
 Notenblick.fillSelection=function(yid=Notenblick.ui.year,cid=Notenblick.ui.class,fid=Notenblick.ui.course){

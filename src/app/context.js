@@ -67,7 +67,7 @@ Notenblick.error=function(message='',kind='input'){
 };
 Notenblick.announcementEpoch=0;
 Notenblick.clearAnnouncement=function(){const A=Notenblick;A.announcementEpoch++;clearTimeout(A.announcementTimer);clearTimeout(A.announcementClearTimer);A.$('#announcement').textContent='';};
-Notenblick.announce=function(text){const A=Notenblick,el=A.$('#announcement'),same=el.textContent===text;A.clearAnnouncement();const epoch=A.announcementEpoch;const write=()=>{if(epoch!==A.announcementEpoch)return;el.textContent=text;A.announcementClearTimer=setTimeout(()=>{if(epoch===A.announcementEpoch)el.textContent='';},Math.max(15000,text.length*100));};if(same)A.announcementTimer=setTimeout(write,30);else write();};
+Notenblick.announce=function(text,{defer=false}={}){const A=Notenblick,el=A.$('#announcement'),same=el.textContent===text;A.clearAnnouncement();const epoch=A.announcementEpoch;const write=()=>{if(epoch!==A.announcementEpoch)return;el.textContent=text;A.announcementClearTimer=setTimeout(()=>{if(epoch===A.announcementEpoch)el.textContent='';},Math.max(15000,text.length*100));};if(same||defer)A.announcementTimer=setTimeout(write,100);else write();};
 // Visible messages have no live semantics. The existing single status source
 // announces each completed action, including a repeated deliberate action.
 Notenblick.feedbacks={};

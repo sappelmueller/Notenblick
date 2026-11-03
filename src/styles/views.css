@@ -550,3 +550,28 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 .help-tabs{min-width:0}.help-tabs li{min-width:0;max-width:100%}.help-tabs a{min-width:0;max-width:100%}
 
 @media(max-width:400px){.participant-list{padding:8px}.participant-list .check{padding:4px 0;column-gap:6px}}
+
+/* Optional updates share the home panels and ordinary settings layout. */
+.update-card{border-inline-start:5px solid var(--accent);margin-bottom:24px;overflow-wrap:anywhere}
+.update-card .button-row{margin-bottom:16px;flex-wrap:wrap}
+.update-card .check,.update-settings .update-auto{display:grid;grid-template-columns:1.1rem minmax(0,1fr);align-items:start;column-gap:8px;max-width:100%;min-width:0;cursor:pointer}
+.update-card .check input,.update-settings .update-auto input{width:1rem;height:1rem;justify-self:start;margin:3px 0 0}
+.update-settings{border-top:1px solid var(--line);padding-top:28px;margin-top:28px;max-width:800px}
+.update-settings .update-auto{margin-top:20px;margin-bottom:12px}
+.update-result{margin:16px 0;padding:12px 16px;border:1px solid var(--line);border-inline-start:4px solid var(--accent);border-radius:6px;background:var(--soft);overflow-wrap:anywhere}
+.update-result[data-state=current]{border-inline-start-style:double}
+.update-result[data-state=available]{background:#edf3f8;border-inline-start-color:#315a7a}
+.update-result[data-state=error]{background:#fff3f0;border-color:var(--red);border-style:dashed}
+.update-result[data-state=checking]{background:#f6f8f6;border-inline-start-style:dotted}
+#updateCheck[aria-disabled=true]:not(:disabled){opacity:.65;cursor:wait}
+.update-card #homeUpdateVersion{font-weight:600}
+.update-notes{padding-inline-start:24px}
+.update-notes li{margin-bottom:12px}
+@media(forced-colors:active){.update-card{border:2px solid CanvasText}.update-result{background:Canvas;color:CanvasText;border-color:CanvasText}}
+
+.update-card .check span,.update-auto span{min-width:0;overflow-wrap:anywhere}
+.update-card .check input,.update-auto input{flex-shrink:0}
+
+.update-card .button-row .button,.update-settings .button-row .button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+#settingsTabs li{min-width:0;max-width:100%}
+#settingsTabs a{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}

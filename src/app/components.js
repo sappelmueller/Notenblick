@@ -1,12 +1,15 @@
 /* Shared menus, table headings and landmark normalization. No per-view copies. */
 (function(A){'use strict';
 // All intentional context focus uses this policy; selectors keep native focus.
-A.focusTarget=function(target,{preventScroll=false}={}){
+A.focusTarget=function(target,{preventScroll=false,announceIfFocused=false}={}){
  const el=typeof target==='string'?document.getElementById(target):target;
  if(!el?.isConnected||el.disabled||el.matches(':disabled')||el.closest('[hidden],[inert]')||el.closest('dialog:not([open])'))return false;
  for(let p=el;p;p=p.parentElement){if(p.tagName==='DETAILS'&&!p.open&&!p.querySelector('summary')?.contains(el))return false;const style=getComputedStyle(p);if(style.display==='none'||style.visibility==='hidden')return false;}
- if(/^H[1-6]$/.test(el.tagName))el.tabIndex=-1;
- if(document.activeElement!==el)el.focus({preventScroll});return document.activeElement===el;
+ if(/^H[1-6]$/.test(el.tagName)&&el.getAttribute('tabindex')!=='-1')el.tabIndex=-1;
+ if(announceIfFocused)A.clearAnnouncement();
+ if(document.activeElement!==el)el.focus({preventScroll});
+ else if(announceIfFocused&&/^H[1-6]$/.test(el.tagName))A.announce(el.getAttribute('aria-label')||el.textContent.trim(),{defer:true});
+ return document.activeElement===el;
 };
 let counter=0,currentMenu=null;
 A.cleanupShortcutMenu=function(focus=true){const holder=document.getElementById('shortcutAddMenu');if(holder){holder.remove();if(focus)A.focusTarget(A.shortcutMenuOrigin);A.shortcutMenuOrigin=null;}};
@@ -19,8 +22,20 @@ const names={overview:'Notenübersicht',assessments:'Leistungen',pupil:'Schüler
 A.setContent=function(id,html,name=names[id]){A.$('#'+id).innerHTML=name===false?html:`<div role="region" aria-label="${A.esc(name)}">${html}</div>`;};
 A.viewHeader=(title,id,primary,kind)=>`<h2 class="notes-heading" id="${id}" tabindex="-1">${A.esc(title)}</h2><div class="notes-actions">${primary||''}${A.b('output','Exportieren',`data-kind="${kind}"`,'button export-action')}</div>`;
 A.viewOptions=(content,id='areaViewDetails',summary='areaViewSummary')=>`<details class="view-options" id="${id}" data-view-options><summary id="${summary}">Ansicht anpassen</summary><div class="view-options-body">${content}</div></details>`;
-A.syncScrollTables=function(){for(const wrap of document.querySelectorAll('.table-wrap,.participant-list')){const scrollable=wrap.scrollWidth>wrap.clientWidth+1||wrap.scrollHeight>wrap.clientHeight+1;if(scrollable)wrap.setAttribute('tabindex','0');else wrap.removeAttribute('tabindex');}const content=A.$('#dialogContent');if(content){const scrollable=A.$('#dialog').open&&content.scrollHeight>content.clientHeight+1,hasControl=[...content.querySelectorAll('a[href],button:not(:disabled),input:not(:disabled):not([type=hidden]),select:not(:disabled),textarea:not(:disabled),summary,[tabindex="0"]')].some(el=>!el.closest('[hidden]')&&el.getBoundingClientRect().width>0);if(scrollable&&!hasControl)content.setAttribute('tabindex','0');else content.removeAttribute('tabindex');}};
-window.addEventListener('resize',()=>{A.syncScrollTables();if(currentMenu)A.closeMenu(false);});
+A.syncScrollTables=function(){
+ const updates=[];
+ for(const wrap of document.querySelectorAll('.table-wrap,.participant-list')){
+  if(wrap.closest('[hidden],[inert],dialog:not([open])'))continue;
+  updates.push([wrap,wrap.scrollWidth>wrap.clientWidth+1||wrap.scrollHeight>wrap.clientHeight+1]);
+ }
+ const content=A.$('#dialogContent');
+ if(content){const scrollable=A.$('#dialog').open&&content.scrollHeight>content.clientHeight+1,hasControl=scrollable&&[...content.querySelectorAll('a[href],button:not(:disabled),input:not(:disabled):not([type=hidden]),select:not(:disabled),textarea:not(:disabled),summary,[tabindex="0"]')].some(el=>!el.closest('[hidden],[inert]')&&el.getBoundingClientRect().width>0);updates.push([content,scrollable&&!hasControl]);}
+ // Read layout first; update only changed attributes to avoid repeated AX work.
+ for(const[el,scrollable]of updates){if(scrollable){if(el.getAttribute('tabindex')!=='0')el.setAttribute('tabindex','0');}else if(el.hasAttribute('tabindex'))el.removeAttribute('tabindex');}
+};
+let scrollSyncPending=false;
+A.queueScrollSync=function(){if(scrollSyncPending)return;scrollSyncPending=true;requestAnimationFrame(()=>{scrollSyncPending=false;A.syncScrollTables();});};
+window.addEventListener('resize',()=>{A.queueScrollSync();if(currentMenu)A.closeMenu(currentMenu.menu.contains(document.activeElement));});
 // Layout/zoom can change scrollability without a window resize or new nodes.
-if(window.ResizeObserver){const observer=new ResizeObserver(()=>A.syncScrollTables());observer.observe(A.$('#main'));observer.observe(A.$('#dialogContent'));}
+if(window.ResizeObserver){const observer=new ResizeObserver(A.queueScrollSync);observer.observe(A.$('#main'));observer.observe(A.$('#dialogContent'));}
 })(globalThis.Notenblick);

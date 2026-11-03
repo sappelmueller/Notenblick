@@ -12,7 +12,8 @@ namespace Notenblick.Native {
   static ushort U16(byte[] bytes,int offset){if(offset<0||offset>bytes.Length-2)throw new InvalidDataException();return (ushort)(bytes[offset]|bytes[offset+1]<<8);}
   static uint U32(byte[] bytes,int offset){return (uint)(U16(bytes,offset)|(uint)U16(bytes,offset+2)<<16);}
   static void Require(bool value){if(!value)throw new InvalidDataException();}
-  static Dictionary<string,uint> DirectoryCrc(byte[] bytes){
+  public static uint UpdateCrc(uint value,byte[] bytes,int count){if(count<0||count>bytes.Length)throw new ArgumentOutOfRangeException();for(int i=0;i<count;i++)value=CrcTable[(value^bytes[i])&255]^(value>>8);return value;}
+  public static Dictionary<string,uint> DirectoryCrc(byte[] bytes){
    int end=-1;for(int i=bytes.Length-22;i>=Math.Max(0,bytes.Length-65557);i--)if(U32(bytes,i)==0x06054b50&&i+22+U16(bytes,i+20)==bytes.Length){end=i;break;}
    Require(end>=0&&U16(bytes,end+4)==0&&U16(bytes,end+6)==0);
    int count=U16(bytes,end+10);Require(count>0&&count<=4096&&U16(bytes,end+8)==count);

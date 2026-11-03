@@ -13,14 +13,14 @@ namespace Notenblick.Native {
  public sealed class Window:Form {
   const string Origin="https://notenblick.invalid/";
   readonly SemaphoreSlim fileGate=new SemaphoreSlim(1,1);
-  readonly string program;readonly Storage storage;readonly WebView2 view;FileStream ownership;bool mayClose,initializing=true,closingRequest;
+  readonly string program;readonly Storage storage;readonly WebView2 view;FileStream ownership;bool mayClose,initializing=true,closingRequest,updateHandoff;UpdateClient updater;string updateErrorDetails;
   public static void Run(string program){Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);using(var form=new Window(program))Application.Run(form);}
-  Window(string root){program=root;storage=new Storage(root);storage.VerifyWritable();Text="Notenblick";Icon=System.Drawing.Icon.ExtractAssociatedIcon(Path.Combine(program,"Notenblick.exe"));Width=1280;Height=860;MinimumSize=new System.Drawing.Size(320,240);StartPosition=FormStartPosition.CenterScreen;AutoScaleMode=AutoScaleMode.Dpi;
+  Window(string root){program=root;storage=new Storage(root);storage.VerifyWritable();Text="Notenblick";Icon=System.Drawing.Icon.ExtractAssociatedIcon(Path.Combine(program,"Notenblick.exe"));AutoScaleMode=AutoScaleMode.Dpi;var area=SystemInformation.WorkingArea;MinimumSize=new System.Drawing.Size(Math.Min(320,area.Width),Math.Min(240,area.Height));Size=new System.Drawing.Size(Math.Min(1280,area.Width),Math.Min(860,area.Height));StartPosition=FormStartPosition.CenterScreen;WindowState=FormWindowState.Maximized;
    var data=storage.Root;Directory.CreateDirectory(data);try{ownership=new FileStream(Path.Combine(data,"InBenutzung.lock"),FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None);}catch(IOException){throw new IOException("Dieser Notenbestand ist bereits in einem anderen Notenblick-Fenster geöffnet. Bitte schließe es zuerst.");}
    view=new WebView2{Dock=DockStyle.Fill,AccessibleName="Notenblick"};Controls.Add(view);Shown+=async(s,e)=>await Start();FormClosing+=OnClosing;
-   FormClosed+=(s,e)=>{view.Dispose();ownership.Dispose();try{File.Delete(Path.Combine(data,"InBenutzung.lock"));}catch{}};
+   FormClosed+=(s,e)=>{updater?.Dispose();view.Dispose();ownership.Dispose();try{File.Delete(Path.Combine(data,"InBenutzung.lock"));}catch{}};
   }
-  async Task Start(){try{var area=Screen.FromControl(this).WorkingArea;MinimumSize=new System.Drawing.Size(Math.Min(320,area.Width),Math.Min(240,area.Height));if(Width>area.Width||Height>area.Height){Size=new System.Drawing.Size(Math.Min(Width,area.Width),Math.Min(Height,area.Height));Location=area.Location;}if(!File.Exists(Path.Combine(program,"Programm","Notenblick.html")))throw new FileNotFoundException("Die Datei Notenblick.html fehlt.");
+  async Task Start(){try{if(!File.Exists(Path.Combine(program,"Programm","Notenblick.html")))throw new FileNotFoundException("Die Datei Notenblick.html fehlt.");
    string digest;using(var sha=SHA256.Create())digest=BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(Path.GetFullPath(program).ToLowerInvariant()))).Replace("-","").Substring(0,24);
    var profile=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Notenblick","Ansicht",digest);
    var env=await CoreWebView2Environment.CreateAsync(null,profile);await view.EnsureCoreWebView2Async(env);var core=view.CoreWebView2;
@@ -49,13 +49,47 @@ namespace Notenblick.Native {
   async void Receive(object sender,CoreWebView2WebMessageReceivedEventArgs e){if(!Local(e.Source))return;JObject req;try{using(var reader=new JsonTextReader(new StringReader(e.WebMessageAsJson)){MaxDepth=40})req=JObject.Load(reader);}catch{return;}
    if((string)req["op"]=="close-ready"){if(closingRequest){view.CoreWebView2.PostWebMessageAsJson(new JObject{{"id",req["id"]},{"ok",true},{"result",true}}.ToString(Formatting.None));mayClose=true;BeginInvoke(new Action(Close));}return;}
    JObject response;
+   if(((string)req["op"]??"").StartsWith("update-",StringComparison.Ordinal)){
+    response=new JObject{{"id",req["id"]},{"ok",false}};
+    bool checking=(string)req["op"]=="update-check";var checkedAt=DateTime.UtcNow;string updateVersion="nicht verfügbar";
+    if(checking)updateErrorDetails=null;
+    try{
+     if(updateHandoff)throw new IOException();
+     // Use the trusted in-memory report, never text or paths supplied by the page.
+     // WebMessageReceived runs on the WinForms STA thread required by Clipboard.
+     if((string)req["op"]=="update-copy-error"){
+      if(string.IsNullOrEmpty(updateErrorDetails))throw new InvalidOperationException("No update error");
+      Clipboard.SetText(updateErrorDetails,TextDataFormat.UnicodeText);response["result"]=true;
+     }else{
+     updateVersion=System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString(3);
+     if(updater==null)updater=new UpdateClient(program,updateVersion);
+     switch((string)req["op"]){
+      case "update-state":response["result"]=updater.State();break;
+      case "update-preferences":response["result"]=updater.Preferences(req);break;
+      case "update-check":if(req["automatic"]!=null&&req["automatic"].Type!=JTokenType.Boolean)throw new InvalidDataException();response["result"]=await updater.Check((bool?)req["automatic"]??false);break;
+      case "update-prepare":response["result"]=await updater.Prepare((string)req["version"],phase=>{if(!IsDisposed)BeginInvoke(new Action(()=>{if(!IsDisposed)ExportProgress(req,phase);}));});break;
+      case "update-cancel":updater.Cancel();response["result"]=true;break;
+      case "update-install":
+       await fileGate.WaitAsync();try{var plan=updater.Take((string)req["token"]);UpdateTransaction.Mark(plan,"authorized");UpdateBootstrap.Start(program,plan.Token,false);updateHandoff=true;updater.HandedOff();mayClose=true;response["result"]=true;BeginInvoke(new Action(Close));}finally{fileGate.Release();}break;
+      default:throw new InvalidDataException();
+     }
+     }
+     response["ok"]=true;
+    }catch(Exception error){
+     if(checking){updateErrorDetails=UpdateDiagnostics.Report(error,updateVersion,checkedAt,"Lokale Update-Einstellungen initialisieren");response["updateDiagnostic"]=updateErrorDetails;response["error"]="Die Aktualisierung konnte nicht geprüft werden. Du kannst normal weiterarbeiten.";}
+     else if(error is OperationCanceledException){response["error"]="Die Aktualisierung wurde abgebrochen.";response["name"]="AbortError";}
+     else response["error"]=(string)req["op"]=="update-copy-error"?"Die Fehlerdetails konnten nicht kopiert werden.":"Die Aktualisierung konnte nicht abgeschlossen werden. Deine Noten sind unverändert.";
+    }
+   }
+   else if(updateHandoff){response=new JObject{{"id",req["id"]},{"ok",false},{"error","Notenblick wird aktualisiert. Deine Noten sind gespeichert."}};}
+   else
    if((string)req["op"]=="open-folder"){response=new JObject{{"id",req["id"]},{"ok",false}};try{System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{FileName=storage.Root,UseShellExecute=true});response["ok"]=true;response["result"]=true;}catch(Exception ex){response["error"]=ex.Message;}}
    // ShowPrintUI has no PrintSettings argument. CSS @page supplies the
    // requested A4 orientation; never replace the preview with silent PrintAsync.
    else if((string)req["op"]=="print-preview"){response=new JObject{{"id",req["id"]},{"ok",true},{"result",false}};try{view.CoreWebView2.ShowPrintUI(CoreWebView2PrintDialogKind.Browser);response["result"]=true;}catch{ /* Older runtimes fall back to window.print in the page. */ }}
    else if((string)req["op"]=="download"){response=new JObject{{"id",req["id"]},{"ok",false}};bool filePrepared=false;try{var name=ExportFiles.FileName((string)req["name"]);ExportProgress(req,"validating");var bytes=await Task.Run(()=>ExportFiles.Decode(req,name));filePrepared=true;ExportProgress(req,"save-dialog");using(var dialog=new SaveFileDialog{FileName=name,Title="Datei speichern",InitialDirectory=storage.Root,OverwritePrompt=true,AddExtension=true,DefaultExt=Path.GetExtension(name).TrimStart('.'),CheckPathExists=true,Filter=ExportFiles.Filter(name)}){if(dialog.ShowDialog(this)==DialogResult.OK){ExportFiles.CheckDestination(dialog.FileName,name,storage.Root);ExportProgress(req,"writing");await Task.Run(()=>ExportFiles.Write(dialog.FileName,bytes));response["ok"]=true;response["result"]=true;}else{response["ok"]=true;response["result"]=false;}}}catch(Exception error){response["code"]=filePrepared?ExportFiles.ErrorCode(error):"export-invalid-file";response["error"]=!filePrepared?"Die erstellte Datei ist ungültig und wurde nicht gespeichert.":(string)response["code"]=="export-location-unavailable"?"Der Speicherort ist nicht verfügbar.":(string)response["code"]=="export-permission"?"An diesem Speicherort darf die Datei nicht gespeichert werden.":"Die Datei konnte nicht gespeichert werden. Deine Noten bleiben unverändert.";}}
    else {await fileGate.WaitAsync();try{response=await Task.Run(()=>storage.Handle(req));}finally{fileGate.Release();}}
-   view.CoreWebView2.PostWebMessageAsJson(response.ToString(Formatting.None));
+   if(!IsDisposed&&view.CoreWebView2!=null)view.CoreWebView2.PostWebMessageAsJson(response.ToString(Formatting.None));
   }
   void ExportProgress(JObject request,string phase){view.CoreWebView2.PostWebMessageAsJson(new JObject{{"id",request["id"]},{"progress",phase}}.ToString(Formatting.None));}
   async void OnClosing(object sender,FormClosingEventArgs e){if(mayClose)return;if(initializing||view.CoreWebView2==null){mayClose=true;return;}e.Cancel=true;closingRequest=true;try{await view.CoreWebView2.ExecuteScriptAsync("if(window.Notenblick&&window.Notenblick.requestClose){window.Notenblick.requestClose();}else{window.chrome.webview.postMessage({op:'close-ready'});}");}catch{closingRequest=false;MessageBox.Show(this,"Die letzten Eingaben konnten noch nicht geprüft werden. Bitte speichere deine Noten vor dem Schließen.","Notenblick",MessageBoxButtons.OK,MessageBoxIcon.Information);}}
