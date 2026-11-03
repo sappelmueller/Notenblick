@@ -75,6 +75,7 @@ static class UpdateProbe {
   Console.WriteLine("Updater diagnostic checks passed: "+count+"; controlled network/filesystem failures, privacy and optional live HTTPS; no Windows clipboard/NVDA execution.");
  }
  public static async Task Main(string[] args){dist=Path.GetFullPath(args[0]);temp=Path.Combine(Path.GetTempPath(),"notenblick-updates-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(temp);try{
+  if(args.Contains("--live-only")){using(var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(45)))Check(await UpdateSource.Discover("1.24.0",timeout.Token)==null,"Live GitHub check: current");Console.WriteLine("One live updater HTTPS check passed: current; .NET 8/Linux, no Windows TLS claim.");return;}
   if(args.Contains("--diagnostics")){await Diagnostics(args.Contains("--live"));return;}
   // Reproduce the legacy process-wide TLS selection of the directly compiled
   // Windows launcher. Request construction must repair it before connecting.

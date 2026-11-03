@@ -1,5 +1,5 @@
 'use strict';
-// Only the added updater copy/fallback controls. No other browser suite.
+// Only updater settings, notification, focus and diagnostic controls.
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),http=require('node:http');
 const root=path.resolve(__dirname,'../dist/Programm');let browser;
 const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+new URL(req.url,'http://localhost').pathname);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}try{res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':'text/html');res.end(fs.readFileSync(file));}catch{res.writeHead(404).end();}});
@@ -23,5 +23,25 @@ const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+new 
   assert.equal(await page.locator('#dialog').evaluate(el=>el.scrollWidth<=el.clientWidth+1),true);
   await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('#dialog').open);assert.equal(await focus(),'updateCopyError');
  }
- assert.deepEqual(errors,[]);console.log('Updater copy UI in Chromium: Enter/Tab, read-only text selection, Escape/focus and three widths/scales passed; controlled clipboard, no Windows/NVDA claim.');
+ await page.evaluate(()=>{const call=NRDesktop.call;globalThis.restoreUpdateCall=()=>{NRDesktop.call=call;};NRDesktop.call=(op,...args)=>op==='update-check'?new Promise((resolve,reject)=>{globalThis.finishUpdateCheck=()=>call(op,...args).then(resolve,reject);}):call(op,...args);updateTestHost.offline=false;updateTestHost.offer=null;});
+ await page.locator('#updateCheck').focus();await page.keyboard.press('Enter');await page.waitForFunction(()=>Notenblick.updates.checking);assert.equal(await focus(),'updateCheck','focus during a genuinely pending check');
+ await page.locator('#setting-startupView').focus();const settingValue=await page.locator('#setting-startupView').inputValue();await page.evaluate(()=>finishUpdateCheck());await page.waitForFunction(()=>!Notenblick.updates.checking);assert.equal(await focus(),'setting-startupView');assert.equal(await page.locator('#setting-startupView').inputValue(),settingValue);await page.evaluate(()=>restoreUpdateCall());
+ for(const [width,zoom] of [[1280,1],[800,1.5],[640,2],[320,1],[320,2]]){
+  await page.setViewportSize({width,height:900});await page.evaluate(z=>document.documentElement.style.zoom=String(z),zoom);
+  await page.evaluate(()=>{const u=Notenblick.updates;u.hiddenVersion='';u.sessionHidden='';updateTestHost.state.hiddenVersion='';updateTestHost.offline=false;Notenblick.activateGroup('main','settings');});
+  for(const state of ['current','available','error']){
+   await page.evaluate(state=>{updateTestHost.offline=state==='error';updateTestHost.offer=state==='current'?null:{version:'1.25.0',notes:['Neue Versionen sind leichter zu finden.','Notenblick startet jetzt maximiert.','Die Tastaturbedienung ist verbessert.']};},state);
+   await page.locator('#updateCheck').focus();await page.keyboard.press('Enter');await page.waitForFunction(state=>document.querySelector('#updateResult').dataset.state===state&&!Notenblick.updates.checking,state);assert.equal(await focus(),'updateCheck');
+   assert.equal(await page.locator('.update-settings').evaluate(el=>el.scrollWidth<=el.clientWidth+1),true,'settings width '+width+'/'+zoom+'/'+state);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true,'page width '+width+'/'+zoom+'/'+state);
+  }
+  await page.evaluate(()=>Notenblick.activateGroup('main','home'));assert.equal(await page.locator('#homeUpdateVersion').textContent(),'Zuletzt gefunden: Notenblick 1.25.0.');assert.equal(await page.locator('#homeUpdateStatus').textContent(),'Die Verfügbarkeit konnte jetzt nicht geprüft werden.');
+  await page.evaluate(async()=>{updateTestHost.offline=false;await Notenblick.checkUpdates(false);});assert.equal(await page.locator('#homeUpdateVersion').textContent(),'Notenblick 1.25.0 ist verfügbar.');
+  assert.equal(await page.locator('.update-card').evaluate(el=>el.scrollWidth<=el.clientWidth+1),true,'card width '+width+'/'+zoom);
+  await page.locator('#homeUpdateSlot [data-action=update-later]').focus();await page.keyboard.press('Enter');await page.waitForFunction(()=>document.querySelector('#homeUpdateSlot').hidden);assert.equal(await focus(),'continueTitle');await page.keyboard.press('Tab');assert.equal(await focus(),'homeContinue');
+  await page.evaluate(async()=>{updateTestHost.offer.version='1.26.0';await Notenblick.checkUpdates(false);});assert.equal(await page.locator('#updateHideLabel').textContent(),'Hinweis zu Version 1.26.0 nicht mehr anzeigen');
+  await page.locator('#updateHide').focus();await page.keyboard.press('Space');await page.waitForFunction(()=>document.querySelector('#homeUpdateSlot').hidden);assert.equal(await focus(),'continueTitle');assert.equal(await page.evaluate(()=>updateTestHost.state.hiddenVersion),'1.26.0');
+ }
+ assert.equal(await page.evaluate(()=>updateTestHost.calls.some(c=>c.op==='update-install')),false);
+ assert.deepEqual(errors,[]);console.log('Updater UI in Chromium: three results, stale offers, session/version hiding, keyboard/focus, copy fallback and five widths/scales through 320 px/200% passed; no Windows/NVDA claim.');
 })().catch(e=>{console.error(e);process.exitCode=1;}).finally(async()=>{if(browser)await browser.close();server.close();});
