@@ -116,10 +116,9 @@ namespace Notenblick.Native {
   }
   internal static HttpWebRequest Request(Uri uri,bool asset){
     if(!Allowed(uri,asset))throw new InvalidDataException("Update source");
-    // The portable launcher is compiled directly, without TargetFrameworkAttribute
-    // or an exe.config. .NET Framework can therefore select legacy TLS defaults
-    // even on current Windows. Let Windows negotiate secure TLS for every updater
-    // request (including asset redirects); never bypass certificate validation.
+    // Launcher declares .NET Framework 4.8 and enables its modern TLS compatibility
+    // before System.Net initializes. SystemDefault is therefore accepted by
+    // SslState and leaves protocol negotiation to Windows, also after redirects.
     ServicePointManager.SecurityProtocol=SecurityProtocolType.SystemDefault;
     var req=(HttpWebRequest)WebRequest.Create(uri);req.AllowAutoRedirect=false;req.Method="GET";req.UserAgent="Notenblick-Updater";req.Accept=asset?"application/octet-stream":"application/vnd.github+json";req.UseDefaultCredentials=false;req.Credentials=null;req.CookieContainer=null;req.Timeout=20000;req.ReadWriteTimeout=20000;
     return req;

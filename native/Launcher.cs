@@ -9,6 +9,7 @@ using System.Windows.Forms;
 [assembly: AssemblyVersion("@ASSEMBLY_VERSION@")]
 [assembly: AssemblyFileVersion("@ASSEMBLY_VERSION@")]
 [assembly: AssemblyInformationalVersion("@VERSION@")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8", FrameworkDisplayName = ".NET Framework 4.8")]
 
 public static class Launcher
 {
@@ -20,6 +21,12 @@ public static class Launcher
     {
         try
         {
+            // Set before loading program assemblies/WebView2 or touching System.Net:
+            // its compatibility flags are cached at the first network initialization.
+            // SystemDefault (0) must be accepted by SslState.ValidateCreateContext.
+            AppContext.SetSwitch("Switch.System.Net.DontEnableSystemDefaultTlsVersions", false);
+            AppContext.SetSwitch("Switch.System.Net.DontEnableSchUseStrongCrypto", false);
+
             var root = AppDomain.CurrentDomain.BaseDirectory;
             bool probe = args.Length == 1 && args[0] == "--verify-update";
             if (!probe && Notenblick.Native.UpdateBootstrap.RecoverBeforeStart(root)) return;
