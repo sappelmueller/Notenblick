@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Net;
 using Newtonsoft.Json.Linq;
 using Notenblick.Native;
 
@@ -27,6 +28,21 @@ static class UpdateProbe {
  static UpdateOffer Offer(byte[] bytes){return new UpdateOffer{Version="1.24.0",Files=UpdateTransaction.Snapshot(dist),Size=bytes.Length,Sha256=UpdateTransaction.Digest(bytes),Notes=new[]{"Neue Versionen sind leichter zu finden.","Notenblick startet jetzt maximiert.","Die Tastaturbedienung ist verbessert."},Url="https://github.com/"+UpdateSource.Repository+"/releases/download/v1.24.0/Notenblick_1.24.0.zip"};}
  static string Empty(){var d=Path.Combine(temp,"extract-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(d);return d;}
  public static async Task Main(string[] args){dist=Path.GetFullPath(args[0]);temp=Path.Combine(Path.GetTempPath(),"notenblick-updates-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(temp);try{
+  // Reproduce the legacy process-wide TLS selection of the directly compiled
+  // Windows launcher. Request construction must repair it before connecting.
+  var priorTls=ServicePointManager.SecurityProtocol;var priorCertificates=ServicePointManager.ServerCertificateValidationCallback;
+  try{
+   foreach(bool asset in new[]{false,true}){
+    ServicePointManager.SecurityProtocol=SecurityProtocolType.Tls;
+    var request=UpdateSource.Request(new Uri(asset?"https://release-assets.githubusercontent.com/synthetic":UpdateSource.Api),asset);
+    Check(ServicePointManager.SecurityProtocol==SecurityProtocolType.SystemDefault,"Windows selects secure TLS despite legacy process defaults");
+    Check(request.ServerCertificateValidationCallback==null&&ServicePointManager.ServerCertificateValidationCallback==priorCertificates,"Certificate validation remains enabled");
+    Check(!request.AllowAutoRedirect&&request.Method=="GET"&&request.UserAgent=="Notenblick-Updater","Controlled HTTP requests and redirects preserved");
+    Check(!request.UseDefaultCredentials&&request.Credentials==null&&request.CookieContainer==null,"No credentials or cookies sent");
+    Check(request.Accept==(asset?"application/octet-stream":"application/vnd.github+json")&&request.Timeout==20000&&request.ReadWriteTimeout==20000,"GitHub media types and timeouts preserved");request.Abort();
+   }
+   Reject(()=>UpdateSource.Request(new Uri("https://evil.example/update"),true),"Foreign request rejected before connection");
+  }finally{ServicePointManager.SecurityProtocol=priorTls;}
   foreach(var bad in new[]{"Daten/Ansicht.json","Programm/../Daten/a","Programm/Daten/a","/Notenblick.exe","Programm\\x","Programm/C:/x","Programm/CON.txt","Programm/COM¹.txt","Programm/CONIN$","Programm/PRN .txt","Programm/a.","Programm/a ","Programm/a//b","Programm/a\u0000.txt","Notenblick.exe/other","Programm/a:b"})Reject(()=>UpdateTransaction.LogicalPath(bad),"Unsafe logical path: "+bad);
   foreach(var bad in new[]{"1.24","01.24.0","1.24.0-beta","v1.24.0","1.24.0.1","-1.24.0","1.24.0+test"})Reject(()=>UpdateTransaction.VersionNumber(bad),"Invalid version: "+bad);
   var root=Root();string before=Data(root);using(UpdateTransaction.Acquire(root)){
@@ -53,6 +69,23 @@ static class UpdateProbe {
   Reject(()=>UpdateSource.Json(Bytes("{\"approved\":true,\"approved\":false}")),"Duplicate JSON fields");
   int requests=0;var published=(JObject)manifest.DeepClone();UpdateSource.Fetch catalogue=(url,max,asset,cancel,progress)=>{requests++;if(url==UpdateSource.Api)return Task.FromResult(Bytes(new JObject{{"id",UpdateSource.RepositoryId},{"full_name",UpdateSource.Repository}}.ToString()));if(url.Contains("/releases?"))return Task.FromResult(Bytes(new JArray(release).ToString()));return Task.FromResult(Bytes(published.ToString()));};
   Check((await UpdateSource.Discover("1.24.0",CancellationToken.None,catalogue)).Version=="1.25.0"&&requests==3,"Controlled official release catalogue");published["approved"]=false;Check(await UpdateSource.Discover("1.24.0",CancellationToken.None,catalogue)==null,"Unapproved stable release ignored");
+  var repository=Bytes(new JObject{{"id",UpdateSource.RepositoryId},{"full_name",UpdateSource.Repository}}.ToString());
+  foreach(string tag in new[]{"v1.23.2","v1.24.0","v1.23.2-oss.1"}){
+   int calls=0;var old=Release("1.23.2",1);old["tag_name"]=tag;
+   UpdateSource.Fetch older=(url,max,asset,cancel,progress)=>{calls++;Check(!asset,"Older/equal releases do not download assets");return Task.FromResult(url==UpdateSource.Api?repository:Bytes(new JArray(old).ToString()));};
+   Check(await UpdateSource.Discover("1.24.0",CancellationToken.None,older)==null&&calls==2,"Current with published "+tag);
+  }
+  Check(UpdateTransaction.VersionNumber("1.10.0")>UpdateTransaction.VersionNumber("1.9.0"),"Numeric version comparison");
+  foreach(string invalid in new[]{"not JSON","{}","null","[null]"}){
+   UpdateSource.Fetch broken=(url,max,asset,cancel,progress)=>Task.FromResult(url==UpdateSource.Api?repository:Bytes(invalid));
+   // [null] is valid JSON but not a valid GitHub release catalogue.
+   Reject(()=>UpdateSource.Discover("1.24.0",CancellationToken.None,broken).GetAwaiter().GetResult(),"Malformed catalogue fails: "+invalid);
+  }
+  foreach(string field in new[]{"draft","prerelease"}){var ignored=Release("1.25.0",1);ignored[field]=true;UpdateSource.Fetch hidden=(u,m,a,c,p)=>Task.FromResult(u==UpdateSource.Api?repository:Bytes(new JArray(ignored).ToString()));Check(await UpdateSource.Discover("1.24.0",CancellationToken.None,hidden)==null,"Discovery ignores "+field);}
+  foreach(var status in new[]{WebExceptionStatus.NameResolutionFailure,WebExceptionStatus.ConnectFailure,WebExceptionStatus.Timeout,WebExceptionStatus.ProtocolError}){UpdateSource.Fetch failed=(u,m,a,c,p)=>Task.FromException<byte[]>(new WebException("Controlled transport failure",status));Reject(()=>UpdateSource.Discover("1.24.0",CancellationToken.None,failed).GetAwaiter().GetResult(),"Transport failure never means current: "+status);}
+  UpdateSource.Fetch wrongRepository=(u,m,a,c,p)=>Task.FromResult(Bytes("{\"id\":1,\"full_name\":\"foreign/project\"}"));Reject(()=>UpdateSource.Discover("1.24.0",CancellationToken.None,wrongRepository).GetAwaiter().GetResult(),"Wrong repository identity fails");
+  published["approved"]=true;published["repositoryId"]=1;Reject(()=>UpdateSource.Discover("1.24.0",CancellationToken.None,catalogue).GetAwaiter().GetResult(),"Invalid published descriptor never means current");
+  using(var cancelled=new CancellationTokenSource()){cancelled.Cancel();Reject(()=>UpdateSource.Read(UpdateSource.Api,128*1024,false,cancelled.Token).GetAwaiter().GetResult(),"Cancelled real HTTP request fails safely");}
   var now=new DateTime(2026,11,3,12,0,0,DateTimeKind.Utc);int checks=0;Func<string,CancellationToken,Task<UpdateOffer>> lookup=(v,c)=>{checks++;return Task.FromResult(offer);};root=Root();before=Data(root);var prefs=Path.Combine(temp,"preferences");
   using(var client=new UpdateClient(root,"1.23.3",prefs,lookup,()=>now)){
    Check(!(bool)client.State()["enabled"],"Automatic checking defaults off");Check(!(bool)(await client.Check(true))["checked"]&&checks==0,"No unsolicited request");client.Preferences(new JObject{{"enabled",true}});await client.Check(true);Check(checks==1,"First opt-in automatic check");await client.Check(true);Check(checks==1,"At most one automatic attempt in 24 hours");await client.Check(false);Check(checks==2,"Manual check independent");now=now.AddHours(25);await client.Check(true);Check(checks==3,"Next automatic day");client.Preferences(new JObject{{"hiddenVersion","1.24.0"}});Check((string)client.State()["hiddenVersion"]=="1.24.0","Hide exact version");
@@ -74,6 +107,7 @@ static class UpdateProbe {
   using(var client=new UpdateClient(root,"1.23.3",Path.Combine(temp,"cancel-download"),lookup,()=>now,waitDownload,()=>Tuple.Create(int.MaxValue,1L))){var work=client.Prepare("1.24.0",phase=>{});await downloading.Task;client.Cancel();Reject(()=>work.GetAwaiter().GetResult(),"Native cancellation stops active download");Check(Data(root)==before,"Cancelled native download leaves data untouched");}
   using(var client=new UpdateClient(root,"1.23.3",Path.Combine(temp,"tampered-stage"),lookup,()=>now,download,()=>Tuple.Create(int.MaxValue,1L))){var token=await client.Prepare("1.24.0",phase=>{});var plan=client.Take(token);File.AppendAllText(Path.Combine(plan.Folder,"new/Programm/Notenblick.html"),"changed after verification");Reject(()=>client.Take(token),"Staged tampering detected again before handoff");client.Cancel();Check(Data(root)==before,"Tampered staging never changes data");}
   var launched=Assembly.LoadFile(Path.Combine(dist,"Notenblick.exe"));using(var embedded=launched.GetManifestResourceStream("Notenblick.Aktualisierung.exe"))using(var b=new MemoryStream()){embedded.CopyTo(b);Check(UpdateTransaction.Digest(b.ToArray())==UpdateTransaction.Hash(Path.Combine(dist,"Programm/Windows/Notenblick.Aktualisierung.exe")),"Embedded recovery helper is identical to the verified portable helper");}
+  if(args.Length>1&&args[1]=="--live")using(var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(45))){Check(await UpdateSource.Discover("1.24.0",timeout.Token)==null,"Live public GitHub API: 1.24.0 is current");Console.WriteLine("Live GitHub discovery: current; actual HTTPS transport, no installation or release mutation.");}
   Console.WriteLine("Updater checks passed: "+count+"; real Linux filesystem, controlled transport/fault boundaries; no Windows GUI/NVDA/Braille or public release mutation.");
  }finally{Directory.Delete(temp,true);}}
 }

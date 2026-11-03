@@ -30,10 +30,19 @@ namespace Notenblick.Native {
    if(uri.Host=="github.com")return uri.AbsolutePath.StartsWith("/"+Repository+"/releases/download/v",StringComparison.Ordinal);
    return uri.Host=="release-assets.githubusercontent.com"||uri.Host=="objects.githubusercontent.com";
   }
+  internal static HttpWebRequest Request(Uri uri,bool asset){
+    if(!Allowed(uri,asset))throw new InvalidDataException("Update source");
+    // The portable launcher is compiled directly, without TargetFrameworkAttribute
+    // or an exe.config. .NET Framework can therefore select legacy TLS defaults
+    // even on current Windows. Let Windows negotiate secure TLS for every updater
+    // request (including asset redirects); never bypass certificate validation.
+    ServicePointManager.SecurityProtocol=SecurityProtocolType.SystemDefault;
+    var req=(HttpWebRequest)WebRequest.Create(uri);req.AllowAutoRedirect=false;req.Method="GET";req.UserAgent="Notenblick-Updater";req.Accept=asset?"application/octet-stream":"application/vnd.github+json";req.UseDefaultCredentials=false;req.Credentials=null;req.CookieContainer=null;req.Timeout=20000;req.ReadWriteTimeout=20000;
+    return req;
+  }
   public static async Task<byte[]> Read(string url,long maximum,bool asset,CancellationToken cancel,Action<long,long> progress=null){
    var uri=new Uri(url);for(int hop=0;hop<5;hop++){
-    if(!Allowed(uri,asset))throw new InvalidDataException("Update source");
-    var req=(HttpWebRequest)WebRequest.Create(uri);req.AllowAutoRedirect=false;req.Method="GET";req.UserAgent="Notenblick-Updater";req.Accept=asset?"application/octet-stream":"application/vnd.github+json";req.UseDefaultCredentials=false;req.Credentials=null;req.CookieContainer=null;req.Timeout=20000;req.ReadWriteTimeout=20000;
+    var req=Request(uri,asset);
     using(cancel.Register(req.Abort)){
      try{using(var response=(HttpWebResponse)await req.GetResponseAsync().ConfigureAwait(false)){
       int code=(int)response.StatusCode;if(code==301||code==302||code==303||code==307||code==308){if(!asset)throw new InvalidDataException("API redirect");uri=new Uri(uri,response.Headers["Location"]);continue;}
@@ -72,7 +81,7 @@ namespace Notenblick.Native {
   public static async Task<UpdateOffer> Discover(string installed,CancellationToken cancel,Fetch transport=null){
    var fetch=transport??Read;
    var repo=Json(await fetch(Api,128*1024,false,cancel,null).ConfigureAwait(false));if(repo["id"]?.Type!=JTokenType.Integer||(long)repo["id"]!=RepositoryId||(string)repo["full_name"]!=Repository)throw new InvalidDataException("Repository identity");
-   var list=Json(await fetch(Api+"/releases?per_page=100",2*1024*1024,false,cancel,null).ConfigureAwait(false)) as JArray;if(list==null)throw new InvalidDataException("Release catalogue");
+   var list=Json(await fetch(Api+"/releases?per_page=100",2*1024*1024,false,cancel,null).ConfigureAwait(false)) as JArray;if(list==null||list.Any(r=>!(r is JObject)))throw new InvalidDataException("Release catalogue");
    var candidates=new List<Tuple<Version,JObject>>();foreach(var release in list.OfType<JObject>())try{var tag=(string)release["tag_name"];if(release["draft"]?.Type==JTokenType.Boolean&&!(bool)release["draft"]&&release["prerelease"]?.Type==JTokenType.Boolean&&!(bool)release["prerelease"]&&tag!=null&&tag.StartsWith("v",StringComparison.Ordinal)){var v=UpdateTransaction.VersionNumber(tag.Substring(1));if(v>UpdateTransaction.VersionNumber(installed))candidates.Add(Tuple.Create(v,release));}}catch(InvalidDataException){}
    bool invalid=false;foreach(var pair in candidates.OrderByDescending(p=>p.Item1).Take(10)){
     string version=pair.Item1.ToString(3),name="Notenblick_"+version+"_Aktualisierung.json";var asset=Asset(pair.Item2,name);if(asset==null)continue;
