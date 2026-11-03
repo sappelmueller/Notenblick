@@ -1,5 +1,15 @@
 # Änderungen
 
+## 1.24.0 – Testversion
+
+- Notenblick startet maximiert; Fenster lassen sich weiterhin verkleinern und wiederherstellen.
+- Fach- und Registerkurzbefehle bestätigen den Bereich zuverlässiger. Die doppelte Fachansage beim Wechsel aus anderen Hauptbereichen wird gezielt vermieden.
+- Neue Versionen lassen sich im Programm finden und nach Zustimmung installieren. Die Prüfung beim Start ist freiwillig und zunächst ausgeschaltet.
+- Neuerungen stehen kurz im Programm. Hinweise können für eine Sitzung oder genau diese Version ausgeblendet werden.
+- Die GitHub-Seite erklärt Funktionen, Downloads und Datensicherung übersichtlicher.
+
+Enthält die unveröffentlichte Zwischenentwicklung 1.23.3. Windows-/NVDA-/Braille-Abnahme von 1.24.0 und ausdrückliche Freigabe stehen noch aus.
+
 ## 1.23.3 – Testversion
 
 - Startet maximiert; Verkleinern, Verschieben und Wiederherstellen bleiben möglich.

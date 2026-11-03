@@ -47,7 +47,13 @@ public static class Launcher
                 .Invoke(null, new object[] { nativeFolder });
 
             // Verify the release without constructing Window/Storage or opening Daten.
-            if (probe) return;
+            if (probe) {
+                libraries.Get("Microsoft.Web.WebView2.Core")
+                    .GetType("Microsoft.Web.WebView2.Core.CoreWebView2Environment", true)
+                    .GetMethod("GetAvailableBrowserVersionString", new Type[] { typeof(string) })
+                    .Invoke(null, new object[] { null });
+                return;
+            }
 
             libraries.Get("Notenblick.Fenster")
                 .GetType("Notenblick.Native.Window", true)

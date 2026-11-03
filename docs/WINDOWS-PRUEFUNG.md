@@ -1,3 +1,14 @@
+# Ergänzung zur Testversion 1.24.0
+
+1. Erstes Update von 1.23.2 manuell mit EXE und vollständigem Programmordner durchführen; Daten behalten.
+2. Unter x86/x64 und ARM64 maximierten Start, Wiederherstellen, Taskleiste, Monitorwechsel und Skalierung praktisch prüfen. Das vorhandene PowerShell-Skript mit `-Launch` misst Prozessarchitektur und Loader; die Oberfläche zusätzlich selbst bedienen.
+3. Aus Start, Verwaltung, Sicherung, Einstellungen und Hilfe Alt+1 bis Alt+9 verwenden, danach wiederholen; jeweils genau eine Ansage. Strg+1 bis Strg+6, leere Ziffern und F1 erneut prüfen.
+4. In Allgemein die freiwillige Prüfung testen: zunächst keine Startprüfung, manuell aktueller Stand/offline; nach Einwilligung höchstens eine automatische Prüfung pro 24 Stunden. Keine Fokusverschiebung oder Startverzögerung.
+5. Mit einem kontrollierten Prüfaufbau neue Version, Später, versionsbezogenes Ausblenden, neuere Meldung und Neuerungsdialog mit NVDA/Braille abnehmen. Produktionsquellen niemals auf Testserver umstellen und öffentliche Releases nicht zu Testzwecken ändern. Die automatisierte Transportattrappe ist kein echter Windows-Downloadtest.
+6. Austauschkomponente unter Windows mit synthetischem Bestand, gesperrten Dateien, fehlenden Rechten und Unterbrechung prüfen. Original-Datenordner einschließlich Dateien und Zeitstempeln muss unverändert bleiben. Nach Fehlern alte vollständige Programmversion wieder öffnen. Abbruch nur vor der sicheren Übergabe.
+
+Neue 1.24.0-Abläufe sind noch nicht praktisch bestätigt. Die bestätigten Nutzerprüfungen von 1.23.2 und die folgenden historischen Prüfpläne bleiben davon getrennt.
+
 # Windows-Prüfung vor Freigabe
 
 **Stand 2. November 2026:** Sebastian Müller hat 1.23.2 auf einem Windows-PC und unter Windows auf ARM in Parallels mit NVDA und Braille praktisch getestet. PowerShell bestätigte ARM64-Prozess und ARM64-WebView2-Loader. Die folgenden älteren Checklisten bleiben historische Prüfpläne; daraus wird keine vollständige Abnahme jedes Einzelpunkts abgeleitet. Für 1.23.3 gelten die zusätzlichen Prüfpunkte am Ende.

@@ -2,7 +2,9 @@
 
 Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du organisierst deine Klassen und Fächer, erfasst Noten oder Punkte und erstellst Berichte für den Schulalltag. Alle Schülerdaten bleiben lokal auf deinem Rechner.
 
-**Programmstand: 1.23.3 als Testversion.** Die offizielle Veröffentlichung folgt erst nach ausdrücklicher Freigabe. Die zuletzt freigegebene Version ist 1.23.2.
+[**Aktuelle Version herunterladen**](https://github.com/sappelmueller/Notenblick/releases/latest)
+
+Freigegeben ist **1.23.2**. Dieser Entwicklungsbranch bereitet **1.24.0** zur praktischen Abnahme vor. Die Verbesserungen aus 1.23.3 sind darin enthalten; 1.23.3 wird nicht separat veröffentlicht.
 
 ## Das kann Notenblick
 
@@ -19,19 +21,23 @@ Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du organisier
 2. Das ZIP vollständig in einen beschreibbaren Ordner entpacken.
 3. **Notenblick.exe** starten. Der Ordner **Programm** muss daneben liegen; **Daten** entsteht beim ersten Start. Der Einrichtungsassistent führt durch die ersten Schritte.
 
-Eine Installation von Notenblick ist nicht nötig. Testversion 1.23.3 wird vor der Freigabe mit einem passenden Windows- und Quellcode-ZIP separat zur Abnahme bereitgestellt. Die EXE ist bisher nicht digital signiert; Windows kann deshalb einen Sicherheitshinweis anzeigen.
+Eine Installation von Notenblick ist nicht nötig. Testversion 1.24.0 wird mit vollständigem Windows- und Quellcode-ZIP separat zur Abnahme bereitgestellt. Der erste Wechsel von 1.23.2 erfolgt manuell. Die EXE ist bisher nicht digital signiert; Windows kann deshalb einen Sicherheitshinweis anzeigen.
 
 ## Tastatur, NVDA, Braille und Hilfe
 
 Hauptbereiche und Fächer sind über Links und Kurzbefehle erreichbar. Echte Registerkarten, kurze Beschriftungen und eine klare Fokusführung unterstützen die Arbeit mit Tastatur, NVDA und Braille. **F1** erklärt den aktuellen Arbeitsschritt. Die schnelle Noteneingabe verwendet Eingabe und Umschalt+Eingabe.
 
-Sebastian Müller hat Version 1.23.2 am **2. November 2026** auf einem Windows-PC und unter Windows auf ARM in Parallels mit **NVDA und Braille** praktisch getestet. Die native ARM64-Prozessarchitektur und der passende WebView2-Loader wurden zusätzlich per PowerShell bestätigt. Wiederholte Kurzbefehle waren dabei teilweise stumm; Version 1.23.3 bearbeitet diese Rückmeldungen gezielt. Die Nutzerabnahme ersetzt keine vollständige Barrierefreiheitszertifizierung. Bedienkonzept, Prüfstand und offene Punkte: [Barrierefreiheit](BARRIEREFREIHEIT.md).
+Sebastian Müller hat Version 1.23.2 am **2. November 2026** auf einem Windows-PC und unter Windows auf ARM in Parallels mit **NVDA und Braille** praktisch getestet. Die native ARM64-Prozessarchitektur und der passende WebView2-Loader wurden zusätzlich per PowerShell bestätigt. Wiederholte Kurzbefehle waren dabei teilweise stumm; Version 1.24.0 übernimmt die bisherigen Korrekturen und bearbeitet zusätzlich die doppelte Fachansage beim Wechsel aus anderen Hauptbereichen. Die geänderten Abläufe müssen erneut praktisch abgenommen werden. Die Nutzerabnahme ersetzt keine vollständige Barrierefreiheitszertifizierung. Bedienkonzept, Prüfstand und offene Punkte: [Barrierefreiheit](BARRIEREFREIHEIT.md).
 
 ## Daten und Sicherungen
 
 Notenblick speichert Schülerdaten ausschließlich im Ordner **Daten** und überträgt sie nicht an externe Dienste. Sichere diesen Ordner regelmäßig zusätzlich auf einem anderen Datenträger. TXT-Notfalllisten helfen beim Nachlesen; eine vollständige Sicherung ist für die Wiederherstellung erforderlich.
 
-Updates erfolgen manuell aus einem freigegebenen Release: **Notenblick schließen, Daten sichern und ausschließlich Notenblick.exe sowie den vollständigen Ordner Programm ersetzen. Daten vollständig behalten.** Ein automatischer Updater ist noch nicht enthalten.
+Ab 1.24.0 kannst du unter **Einstellungen → Allgemein → Aktualisierungen** nach neuen Versionen suchen. Die Prüfung beim Start ist freiwillig und zunächst ausgeschaltet. Eine angebotene Version wird erst nach deiner Zustimmung heruntergeladen und installiert. Notenblick wird dabei geschlossen und anschließend wieder geöffnet. Deine Noten werden nicht übertragen. Die Aktualisierungseinstellungen werden getrennt von deinen Noten auf diesem Rechner gespeichert.
+
+Der Updater berücksichtigt ausschließlich freigegebene stabile GitHub Releases. Eine Änderung am Quellcode allein löst keine Aktualisierung aus. Bei der Installation werden nur **Notenblick.exe** und der vollständige Ordner **Programm** ausgetauscht; **Daten bleibt unangetastet**. Wenn die Vorbereitung oder Prüfung scheitert, wird nichts installiert. Bei einem unterbrochenen Austausch wird die bisherige Version wiederhergestellt.
+
+Manuelle Updates bleiben möglich: **Notenblick schließen, Daten sichern und ausschließlich Notenblick.exe sowie den vollständigen Ordner Programm ersetzen. Daten vollständig behalten.** Bewahre auch bei Verwendung des Updaters regelmäßig eigene Sicherungen auf.
 
 ## Voraussetzungen
 

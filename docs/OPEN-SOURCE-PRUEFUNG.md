@@ -1,6 +1,6 @@
 # Open-Source-Prüfung vom 2. November 2026
 
-**Einordnung:** Die folgenden Abschnitte dokumentieren den damaligen Bereinigungs- und Lizenzprüfverlauf. Der bereinigte aktuelle Hauptstand bleibt erhalten; drei historische PR-Referenzen liegen weiter beim GitHub-Support. Die ergänzte Nutzerabnahme mit Braille und nachgewiesener nativer ARM64-Ausführung sowie die Testversion 1.23.3 stehen im [aktuellen Versionsbericht](PRUEFBERICHT-1.23.3.md). Ältere Aussagen zu offenen Einzeltests sind historische Prüfstände.
+**Einordnung:** Die folgenden Abschnitte dokumentieren den damaligen Bereinigungs- und Lizenzprüfverlauf. Der bereinigte aktuelle Hauptstand bleibt erhalten; drei historische PR-Referenzen liegen weiter beim GitHub-Support. Die ergänzte Nutzerabnahme mit Braille und nachgewiesener nativer ARM64-Ausführung sowie die Testversion 1.24.0 stehen im [aktuellen Versionsbericht](PRUEFBERICHT-1.24.0.md). Ältere Aussagen zu offenen Einzeltests sind historische Prüfstände.
 
 ## Gesicherter Ausgangsstand
 

@@ -561,3 +561,10 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 .update-notes{padding-inline-start:24px}
 .update-notes li{margin-bottom:12px}
 @media(forced-colors:active){.update-card{border:2px solid CanvasText}}
+
+.update-card .check span,.update-auto span{min-width:0;overflow-wrap:anywhere}
+.update-card .check input,.update-auto input{flex-shrink:0}
+
+.update-card .button-row .button,.update-settings .button-row .button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+#settingsTabs li{min-width:0;max-width:100%}
+#settingsTabs a{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}

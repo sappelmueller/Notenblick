@@ -15,6 +15,7 @@ if ($names.Count -ne 2 -or $names -notcontains 'Notenblick.exe' -or $names -notc
 }
 $required = @('Notenblick.exe', 'Programm/Notenblick.html',
     'Programm/Windows/Notenblick.Fenster.dll', 'Programm/Windows/Notenblick.Speicherung.dll',
+    'Programm/Windows/Notenblick.Aktualisierung.exe',
     'Programm/Windows/Newtonsoft.Json.dll', 'Programm/Windows/Microsoft.Web.WebView2.Core.dll',
     'Programm/Windows/Microsoft.Web.WebView2.WinForms.dll',
     'Programm/Windows/x86/WebView2Loader.dll', 'Programm/Windows/x64/WebView2Loader.dll',
