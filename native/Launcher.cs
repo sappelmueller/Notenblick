@@ -16,11 +16,13 @@ public static class Launcher
     static extern bool SetDllDirectory(string path);
 
     [STAThread]
-    public static void Main()
+    public static void Main(string[] args)
     {
         try
         {
             var root = AppDomain.CurrentDomain.BaseDirectory;
+            bool probe = args.Length == 1 && args[0] == "--verify-update";
+            if (!probe && Notenblick.Native.UpdateBootstrap.RecoverBeforeStart(root)) return;
             var libraries = new Notenblick.Native.ProgramLibraries(root);
             AppDomain.CurrentDomain.AssemblyResolve += libraries.Resolve;
 
@@ -44,6 +46,9 @@ public static class Launcher
                 .GetMethod("SetLoaderDllFolderPath", new Type[] { typeof(string) })
                 .Invoke(null, new object[] { nativeFolder });
 
+            // Verify the release without constructing Window/Storage or opening Daten.
+            if (probe) return;
+
             libraries.Get("Notenblick.Fenster")
                 .GetType("Notenblick.Native.Window", true)
                 .GetMethod("Run")
@@ -51,6 +56,7 @@ public static class Launcher
         }
         catch (Exception error)
         {
+            if (args.Length == 1 && args[0] == "--verify-update") { Environment.ExitCode = 1; return; }
             while (error.InnerException != null) error = error.InnerException;
             MessageBox.Show("Notenblick @VERSION@ konnte nicht geöffnet werden.\n\n" + error.Message,
                 "Notenblick @VERSION@", MessageBoxButtons.OK, MessageBoxIcon.Error);

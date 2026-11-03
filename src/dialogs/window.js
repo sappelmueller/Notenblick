@@ -34,7 +34,7 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
   Notenblick.$('#dialogContent').innerHTML = content;
   Notenblick.$('#dialogSave').textContent = label;
   Notenblick.$('#dialogSave').hidden = !fn;
-  Notenblick.$('#dialog .dialog-actions [data-action=close]').textContent = fn ? 'Abbrechen' : 'Schließen';
+  Notenblick.$('#dialog .dialog-actions [data-action=close]').textContent = options.cancelLabel || (fn ? 'Abbrechen' : 'Schließen');
   Notenblick.$('#dialogError').hidden = true;
   Notenblick.submitDialog = fn;
   Notenblick.clearAnnouncement();
@@ -84,7 +84,7 @@ Notenblick.submitModal=async function(next=false){
  Notenblick.$('#dialogSave').disabled=true;Notenblick.$('#dialogNext').disabled=true;Notenblick.$('#dialogError').hidden=true;
  try{result=await fn(next);if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open&&!result?.keepOpen)Notenblick.closeModal({submitted:true});}
  catch(e){if(Notenblick.submitDialog!==fn||!Notenblick.$('#dialog').open)return;const el=Notenblick.$('#dialogError');el.textContent=e.message;el.hidden=false;if(document.activeElement===Notenblick.$('#dialogTitle'))result={keepOpen:true,focus:'dialogSave'};}
- finally{if(Notenblick.submitDialog===fn||!Notenblick.$('#dialog').open){Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=false;Notenblick.$('#dialogNext').disabled=false;Notenblick.updateOralNext?.();if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open){if(result?.focus)document.getElementById(result.focus)?.focus();else if(!Notenblick.$('#dialog').contains(document.activeElement))Notenblick.$('#dialogSave').focus();}}}
+ finally{if(result?.keepBusy&&Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open){Notenblick.dialogBusy=true;}else if(Notenblick.submitDialog===fn||!Notenblick.$('#dialog').open){Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=false;Notenblick.$('#dialogNext').disabled=false;Notenblick.updateOralNext?.();if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open){if(result?.focus)document.getElementById(result.focus)?.focus();else if(!Notenblick.$('#dialog').contains(document.activeElement))Notenblick.$('#dialogSave').focus();}}}
 };
 Notenblick.confirm = function confirm(title, text, fn, label = 'Bestätigen', options = {}) {
   Notenblick.modal(title, '<p>' + Notenblick.esc(text) + '</p>', fn, label,{size:'small',...options});
@@ -124,7 +124,7 @@ Notenblick.runOperation=async function(title,work,{cancellable=false}={}){
  while(content.firstChild)nodes.append(content.firstChild);
  heading.textContent=title;heading.tabIndex=-1;save.hidden=true;A.dialogCancellable=cancellable;for(const[el]of close)el.disabled=!cancellable;
  content.innerHTML='<div class="operation-progress"><p id="operationStep"></p><progress id="operationProgress" aria-label="Fortschritt"></progress></div>';content.append(live);dialog.setAttribute('aria-describedby','operationStep');dialog.scrollTop=0;heading.focus();
- let last=0,previous='';const update=(text,done,total)=>{
+ let last=0,previous='',handedOff=false;const update=(text,done,total)=>{
   if(!dialog.open||A.submitDialog!==fn)return;
   A.$('#operationStep').textContent=text;const bar=A.$('#operationProgress');
   if(Number.isSafeInteger(total)&&total>0&&Number.isSafeInteger(done)){bar.max=total;bar.value=done;}else bar.removeAttribute('value');
@@ -133,10 +133,13 @@ Notenblick.runOperation=async function(title,work,{cancellable=false}={}){
  // Once the native save handoff begins, only its save dialog can cancel it.
  // Keep the originating form alive until the native final reply arrives.
  const lock=()=>{A.dialogCancellable=false;for(const[el]of close)el.disabled=true;};
- try{return await work(update,()=>dialog.open&&A.submitDialog===fn,lock);}
+ const handoff=()=>{handedOff=true;lock();};
+ try{return await work(update,()=>dialog.open&&A.submitDialog===fn,lock,handoff);}
  finally{
+  if(!handedOff){
   live.textContent='';saved.liveParent.insertBefore(live,saved.liveNext?.parentNode===saved.liveParent?saved.liveNext:null);
   if(dialog.open&&A.submitDialog===fn){content.replaceChildren(nodes);if(saved.description)dialog.setAttribute('aria-describedby',saved.description);else dialog.removeAttribute('aria-describedby');heading.textContent=saved.title;save.hidden=saved.saveHidden;A.dialogCancellable=saved.cancellable;for(const[el,disabled]of close)el.disabled=disabled;dialog.scrollTop=saved.scroll;save.focus();}
+  }
  }
 };
 })(globalThis.Notenblick = globalThis.Notenblick || {});

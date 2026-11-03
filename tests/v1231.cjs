@@ -66,6 +66,32 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
  await prepare(11);const toggle=$('[data-menu-key=add-performance]');A.openMenu(toggle);w.dispatchEvent(new w.Event('resize'));assert.equal(w.document.activeElement,toggle);assert.equal(toggle.getAttribute('aria-expanded'),'false');
  A.openMenu(toggle);const outside=$('#overview-search');outside.focus();w.dispatchEvent(new w.Event('resize'));assert.equal(w.document.activeElement,outside);assert.equal(outside.closest('[hidden]'),null);
  checks.push('1.23.3: unveränderte Scrollfähigkeit ohne tabindex-Mutationen, 20 Resize-Ereignisse gebündelt, Eingaben/Fokus erhalten; Größenänderung schließt beide Menüarten mit sicherer Fokusrückkehr und ohne Fokusraub außerhalb des Menüs');
+
+ // 1.24: finish the accessible course name before revealing the destination.
+ await prepare(11);A.prefs.quickIds=[A.ui.course];
+ for(const main of ['home','admin','backup','settings','help']){
+  A.activateGroup('main',main);A.focusTarget($('#'+main+' h1'));A.clearAnnouncement();await settle();
+  const seen=[],focused=[],spoken=[];const label=A.labelCourseHeading;A.labelCourseHeading=()=>{seen.push($('#notes').hidden);return label();};
+  const f=e=>{if(e.target.id==='subjectTitle')focused.push(e.target);};w.document.addEventListener('focusin',f);
+  const watch=new w.MutationObserver(()=>{const t=$('#announcement').textContent;if(t)spoken.push(t);});watch.observe($('#announcement'),{subtree:true,childList:true,characterData:true});
+  key('1',{altKey:true});await settle();assert.equal(seen[0],true);assert.equal(focused.length,1);assert.deepEqual(spoken,[]);assert.equal(w.document.activeElement.id,'subjectTitle');
+  key('1',{altKey:true});await settle();assert.equal(focused.length,1);assert.deepEqual(spoken,[$('#subjectTitle').getAttribute('aria-label')]);
+  A.labelCourseHeading=label;watch.disconnect();w.document.removeEventListener('focusin',f);
+ }
+ checks.push('1.24: Fachüberschrift aus allen fünf anderen Hauptbereichen vor dem Einblenden fertig, eine Fokusquelle; Wiederholung eine Live-Ansage ohne Refokus');
+ await prepare(11);w.eval('globalThis.installUpdateTestHost='+require('./update-fixture.cjs').toString());const host=w.installUpdateTestHost();
+ A.updates.initialized=false;const notesBefore=JSON.stringify(A.data),workspaceBefore=JSON.stringify(A.getWorkspace());await A.initUpdates();assert.deepEqual(Array.from(host.calls,c=>c.op),['update-state']);assert.equal(A.updates.enabled,false);assert.equal(JSON.stringify(A.data),notesBefore);assert.equal(JSON.stringify(A.getWorkspace()),workspaceBefore);
+ A.activateGroup('main','settings');A.activateGroup('settings','general');assert.equal($('#updatesTitle').textContent,'Aktualisierungen');assert.equal($('#updateAuto').checked,false);
+ await A.checkUpdates(false);await settle();assert.equal($('#updateResult').textContent,'Eine neue Version ist verfügbar.');assert.equal($('#updateActions').hidden,false);const opener=$('#updateActions [data-action=update-notes]');opener.focus();A.updateDialog(true);assert.equal($('#dialogTitle').textContent,'Was ist neu in Notenblick 1.25.0?');assert.equal(w.document.activeElement.id,'dialogTitle');assert.equal($('#dialog .dialog-actions [data-action=close]').textContent,'Schließen');assert.equal($('#dialogContent').querySelectorAll('li').length,3);A.closeModal();assert.equal(w.document.activeElement,opener);
+ A.activateGroup('main','home');const homeNode=$('#homeContinue'),homeData=JSON.stringify(A.data);A.syncUpdateViews();assert.equal($('#homeUpdateSlot').hidden,false);assert.equal($('#homeContinue'),homeNode);A.dismissUpdate();assert.equal($('#homeUpdateSlot').hidden,true);assert.equal(JSON.stringify(A.data),homeData);
+ A.updates.sessionHidden='';A.syncUpdateViews();await A.setUpdatePreference({hiddenVersion:'1.25.0'});assert.equal($('#homeUpdateSlot').hidden,true);host.offer.version='1.26.0';await A.checkUpdates(false);assert.equal($('#homeUpdateSlot').hidden,false);assert.equal($('#homeContinue'),homeNode);
+ host.offline=true;await A.checkUpdates(false);assert.equal(A.updates.message,'Die Aktualisierung konnte nicht geprüft werden. Du kannst normal weiterarbeiten.');host.offline=false;host.offer=null;await A.checkUpdates(false);assert.equal(A.updates.message,'Dein Notenblick ist aktuell.');assert.equal($('#homeUpdateSlot').hidden,true);
+ assert.equal(host.calls.some(c=>['write','read','download','migration-commit'].includes(c.op)),false);
+ checks.push('1.24: kein Start-Netzwerk ohne Einwilligung; Einstellungen außerhalb von Daten/Ansicht; neue/keine/offline Version, gepflegte Neuerungen, Dialogfokus/Rückkehr, sitzungsweises und versionsbezogenes Ausblenden ohne Neuaufbau');
+ host.offer={version:'1.27.0',notes:['Notenblick startet jetzt maximiert.','Tastenkombinationen werden zuverlässiger angesagt.','Neue Versionen lassen sich direkt installieren.']};await A.checkUpdates(false);host.prepareMode='wait';$('#homeUpdateSlot [data-action=update-install]').focus();A.updateDialog(false);const pendingUpdate=A.submitModal();await settle();assert.equal(A.dialogBusy,true);assert.equal(A.dialogCancellable,true);A.closeModal();await pendingUpdate;assert.equal($('#dialog').open,false);assert.equal(host.handedOff,false);assert.equal(w.document.activeElement.dataset.action,'update-install');
+ host.prepareMode='ready';const flush=A.flushForClose;A.flushForClose=async()=>false;A.updateDialog(false);await A.submitModal();assert.equal($('#dialog').open,true);assert.equal(host.handedOff,false);assert.match($('#dialogError').textContent,/speichere/);A.closeModal();A.flushForClose=flush;
+ A.updateDialog(false);await A.submitModal();assert.equal(host.handedOff,true);assert.equal(A.dialogBusy,true);assert.equal(A.dialogCancellable,false);assert.equal($('#dialog .dialog-actions [data-action=close]').disabled,true);assert.equal($('#operationStep').textContent,'Notenblick wird neu gestartet …');host.restore();
+ checks.push('1.24: Fortschritt und sicherer Abbruch mit Fokusrückkehr; Speicherfehler verhindern Installation; nach ausdrücklicher Übergabe kein Abbruch mehr und kein Rücksprung auf eine alte Dialogseite');
  await settle();assert.deepEqual(ctx.errors,[]);await A.workspacePromise;fs.writeFileSync(path.join(__dirname,'v1231-results.json'),JSON.stringify({checks,syntheticOnly:true,windows:false,nvda:false},null,2));console.log('1.23.1–1.23.3:',checks.length,'gezielte Gruppen');
  }finally{await settle();w.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

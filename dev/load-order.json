@@ -23,6 +23,7 @@
   "app/preferences.js",
   "app/context.js",
   "app/components.js",
+  "app/updates.js",
   "app/changes.js",
   "app/navigation.js",
   "app/weight-editor.js",

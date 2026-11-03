@@ -24,7 +24,7 @@ def pe(file):
     flags=struct.unpack_from('<I',data,offset(clr)+16)[0] if clr else None
     return data,machine,flags,directories,offset
 
-for file in [root/'dist/Notenblick.exe',*(root/'dist/Programm/Windows').glob('*.dll')]:
+for file in [root/'dist/Notenblick.exe',root/'dist/Programm/Windows/Notenblick.Aktualisierung.exe',*(root/'dist/Programm/Windows').glob('*.dll')]:
     _,machine,flags,_,_=pe(file)
     assert machine==0x14c and flags is not None and flags&1 and not flags&(2|0x20000),str(file)
     checks.append(file.name+': IL-only AnyCPU; neither 32BITREQUIRED nor 32BITPREFERRED')
@@ -58,6 +58,14 @@ with tempfile.TemporaryDirectory(prefix='notenblick-loader-') as temp:
     subprocess.run([str(dotnet),str(architecture),str(root/'dist/Programm/Windows/Notenblick.Fenster.dll')],check=True)
     checks.append('Compiled production architecture selector: native and emulated process cases; no Windows API execution on Linux')
     checks.append('Compiled Windows DLL IL: startup Maximized before Shown, no delayed resize, standard window controls retained; no real Windows GUI execution')
+    updater_folder=temp/'updater';updater_folder.mkdir();updater=updater_folder/'UpdateProbe.exe'
+    storage=root/'dist/Programm/Windows/Notenblick.Speicherung.dll'
+    newton=root/'dev/newtonsoft.json/lib/net45/Newtonsoft.Json.dll'
+    subprocess.run(compiler()+['-nologo','-nostdlib+','-target:exe','-out:'+str(updater)]+['-r:'+str(p) for p in probe_refs.glob('*.dll')]+['-r:'+str(storage),'-r:'+str(newton)]+[str(root/'native'/p) for p in ['UpdateTransaction.cs','UpdateClient.cs']]+[str(root/'tests/UpdateProbe.cs')],check=True)
+    shutil.copy2(storage,updater_folder/storage.name);shutil.copy2(newton,updater_folder/newton.name)
+    (updater_folder/'UpdateProbe.runtimeconfig.json').write_text((temp/'ArchitectureProbe.runtimeconfig.json').read_text())
+    subprocess.run([str(dotnet),str(updater),str(root/'dist')],check=True)
+    checks.append('Production updater: controlled releases/transport, complete archive checks, opt-in/daily preferences and cancellation; real filesystem rollback at every journal boundary; no Windows updater execution')
     subprocess.run(compiler()+['-nologo','-nostdlib+','-target:exe','-out:'+str(probe)]+['-r:'+str(refs/(name+'.dll')) for name in ['mscorlib','System','System.Core']]+[str(root/'native/ProgramLibraries.cs'),str(root/'.build/generated/ReleaseLibraries.g.cs'),str(root/'.build/generated/ReleaseFiles.g.cs'),str(root/'tests/LoaderProbe.cs')],check=True)
     (temp/'LoaderProbe.runtimeconfig.json').write_text(json.dumps({'runtimeOptions':{'tfm':'net8.0','framework':{'name':'Microsoft.NETCore.App','version':'8.0.15'}}}))
     def run(mode,folder,label):

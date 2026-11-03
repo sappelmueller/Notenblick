@@ -55,6 +55,7 @@ Notenblick.boot = async function boot() {
     if(!Notenblick.fatalStart&&Notenblick.$('#bootError').dataset.kind==='timeout')Notenblick.$('#bootError').hidden=true;
     Notenblick.remember();
     document.documentElement.dataset.ready = 'true';
+    if(!Notenblick.fatalStart)Notenblick.initUpdates().catch(()=>{});
   }
 };
 Notenblick.folder = async function folder() {
@@ -119,13 +120,17 @@ Notenblick.requestClose = async function requestClose() {
     }
     Notenblick.closeModal();
   }
+  if(!await Notenblick.flushForClose())return;
+  await window.NRDesktop.call('close-ready');
+};
+Notenblick.flushForClose=async function(){
   await Notenblick.save();
   if (Notenblick.dirty && Notenblick.store) {
     Notenblick.error('Bitte erstelle eine Sicherung, bevor du das Programm schließt. Die letzten Änderungen sind noch nicht vollständig gespeichert.');
-    return;
+    return false;
   }
   await Notenblick.workspacePromise;
-  if(Notenblick.workspaceFailed){Notenblick.error('Die letzte Ansicht konnte nicht gespeichert werden. Bitte schließe die Meldung und versuche erneut zu speichern.','storage');return;}
-  await window.NRDesktop.call('close-ready');
+  if(Notenblick.workspaceFailed){Notenblick.error('Die letzte Ansicht konnte nicht gespeichert werden. Bitte schließe die Meldung und versuche erneut zu speichern.','storage');return false;}
+  return true;
 };
 })(globalThis.Notenblick = globalThis.Notenblick || {});

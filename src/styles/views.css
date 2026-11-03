@@ -550,3 +550,14 @@ dialog[data-size=small]{width:min(560px,calc(100% - 24px))}dialog[data-size=medi
 .help-tabs{min-width:0}.help-tabs li{min-width:0;max-width:100%}.help-tabs a{min-width:0;max-width:100%}
 
 @media(max-width:400px){.participant-list{padding:8px}.participant-list .check{padding:4px 0;column-gap:6px}}
+
+/* Optional updates share the home panels and ordinary settings layout. */
+.update-card{border-inline-start:5px solid var(--accent);margin-bottom:24px}
+.update-card .button-row{margin-bottom:16px;flex-wrap:wrap}
+.update-card .check,.update-auto{max-width:100%;align-items:flex-start}
+.update-settings{border-top:1px solid var(--line);padding-top:28px;margin-top:28px;max-width:800px}
+.update-settings .update-auto{margin-top:20px;margin-bottom:12px}
+.update-result{margin-top:16px;margin-bottom:16px}
+.update-notes{padding-inline-start:24px}
+.update-notes li{margin-bottom:12px}
+@media(forced-colors:active){.update-card{border:2px solid CanvasText}}

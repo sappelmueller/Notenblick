@@ -5,13 +5,13 @@ A.shortcutTabs=function(){
  const main={notes:'noteTabs',admin:'adminTabs',backup:'backupTabs',settings:'settingsTabs',help:'helpTabs'}[A.ui.main];
  return main?document.getElementById(main):null;
 };
-A.focusCourseHeading=function(){
+A.labelCourseHeading=function(){
  const h=A.$('#subjectTitle'),tab=A.$('#noteTabs [aria-selected=true]');
  // One focus announcement, including the active area; the visible H1 stays intact.
  const label=h.textContent+(tab?', '+tab.textContent:'');
  if(h.getAttribute('aria-label')!==label)h.setAttribute('aria-label',label);
- A.focusTarget(h,{announceIfFocused:true});
 };
+A.focusCourseHeading=function({announceIfFocused=true}={}){A.labelCourseHeading();A.focusTarget(A.$('#subjectTitle'),{announceIfFocused});};
 A.activateShortcutTab=function(list,target){
  if(!target){A.announce('Keine Registerkarte vorhanden.',{defer:true});return;}
  const group=list.id.startsWith('entryTabs-')?'entry-'+list.id.slice(10):{noteTabs:'notes',adminTabs:'class',settingsTabs:'settings',backupTabs:'backup',helpTabs:'help'}[list.id];
@@ -29,7 +29,7 @@ A.handleShortcut=function(e){
  if(e.altKey&&!e.shiftKey&&!e.ctrlKey){
   const main={s:'home',n:'notes',v:'admin',i:'backup',e:'settings',h:'help'}[key];
   if(main){consume();
-   if(main==='notes'&&A.getCourse()){if(A.chooseContext({courseId:A.ui.course,historical:true,openNotes:true}))A.focusCourseHeading();}
+   if(main==='notes'&&A.getCourse()){const repeated=A.ui.main==='notes';if(A.chooseContext({courseId:A.ui.course,historical:true,openNotes:true,shortcut:true}))A.focusCourseHeading({announceIfFocused:repeated});}
    else if(A.activateGroup('main',main,false,true))A.focusTarget(A.$('#'+main+' h1'),{announceIfFocused:true});
    return true;
   }
@@ -44,7 +44,7 @@ A.handleShortcut=function(e){
    }
    const year=A.ui.main==='notes'?A.ui.year:A.ui.workingYear,chosen=A.shortcutChoices(year).chosen[Number(digit)-1];
    if(!chosen){A.announce('Kein Fach zugeordnet.',{defer:true});return true;}
-   if(A.chooseContext({courseId:chosen.id,historical:true,openNotes:true}))A.focusCourseHeading();return true;
+   const repeated=A.ui.main==='notes';if(A.chooseContext({courseId:chosen.id,historical:true,openNotes:true,shortcut:true}))A.focusCourseHeading({announceIfFocused:repeated});return true;
   }
  }
  if(!e.ctrlKey||e.altKey)return false;
