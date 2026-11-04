@@ -45,7 +45,7 @@
           "heading": "Programmstart und Aktualisierung",
           "paragraphs": [
             "Entpacke Notenblick vollständig und starte „Notenblick.exe“. Unter „Einstellungen → Allgemein“ entscheidest du, ob beim nächsten Start die Startseite oder deine letzte Ansicht erscheint.",
-            "Unter „Einstellungen → Allgemein → Aktualisierung prüfen“ suchst du freiwillig nach einer neuen Version. „Was ist neu?“ erklärt die Änderungen. Erst „Jetzt aktualisieren“ und deine anschließende Zustimmung starten den Austausch. Deine Noten bleiben erhalten.",
+            "Unter „Einstellungen → Allgemein → Aktualisierung prüfen“ suchst du nach einer neuen Version. Wenn „Beim Start nach Aktualisierungen suchen“ aktiviert ist, prüft Notenblick bei jedem Programmstart einmal im Hintergrund. „Was ist neu?“ zeigt die Neuerungen. „Jetzt aktualisieren“ öffnet die Bestätigung; erst „Aktualisierung starten“ beginnt den Austausch. Deine Noten und Einstellungen bleiben erhalten.",
             "Bei einer manuellen Aktualisierung beendest du Notenblick und ersetzt nur „Notenblick.exe“ und den vollständigen Ordner „Programm“. Behalte deinen bisherigen Ordner „Daten“. Für einen Computerwechsel kopierst du den gesamten Notenblick-Ordner."
           ],
           "id": "einstieg-programmstart-und-aktualisierung"

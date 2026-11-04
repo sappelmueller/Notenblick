@@ -1,0 +1,92 @@
+{
+  "version": "1.25.1",
+  "test_version": true,
+  "official_release": false,
+  "approved_update": false,
+  "branch": "entwicklung/1.25.1",
+  "baseline": "f6eb7a3d910855804932acde01079f273bc762f9",
+  "targeted_groups": 6,
+  "native_updater_checks": 168,
+  "dialog_browser_axe_cases": 12,
+  "maximum_browser_zoom_percent": 400,
+  "targeted_run": {
+    "report": "reports/20261104T144836271356Z/summary.json",
+    "report_sha256": "6f7dacab408bdfedb62c03399ea0c0403f285434e4031625b7a29c845872bfde",
+    "executed": 5,
+    "reused": 1
+  },
+  "package_run": {
+    "report": "reports/20261104T145152172539Z/summary.json",
+    "report_sha256": "53a25e3cace01ecb2f8bb939e22ceceeed200dd10b9716d448ca9ee928ac8023",
+    "smoke_test_passed": true
+  },
+  "runtime_and_test_inputs_unchanged_since_targeted_run": true,
+  "final_documentation_binding": "Finaler gezielter Wiederaufnahmelauf vor Commit; vollständige Logs lokal.",
+  "windows_zip": {
+    "name": "Notenblick_1.25.1.zip",
+    "bytes": 2099485,
+    "sha256": "6d0f2efd7946e2aa1a446369e102399b8d98590733ac388c866280afa95cee41"
+  },
+  "unchanged_modules_sha256": {
+    "src/domain/arithmetic.js": "41d05c429ed7fdd94b83b18eb6fff5eb79ecea34b0089dd49405ac96a10665d6",
+    "src/domain/points.js": "c4512fe4494f8dbad606531ee56995e4f944619a32427f2a9a6f2d22292f0f29",
+    "src/domain/records.js": "fc81e1ce936232e277f6c487b947c65795def6c32d206f44418140954738ae9e",
+    "src/domain/evaluation.js": "fc6215eb8163614486d077d274b84c427e870c44b8daa0e68cb25ef517eaf36b",
+    "src/domain/finals.js": "aa19d332bb0b0b9fc3b88b84b14066d00b02956b656a0cd4b3bc69dde99d280b",
+    "src/domain/weighting.js": "432fa0f9817ae279e6051787f340d807a4009f52f887bef91c10d96521a55a3b",
+    "src/storage.js": "2bc783f10d2bb5d5ca504570cae53c41fb1f6c91be168923c1855aee1a6e4d1a",
+    "src/session.js": "11ca0fe1245880c2832caa89595917a669306067bbb75612224e46deda75eb2c",
+    "native/Storage.cs": "04b1486f1e03d76eb3167da9c8da324cb5f02e7b3387849b218e2da7ab059348",
+    "native/Migration.cs": "eadee7217c95cf22ec50081e854c1a98d678114c876fb4169b7dd31e1cf50d92",
+    "native/UpdateHelper.cs": "bab12ea5d96605d490b7dedfedf822c67cf9ebad9c31fb5fd15cc929f42b0137",
+    "native/UpdateTransaction.cs": "2cc8ee803642ff5893a48dffb4f874ff53be2174e9eae7eab78b242a5b2effd3",
+    "src/exports/collection.js": "fb58f8df8ae0530bf5c48bdc6ce87a65ad5b61ecb4ca974420a18dd72de8744c",
+    "src/exports/dialog.js": "a0ea318755cef06d6bab97d1cf5304115e5e71619166dc65ba2a123dfd8ababe",
+    "src/exports/office.js": "75234ae0f1c3d6faae473bfe83a001324a1da85c79d236d2cd44126f6de10950",
+    "src/exports/pdf.js": "9cd5002f01ddabc79ceadcae7880cf1d16fd50b5aca5ecf6b421f858dbbfda37",
+    "src/exports/report.js": "671d1c4e1d054686dcdbdcf2b26460c915b583ad4f2fd0cb2bc0c8b3a30a3ed2",
+    "src/exports/text.js": "8cdcd50fe39720191845cdfa89f8a86ccdfa28e6743940ef744b4c5c5ba5bf72"
+  },
+  "unchanged_native_update_source_and_installation": true,
+  "historical_1250_audit": "docs/qa-1.25.0.json; keine frische Vollprüfung von 1.25.1",
+  "grade_stress_test_rerun": false,
+  "export_suite_rerun": false,
+  "full_browser_suite_rerun": false,
+  "double_build_rerun": false,
+  "windows_1251_tested": false,
+  "nvda_1251_tested": false,
+  "braille_1251_tested": false,
+  "github_actions_used": false,
+  "receipts": [
+    {
+      "task": "infrastructure",
+      "key": "16a51b5c2be7547bace8bb9e210168f11154bed8c78db441ff6ed79735bb0f8b",
+      "receipt_sha256": "749249730c5c87367991db6a7ca6d8faf2a30094b61d17cad7c1adca8868ec6f"
+    },
+    {
+      "task": "ui",
+      "key": "a97cb52de62252205c1ce6d7c36777f2c381b764ab859ec58f5192c566c3ecb8",
+      "receipt_sha256": "208a46009ea0053cc88c29819217642b20c3bcdb640ae0ccb0d47111d2754f1e"
+    },
+    {
+      "task": "v1230",
+      "key": "e5f290d24237fdb46ab4324c1310c64a34626fbe910dbcadb34b1e3310eb857c",
+      "receipt_sha256": "949029a3c6189b5f774f66fed3827cba20edbc7f19291b3824e6f1898cae4e91"
+    },
+    {
+      "task": "v1231",
+      "key": "3c0d5bddd78157e43657ef80d61d5b044f18dcb43862b347fd671ca448dd888b",
+      "receipt_sha256": "0bdcd344bbb1dc83fd989649617a2fc634b0217bb39eb6b392b46e1ef148bbb0"
+    },
+    {
+      "task": "update",
+      "key": "8cc40d923dc72e0fb4227dcc273cd7391785430204fc4272b54bd5ff55f78c0a",
+      "receipt_sha256": "f59aa935fbe522b73773b40df4f8a3ea52b7575dabf81be9ab9b4c126076919e"
+    },
+    {
+      "task": "update-browser",
+      "key": "56882633757167183f240d2c34b59a345447625881db4b11939e7bd641df5c12",
+      "receipt_sha256": "0792063e833815e0c4dc9e6ca33304409da1d8a8fd2a5d9a34fbe9855ecc09bb"
+    }
+  ]
+}

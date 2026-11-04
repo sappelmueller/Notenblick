@@ -48,17 +48,50 @@ const assert=require('node:assert/strict');
   const later=slot.querySelector('[data-action=update-later]');later.focus();await A.action(later);assert.equal(slot.hidden,true);assert.equal(w.document.activeElement.id,'continueTitle');assert.equal(host.state.hiddenVersion,'');assert.equal(host.calls.some(c=>['update-prepare','update-install'].includes(c.op)),false);
   await A.checkUpdates(false);assert.equal(slot.hidden,true);assert.equal($('#homeContinue'),continueNode);assert.equal($('.home-grid'),grid);
   // Recreate only the UI session boundary; native version preference survives.
-  A.updates.sessionHidden='';A.updates.result='';A.updates.initialized=false;const beforeInit=host.calls.length,focusBeforeInit=w.document.activeElement;await A.initUpdates();assert.equal(slot.hidden,false);assert.equal(w.document.activeElement,focusBeforeInit);assert.equal($('#dialog').open,false);assert.deepEqual(Array.from(host.calls.slice(beforeInit),c=>c.op),['update-state']);assert.equal($('#homeUpdateVersion').textContent,'Zuletzt gefunden: Notenblick 1.25.0.');
+  A.updates.sessionHidden='';A.updates.result='';A.updates.initialized=false;const beforeInit=host.calls.length,focusBeforeInit=w.document.activeElement;await A.initUpdates();assert.equal(slot.hidden,false);assert.equal(w.document.activeElement,focusBeforeInit);assert.equal($('#dialog').open,false);assert.deepEqual(Array.from(host.calls.slice(beforeInit),c=>c.op),['update-state']);assert.equal($('#homeUpdateVersion').textContent,'Notenblick 1.25.0 wurde bereits gefunden. Die Verfügbarkeit wird beim Aktualisieren geprüft.');
   host.offer.version='1.26.0';await A.checkUpdates(false);const hide=$('#updateHide');hide.focus();hide.checked=true;await hide.onchange({target:hide});assert.equal(slot.hidden,true);assert.equal(host.state.hiddenVersion,'1.26.0');assert.equal(w.document.activeElement.id,'continueTitle');assert.equal($('#announcement').textContent,'');
   A.updates.initialized=false;A.updates.result='';await A.initUpdates();assert.equal(slot.hidden,true);host.offer.version='1.27.0';await A.checkUpdates(false);assert.equal(slot.hidden,false);assert.equal($('#updateHideLabel').textContent,'Hinweis zu Version 1.27.0 nicht mehr anzeigen');
   const continueTitle=$('#continueTitle');continueTitle.hidden=true;later.focus();await A.action(later);assert.equal(w.document.activeElement.id,'homeSubjectsTitle');continueTitle.hidden=false;
-  host.offer.version='1.28.0';await A.checkUpdates(false);host.offline=true;await A.checkUpdates(false);assert.equal($('#homeUpdateVersion').textContent,'Zuletzt gefunden: Notenblick 1.28.0.');assert.equal($('#homeUpdateStatus').textContent,'Die Verfügbarkeit konnte jetzt nicht geprüft werden.');assert.equal($('#homeUpdateStatus').hidden,false);
+  host.offer.version='1.28.0';await A.checkUpdates(false);host.offline=true;await A.checkUpdates(false);assert.equal($('#homeUpdateVersion').textContent,'Notenblick 1.28.0 wurde bereits gefunden. Die Verfügbarkeit wird beim Aktualisieren geprüft.');assert.equal($('#homeUpdateStatus').textContent,'Die Verfügbarkeit konnte jetzt nicht geprüft werden.');assert.equal($('#homeUpdateStatus').hidden,false);
   const callsBeforeRender=host.calls.length;A.syncUpdateViews();assert.equal(host.calls.length,callsBeforeRender);
-  A.activateGroup('main','settings');assert.equal($('#updateKnownVersion').textContent,'Zuletzt gefunden: Notenblick 1.28.0.');assert.equal($('#updateKnownVersion').hidden,false);assert.equal($('#updateResult').textContent,'Die Aktualisierung konnte nicht geprüft werden. Du kannst normal weiterarbeiten.');assert.equal($('#updateCheck').disabled,false);
-  $('#updateActions [data-action=update-install]').focus();A.updateDialog(false);assert.match($('#dialogContent').textContent,/Zuletzt gefunden: Notenblick 1.28.0/);assert.doesNotMatch($('#dialogContent').textContent,/1.28.0 ist verfügbar/);
+  A.activateGroup('main','settings');assert.equal($('#updateKnownVersion').textContent,'Notenblick 1.28.0 wurde bereits gefunden. Die Verfügbarkeit wird beim Aktualisieren geprüft.');assert.equal($('#updateKnownVersion').hidden,false);assert.equal($('#updateResult').textContent,'Die Aktualisierung konnte nicht geprüft werden. Du kannst normal weiterarbeiten.');assert.equal($('#updateCheck').disabled,false);
+  $('#updateActions [data-action=update-install]').focus();A.updateDialog(false);assert.equal($('#dialogTitle').textContent,'Notenblick 1.28.0 installieren?');assert.equal($('#dialogContent').textContent,'Notenblick wird für die Aktualisierung kurz geschlossen und danach wieder geöffnet. Deine Noten und Einstellungen bleiben erhalten.');assert.doesNotMatch($('#dialogContent').textContent,/1.28.0 ist verfügbar/);
   host.prepareMode='fail';await A.submitModal();assert.equal(host.calls.filter(c=>c.op==='update-prepare').length,1);assert.equal(host.calls.filter(c=>c.op==='update-install').length,0);A.closeModal();
   host.offline=false;await A.checkUpdates(false);assert.equal($('#updateResult').textContent,'Notenblick 1.28.0 ist verfügbar.');assert.equal($('#updateKnownVersion').hidden,true);host.offer=null;await A.checkUpdates(false);assert.equal($('#updateKnownVersion').hidden,true);assert.equal($('#updateActions').hidden,true);A.activateGroup('main','home');assert.equal($('#homeUpdateSlot').hidden,true);A.activateGroup('main','settings');
   assert.equal(JSON.stringify(A.data),data);assert.equal(JSON.stringify(A.getWorkspace()),workspace);
+  // Optional startup work is scheduled once, stays silent and never replaces
+  // the existing home controls or the user's focused input.
+  const nativeCall=w.NRDesktop.call,originalTimeout=w.setTimeout,timers=[],announcements=[],announce=A.announce;
+  w.setTimeout=(fn,delay,...args)=>delay===1200?(timers.push(fn),123):originalTimeout(fn,delay,...args);
+  A.announce=(...args)=>announcements.push(args);
+  const settle=()=>new Promise(resolve=>originalTimeout(resolve,0));
+  const restart=async()=>{A.updates.initialized=false;A.updates.result='';A.updates.message='';A.updates.sessionHidden='';await Promise.all([A.initUpdates(),A.initUpdates()]);};
+  const checks=()=>host.calls.filter(c=>c.op==='update-check').length;
+  try{
+   host.state.enabled=true;host.state.hiddenVersion='';host.offer={version:'1.33.0',notes:['Eine neue Version ist verfügbar.','Die Suche ist zuverlässiger geworden.','Die Bestätigung ist verständlicher.']};host.state.offer=JSON.parse(JSON.stringify(host.offer));host.offline=false;
+   A.activateGroup('main','home');const stableGrid=$('.home-grid');$('#homeContinue').focus();const homeFocus=w.document.activeElement;
+   let count=checks();await restart();assert.equal(timers.length,1);assert.equal(checks(),count);assert.equal($('#homeUpdateVersion').textContent,'Notenblick 1.33.0 wurde bereits gefunden. Die Verfügbarkeit wird beim Aktualisieren geprüft.');assert.equal($('#homeUpdateStatus').hidden,true);
+   timers.shift()();await settle();assert.equal(checks(),count+1);assert.equal(host.calls.filter(c=>c.op==='update-check').at(-1).args.automatic,true);assert.equal($('#homeUpdateVersion').textContent,'Notenblick 1.33.0 ist verfügbar.');assert.equal($('.home-grid'),stableGrid);assert.equal(w.document.activeElement,homeFocus);assert.equal($('#dialog').open,false);assert.equal(announcements.length,0);
+   // Turning the preference off during the startup delay prevents even a bridge call.
+   await restart();assert.equal(timers.length,1);await A.setUpdatePreference({enabled:false});count=checks();timers.shift()();await settle();assert.equal(checks(),count);
+   await restart();assert.equal(timers.length,0);await A.checkUpdates(true);assert.equal(checks(),count);
+   host.state.enabled=true;host.offline=true;await restart();timers.shift()();await settle();assert.equal(checks(),count+1);assert.equal(A.updates.result,'error');assert.equal(A.updates.offer.version,'1.33.0');assert.equal(announcements.length,0);
+   host.offline=false;host.offer.version='1.34.0';await restart();timers.shift()();await settle();assert.equal(checks(),count+2);assert.equal($('#homeUpdateVersion').textContent,'Notenblick 1.34.0 ist verfügbar.');assert.equal(w.document.activeElement,homeFocus);
+   // A pending automatic check and manual click never create parallel bridge work.
+   let complete;w.NRDesktop.call=(op,...args)=>op==='update-check'?new Promise((resolve,reject)=>{complete=()=>nativeCall(op,...args).then(resolve,reject);}):nativeCall(op,...args);
+   const automatic=A.checkUpdates(true);await A.checkUpdates(false);await complete();await automatic;assert.equal(checks(),count+3);w.NRDesktop.call=nativeCall;
+   for(const main of ['home','settings']){
+    A.activateGroup('main',main);if(main==='settings')A.activateGroup('settings','general');
+    const origin=$(main==='home'?'#homeUpdateSlot [data-action=update-install]':'#updateActions [data-action=update-install]');origin.focus();A.updateDialog();
+    assert.equal($('#dialogTitle').textContent,'Notenblick 1.34.0 installieren?');assert.equal(w.document.activeElement.id,'dialogTitle');assert.equal($('#dialogContent').textContent,'Notenblick wird für die Aktualisierung kurz geschlossen und danach wieder geöffnet. Deine Noten und Einstellungen bleiben erhalten.');
+    assert.equal($('#dialog .dialog-header [data-action=close]').hidden,true);assert.deepEqual(Array.from($('#dialog .dialog-actions').querySelectorAll('button'),b=>b.hidden?null:b.textContent).filter(Boolean),['Abbrechen','Aktualisierung starten']);
+    A.openContextHelp();assert.equal(A.contextHelp.index,43);A.closeContextHelp();assert.equal($('#dialog .dialog-header [data-action=close]').hidden,true);assert.equal(w.document.activeElement.id,'dialogTitle');
+    $('#dialog').dispatchEvent(new w.Event('cancel',{cancelable:true}));assert.equal($('#dialog').open,false);assert.equal(w.document.activeElement,origin);
+   }
+   A.updateDialog(true);assert.deepEqual(Array.from($('#dialogContent').querySelectorAll('li'),n=>n.textContent),host.offer.notes);assert.equal($('#dialogContent').querySelector('p'),null);assert.equal($('#dialogSave').hidden,true);assert.equal($('#dialog .dialog-header [data-action=close]').hidden,false);A.closeModal();
+   A.modal('Andere Aufgabe','<p>Der normale Dialog bleibt erhalten.</p>');assert.equal($('#dialog .dialog-header [data-action=close]').hidden,false);A.closeModal();
+   assert.equal(JSON.stringify(A.data),data);assert.equal(JSON.stringify(A.getWorkspace()),workspace);
+  }finally{w.setTimeout=originalTimeout;A.announce=announce;w.NRDesktop.call=nativeCall;}
   assert.deepEqual(errors,[]);host.restore();
   // Exercise the real bridge's error path, including constructor failures.
   const vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');let receive,sent;

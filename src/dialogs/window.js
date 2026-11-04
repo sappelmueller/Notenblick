@@ -31,6 +31,7 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
   Notenblick.$('#setupFooterSlot').hidden=true;Notenblick.$('#setupFooterSlot').innerHTML='';Notenblick.$('#dialog .dialog-actions [data-action=close]').classList.remove('text-button');
   Notenblick.$('#dialogNext').hidden=true;Notenblick.oralDraft=null;Notenblick.afterClose=null;
   Notenblick.$('#dialogTitle').textContent = title;
+  Notenblick.$('#dialog .dialog-header [data-action=close]').hidden = options.hideHeaderClose === true;
   Notenblick.$('#dialogContent').innerHTML = content;
   Notenblick.$('#dialogSave').textContent = label;
   Notenblick.$('#dialogSave').hidden = !fn;
