@@ -40,7 +40,9 @@ Unter „Einstellungen → Darstellung → Beim Öffnen eines Fachs“ legst du 
 
 Entpacke Notenblick vollständig und starte „Notenblick.exe“. Unter „Einstellungen → Allgemein“ entscheidest du, ob beim nächsten Start die Startseite oder deine letzte Ansicht erscheint.
 
-Vor einer Aktualisierung ist eine zusätzliche Sicherung sinnvoll. Beende Notenblick, ersetze die Programmdateien und behalte deinen bisherigen Ordner „Daten“ unverändert. Wenn du auf einen anderen Computer wechselst, nimm auch den Ordner „Daten“ mit.
+Unter „Einstellungen → Allgemein → Aktualisierung prüfen“ suchst du freiwillig nach einer neuen Version. „Was ist neu?“ erklärt die Änderungen. Erst „Jetzt aktualisieren“ und deine anschließende Zustimmung starten den Austausch. Deine Noten bleiben erhalten.
+
+Bei einer manuellen Aktualisierung beendest du Notenblick und ersetzt nur „Notenblick.exe“ und den vollständigen Ordner „Programm“. Behalte deinen bisherigen Ordner „Daten“. Für einen Computerwechsel kopierst du den gesamten Notenblick-Ordner.
 
 ## Verwaltung
 
@@ -413,6 +415,10 @@ Bewahre deinen Ordner „Daten“ auch bei einer Programmaktualisierung auf. Ein
 ### Allgemein
 
 Unter „Einstellungen → Allgemein“ wählst du bei „Beim Programmstart“ zwischen „Startseite öffnen“ und „Letzte Ansicht öffnen“. Das ändert nicht deine Noten.
+
+Mit „Aktualisierung prüfen“ suchst du nach einer freigegebenen Version. Die Suche beim Programmstart ist freiwillig und lässt sich über „Beim Start nach Aktualisierungen suchen“ einschalten. Deine Noten werden dabei nicht übertragen.
+
+Eine gefundene Version erscheint auch auf der Startseite. „Später aktualisieren“ blendet sie vorübergehend aus. „Hinweis zu Version … nicht mehr anzeigen“ gilt nur für diese Version. Bei einem Fehler kannst du über „Fehlerdetails kopieren“ eine technische Beschreibung kopieren und normal weiterarbeiten.
 
 ### Klassenreihenfolge
 

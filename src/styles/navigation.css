@@ -9,6 +9,7 @@
   min-height:82px;
   padding:0 36px;
   display:flex;
+  flex-wrap:wrap;
   align-items:center;
   gap:48px
 }
@@ -47,7 +48,9 @@
 }
 .tabs li {
   margin:0;
-  padding:0
+  padding:0;
+  min-width:0;
+  max-width:100%
 }
 .tabs a {
   display:block;
@@ -55,8 +58,9 @@
   color:#53645a;
   font-size:.93rem;
   padding:12px 17px;
-  border-radius:6px;
-  font-weight:550
+  border-radius:var(--radius);
+  font-weight:550;
+  overflow-wrap:anywhere
 }
 .tabs a:hover {
   background:#eff3ed

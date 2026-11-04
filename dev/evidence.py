@@ -64,7 +64,7 @@ def node_packages(root,values):
     # bundle exposed by NODE_PATH. Include transitive and optional dependencies.
     script="""const fs=require('fs'),path=require('path'),{createRequire}=require('module');
 const req=createRequire(path.join(process.cwd(),'package.json')),seen=new Set(),missing=[];
-function visit(name,from){try{let p=from.resolve(name);while(!fs.existsSync(path.join(p,'package.json'))){const parent=path.dirname(p);if(parent===p)throw Error(name);p=parent;}p=fs.realpathSync(p);if(seen.has(p))return;seen.add(p);const m=JSON.parse(fs.readFileSync(path.join(p,'package.json'))),next=createRequire(path.join(p,'package.json'));for(const n of Object.keys({...m.dependencies,...m.optionalDependencies}))visit(n,next);}catch{missing.push(name);}}
+function visit(name,from){try{let p;try{p=from.resolve(name+'/package.json');}catch{p=from.resolve(name);}if(!path.isAbsolute(p))return;while(!fs.existsSync(path.join(p,'package.json'))){const parent=path.dirname(p);if(parent===p)throw Error(name);p=parent;}p=fs.realpathSync(p);if(seen.has(p))return;seen.add(p);const m=JSON.parse(fs.readFileSync(path.join(p,'package.json'))),next=createRequire(path.join(p,'package.json'));for(const n of Object.keys({...m.dependencies,...m.optionalDependencies}))visit(n,next);}catch{missing.push(name);}}
 for(const name of Object.keys(require('./package.json').devDependencies||{}))visit(name,req);
 process.stdout.write(JSON.stringify({files:[...seen].sort(),missing:missing.sort()}));"""
     try:

@@ -4,6 +4,7 @@ button,input,select,textarea {
 }
 .selection {
   display:flex;
+  flex-wrap:wrap;
   align-items:end;
   gap:16px;
   border-bottom:1px solid var(--line);
@@ -11,9 +12,9 @@ button,input,select,textarea {
   margin-bottom:26px
 }
 .selection .field {
-  min-width:160px;
+  min-width:min(160px,100%);
   max-width:245px;
-  flex:1
+  flex:1 1 160px
 }
 .selection .button {
   min-width:110px
@@ -33,9 +34,10 @@ button,input,select,textarea {
   color:var(--muted)
 }
 input,select,textarea {
-  min-height:44px;
-  border:1px solid #7b8d7f;
-  border-radius:6px;
+  min-width:0;
+  min-height:var(--control-height);
+  border:1px solid var(--control-border);
+  border-radius:var(--radius);
   color:var(--ink);
   background:#fff;
   padding:9px 12px;
@@ -45,7 +47,7 @@ textarea {
   resize:vertical;
   min-height:92px
 }
-input[aria-invalid=true],select[aria-invalid=true] {
+input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true] {
   border:2px solid var(--red)
 }
 input[type=checkbox] {
@@ -60,25 +62,32 @@ input[type=checkbox] {
   margin-bottom:20px
 }
 .check {
-  display:flex;
-  gap:10px;
+  display:grid;
+  grid-template-columns:1.1rem minmax(0,1fr);
+  gap:var(--space-2);
   align-items:flex-start;
-  font-size:.87rem
+  font-size:.87rem;
+  min-width:0;
+  max-width:100%;
+  overflow-wrap:anywhere;
+  cursor:pointer
 }
 .check input {
   flex-shrink:0;
-  margin-top:3px
+  margin:3px 0 0;
+  justify-self:start
 }
 .entry-top .field {
   max-width:520px;
-  flex:1
+  min-width:min(180px,100%);
+  flex:1 1 240px
 }
 .single .field {
   margin-bottom:18px
 }
 .form-grid {
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));
   gap:18px
 }
 fieldset {
@@ -118,6 +127,8 @@ dialog {
   border-radius:12px;
   width:min(650px,calc(100% - 28px));
   max-height:90vh;
+  max-height:90dvh;
+  overflow:hidden;
   color:var(--ink);
   box-shadow:0 20px 70px #1b342b33
 }
@@ -125,8 +136,20 @@ dialog::backdrop {
   background:#1f302b77
 }
 #dialogForm {
-  padding:27px
+  padding:var(--space-5);
+  display:flex;
+  flex-direction:column;
+  max-height:90vh;
+  max-height:90dvh;
+  overflow:hidden;
+  min-height:0
 }
+dialog[data-size=small]{width:min(560px,calc(100% - 24px))}
+dialog[data-size=medium]{width:min(740px,calc(100% - 24px))}
+dialog[data-size=wide]{width:min(1120px,calc(100% - 24px))}
+#dialogContent{overflow:auto;min-height:0;padding:4px;overscroll-behavior:contain;overflow-wrap:anywhere}
+#dialogError{flex-shrink:0;max-height:18vh;overflow:auto}
+.dialog-header,.dialog-actions{flex-shrink:0}
 .dialog-header {
   display:flex;
   gap:16px;
@@ -140,20 +163,21 @@ dialog::backdrop {
 }
 .close {
   border:0;
-  background:#eef2eb;
+  background:var(--surface-hover);
   color:var(--ink);
-  border-radius:6px;
+  border-radius:var(--radius);
   width:38px;
   min-height:38px;
   font-size:1.5rem
 }
 .dialog-actions {
   display:flex;
+  flex-wrap:wrap;
   gap:10px;
   justify-content:flex-end;
   border-top:1px solid var(--line);
   padding-top:20px;
-  margin-top:25px
+  margin-top:20px
 }
 .dialog-intro {
   font-size:.87rem;

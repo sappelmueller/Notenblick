@@ -33,7 +33,7 @@ A.batchEntryName=function(student,extension,used){
 };
 // Shared presentation helpers. All arithmetic remains in the domain evaluator.
 A.reportAverage=(q,c)=>q===null||q===undefined?text('–'):{text:A.N.show(q,c),number:Number(A.N.show(q,c).replace(',','.')),format:'average',precision:c.precision};
-A.reportFlags=a=>[a.isGfs?'GFS':'',A.N.Q.from(a.weight).cmp(1)!==0n?'Faktor '+String(a.weight).replace('.',','):''].filter(Boolean).join(' · ');
+A.reportFlags=a=>[a.isGfs?'GFS':'',A.N.Q.from(a.weight).cmp(1)!==0n?String(a.weight).replace('.',',')+'-fach':''].filter(Boolean).join(' · ');
 A.reportResult=(a,sid)=>a.participantIds&&!a.participantIds.includes(sid)?text('Nimmt nicht teil'):a.results[sid]?.status==='graded'?A.reportGrade(a.results[sid].grade):text(a.results[sid]?.status&&a.results[sid].status!=='open'?A.N.STATUS[a.results[sid].status]:'–');
 A.reportSingleResult=function(a,sid){const r=a.results[sid],value=A.reportResult(a,sid);if(!A.N.isPoints(a))return value;const suffix=r?.manualGrade!=null?' · Manuell festgelegt':'';if(r?.status==='graded')return suffix?text(A.N.pointGradeText(r.grade,a.pointKey)+suffix):{...value,text:A.N.pointGradeText(r.grade,a.pointKey)};return text(value.text+(r?.calculatedGrade!=null?' · berechnet '+A.N.pointGradeText(r.calculatedGrade,a.pointKey):'')+suffix);};
 A.reportPupilResult=function(a,sid,points){const value=A.reportResult(a,sid),r=a.results[sid];return points&&A.N.isPoints(a)&&r?.points!=null?text(value.text+' ('+r.points.replace('.',',')+' von '+a.pointKey.maximum.replace('.',',')+' Punkten)'):value;};

@@ -9,7 +9,7 @@ A.updateSaveDetails=function(){
  set('textListState',!A.store?'Ohne Datenordner nicht verfügbar':A.textPending?'Unvollständig':failed?'Aktualisierung noch ausstehend':A.firstRun&&!A.data.years.length?'Noch keine Notenlisten':'Aktuell');
  const warning=A.$('#textListWarning');if(warning){warning.textContent=A.fatalStart?'Deine Noten konnten nicht geöffnet werden. Bitte stelle eine Sicherung wieder her.':failed?'Deine letzten Änderungen konnten noch nicht vollständig gespeichert werden.':A.textPending?'Deine Noten sind gespeichert. Die zusätzlichen Textdateien konnten noch nicht vollständig aktualisiert werden.':'';warning.hidden=!warning.textContent;}
  const view=A.$('#workspaceWarning');if(view){view.hidden=!A.workspaceFailed;view.textContent='Die letzte Ansicht konnte noch nicht gespeichert werden. Bitte erneut speichern.';}
- const retained=A.$('#retainedTextLists');if(retained){retained.textContent=A.store?.textWarning||'';retained.hidden=!retained.textContent;}
+ const retained=A.$('#retainedTextLists');if(retained){retained.textContent=[A.store?.textWarning,A.store?.backupWarning].filter(Boolean).join(' ');retained.hidden=!retained.textContent;}
  const save=A.$('#backup-save');if(save){save.disabled=!A.store||A.fatalStart;save.className=jsonPending||A.workspaceFailed?'button primary':'text-button';}
  const undo=A.$('#backup-undo');if(undo)undo.disabled=!A.undo.length;
 };

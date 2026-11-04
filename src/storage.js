@@ -2,6 +2,7 @@
   'use strict';
 
   const N = typeof module !== 'undefined' ? require('./core.js') : global.NR;
+  const ownsBackup=(known,name,data,info,digest)=>!!known&&known.name===name&&known.at===(data.at||data.updatedAt)&&known.revision===data.revision&&known.size===info.size&&known.lastModified===info.lastModified&&(digest===undefined||!known.digest||known.digest===digest);
   async function readAt(root, path) {
     let dir = root;
     const parts = path.split('/');
@@ -120,7 +121,7 @@
         try{
           const d=N.validate(json(text));if(String(d.revision).padStart(8,'0')!==match[1]||d.commitId!==match[2])throw Error('Name und Inhalt stimmen nicht überein.');
           Object.assign(entry,{valid:true,at:d.updatedAt,revision:d.revision,digest:await N.textDigest(text)});digests.push([name,entry.digest]);
-          const known=metadata[name];entry.owned=!!known&&known.name===name&&known.at===d.updatedAt&&known.revision===d.revision&&known.size===size&&known.lastModified===info.lastModified;
+          const known=metadata[name];entry.owned=ownsBackup(known,name,d,{size,lastModified:info.lastModified},entry.digest);
         }catch{reason='Mindestens ein automatischer Speicherstand ist nicht vollständig gültig. Zur Sicherheit wird keine Sicherung entfernt.';}
       }
       const again=[];for await(const [name,h]of dir.entries())again.push([name,h.kind,h.meta?.size,h.meta?.lastModified]);again.sort((a,b)=>a[0].localeCompare(b[0]));
@@ -191,11 +192,12 @@
         const snap = d => `Sicherungen/Stand_${String(d.revision).padStart(8, '0')}_${d.commitId}.json`;
         const snapshotMeta=new Map([[snap(next).split('/').at(-1),{at:next.updatedAt,revision:next.revision}]]);
         if(current)snapshotMeta.set(snap(current).split('/').at(-1),{at:current.updatedAt,revision:current.revision});
-        if (current) {await writeAt(this.root, snap(current), JSON.stringify(full(current,true), null, 2));
+        if (current) {const text=JSON.stringify(full(current,true),null,2);snapshotMeta.get(snap(current).split('/').at(-1)).digest=await N.textDigest(text);await writeAt(this.root, snap(current), text);
           if(replace) await writeAt(this.root,'Sicherungen/Vor_Wiederherstellung_'+new Date().toISOString().replace(/[:.]/g,'-')+'_'+N.id()+'.json',JSON.stringify(full(current,true),null,2));
         }
         onProgress('Noten wiederherstellen.');
-        await writeAt(this.root, snap(next), JSON.stringify(full(next), null, 2));
+        const nextText=JSON.stringify(full(next),null,2);snapshotMeta.get(snap(next).split('/').at(-1)).digest=await N.textDigest(nextText);
+        await writeAt(this.root, snap(next), nextText);
         await writeAt(this.root, this.path, JSON.stringify(next, null, 2));
         this.base = {
           id: next.id,
@@ -204,14 +206,17 @@
         };
         let txtError = null;
         try {onProgress('Automatische Notenlisten aktualisieren.');await this.syncTextLists(next,{force:forceTXT});}catch(e){this.textCache=null;txtError=e.message;}
-        try {
+        this.backupWarning='';try {
           const backup=await this.root.getDirectoryHandle('Sicherungen'), points=[],meta={};
           if(!this.retentionMeta){try{this.retentionMeta=json(await readAt(this.root,'Sicherungen/Aufbewahrung.json'));}catch{this.retentionMeta={};}}
           for await(const [name,h] of backup.entries())if(h.kind==='file'&&/^Stand_\d{8,}_[a-zA-Z0-9_-]+\.json$/.test(name)){
-            try{const known=this.retentionMeta?.[name],info=h.meta||await h.getFile(),matches=known&&known.size===info.size&&known.lastModified===info.lastModified;
-              const d=snapshotMeta.get(name)||(matches?known:null)||json(await (await h.getFile()).text());const at=d.at||d.updatedAt;
-              if(Number.isFinite(Date.parse(at))&&Number.isSafeInteger(d.revision)){const p={name,at,revision:d.revision};points.push(p);meta[name]={...p,size:info.size,lastModified:info.lastModified};}
-            }catch{}
+            const known=this.retentionMeta?.[name],info=h.meta||await h.getFile(),fresh=snapshotMeta.get(name);
+            // Never adopt a foreign, changed or unverifiable file merely because
+            // it resembles a snapshot. Old metadata remains readable; automatic
+            // removal additionally requires the digest written with the snapshot.
+            const d=fresh||(known?.digest&&ownsBackup(known,name,known,info)?known:null);
+            if(d&&Number.isFinite(Date.parse(d.at))&&Number.isSafeInteger(d.revision)){const p={name,at:d.at,revision:d.revision,info,digest:d.digest};points.push(p);meta[name]={name,at:d.at,revision:d.revision,size:info.size,lastModified:info.lastModified,digest:d.digest};}
+            else if(known&&ownsBackup(known,name,known,info))meta[name]=known;
           }
           points.sort((a,b)=>Date.parse(b.at)-Date.parse(a.at)||b.revision-a.revision);
           const keep=new Set(points.slice(0,30).map(p=>p.name)), days=new Set(),weeks=new Set(),years=new Set(),now=Date.now();
@@ -220,9 +225,13 @@
             if(age<=366&&!weeks.has(week)){keep.add(p.name);weeks.add(week);}
             if(age>366&&!years.has(p.at.slice(0,4))){keep.add(p.name);years.add(p.at.slice(0,4));}
           }
-          for(const p of points)if(!keep.has(p.name)){await backup.removeEntry(p.name);delete meta[p.name];}
+          for(const p of points)if(!keep.has(p.name)){
+            const text=await readAt(this.root,'Sicherungen/'+p.name),d=N.validate(json(text)),digest=await N.textDigest(text);
+            if(!ownsBackup(meta[p.name],p.name,d,p.info,digest)){delete meta[p.name];continue;}
+            await backup.removeEntry(p.name);delete meta[p.name];
+          }
           await writeAt(this.root,'Sicherungen/Aufbewahrung.json',JSON.stringify(meta));this.retentionMeta=meta;
-        } catch {}
+        } catch {this.backupWarning='Die Bereinigung älterer Sicherungen wurde angehalten. Deine Noten sind gespeichert.';}
         return {
           data: next,
           txtError

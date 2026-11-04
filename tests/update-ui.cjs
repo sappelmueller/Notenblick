@@ -11,7 +11,7 @@ const assert=require('node:assert/strict');
   A.activateGroup('main','settings');A.activateGroup('settings','general');
   const $=s=>w.document.querySelector(s),button=$('#updateCheck');
   assert.equal($('#updatesTitle').tagName,'H2');assert.equal($('#updatesTitle').textContent,'Aktualisierungen');
-  assert.equal($('.update-settings p strong').textContent,'1.24.0');assert.equal($('#updateAuto').nextElementSibling.textContent,'Beim Start nach Aktualisierungen suchen');
+  assert.equal($('.update-settings p strong').textContent,require('../package.json').version);assert.equal($('#updateAuto').nextElementSibling.textContent,'Beim Start nach Aktualisierungen suchen');
   assert.equal($('.update-settings .hint').textContent,'Notenblick sucht nach neuen Versionen. Deine Noten bleiben auf deinem Computer.');
   assert.equal($('#updateResult').hasAttribute('role'),false);assert.equal($('#updateResult').hasAttribute('aria-live'),false);
   button.focus();const data=JSON.stringify(A.data),workspace=JSON.stringify(A.getWorkspace());

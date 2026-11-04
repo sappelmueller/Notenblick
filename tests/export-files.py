@@ -102,7 +102,7 @@ assert result.returncode==0,result.stderr
 validation=json.loads(result.stdout);jobs=validation['report']['jobs'];assert len(jobs)==len(targets)
 assert all(j['validationResult'][0]['compliant'] for j in jobs),result.stdout
 checks.append('veraPDF PDF/UA-1: '+str(len(jobs))+' Dateien, keine verletzten maschinellen Regeln')
-(OUT/'verapdf-final.json').write_text(result.stdout)
+(ROOT/'tests/export-files-verapdf-results.json').write_text(result.stdout)
 version=json.loads((ROOT/'package.json').read_text())['version']
 assert json.loads((ROOT/'package-lock.json').read_text())['version']==version
 assert version in (ROOT/'README.md').read_text()

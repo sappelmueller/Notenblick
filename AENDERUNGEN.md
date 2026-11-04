@@ -1,5 +1,15 @@
 # Änderungen
 
+## 1.25.0 – Testversion, 4. November 2026
+
+- Navigation, Auswahlfelder und Schülerübersichten passen sich bei starker Vergrößerung besser an. Kontrollfelder, Dialoge, Fokus und Rückmeldungen verwenden gemeinsame Regeln.
+- Aktionsmenüs nennen die zugehörige Zeile, bleiben im Fenster und verändern die Tabellenbreite nicht mehr.
+- Automatische Sicherungsbereinigung entfernt nur nachweislich eigene, unveränderte Speicherstände. Fremde, veränderte und nach einem Abbruch verbliebene Dateien werden erhalten; Zugriffsfehler beim Wiederherstellen werden verständlich gemeldet.
+- Die Hilfe erklärt die freiwillige Aktualisierung im Programm. Das Datenformat und die exakte Notenberechnung bleiben erhalten.
+- Die Testverwaltung aus Phase 1 wird vollständig verwendet. Ein Fehler bei der Erkennung eingebauter Node-Module wurde behoben, damit Protokolle gültige Nachweise nicht entwerten.
+
+Keine Veröffentlichung oder Updatefreigabe. Windows, NVDA, Braille und ARM64 benötigen die erneute Nutzerabnahme. [Audit und Prüfgrenzen](docs/PRUEFBERICHT-1.25.0.md).
+
 ## 1.24.0 – 3. November 2026
 
 - Notenblick startet maximiert; Fenster lassen sich weiterhin verkleinern und wiederherstellen.

@@ -7,6 +7,18 @@ sys.path.insert(0,str(ROOT/'dev'))
 import guard,manage,testplan,evidence,bootstrap
 
 class Infrastructure(unittest.TestCase):
+    def test_builtin_node_module_never_fingerprints_project_or_reports(self):
+        import os
+        with tempfile.TemporaryDirectory(prefix='notenblick-builtin-') as tmp:
+            folder=Path(tmp)
+            (folder/'package.json').write_text(json.dumps({'devDependencies':{'punycode':'2.3.1'}}))
+            values={**os.environ,'NODE_PATH':''}
+            before=evidence.node_packages(folder,values)
+            (folder/'reports').mkdir();(folder/'reports/result.json').write_text('synthetic changing log')
+            self.assertEqual(evidence.node_packages(folder,values),before)
+            self.assertNotIn(folder,before)
+            self.assertTrue(all(p.is_relative_to(folder/'.tools') for p in before))
+
     def test_history_audit_finds_deleted_secret_and_redacts_it(self):
         import importlib.util
         spec=importlib.util.spec_from_file_location('notenblick_audit',ROOT/'dev/audit.py');audit=importlib.util.module_from_spec(spec);spec.loader.exec_module(audit)

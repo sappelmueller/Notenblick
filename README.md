@@ -1,5 +1,7 @@
 # Notenblick
 
+Entwicklung: **1.25.0 – Testversion**. Die offizielle Version bleibt 1.24.0.
+
 Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du organisierst deine Klassen und Fächer, erfasst Noten oder Punkte und erstellst Berichte für den Schulalltag. Alle Schülerdaten bleiben lokal auf deinem Rechner.
 
 [**Notenblick 1.24.0 herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.24.0/Notenblick_1.24.0.zip)

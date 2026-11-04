@@ -1,6 +1,6 @@
 # Entwicklung und Erstellung
 
-Technischer Stand der Anwendung: Notenblick 1.24.0. Die Testverwaltung für 1.25.0 wird getrennt auf `entwicklung/1.25.0` vorbereitet. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
+Entwicklungsstand: Notenblick 1.25.0 als Testversion auf `entwicklung/1.25.0`; offizielle Version weiterhin 1.24.0. Die ressourcenschonende Testverwaltung aus Phase 1 wird für den vollständigen Audit verwendet. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
 
 ## Werkzeuge
 

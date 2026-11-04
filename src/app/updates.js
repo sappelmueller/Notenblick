@@ -53,7 +53,7 @@ A.initUpdates=async function(){
  try{A.acceptUpdateState(await window.NRDesktop.call('update-state'));A.syncUpdateViews();if(A.updates.enabled)setTimeout(()=>A.checkUpdates(true),1200);}catch{/* Starting and offline work never depend on optional updates. */}
 };
 A.dismissUpdate=function(){if(!A.updates.offer)return;const origin=document.activeElement;A.updates.sessionHidden=A.updates.offer.version;A.syncUpdateViews();focusAfterHide(origin);};
-function options(notes){return{size:'small',cancelLabel:notes?'Schließen':'Abbrechen',onClose:()=>{if(A.updates.active)window.NRDesktop.call('update-cancel').catch(()=>{});}};}
+function options(notes){return{size:'small',helpContext:43,cancelLabel:notes?'Schließen':'Abbrechen',onClose:()=>{if(A.updates.active)window.NRDesktop.call('update-cancel').catch(()=>{});}};}
 A.updateDialog=function(notes=false){
  const o=A.updates.offer;if(!o||A.updates.active||A.$('#dialog').open||!A.canLeave())return;
  const title=notes?'Was ist neu in Notenblick '+o.version+'?':'Notenblick aktualisieren';
