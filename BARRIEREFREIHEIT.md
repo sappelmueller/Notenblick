@@ -36,6 +36,6 @@ Probleme bitte mit Version, Tastenschritten und erwartetem Verhalten als Issue m
 
 Version 1.25.0 hat zusätzlich den vollständigen automatisierten Qualitätsaudit bestanden. Die vorhandenen Nachweise werden für das unveränderte Release übernommen; ein erneuter Browser- oder Hilfetechniktest wird dadurch nicht behauptet.
 
-## Testversion 1.25.1
+## Version 1.25.1
 
-Die automatische Suche bleibt ohne Fokuswechsel und zusätzliche Ansage. Startseite und Einstellungen verwenden dieselbe vereinfachte Bestätigung mit Überschriftenfokus, Escape und Rückkehr zum Auslöser. Der obere Schließen-Schalter entfällt ausschließlich dort. Gezielte Chromium-Prüfungen umfassen zwölf Dialog-/axe-Fälle bis 400 %, Tastatur, F1 und sicheren Downloadabbruch. Diese Änderungen müssen noch praktisch unter Windows mit NVDA und Braille abgenommen werden. [Prüfbericht](docs/PRUEFBERICHT-1.25.1.md).
+Die automatische Suche bleibt ohne Fokuswechsel und zusätzliche Ansage. Startseite und Einstellungen verwenden dieselbe vereinfachte Bestätigung mit Überschriftenfokus, Escape und Rückkehr zum Auslöser. Der obere Schließen-Schalter entfällt ausschließlich dort. Gezielte Chromium-Prüfungen umfassen zwölf Dialog-/axe-Fälle bis 400 %, Tastatur, F1 und sicheren Downloadabbruch. Der Herausgeber hat 1.25.1 unter Windows praktisch erfolgreich getestet und ausdrücklich freigegeben. Gesonderte Messungen einzelner NVDA-/Braille-Ansagen werden nur bei ausdrücklicher Einzelbestätigung als durchgeführt geführt. [Prüfbericht](docs/PRUEFBERICHT-1.25.1.md).

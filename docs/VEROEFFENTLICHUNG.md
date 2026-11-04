@@ -9,7 +9,7 @@
 7. Nur nach ausdrücklicher Freigabe auf dem geprüften Stand `TZ=UTC python3 dev/package.py --approve-update reports/<Lauf>/summary.json` ausführen. Der Befehl verlangt den gültigen Release-Nachweis, erzeugt dieselben vollständigen Archive und setzt den separaten Deskriptor auf `approved: true`. Archive, Deskriptor, Quellbaum und Prüfsummen erneut abgleichen. Bei geänderten Quellen erneut `release` ausführen: gültige unveränderte Gruppen übernehmen, betroffene neu prüfen und den vollständigen Nachweis für den endgültigen Quellstand zusammensetzen.
 8. Eindeutigen Tag `vX.Y.Z` am freigegebenen Commit und ein stabiles offizielles GitHub Release erstellen. Beifügen: `Notenblick_X.Y.Z.zip`, `Notenblick_X.Y.Z_Quellcode.zip`, `Notenblick_X.Y.Z_Pruefsummen.json` und `Notenblick_X.Y.Z_Aktualisierung.json`. Ein neuer Commit in `main`, ein Entwurf oder ein Prerelease ist keine Aktualisierung. Bei fehlender Windows-Abnahme ausschließlich Testversion/Prerelease und `approved: false` verwenden.
 9. Veröffentlichte Downloads erneut abrufen. Hashes, vollständige Dateiliste, Version, Tag/Quellbaum und Lizenzen abgleichen. Tatsächlichen GitHub-Stand kontrollieren. Bestehende Tags und Downloads nicht ersetzen.
-10. Erst danach vollständig übernommene Entwicklungsbranches löschen. Für 1.25.0 betrifft dies `entwicklung/1.25.0`. Aufgeräumter Regelstand: nur `main`. Die Zwischenentwicklung 1.23.3 wurde bereits in 1.24.0 übernommen. Die drei historischen PR-Referenzen bleiben beim Support; keine weitere Historienbereinigung.
+10. Erst danach vollständig übernommene Entwicklungsbranches löschen. Für 1.25.1 betrifft dies `entwicklung/1.25.1`. Aufgeräumter Regelstand: nur `main`. Die Zwischenentwicklung 1.23.3 wurde bereits in 1.24.0 übernommen. Die drei historischen PR-Referenzen bleiben beim Support; keine weitere Historienbereinigung.
 
 ## Wiederaufnahme ab Entwicklung 1.25.0
 
@@ -20,6 +20,14 @@ Datum, Git-Commitdatum und fachlich unbeteiligte Dokumente sind keine Gruppenvor
 Verpackung, CRC, vollständige Dateiliste, Einzelhashes und bytegleiche Entpackung werden für die abschließenden Archive erneut kontrolliert. Ein gültiger Startnachweis identischer entpackter Programmbytes darf übernommen werden. `status` prüft alle Pflichtgruppen, ihre kanonischen Befehle, Einzelbelege, Build-Reproduzierbarkeit, vier Archive/Deskriptor-Dateien sowie Quelle, Werkzeuge und Index. Eine Anzahl bestandener Schritte oder ein manuell gesetztes Erfolgsfeld reicht nicht. Die ausdrückliche Herausgeberfreigabe und die getrennten Windows-Praxistests bleiben erforderlich.
 
 Alte Nachweise vor Schema 2 werden einmalig nicht automatisch importiert: Sie enthalten keine vollständigen dauerhaften Ausgabekopien. Vorhandene Werkzeuge werden weiterverwendet; keine pauschale Neuinstallation. Lokale Nachweise bleiben in der Arbeitskopie und werden nicht über GitHub veröffentlicht. Eine Wiederaufnahme setzt deren Erhalt voraus.
+
+## Ausdrückliche Freigabe von 1.25.1 am 4. November 2026
+
+Sebastian Müller hat die unveränderte Testversion 1.25.1 nach erfolgreichem Windows-Praxistest zur Veröffentlichung freigegeben und neue vollständige Prüfläufe/Programmbuilds ausdrücklich ausgeschlossen. Übernommen werden der geprüfte Entwicklungscommit `892dd24a5365b6f5153bff2e31ac7777a59b1e8f`, die sechs erfolgreichen gezielten Gruppen mit 168 nativen Updaterprüfungen und zwölf Dialog-/axe-Fällen, die unveränderte Qualitätsgrundlage 1.25.0 und das konkret praktisch getestete Windows-ZIP.
+
+Für genau diese Version gilt der bereits dokumentierte Freigabeweg: Archividentität gegen den gespeicherten Nachweis prüfen; EXE/Programm, Version, Quellen, Lizenzen, Bibliotheken und sämtliche Datei-/Archivhashes kontrollieren. Nur Dokumentation und externe Veröffentlichungsmetadaten abschließen. Der separate Deskriptor erhält `approved: true`, `minimumUpdater: 1.24.0` und `dataSchema: 1`; anschließend seine Prüfsumme nachführen. Die Sicherheits-/Prüfverwaltung und der Installationscode werden nicht verändert. Ein neuer vollständiger Release-Nachweis wird nicht behauptet.
+
+Die unveränderte ursprüngliche Produktionslogik von 1.24.0/1.25.0 prüft den neuen Deskriptor und das echte Zielarchiv einschließlich Dateiliste, EXE-Version und Architektur. Nach Veröffentlichung zusätzlich die echte GitHub-Suche mit beiden installierten Versionsständen und die heruntergeladenen vier Release-Dateien kontrollieren. Das ist eine gezielte Veröffentlichungskontrolle unter Linux/.NET 8, keine neue Windows-Installation oder Rückfallprüfung. Pull Request gemäß Branchschutz, Tag `v1.25.1`, stabiles Release, Downloadabgleich und erst dann Branch löschen. Historische Releases und Tags bleiben unverändert; Actions bleiben deaktiviert.
 
 ## Freigabe des unveränderten 1.25.0 am 4. November 2026
 

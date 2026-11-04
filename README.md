@@ -1,12 +1,10 @@
 # Notenblick
 
-Entwicklung: **1.25.1 – Testversion** auf `entwicklung/1.25.1`. Offiziell bleibt [1.25.0](https://github.com/sappelmueller/Notenblick/releases/tag/v1.25.0). [Gezielte Prüfungen](docs/PRUEFBERICHT-1.25.1.md).
-
 Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du verwaltest Klassen und Fächer, erfasst Noten oder Punkte und erstellst Berichte für den Schulalltag. Alle Schülerdaten bleiben lokal auf deinem Rechner.
 
-[**Notenblick 1.25.0 für Windows herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.25.0/Notenblick_1.25.0.zip)
+[**Notenblick 1.25.1 für Windows herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.25.1/Notenblick_1.25.1.zip)
 
-Aktuelle Version: **1.25.0**, veröffentlicht am **4. November 2026**. [Was ist neu?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.25.0) · [Alle Versionen](https://github.com/sappelmueller/Notenblick/releases/latest)
+Aktuelle Version: **1.25.1**, veröffentlicht am **4. November 2026**. [Was ist neu?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.25.1)
 
 ## Das kann Notenblick
 
@@ -23,7 +21,7 @@ Aktuelle Version: **1.25.0**, veröffentlicht am **4. November 2026**. [Was ist 
 2. **Notenblick.exe** starten. Der vollständige Ordner **Programm** muss daneben liegen; **Daten** entsteht beim ersten Start.
 3. Dem Einrichtungsassistenten folgen oder eine eigene Sicherung wiederherstellen.
 
-Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digital signiert; Windows kann deshalb einen Sicherheitshinweis anzeigen. Quellcode und Prüfsummen stehen beim [Release](https://github.com/sappelmueller/Notenblick/releases/tag/v1.25.0).
+Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digital signiert; Windows kann deshalb einen Sicherheitshinweis anzeigen. Quellcode und Prüfsummen stehen beim [Release](https://github.com/sappelmueller/Notenblick/releases/tag/v1.25.1).
 
 **Voraussetzungen:** Windows x86/x64 mit .NET Framework 4.8 oder neuer und Microsoft Edge WebView2 Runtime. Für native ARM64-Ausführung: Windows 11 ab 24H2, .NET Framework 4.8.1 und ARM64-WebView2. Dieselbe EXE unterstützt beide Prozessorfamilien; die erforderlichen Programm-Bibliotheken liegen bei. Node.js, Python und Office werden für die Anwendung nicht benötigt.
 
@@ -31,7 +29,7 @@ Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digi
 
 Notenblick ist für Tastatur, NVDA und Braille entwickelt. Links, echte Registerkarten, kurze Beschriftungen und eine klare Fokusführung unterstützen die Bedienung. **F1** erklärt den aktuellen Arbeitsschritt; Eingabe und Umschalt+Eingabe führen durch die schnelle Noteneingabe.
 
-Version 1.25.0 wurde vom Herausgeber unter Windows auf x86 und ARM praktisch erfolgreich getestet. [Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe](docs/HILFE-1.23.1-QUELLE.md) · [Prüfstand](docs/PRUEFBERICHT-1.25.0.md)
+Version 1.25.1 wurde vom Herausgeber unter Windows praktisch erfolgreich getestet und zur Veröffentlichung freigegeben. [Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe](docs/HILFE-1.23.1-QUELLE.md) · [Prüfstand](docs/PRUEFBERICHT-1.25.1.md)
 
 ## Daten und Aktualisierungen
 

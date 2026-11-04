@@ -1,9 +1,9 @@
 {
   "version": "1.25.1",
-  "test_version": true,
-  "official_release": false,
-  "approved_update": false,
-  "branch": "entwicklung/1.25.1",
+  "test_version": false,
+  "official_release": true,
+  "approved_update": true,
+  "branch": "main",
   "baseline": "f6eb7a3d910855804932acde01079f273bc762f9",
   "targeted_groups": 6,
   "native_updater_checks": 168,
@@ -53,7 +53,7 @@
   "export_suite_rerun": false,
   "full_browser_suite_rerun": false,
   "double_build_rerun": false,
-  "windows_1251_tested": false,
+  "windows_1251_tested": true,
   "nvda_1251_tested": false,
   "braille_1251_tested": false,
   "github_actions_used": false,
@@ -88,5 +88,20 @@
       "key": "56882633757167183f240d2c34b59a345447625881db4b11939e7bd641df5c12",
       "receipt_sha256": "0792063e833815e0c4dc9e6ca33304409da1d8a8fd2a5d9a34fbe9855ecc09bb"
     }
-  ]
+  ],
+  "publication": {
+    "approved_by": "Sebastian Müller",
+    "date": "2026-11-04",
+    "tested_application_commit": "892dd24a5365b6f5153bff2e31ac7777a59b1e8f",
+    "program_unchanged": true,
+    "windows_archive_unchanged": true,
+    "new_application_tests": 0,
+    "new_program_builds": 0,
+    "publisher_windows_acceptance": true,
+    "individual_nvda_braille_measurements": "not separately reported",
+    "release_only_verification": "source/archive identity, complete files and hashes, legacy updater compatibility and published downloads",
+    "tag": "v1.25.1",
+    "minimumUpdater": "1.24.0",
+    "dataSchema": 1
+  }
 }

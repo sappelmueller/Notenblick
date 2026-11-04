@@ -1,13 +1,13 @@
 # Änderungen
 
-## 1.25.1 – Testversion, 4. November 2026
+## 1.25.1 – 4. November 2026
 
 - Bei aktivierter Startprüfung einmal pro Programmstart nach Aktualisierungen suchen. Die bisherige 24-Stunden-Sperre entfällt, auch nach fehlgeschlagenen Prüfungen. Manuelle und automatische Anfragen werden zusammengeführt.
 - Neue Versionen erscheinen unmittelbar auf der bereits geöffneten Startseite. Automatische Prüfungen bleiben ohne Ansage oder Fokuswechsel; gespeicherte Hinweise und versionsbezogenes Ausblenden bleiben erhalten.
 - Einheitliche Bestätigung von Startseite und Einstellungen: „Notenblick X.Y.Z installieren?“, „Abbrechen“ und „Aktualisierung starten“. Nur diese Bestätigung verzichtet auf den oberen Schließen-Schalter. Die Neuerungenansicht zeigt ausschließlich die tatsächlichen Neuerungen.
 - Hilfe und Hinweise zu bereits gefundenen Versionen aktualisiert. Sicherheitsprüfung, Installation, Wiederherstellung und Schutz von Daten bleiben erhalten.
 
-Noch keine Veröffentlichung oder Updatefreigabe. [Prüfstand und Windows-Praxisabnahme](docs/PRUEFBERICHT-1.25.1.md).
+Nach erfolgreicher Windows-Praxisabnahme ausdrücklich zur Veröffentlichung freigegeben. Die getesteten Programmdateien und das Windows-ZIP werden unverändert übernommen. [Prüfstand](docs/PRUEFBERICHT-1.25.1.md).
 
 ## 1.25.0 – 4. November 2026
 

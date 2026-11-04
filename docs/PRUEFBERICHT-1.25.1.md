@@ -1,6 +1,6 @@
 # Notenblick 1.25.1 – gezielte Updaterprüfung
 
-Stand: 4. November 2026. Basis: offizielles 1.25.0, Commit `f6eb7a3d910855804932acde01079f273bc762f9`. Arbeit ausschließlich auf `entwicklung/1.25.1`. Testversion, keine Übernahme nach main, kein Tag/Release, Aktualisierungsdeskriptor `approved: false`. GitHub Actions bleiben deaktiviert.
+Stand: 4. November 2026. Basis: offizielles 1.25.0, Commit `f6eb7a3d910855804932acde01079f273bc762f9`. Arbeit ausschließlich auf `entwicklung/1.25.1`. Nach erfolgreichem Windows-Praxistest am 4. November 2026 durch Sebastian Müller ausdrücklich zur unveränderten offiziellen Veröffentlichung freigegeben. Geprüfter Programmstand: `892dd24a5365b6f5153bff2e31ac7777a59b1e8f`. GitHub Actions bleiben deaktiviert.
 
 ## Änderungen
 
@@ -24,8 +24,16 @@ Chromium: zwölf zusätzliche Dialog-/axe-Fälle aus zwei Einstiegspunkten und s
 
 Die vollständigen 89 Pflichtgruppen, 180.000 Rechenergebnisse und Exporte von 1.25.0 bleiben als historische Basis erhalten. Unveränderte Rechen-, Speicher-, Export- und Installationsmodule werden über den Git-Vergleich abgeglichen. Ihre alten Belege werden nicht als frisch ausgeführte 1.25.1-Vollprüfung ausgegeben. Die konservative Gesamtauswahl aufgrund der Versions- und Dialogänderung wurde entsprechend dem ausdrücklichen Auftrag nicht gestartet. Keine erneuten 180.000 Berechnungen, Office-/PDF-Prüfreihen, vollständigen Browserreihen oder Doppelbuilds.
 
-Der Herausgeber bestätigt für 1.25.0 Windows x86 und ARM einschließlich erfolgreicher echter Aktualisierung. Für die geänderte 1.25.1 stehen die realen Windows-/WebView2-/NVDA-/Braille-Prüfungen noch aus. Linux/.NET 8, jsdom und Chromium werden davon getrennt ausgewiesen. Kontrollierte Rückfallprüfungen sind keine tatsächlich ausgeführten Windows-Störfalltests.
+Der Herausgeber bestätigt für 1.25.0 Windows x86 und ARM einschließlich erfolgreicher echter Aktualisierung. Für 1.25.1 hat er inzwischen ebenfalls die erfolgreiche praktische Verwendung unter Windows bestätigt und die Veröffentlichung freigegeben. Nicht einzeln protokollierte Hilfetechnik-/UIA-Messungen werden nicht aus dieser allgemeinen Bestätigung abgeleitet. Linux/.NET 8, jsdom und Chromium werden davon getrennt ausgewiesen. Kontrollierte Rückfallprüfungen sind keine tatsächlich ausgeführten Windows-Störfalltests.
 
-Die portable Testausgabe enthält eine AnyCPU-EXE sowie vollständiges Programm mit x86-/x64-/ARM64-Bibliotheken und Lizenzen, keinen Datenordner. Version, vollständige Dateiliste, eingebettete Integrität, ZIP-CRC und bytegleiche Entpackung werden im Paketabschluss kontrolliert; dessen Ergebnisse stehen in den lokalen Berichten und im kompakten Nachweis dieser Testversion.
+Die unverändert übernommene portable Ausgabe enthält eine AnyCPU-EXE sowie vollständiges Programm mit x86-/x64-/ARM64-Bibliotheken und Lizenzen, keinen Datenordner. Version, vollständige Dateiliste, eingebettete Integrität, ZIP-CRC und bytegleiche Entpackung werden im Paketabschluss kontrolliert; dessen Ergebnisse stehen in den lokalen Berichten und im kompakten Nachweis dieser Version.
 
 Kompakte Nachweise: [qa-1.25.1.json](qa-1.25.1.json). Die abschließende Wiederaufnahme bindet dieselben gültigen Anwendungsbelege an die fertige Dokumentation; nur die betroffene Infrastrukturprüfung wird erneut ausgeführt. Die ZIP-Prüfsumme bleibt unverändert.
+
+## Offizielle Veröffentlichung ohne neue Programmprüfung
+
+Das vorhandene Windows-ZIP wird bytegleich übernommen: 2.099.485 Bytes, SHA-256 `6d0f2efd7946e2aa1a446369e102399b8d98590733ac388c866280afa95cee41`. Dateiliste, CRC, alle Dateihashes, die eingebetteten Integritätswerte, Laufzeitquellen, Hilfe, Bibliotheken und Lizenzen stimmen mit dem freigegebenen Stand überein. Die 18 im kompakten Nachweis erfassten unveränderten Fach-/Speicher-/Export-/Installationsmodule wurden anhand ihrer Hashes bestätigt.
+
+Die im Entwicklungscommit gesicherten Testberichte und Prüfsummen werden als ursprüngliche Nachweise übernommen. Es werden keine neuen Erfolgsergebnisse für alte Tests oder einen vollständigen 1.25.1-Release-Lauf erzeugt. Zur Veröffentlichung ändern sich ausschließlich Dokumentation, Quellcodearchiv und externe Freigabe-/Prüfsummenmetadaten; keine Anwendungstests, Browserreihen, Berechnungs-/Exportprüfreihen oder Programmbuilds.
+
+Die Herkunfts-, Versions-, Freigabe- und Extraktionslogik von 1.24.0 ist in 1.25.0 und 1.25.1 identisch. Eine isolierte Veröffentlichungskontrolle mit dieser unveränderten Produktionslogik bestätigt Deskriptor, Datenschema, Mindest-Updater, ZIP/Einzelhashes, EXE-Version, AnyCPU und x86-/x64-/ARM64-Loader für beide Ausgangsversionen. Nach Veröffentlichung werden zusätzlich die echte GitHub-Suche für 1.24.0/1.25.0 und alle vier heruntergeladenen Dateien abgeglichen. Dabei wird keine Windows-Installation gestartet; eine neue Windows-Störfall-/Rückfallprüfung wird nicht behauptet.
