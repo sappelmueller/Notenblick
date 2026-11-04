@@ -207,10 +207,10 @@ namespace Notenblick.Native {
   }
  }
  public sealed class UpdateClient:IDisposable {
-  readonly string root,version,prefsPath;readonly Func<string,CancellationToken,Task<UpdateOffer>> discover;readonly Func<DateTime> now;readonly UpdateSource.Fetch fetch;readonly Func<Tuple<int,long>> identity;readonly object gate=new object();JObject prefs;Task<JObject> check;CancellationTokenSource download;FileStream preparedLock;UpdatePlan prepared;
-  public UpdateClient(string root,string version,string preferences=null,Func<string,CancellationToken,Task<UpdateOffer>> discovery=null,Func<DateTime> clock=null,UpdateSource.Fetch transport=null,Func<Tuple<int,long>> processIdentity=null){
+  readonly string root,version,prefsPath;readonly Func<string,CancellationToken,Task<UpdateOffer>> discover;readonly UpdateSource.Fetch fetch;readonly Func<Tuple<int,long>> identity;readonly object gate=new object();JObject prefs;Task<JObject> check;bool automaticAttempted;CancellationTokenSource download;FileStream preparedLock;UpdatePlan prepared;
+  public UpdateClient(string root,string version,string preferences=null,Func<string,CancellationToken,Task<UpdateOffer>> discovery=null,UpdateSource.Fetch transport=null,Func<Tuple<int,long>> processIdentity=null){
    try{this.root=UpdateTransaction.RootPath(root);this.version=version;UpdateTransaction.VersionNumber(version);}catch(Exception error){throw UpdateDiagnostics.At("Installationsordner/Version prüfen",error);}
-   discover=discovery??((v,c)=>UpdateSource.Discover(v,c));now=clock??(()=>DateTime.UtcNow);fetch=transport??UpdateSource.Read;identity=processIdentity;
+   discover=discovery??((v,c)=>UpdateSource.Discover(v,c));fetch=transport??UpdateSource.Read;identity=processIdentity;
    var dir=preferences??Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Notenblick","Aktualisierungen",UpdateTransaction.Digest(Encoding.UTF8.GetBytes(this.root.ToUpperInvariant())).Substring(0,24));
    try{dir=UpdateTransaction.RootPath(dir);if(dir.StartsWith(this.root+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))throw new IOException("Preference location");Directory.CreateDirectory(dir);prefsPath=Path.Combine(dir,"einstellungen.json");UpdateTransaction.NoLink(prefsPath);}catch(Exception error){throw UpdateDiagnostics.At("Lokale Update-Einstellungen öffnen",error);}
    try{prefs=File.Exists(prefsPath)&&new FileInfo(prefsPath).Length<=32768?UpdateSource.Json(File.ReadAllBytes(prefsPath)) as JObject:null;}catch{prefs=null;}if(prefs==null)prefs=new JObject();
@@ -219,7 +219,16 @@ namespace Notenblick.Native {
   JObject PublicOffer(){try{var offer=prefs["offer"] as JObject;if(offer==null||UpdateTransaction.VersionNumber((string)offer["version"])<=UpdateTransaction.VersionNumber(version)||!UpdateSource.NotesValid(offer["notes"]))return null;return new JObject{{"version",offer["version"].DeepClone()},{"notes",offer["notes"].DeepClone()}};}catch{return null;}}
   public JObject State(){lock(gate)return new JObject{{"enabled",prefs["enabled"]?.Type==JTokenType.Boolean&&(bool)prefs["enabled"]},{"hiddenVersion",prefs["hiddenVersion"]?.Type==JTokenType.String?(string)prefs["hiddenVersion"]:""},{"offer",PublicOffer()}};}
   public JObject Preferences(JObject request){lock(gate){if(request["enabled"]!=null){if(request["enabled"].Type!=JTokenType.Boolean)throw new InvalidDataException();prefs["enabled"]=(bool)request["enabled"];}if(request["hiddenVersion"]!=null){string hidden=(string)request["hiddenVersion"];if(hidden!="")UpdateTransaction.VersionNumber(hidden);prefs["hiddenVersion"]=hidden;}Save();return State();}}
-  public Task<JObject> Check(bool automatic){lock(gate){if(check!=null&&!check.IsCompleted)return check;if(automatic){DateTime previous;bool recent=DateTime.TryParse((string)prefs["lastAutomaticUtc"],System.Globalization.CultureInfo.InvariantCulture,System.Globalization.DateTimeStyles.RoundtripKind,out previous)&&now()-previous.ToUniversalTime()<TimeSpan.FromDays(1);if(!(bool)State()["enabled"]||recent){var skipped=State();skipped["checked"]=false;return Task.FromResult(skipped);}prefs["lastAutomaticUtc"]=now().ToString("o");Save();}return check=CheckNow();}}
+  public Task<JObject> Check(bool automatic){lock(gate){
+   bool enabled=(bool)State()["enabled"];
+   if(automatic&&!enabled){var skipped=State();skipped["checked"]=false;return Task.FromResult(skipped);}
+   // A manual startup check also fulfils the optional startup check. Pending
+   // manual/automatic requests share one task; later manual retries stay free.
+   if(check!=null&&!check.IsCompleted){if(automatic||enabled)automaticAttempted=true;return check;}
+   if(automatic&&automaticAttempted){var skipped=State();skipped["checked"]=false;return Task.FromResult(skipped);}
+   if(automatic||enabled)automaticAttempted=true;
+   return check=CheckNow();
+  }}
   async Task<JObject> CheckNow(){string step="Aktualisierungsprüfung";try{using(var timeout=new CancellationTokenSource(TimeSpan.FromSeconds(45))){var offer=await discover(version,timeout.Token).ConfigureAwait(false);step="Lokale Speicherung des Prüfergebnisses";lock(gate){prefs["offer"]=offer?.Public();Save();var result=State();result["checked"]=true;return result;}}}catch(Exception error){throw UpdateDiagnostics.At(step,error);}}
   public async Task<string> Prepare(string requested,Action<string> progress){
    lock(gate){if(download!=null||prepared!=null)throw new IOException("Update already running");download=new CancellationTokenSource(TimeSpan.FromMinutes(10));}

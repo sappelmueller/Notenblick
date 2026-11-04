@@ -18,7 +18,7 @@ Unter Einstellungen → Allgemein gibt es einen eigenen Abschnitt mit installier
 
 ## Bestätigte Praxistests
 
-Am **4. November 2026** hat Sebastian Müller **1.25.0** unter Windows auf **x86 und ARM** sowie die Aktualisierungsprüfung und Updater-Bedienung als erfolgreich bestätigt und zur Veröffentlichung freigegeben. Einzelne Ansagen und technische Messungen werden nur dann als gesondert geprüft geführt, wenn sie ausdrücklich dokumentiert sind. Der vollständige Download-/Installations-/Rückfallablauf des Updaters ist durch diese Bestätigung nicht nachgewiesen.
+Am **4. November 2026** hat Sebastian Müller **1.25.0** unter Windows auf **x86 und ARM** sowie die Aktualisierungsprüfung und Updater-Bedienung als erfolgreich bestätigt und zur Veröffentlichung freigegeben. Einzelne Ansagen und technische Messungen werden nur dann als gesondert geprüft geführt, wenn sie ausdrücklich dokumentiert sind. Inzwischen bestätigt der Herausgeber zusätzlich die erfolgreich ausgeführte Aktualisierung unter Windows x86 und ARM. Daraus wird kein gesonderter Fehler-/Unterbrechungs-/Rückfalltest abgeleitet.
 
 Historischer Ausgangsstand:
 
@@ -35,3 +35,7 @@ Die Nutzerabnahme ist keine vollständige Barrierefreiheitszertifizierung. Nicht
 Probleme bitte mit Version, Tastenschritten und erwartetem Verhalten als Issue melden. Keine echten Schülerdaten hochladen.
 
 Version 1.25.0 hat zusätzlich den vollständigen automatisierten Qualitätsaudit bestanden. Die vorhandenen Nachweise werden für das unveränderte Release übernommen; ein erneuter Browser- oder Hilfetechniktest wird dadurch nicht behauptet.
+
+## Version 1.25.1
+
+Die automatische Suche bleibt ohne Fokuswechsel und zusätzliche Ansage. Startseite und Einstellungen verwenden dieselbe vereinfachte Bestätigung mit Überschriftenfokus, Escape und Rückkehr zum Auslöser. Der obere Schließen-Schalter entfällt ausschließlich dort. Gezielte Chromium-Prüfungen umfassen zwölf Dialog-/axe-Fälle bis 400 %, Tastatur, F1 und sicheren Downloadabbruch. Der Herausgeber hat 1.25.1 unter Windows praktisch erfolgreich getestet und ausdrücklich freigegeben. Gesonderte Messungen einzelner NVDA-/Braille-Ansagen werden nur bei ausdrücklicher Einzelbestätigung als durchgeführt geführt. [Prüfbericht](docs/PRUEFBERICHT-1.25.1.md).

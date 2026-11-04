@@ -1,6 +1,6 @@
 # Technischer Einstieg
 
-Notenblick 1.25.0 (offiziell freigegeben am 4. November 2026): Windows, .NET Framework 4.8, WinForms und WebView2. Ziel ausschließlich `sappelmueller/Notenblick`, ID `1432518047`; privat oder öffentlich. Actions aus. Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in LICENSE-EXCEPTION. Vor Änderungen [AGENTS.md](../AGENTS.md) beachten.
+Notenblick 1.25.1 (offiziell freigegeben am 4. November 2026; Grundlage 1.25.0): Windows, .NET Framework 4.8, WinForms und WebView2. Ziel ausschließlich `sappelmueller/Notenblick`, ID `1432518047`; privat oder öffentlich. Actions aus. Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in LICENSE-EXCEPTION. Vor Änderungen [AGENTS.md](../AGENTS.md) beachten.
 
 ## Aufbau
 
@@ -44,3 +44,5 @@ Historischer Veröffentlichungsstand 1.24.0: ausdrücklich freigegebener reduzie
 1.25.0: Gemeinsame Gestaltungsvariablen, fließende Auswahl-/Schülerlayouts und im Fenster begrenzte Aktionsmenüs. Die Sicherungsaufbewahrung verbindet eigene Metadaten mit Inhaltsprüfsummen; automatische Bereinigung übernimmt keine fremden Dateien. Die kurze aktuelle Auditbeschreibung steht in [PRUEFBERICHT-1.25.0.md](PRUEFBERICHT-1.25.0.md).
 
 Veröffentlichung 1.25.0: vollständiger Audit und ausdrückliche Praxisfreigabe. Programmquellen und Windows-ZIP bleiben gegenüber `f7d7909e96c0da99d70beab150a2644dcff5664e` unverändert. Nur Dokumentation und externe Veröffentlichungsmetadaten werden abgeschlossen; kein erneuter Test-/Buildlauf. Aktueller Nachweis: [Prüfbericht 1.25.0](PRUEFBERICHT-1.25.0.md).
+
+1.25.1: Nur Startprüfung und zentralen Bestätigungsdialog optimiert. `UpdateClient.Check` begrenzt automatische Anfragen pro Prozess statt nach einer gespeicherten Uhrzeit; parallele Prüfungen teilen dieselbe Task. `modal` blendet den oberen Schließen-Schalter nur mit ausdrücklicher Option aus. Installations-/Rückfallcode bleibt unverändert. [Gezielte Nachweise und ausdrückliche Windows-Praxisfreigabe](PRUEFBERICHT-1.25.1.md). Die Veröffentlichung übernimmt den getesteten Programmstand unverändert; der Entwicklungsbranch wird erst nach erfolgreichem Downloadabgleich gelöscht.

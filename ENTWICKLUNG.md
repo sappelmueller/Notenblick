@@ -1,6 +1,8 @@
 # Entwicklung und Erstellung
 
-Aktueller Stand: **Notenblick 1.25.0**, offiziell freigegeben am 4. November 2026. Der vollständige Audit und die ressourcenschonende Testverwaltung sind abgeschlossen. Das Release übernimmt das getestete Programm unverändert; sein Entwicklungsbranch wird nach Veröffentlichung und Downloadkontrolle gelöscht. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
+Aktueller Stand: **Notenblick 1.25.1**, offiziell freigegeben am 4. November 2026 nach erfolgreichem Windows-Praxistest. Die gezielten Updater-/Dialogprüfungen werden übernommen; zur Veröffentlichung keine erneuten Anwendungstests oder Programmbuilds. [Freigabe und Nachweise](docs/PRUEFBERICHT-1.25.1.md).
+
+Historischer Abschluss 1.25.0: Der vollständige Audit und die ressourcenschonende Testverwaltung sind abgeschlossen. Das Release übernimmt das getestete Programm unverändert; sein Entwicklungsbranch wird nach Veröffentlichung und Downloadkontrolle gelöscht. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
 
 ## Werkzeuge
 
