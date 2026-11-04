@@ -1,7 +1,7 @@
 {
   "version": "1.25.0",
   "branch": "entwicklung/1.25.0",
-  "official_release": false,
+  "official_release": true,
   "baseline": "889349979925f8da24db48c47152a899b8dd706e",
   "full_run": "reports/20261104T101509315781Z/summary.json",
   "full_run_summary_sha256": "d96596f97b69573cf84af96d4aba9376824cb118f391340cdf98d1cbc8f86d5b",
@@ -780,5 +780,39 @@
       "reused": false,
       "measured_execution_seconds": 5.392
     }
-  ]
+  ],
+  "publication": {
+    "approved_by": "Sebastian Müller",
+    "approval_date": "2026-11-04",
+    "application_commit": "f7d7909e96c0da99d70beab150a2644dcff5664e",
+    "tag": "v1.25.0",
+    "preserved_evidence": {
+      "mode": "unchanged-tested-artifact-promotion",
+      "original_report": "reports/20261104T102056823776Z/summary.json",
+      "original_report_sha256": "0b830bf11d8fbc6d0091774ecd436e0870d78452b482305a9444f27a4d9fa54a",
+      "application_commit": "f7d7909e96c0da99d70beab150a2644dcff5664e",
+      "source_current": true,
+      "runtime_current": true,
+      "all_original_receipts_intact": true,
+      "mandatory_groups": 89,
+      "two_clean_byte_identical_builds_intact": true,
+      "original_packages_intact": true,
+      "new_tests_executed": 0,
+      "new_builds_executed": 0,
+      "new_session_environment_used_for_test_execution": false
+    },
+    "windows_publisher_acceptance": {
+      "x86": true,
+      "arm": true,
+      "update_check": true,
+      "updater_ui": true,
+      "full_download_install_rollback": false,
+      "individual_assistive_technology_measurements": "not separately supplied"
+    },
+    "runtime_unchanged": true,
+    "new_tests_executed": 0,
+    "new_builds_executed": 0,
+    "approved_update": true,
+    "historical_top_level_test_flags_scope": "automated audit; publisher acceptance recorded separately"
+  }
 }

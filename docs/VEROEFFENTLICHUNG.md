@@ -9,7 +9,7 @@
 7. Nur nach ausdrücklicher Freigabe auf dem geprüften Stand `TZ=UTC python3 dev/package.py --approve-update reports/<Lauf>/summary.json` ausführen. Der Befehl verlangt den gültigen Release-Nachweis, erzeugt dieselben vollständigen Archive und setzt den separaten Deskriptor auf `approved: true`. Archive, Deskriptor, Quellbaum und Prüfsummen erneut abgleichen. Bei geänderten Quellen erneut `release` ausführen: gültige unveränderte Gruppen übernehmen, betroffene neu prüfen und den vollständigen Nachweis für den endgültigen Quellstand zusammensetzen.
 8. Eindeutigen Tag `vX.Y.Z` am freigegebenen Commit und ein stabiles offizielles GitHub Release erstellen. Beifügen: `Notenblick_X.Y.Z.zip`, `Notenblick_X.Y.Z_Quellcode.zip`, `Notenblick_X.Y.Z_Pruefsummen.json` und `Notenblick_X.Y.Z_Aktualisierung.json`. Ein neuer Commit in `main`, ein Entwurf oder ein Prerelease ist keine Aktualisierung. Bei fehlender Windows-Abnahme ausschließlich Testversion/Prerelease und `approved: false` verwenden.
 9. Veröffentlichte Downloads erneut abrufen. Hashes, vollständige Dateiliste, Version, Tag/Quellbaum und Lizenzen abgleichen. Tatsächlichen GitHub-Stand kontrollieren. Bestehende Tags und Downloads nicht ersetzen.
-10. Erst danach vollständig übernommene Entwicklungsbranches löschen. Für 1.24.0 betrifft dies `codex/1.23.3-bedienung-github` und `entwicklung/1.24.0`. 1.23.3 wird nicht separat veröffentlicht. Die drei historischen PR-Referenzen bleiben beim Support; keine weitere Historienbereinigung.
+10. Erst danach vollständig übernommene Entwicklungsbranches löschen. Für 1.25.0 betrifft dies `entwicklung/1.25.0`. Aufgeräumter Regelstand: nur `main`. Die Zwischenentwicklung 1.23.3 wurde bereits in 1.24.0 übernommen. Die drei historischen PR-Referenzen bleiben beim Support; keine weitere Historienbereinigung.
 
 ## Wiederaufnahme ab Entwicklung 1.25.0
 
@@ -20,6 +20,16 @@ Datum, Git-Commitdatum und fachlich unbeteiligte Dokumente sind keine Gruppenvor
 Verpackung, CRC, vollständige Dateiliste, Einzelhashes und bytegleiche Entpackung werden für die abschließenden Archive erneut kontrolliert. Ein gültiger Startnachweis identischer entpackter Programmbytes darf übernommen werden. `status` prüft alle Pflichtgruppen, ihre kanonischen Befehle, Einzelbelege, Build-Reproduzierbarkeit, vier Archive/Deskriptor-Dateien sowie Quelle, Werkzeuge und Index. Eine Anzahl bestandener Schritte oder ein manuell gesetztes Erfolgsfeld reicht nicht. Die ausdrückliche Herausgeberfreigabe und die getrennten Windows-Praxistests bleiben erforderlich.
 
 Alte Nachweise vor Schema 2 werden einmalig nicht automatisch importiert: Sie enthalten keine vollständigen dauerhaften Ausgabekopien. Vorhandene Werkzeuge werden weiterverwendet; keine pauschale Neuinstallation. Lokale Nachweise bleiben in der Arbeitskopie und werden nicht über GitHub veröffentlicht. Eine Wiederaufnahme setzt deren Erhalt voraus.
+
+## Freigabe des unveränderten 1.25.0 am 4. November 2026
+
+Sebastian Müller hat nach erfolgreichen Windows-Tests auf x86 und ARM die Veröffentlichung ausdrücklich freigegeben und neue Anwendungs-/Exportprüfungen und Builds untersagt. Der vollständige automatisierte Audit ist bereits erfolgreich. Dies ist die Übernahme eines geprüften Artefakts, kein reduzierter Ersatz für den ursprünglichen Audit.
+
+Vor dem Dokumentationsabschluss werden Quellfingerabdruck, alle 89 erhaltenen Gruppenbelege einschließlich ihrer Ausgabebytes, der versiegelte vollständige Bericht, der Doppelbuild-Beleg und alle bisherigen Paketdateien abgeglichen. Programmquellen, Werkzeuge im Repository, Version und Programmdateien bleiben gegenüber dem freigegebenen Commit `f7d7909e96c0da99d70beab150a2644dcff5664e` unverändert. Der Nachweis bleibt an die damaligen Ausführungsbedingungen gebunden. Neue Sitzungswerte sind keine damals ausgeführte Prüfung; ein aktueller Neu-Ausführungsnachweis wird nicht vorgetäuscht.
+
+Anschließend nur Dokumentation abschließen, das Quellcodearchiv aus dem endgültigen Git-Baum erzeugen und Größen/Prüfsummen nachführen. Das vorhandene geprüfte Windows-ZIP bleibt bytegleich. Aufgrund der ausdrücklichen versionsgebundenen Freigabe wird ausschließlich dessen externer Deskriptor 1.25.0 auf `approved: true` gesetzt. Herkunft, Mindest-Updater, Datenschema, Archiv und alle Programmdateien werden vollständig geprüft; der normale Prüfcode und seine Sicherheitsanforderungen bleiben unverändert. Der [Versionsbericht](PRUEFBERICHT-1.25.0.md) trennt Praxisbestätigung und weiterhin unbestätigte Update-Einzelfälle.
+
+Danach Pull Request nach `main`, Tag `v1.25.0`, stabiles Release mit vier Dateien, Downloadabgleich und erst dann Löschung von `entwicklung/1.25.0`. GitHub Actions bleiben deaktiviert.
 
 ## Ausdrückliche Ausnahme für 1.24.0 am 3. November 2026
 

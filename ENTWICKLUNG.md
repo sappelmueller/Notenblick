@@ -1,6 +1,6 @@
 # Entwicklung und Erstellung
 
-Entwicklungsstand: Notenblick 1.25.0 als Testversion auf `entwicklung/1.25.0`; offizielle Version weiterhin 1.24.0. Die ressourcenschonende Testverwaltung aus Phase 1 wird für den vollständigen Audit verwendet. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
+Aktueller Stand: **Notenblick 1.25.0**, offiziell freigegeben am 4. November 2026. Der vollständige Audit und die ressourcenschonende Testverwaltung sind abgeschlossen. Das Release übernimmt das getestete Programm unverändert; sein Entwicklungsbranch wird nach Veröffentlichung und Downloadkontrolle gelöscht. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
 
 ## Werkzeuge
 
@@ -33,4 +33,4 @@ Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in [LICENSE-EXCEPTION](LICENSE
 
 Die frühere ausführliche Architekturbeschreibung bis 1.14 ist als [historischer Hintergrund](docs/archiv/ENTWICKLUNG-bis-1.14.md) erhalten. Ihre damaligen Versionslisten, Beschriftungen und Befehle sind keine aktuellen Vorgaben.
 
-Für die offizielle 1.24.0 gilt die ausdrücklich freigegebene Ausnahme mit reduziertem Prüfumfang: [Veröffentlichung und Nachweis](docs/PRUEFBERICHT-1.24.0.md). Sie ist kein vollständiger Release-Nachweis und ändert das allgemeine Prüfverfahren nicht.
+Für 1.25.0 werden der vollständige Audit, sämtliche erhaltenen Einzelbelege und der Doppelbuild-Nachweis wiederverwendet. Nach der Nutzerfreigabe ändern sich nur Dokumentation, Quellcodearchiv und externe Veröffentlichungsmetadaten. Keine erneuten Anwendungs-/Exportprüfungen oder Builds: [Abschluss und Nachweis](docs/PRUEFBERICHT-1.25.0.md). Die reduzierte Freigabe von [1.24.0](docs/PRUEFBERICHT-1.24.0.md) bleibt ein historischer Sonderfall.
