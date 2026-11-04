@@ -1,6 +1,6 @@
 # Entwicklung und Erstellung
 
-Technischer Stand: Notenblick 1.24.0. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
+Aktueller Stand: **Notenblick 1.25.0**, offiziell freigegeben am 4. November 2026. Der vollständige Audit und die ressourcenschonende Testverwaltung sind abgeschlossen. Das Release übernimmt das getestete Programm unverändert; sein Entwicklungsbranch wird nach Veröffentlichung und Downloadkontrolle gelöscht. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
 
 ## Werkzeuge
 
@@ -18,11 +18,12 @@ python3 dev/manage.py test changed --base main
 python3 dev/manage.py test changed --stage integration --base main
 python3 dev/manage.py build
 python3 dev/manage.py release
+python3 dev/manage.py release --retry reports/<Lauf>
 ```
 
 Die Ausgangsbasis während einer Aufgabe nicht wechseln. Vor einer unmittelbar folgenden vollständigen Release-Prüfung ist kein doppelter Integrationslauf nötig. Unbekannte gemeinsame Änderungen werden konservativ vollständig geprüft. Fehler nicht überspringen.
 
-`release` führt sämtliche Tests, große Datenbestände, Exportvalidatoren, zwei saubere bytegleiche Builds und ZIP-/Entpackprüfungen aus. `release --check-only` prüft denselben Umfang mit temporären Archiven. Quellen und Dokumente vorher abschließen und stagen; den aktuellen Nachweis mit `status --report reports/<Lauf>/summary.json` bestätigen.
+`release` führt sämtliche Tests, große Datenbestände, Exportvalidatoren, zwei saubere bytegleiche Builds und ZIP-/Entpackprüfungen zusammen. Gültige Einzelbelege werden wiederverwendet; nur betroffene oder offene Prüfungen laufen neu. Der Doppelbuild-Nachweis bleibt für unveränderte Build-Voraussetzungen gültig. Einzelheiten zur Wiederaufnahme und zu kleinen Infrastrukturtests: [Effizient entwickeln](docs/ENTWICKLUNGSOPTIMIERUNG.md). `release --check-only` prüft denselben Umfang mit temporären Archiven. Quellen und Dokumente vorher abschließen und stagen; den aktuellen Nachweis mit `status --report reports/<Lauf>/summary.json` bestätigen.
 
 ## Ausgabe und Zusammenarbeit
 
@@ -32,4 +33,4 @@ Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in [LICENSE-EXCEPTION](LICENSE
 
 Die frühere ausführliche Architekturbeschreibung bis 1.14 ist als [historischer Hintergrund](docs/archiv/ENTWICKLUNG-bis-1.14.md) erhalten. Ihre damaligen Versionslisten, Beschriftungen und Befehle sind keine aktuellen Vorgaben.
 
-Für die offizielle 1.24.0 gilt die ausdrücklich freigegebene Ausnahme mit reduziertem Prüfumfang: [Veröffentlichung und Nachweis](docs/PRUEFBERICHT-1.24.0.md). Sie ist kein vollständiger Release-Nachweis und ändert das allgemeine Prüfverfahren nicht.
+Für 1.25.0 werden der vollständige Audit, sämtliche erhaltenen Einzelbelege und der Doppelbuild-Nachweis wiederverwendet. Nach der Nutzerfreigabe ändern sich nur Dokumentation, Quellcodearchiv und externe Veröffentlichungsmetadaten. Keine erneuten Anwendungs-/Exportprüfungen oder Builds: [Abschluss und Nachweis](docs/PRUEFBERICHT-1.25.0.md). Die reduzierte Freigabe von [1.24.0](docs/PRUEFBERICHT-1.24.0.md) bleibt ein historischer Sonderfall.

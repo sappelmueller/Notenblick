@@ -16,7 +16,7 @@ const server=http.createServer((req,res)=>{const file=path.resolve(root,'.'+new 
   await page.evaluate(async()=>{updateTestHost.offline=false;await Notenblick.checkUpdates(false);});
   for(const [width,zoom] of [[1280,1],[640,2],[320,2]]){
    await page.setViewportSize({width,height:900});await page.evaluate(z=>document.documentElement.style.zoom=String(z),zoom);
-   await page.evaluate(()=>Notenblick.activateGroup('main','settings'));assert.equal(await page.locator('.update-settings>p').first().textContent(),'Deine Version: 1.24.0');
+   await page.evaluate(()=>Notenblick.activateGroup('main','settings'));assert.equal(await page.locator('.update-settings>p').first().textContent(),'Deine Version: '+require('../package.json').version);
    for(const id of ['updateAuto','updateHide']){
     if(id==='updateHide')await page.evaluate(()=>{Notenblick.updates.sessionHidden='';Notenblick.updates.hiddenVersion='';updateTestHost.state.hiddenVersion='';Notenblick.activateGroup('main','home');Notenblick.syncUpdateViews();});
     const layout=await page.locator('#'+id).evaluate(input=>{const span=input.nextElementSibling,a=input.getBoundingClientRect(),b=span.getBoundingClientRect(),label=input.closest('label'),range=document.createRange();range.setStart(span.firstChild,0);range.setEnd(span.firstChild,Math.min(5,span.firstChild.length));const first=range.getBoundingClientRect();return {right:b.left>=a.right+4,sameLine:a.top<first.bottom&&a.bottom>first.top,fits:label.scrollWidth<=label.clientWidth+1,label:label.textContent};});

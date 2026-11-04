@@ -82,7 +82,7 @@
       if (!sets.courses.has(a.courseId) || !['1', '2'].includes(a.period) || !(Object.hasOwn(NR.KINDS, a.kind)||legacy&&a.kind==='other')) fail('Ungültige Leistung.');
       if (typeof a.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(a.date) || !Number.isFinite(Date.parse(a.date)) || new Date(a.date).toISOString().slice(0, 10) !== a.date) fail('Ungültiges Datum.');
       const w = NR.Q.from(a.weight);
-      if (w.cmp(0) <= 0n || w.cmp(100) > 0n) fail('Ungültiger Leistungsfaktor.');
+      if (w.cmp(0) <= 0n || w.cmp(100) > 0n) fail('Ungültige Gewichtung der Leistung.');
       if (!a.results || typeof a.results !== 'object' || Array.isArray(a.results)) fail('Leistungen fehlen.');
       const course = maps.courses.get(a.courseId);
       NR.validatePointRecord(a);

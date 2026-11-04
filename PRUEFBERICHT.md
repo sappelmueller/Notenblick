@@ -1,9 +1,13 @@
 # Prüfberichte
 
-Aktuelle offizielle Version: **Notenblick 1.24.0**. Sebastian Müller hat die Veröffentlichung am **3. November 2026** ausdrücklich mit reduziertem Prüfumfang freigegeben. Der [aktuelle Versionsbericht](docs/PRUEFBERICHT-1.24.0.md) nennt die tatsächlich neu ausgeführten Kontrollen, frühere Nachweise und die offenen Windows-Installations-/Wiederherstellungstests. Kein erneuter vollständiger Release-Testlauf. 1.23.3 ist vollständig in 1.24.0 enthalten und wird nicht separat veröffentlicht.
+Aktuelle offizielle Version: **Notenblick 1.25.0**, am **4. November 2026** ausdrücklich durch Sebastian Müller freigegeben. Der [Versionsbericht](docs/PRUEFBERICHT-1.25.0.md) dokumentiert den erfolgreichen vollständigen Qualitätsaudit, die bestätigten Windows-Praxistests auf x86 und ARM und die unveränderte Übernahme des geprüften Windows-ZIPs. Die [kompakten Nachweise](docs/qa-1.25.0.json) bleiben nachvollziehbar erhalten. Zum Release wurden keine Anwendungstests oder Builds erneut ausgeführt.
 
-Für **1.23.2** bestätigte Sebastian Müller am 2. November 2026 die praktische Verwendung mit **Windows, NVDA und Braille** auf einem Windows-PC und unter Windows auf ARM in Parallels. PowerShell bestätigte Prozessarchitektur ARM64 und den geladenen ARM64-WebView2-Loader. Diese Nutzerabnahme ist von automatisierten Prüfungen und der erneuten Abnahme von 1.24.0 getrennt. Der [historische Versionsbericht](docs/PRUEFBERICHT-1.23.2.md) bleibt unverändert.
+Aktualisierungsprüfung und Updater-Bedienung wurden praktisch bestätigt. Der vollständige echte Windows-Download-, Installations- und Rückfalltest sowie nicht einzeln bestätigte Office-/Druckprüfungen bleiben davon getrennt.
 
-Die Open-Source-Prüfung steht in [docs/OPEN-SOURCE-PRUEFUNG.md](docs/OPEN-SOURCE-PRUEFUNG.md). Vollständige aktuelle Logs entstehen lokal unter `reports/`; der Quellen-, Werkzeug-, Ausgabe- und Indexnachweis wird mit `dev/manage.py status --report ...` geprüft.
+## Frühere Versionen
 
-Ältere Berichte unter `docs/archiv/`, `qa-*.json` und der Einrichtungsbericht sind historische Nachweise. Sie bleiben zur Rückverfolgbarkeit erhalten. Ihre damaligen Vorgaben zu privater Ablage und separaten Downloads beschreiben frühere Stände; für neue Arbeit gelten AGENTS.md und der aktuelle Veröffentlichungsablauf.
+- [1.24.0](docs/PRUEFBERICHT-1.24.0.md): ausdrücklich freigegebener reduzierter Abschlussumfang vom 3. November 2026; enthält die Zwischenentwicklung 1.23.3.
+- [1.23.2](docs/PRUEFBERICHT-1.23.2.md): Windows, NVDA und Braille am 2. November 2026 praktisch bestätigt, einschließlich nativer ARM64-Prozessarchitektur und ARM64-WebView2-Loader in Parallels.
+- [Open-Source-Prüfung](docs/OPEN-SOURCE-PRUEFUNG.md).
+
+Ältere Berichte unter `docs/archiv/`, `qa-*.json` und der Einrichtungsbericht sind historische Nachweise. Ihre damaligen Anforderungen beschreiben frühere Stände; für neue Arbeit gelten [AGENTS.md](AGENTS.md) und der [Veröffentlichungsablauf](docs/VEROEFFENTLICHUNG.md). Vollständige Logs und unveränderliche Einzelbelege bleiben lokal unter `reports/` und `.build/`.

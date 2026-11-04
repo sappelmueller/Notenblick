@@ -50,7 +50,7 @@
   }
   .main-tabs a {
     padding:11px 16px;
-    border-radius:6px;
+    border-radius:var(--radius);
     background:#f2f5f0!important
   }
   .main-tabs a[aria-selected=true] {
@@ -176,6 +176,24 @@
   }
 }
 @media(forced-colors:active) {
+  :root {
+    --ink:CanvasText;
+    --surface:Canvas;
+    --muted:CanvasText;
+    --accent:LinkText;
+    --soft:Canvas;
+    --line:CanvasText;
+    --control-border:ButtonText;
+    --surface-hover:Canvas;
+    --accent-hover:LinkText;
+    --red:CanvasText;
+    --error-surface:Canvas;
+    --warning-surface:Canvas;
+    --warning-ink:CanvasText;
+    --focus:Highlight
+  }
+  :focus-visible{outline-color:Highlight}
+  [aria-invalid=true]{border-style:dashed}
   .tabs a[aria-selected=true],.total {
     border:2px solid CanvasText
   }

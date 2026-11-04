@@ -49,18 +49,22 @@ Notenblick.restorePoint = async function restorePoint() {
   let dir;
   try {
     dir=await Notenblick.store.root.getDirectoryHandle('Sicherungen');
-  } catch {
-    throw Error('Es gibt noch keine früheren Speicherstände.');
+  } catch (e) {
+    if(e.name==='NotFoundError')throw Error('Es gibt noch keine früheren Speicherstände.');
+    throw Error('Die früheren Speicherstände konnten nicht geöffnet werden. Bitte prüfe den Zugriff auf deinen Ordner „Daten“.');
   }
   const versions = [];
   for await (const [name, h] of dir.entries()) if (h.kind === 'file' && /^(Stand_\d{8,}_[a-zA-Z0-9_-]+|Vor_Wiederherstellung_[a-zA-Z0-9_-]+|Vor_Einstellungen_1-4_[a-zA-Z0-9_-]+|Vor_Muendlich_Zuordnung_[a-zA-Z0-9_-]+)\.json$/.test(name)) {
+    let text;
+    try{text=await(await h.getFile()).text();}
+    catch{throw Error('Ein früherer Speicherstand konnte nicht gelesen werden. Bitte prüfe den Zugriff auf deinen Ordner „Daten“ und versuche es erneut.');}
     try {
-      const text=await(await h.getFile()).text(),d=Notenblick.N.validate(JSON.parse(text.replace(/^\ufeff/,'')));
+      const d=Notenblick.N.validate(JSON.parse(text.replace(/^\ufeff/,'')));
       versions.push({
         name,handle:h,digest:await Notenblick.N.textDigest(text),
         at:d.updatedAt,revision:d.revision,years:d.years.length,students:d.students.length,assessments:d.assessments.length
       });
-    } catch {}
+    } catch {/* Invalid snapshots remain untouched; offer only valid data. */}
   }
   versions.sort((a,b)=>Date.parse(b.at)-Date.parse(a.at)||b.revision-a.revision);
   if (!versions.length) throw Error('Es gibt noch keine lesbaren früheren Speicherstände.');

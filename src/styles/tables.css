@@ -24,6 +24,7 @@
   overflow:auto;
   max-width:100%
 }
+.table-wrap:focus-visible{outline-offset:-3px}
 table {
   border-collapse:collapse;
   width:100%;

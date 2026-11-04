@@ -1,4 +1,10 @@
-# Ergänzung zur Testversion 1.24.0
+# Windows-Praxisstand 1.25.0
+
+Am 4. November 2026 hat Sebastian Müller die praktische Verwendung unter Windows auf x86 und ARM sowie Aktualisierungsprüfung und Updater-Bedienung erfolgreich bestätigt und 1.25.0 ausdrücklich freigegeben. Der vollständige reale Download-/Installations-/Rückfalltest ist damit nicht nachgewiesen. Nicht einzeln protokollierte Office-, Druck- oder Hilfetechnikfälle werden nicht aus dieser allgemeinen Abnahme abgeleitet. [Aktueller Prüfbericht](PRUEFBERICHT-1.25.0.md).
+
+Die folgenden datierten Pläne bleiben als Prüfhilfe und historischer Hintergrund erhalten.
+
+# Historischer Prüfplan für die Testversion 1.24.0
 
 1. Erstes Update von 1.23.2 manuell mit EXE und vollständigem Programmordner durchführen; Daten behalten.
 2. Unter x86/x64 und ARM64 maximierten Start, Wiederherstellen, Taskleiste, Monitorwechsel und Skalierung praktisch prüfen. Das vorhandene PowerShell-Skript mit `-Launch` misst Prozessarchitektur und Loader; die Oberfläche zusätzlich selbst bedienen.

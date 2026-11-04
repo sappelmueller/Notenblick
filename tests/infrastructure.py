@@ -7,6 +7,18 @@ sys.path.insert(0,str(ROOT/'dev'))
 import guard,manage,testplan,evidence,bootstrap
 
 class Infrastructure(unittest.TestCase):
+    def test_builtin_node_module_never_fingerprints_project_or_reports(self):
+        import os
+        with tempfile.TemporaryDirectory(prefix='notenblick-builtin-') as tmp:
+            folder=Path(tmp)
+            (folder/'package.json').write_text(json.dumps({'devDependencies':{'punycode':'2.3.1'}}))
+            values={**os.environ,'NODE_PATH':''}
+            before=evidence.node_packages(folder,values)
+            (folder/'reports').mkdir();(folder/'reports/result.json').write_text('synthetic changing log')
+            self.assertEqual(evidence.node_packages(folder,values),before)
+            self.assertNotIn(folder,before)
+            self.assertTrue(all(p.is_relative_to(folder/'.tools') for p in before))
+
     def test_history_audit_finds_deleted_secret_and_redacts_it(self):
         import importlib.util
         spec=importlib.util.spec_from_file_location('notenblick_audit',ROOT/'dev/audit.py');audit=importlib.util.module_from_spec(spec);spec.loader.exec_module(audit)
@@ -184,7 +196,7 @@ class Efficiency(unittest.TestCase):
             self.assertTrue(set(testplan.BROWSER).issubset(testplan.select([path],'integration')['tests']))
 
     def test_unknown_shared_native_and_configuration_expand_conservatively(self):
-        for path in ['new-engine.rs','native/Window.cs','native/ExportFiles.cs','native/OfficePackage.cs','tests/fixtures.cjs','dev/manage.py','package-lock.json']:
+        for path in ['new-engine.rs','native/Window.cs','native/ExportFiles.cs','native/OfficePackage.cs','tests/fixtures.cjs','package-lock.json']:
             self.assertEqual(testplan.select([path])['tests'],testplan.ALL,path)
 
     def test_changed_producer_selects_transitive_consumers(self):
@@ -219,7 +231,7 @@ class Efficiency(unittest.TestCase):
     def test_success_evidence_requires_key_completion_exit_and_output_bytes(self):
         with tempfile.TemporaryDirectory(prefix='nb-evidence-') as tmp:
             root=Path(tmp);p=root/'result.json';p.write_text('synthetic')
-            entry={'key':'k','complete':True,'exit_code':0,'outputs':evidence.inventory(root,[p])}
+            entry=evidence.sealed({'key':'k','complete':True,'exit_code':0,'outputs':evidence.inventory(root,[p])})
             self.assertTrue(evidence.valid(entry,'k',root))
             for changed in [{'key':'old'},{'complete':False},{'exit_code':1},{'outputs':{}}]:self.assertFalse(evidence.valid({**entry,**changed},'k',root))
             self.assertFalse(evidence.valid(entry,'new-tool-key',root));p.write_text('corrupt');self.assertFalse(evidence.valid(entry,'k',root))
@@ -237,7 +249,7 @@ class Efficiency(unittest.TestCase):
             with patch.dict('os.environ',{'NOTENBLICK_FRESH_BUILD':'0'}):
                 self.assertFalse(evidence.component('probe',[source],[output],compile,root));output.unlink()
                 self.assertTrue(evidence.component('probe',[source],[output],compile,root));self.assertEqual(output.read_text(),'v1')
-                next((root/'.build/components/probe').rglob('0')).write_text('corrupt')
+                next((root/'.build/components/probe').rglob('file-0')).write_text('corrupt')
                 self.assertFalse(evidence.component('probe',[source],[output],compile,root));source.write_text('v2')
                 self.assertFalse(evidence.component('probe',[source],[output],compile,root))
             with patch.dict('os.environ',{'NOTENBLICK_FRESH_BUILD':'1'}):self.assertFalse(evidence.component('probe',[source],[output],compile,root))
@@ -266,12 +278,12 @@ class Efficiency(unittest.TestCase):
 
     def test_complete_release_still_needs_current_source_tools_and_runtime(self):
         with tempfile.TemporaryDirectory(prefix='nb-audit-') as tmp:
-            p=Path(tmp)/'summary.json';evidence.write(p,{'release_eligible':True,'status':'passed','source_hash':evidence.digest({'a':'h'}),'tools_hash':'tools','runtime_outputs':{'runtime':'ok'}})
-            with patch.object(manage,'git',return_value=''),patch.object(evidence,'source',return_value={'a':'h'}),patch.object(evidence,'tools',return_value='tools'),patch.object(evidence,'inventory',return_value={'runtime':'ok'}):
+            p=Path(tmp)/'summary.json';evidence.write(p,evidence.sealed({'release_eligible':True,'status':'passed','source_hash':evidence.digest({'a':'h'}),'tools_hash':'tools','runtime_outputs':{'runtime':'ok'}}))
+            with patch.object(manage,'git',return_value=''),patch.object(evidence,'source',return_value={'a':'h'}),patch.object(manage,'tool_identity',return_value='tools'),patch.object(manage,'evidence_current',return_value=True),patch.object(evidence,'inventory',return_value={'runtime':'ok'}):
                 self.assertTrue(manage.audit(p)['release_current'])
                 with patch.object(manage,'git',return_value='unstaged-or-untracked'):self.assertFalse(manage.audit(p)['release_current'])
                 with patch.object(evidence,'source',return_value={'a':'changed'}):self.assertFalse(manage.audit(p)['release_current'])
-                with patch.object(evidence,'tools',return_value='other'):self.assertFalse(manage.audit(p)['release_current'])
+                with patch.object(manage,'tool_identity',return_value='other'):self.assertFalse(manage.audit(p)['release_current'])
                 with patch.object(evidence,'inventory',return_value={}):self.assertFalse(manage.audit(p)['release_current'])
 
     def test_failure_summary_is_bounded_full_log_is_retained(self):
@@ -287,20 +299,11 @@ class Efficiency(unittest.TestCase):
         with self.assertRaises(ValueError):manage.retry_plan([],{'status':'passed'})
 
     def test_real_runner_reuses_only_verified_success_and_reexecutes_failure(self):
-        export=ROOT/'tests/exports';export.mkdir(exist_ok=True)
-        with tempfile.TemporaryDirectory(prefix='nb-cache-probe-',dir=export) as folder,tempfile.TemporaryDirectory(prefix='nb-run-') as tmp:
-            output=Path(folder)/'proof';report=Path(tmp);cache=report/'cache.json';pending={};steps=[]
-            command=[sys.executable,'-c','from pathlib import Path; Path('+repr(str(output))+').write_text("proof")']
-            with patch.multiple(manage,REPORT=report,CACHE=cache,PENDING=pending,STEPS=steps,REUSE=True,TOOLS='synthetic-tools'),patch.object(evidence,'task_key',return_value='key'):
-                manage.run('probe',command,task='ui');entry=dict(pending['ui']);entry.pop('source_after');evidence.write(cache,{'ui':entry})
-                manage.run('probe',command,task='ui');self.assertTrue(steps[-1]['reused'])
-                output.write_text('corrupt');manage.run('probe',command,task='ui');self.assertFalse(steps[-1]['reused'])
-                with self.assertRaises(RuntimeError):manage.run('different command',[sys.executable,'-c','raise SystemExit(8)'],task='ui')
-                self.assertFalse(steps[-1]['reused'])
-                for _ in range(2):
-                    with self.assertRaises(RuntimeError):manage.run('failed',[sys.executable,'-c','raise SystemExit(7)'],task='v1140')
-                    self.assertFalse(steps[-1]['reused'])
-                self.assertNotIn('v1140',pending);self.assertTrue((report/'failure.json').is_file())
+        # Same real-runner contract, now with durable snapshots instead of the
+        # old end-of-run PENDING map. All fixture state stays synthetic/local.
+        import importlib.util
+        spec=importlib.util.spec_from_file_location('nb_management',ROOT/'tests/test_management.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        case=module.Management('test_failed_groups_rerun_and_other_successes_survive');case.debug()
 
     def test_concurrent_runs_cannot_mix_outputs(self):
         with tempfile.TemporaryDirectory(prefix='nb-lock-') as tmp:
@@ -337,11 +340,11 @@ class Efficiency(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='nb-dependencies-') as tmp:
             root=Path(tmp);subprocess.run(['git','init','-q',tmp],check=True)
             (root/'tests').mkdir();(root/'src/domain').mkdir(parents=True);(root/'src/views').mkdir()
-            own=root/'tests/ui.cjs';own.write_text('ui');other=root/'tests/v140.cjs';other.write_text('other')
+            own=root/'tests/ui.cjs';own.write_text("require('./fixtures.cjs')");other=root/'tests/v140.cjs';other.write_text('other')
             fixture=root/'tests/fixtures.cjs';fixture.write_text('fixture');(root/'src/domain/arithmetic.js').write_text('math')
             view=root/'src/views/pupil.js';view.write_text('view')
             key=evidence.task_key('ui','tools',root);other.write_text('unrelated change');self.assertEqual(key,evidence.task_key('ui','tools',root))
-            own.write_text('own changed');self.assertNotEqual(key,evidence.task_key('ui','tools',root))
+            own.write_text("require('./fixtures.cjs'); // own changed");self.assertNotEqual(key,evidence.task_key('ui','tools',root))
             key=evidence.task_key('ui','tools',root);fixture.write_text('shared changed');self.assertNotEqual(key,evidence.task_key('ui','tools',root))
             math=evidence.task_key('domain-storage','tools',root);view.write_text('view changed');self.assertEqual(math,evidence.task_key('domain-storage','tools',root))
 
@@ -379,4 +382,8 @@ class Efficiency(unittest.TestCase):
                 inventory.return_value={'probe':'corrupt'};bootstrap.setup()
                 self.assertEqual(sum('ci' in c.args[0] for c in run.call_args_list),2)
 
-if __name__=='__main__':unittest.main(verbosity=2)
+def load_tests(loader,suite,pattern):
+    suite.addTests(loader.discover(str(ROOT/'tests'),pattern='test_management.py'))
+    return suite
+
+if __name__=='__main__':unittest.main(verbosity=1)

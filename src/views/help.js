@@ -63,6 +63,7 @@ A.helpContext=function(el=document.activeElement){
  }
  if(A.ui.main==='help')return 48;
  const action=el?.closest?.('[data-action]')?.dataset.action,menu=el?.closest?.('[data-menu-key]')?.dataset.menuKey;
+ if(action?.startsWith('update-')||within('#updateAuto,#updateHide'))return 43;
  if(menu==='add-performance'||['new-assessment','quick-oral'].includes(action))return 12;
  if(menu==='finals'||['final-dialog','finals-class'].includes(action))return 30;
  if(['weights','settings-course-weights'].includes(action)||within('.weight-action'))return 27;

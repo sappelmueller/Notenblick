@@ -1,56 +1,48 @@
 # Notenblick
 
-Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du organisierst deine Klassen und Fächer, erfasst Noten oder Punkte und erstellst Berichte für den Schulalltag. Alle Schülerdaten bleiben lokal auf deinem Rechner.
+Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du verwaltest Klassen und Fächer, erfasst Noten oder Punkte und erstellst Berichte für den Schulalltag. Alle Schülerdaten bleiben lokal auf deinem Rechner.
 
-[**Notenblick 1.24.0 herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.24.0/Notenblick_1.24.0.zip)
+[**Notenblick 1.25.0 für Windows herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.25.0/Notenblick_1.25.0.zip)
 
-Aktuelle Version: **1.24.0**, veröffentlicht am **3. November 2026**. Die Verbesserungen aus der Zwischenentwicklung 1.23.3 sind enthalten.
+Aktuelle Version: **1.25.0**, veröffentlicht am **4. November 2026**. [Was ist neu?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.25.0) · [Alle Versionen](https://github.com/sappelmueller/Notenblick/releases/latest)
 
 ## Das kann Notenblick
 
-- **Organisieren:** Schuljahre, Klassen, Fächer und Schüler verwalten, mit einem Assistenten einrichten und Schülerlisten übernehmen. Die Startseite bietet Fach-Schnellzugriffe, das zuletzt geöffnete Fach und offene Noteneingaben.
-- **Leistungen erfassen:** Klassenarbeiten, Tests, mündliche Klassenrunden und Einzelnoten, GFS, Hausaufgaben und Heftbewertungen. Teilnehmer auswählen sowie Status und Bemerkungen ergänzen.
-- **Mit Noten oder Punkten arbeiten:** Noten direkt eingeben oder Punkte über lineare Schlüssel, Schlüssel mit Knick oder individuelle Notengrenzen umrechnen. Ganze, halbe, Viertel- und Zehntelnoten sind möglich; einzelne Noten lassen sich bewusst anpassen.
-- **Durchschnitte und Abschlussnoten:** Gewichtungen individuell festlegen und Ergebnisse nachvollziehen. Halbjahresinformationen verwenden Viertelnoten, Halbjahres- und Jahreszeugnisse ganze Noten. Festgelegte Abschlussnoten bleiben unabhängig vom berechneten Durchschnitt gespeichert.
-- **Sichern und wiederherstellen:** Automatisch speichern, vollständige Sicherungen erstellen und frühere Stände wiederherstellen. Lesbare TXT-Notfalllisten stehen auch ohne das Programm zur Verfügung.
+- **Organisieren:** Schuljahre, Klassen, Fächer und Schüler verwalten, Schülerlisten übernehmen und mit dem Einrichtungsassistenten starten. Die Startseite führt zum letzten Fach und zu offenen Noteneingaben.
+- **Bewerten:** Klassenarbeiten, Tests, mündliche Klassenrunden und Einzelnoten sowie GFS, Hausaufgaben und Heftbewertungen erfassen. Teilnehmer auswählen, Status und Bemerkungen ergänzen.
+- **Noten und Punkte:** Noten direkt eingeben oder Punkte mit linearen, geknickten und individuellen Notenschlüsseln umrechnen. Ganze, halbe, Viertel- und Zehntelnoten sowie manuelle Anpassungen sind möglich.
+- **Durchschnitte und Zeugnisse:** Gewichtungen festlegen und Ergebnisse nachvollziehen. Halbjahresinformationen mit Viertelnoten, Zeugnisse mit ganzen Noten; festgelegte Abschlussnoten bleiben unabhängig vom Durchschnitt gespeichert.
+- **Sichern und wiederherstellen:** Automatisch speichern, vollständige Sicherungen erstellen und frühere Stände wiederherstellen. TXT-Notfalllisten sind auch ohne das Programm lesbar.
 - **Berichte erstellen:** PDF, Word, Excel, CSV und TXT für Fächer, Leistungen und Schüler, dazu Druckvorschau und Gesamtexporte als ZIP.
 
-## Download und Start
+## Herunterladen und starten
 
-1. Unter [Releases](https://github.com/sappelmueller/Notenblick/releases) das Windows-ZIP der freigegebenen Version herunterladen. Quellcode und SHA-256-Prüfsummen stehen dort ebenfalls bereit.
-2. Das ZIP vollständig in einen beschreibbaren Ordner entpacken.
-3. **Notenblick.exe** starten. Der Ordner **Programm** muss daneben liegen; **Daten** entsteht beim ersten Start. Der Einrichtungsassistent führt durch die ersten Schritte.
+1. Das Windows-ZIP vollständig in einen beschreibbaren Ordner entpacken.
+2. **Notenblick.exe** starten. Der vollständige Ordner **Programm** muss daneben liegen; **Daten** entsteht beim ersten Start.
+3. Dem Einrichtungsassistenten folgen oder eine eigene Sicherung wiederherstellen.
 
-Eine Installation von Notenblick ist nicht nötig. Der erste Wechsel von 1.23.2 auf 1.24.0 erfolgt manuell. Die EXE ist bisher nicht digital signiert; Windows kann deshalb einen Sicherheitshinweis anzeigen.
+Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digital signiert; Windows kann deshalb einen Sicherheitshinweis anzeigen. Quellcode und Prüfsummen stehen beim [Release](https://github.com/sappelmueller/Notenblick/releases/tag/v1.25.0).
 
-## Tastatur, NVDA, Braille und Hilfe
+**Voraussetzungen:** Windows x86/x64 mit .NET Framework 4.8 oder neuer und Microsoft Edge WebView2 Runtime. Für native ARM64-Ausführung: Windows 11 ab 24H2, .NET Framework 4.8.1 und ARM64-WebView2. Dieselbe EXE unterstützt beide Prozessorfamilien; die erforderlichen Programm-Bibliotheken liegen bei. Node.js, Python und Office werden für die Anwendung nicht benötigt.
 
-Hauptbereiche und Fächer sind über Links und Kurzbefehle erreichbar. Echte Registerkarten, kurze Beschriftungen und eine klare Fokusführung unterstützen die Arbeit mit Tastatur, NVDA und Braille. **F1** erklärt den aktuellen Arbeitsschritt. Die schnelle Noteneingabe verwendet Eingabe und Umschalt+Eingabe.
+## Tastatur und Hilfe
 
-Sebastian Müller hat Version 1.23.2 am **2. November 2026** auf einem Windows-PC und unter Windows auf ARM in Parallels mit **NVDA und Braille** praktisch getestet. Die native ARM64-Prozessarchitektur und der passende WebView2-Loader wurden zusätzlich per PowerShell bestätigt. Wiederholte Kurzbefehle waren dabei teilweise stumm; Version 1.24.0 übernimmt die bisherigen Korrekturen und bearbeitet zusätzlich die doppelte Fachansage beim Wechsel aus anderen Hauptbereichen. Die Aktualisierungsprüfung von 1.24.0 wurde inzwischen unter Windows bestätigt. Die vollständige automatische Installation und Wiederherstellung sowie eine umfassende erneute Windows-/NVDA-/Braille-Abnahme bleiben offen. Die Nutzerabnahme ersetzt keine vollständige Barrierefreiheitszertifizierung. Bedienkonzept, Prüfstand und offene Punkte: [Barrierefreiheit](BARRIEREFREIHEIT.md).
+Notenblick ist für Tastatur, NVDA und Braille entwickelt. Links, echte Registerkarten, kurze Beschriftungen und eine klare Fokusführung unterstützen die Bedienung. **F1** erklärt den aktuellen Arbeitsschritt; Eingabe und Umschalt+Eingabe führen durch die schnelle Noteneingabe.
 
-## Daten und Sicherungen
+Version 1.25.0 wurde vom Herausgeber unter Windows auf x86 und ARM praktisch erfolgreich getestet. [Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe](docs/HILFE-1.23.1-QUELLE.md) · [Prüfstand](docs/PRUEFBERICHT-1.25.0.md)
 
-Notenblick speichert Schülerdaten ausschließlich im Ordner **Daten** und überträgt sie nicht an externe Dienste. Sichere diesen Ordner regelmäßig zusätzlich auf einem anderen Datenträger. TXT-Notfalllisten helfen beim Nachlesen; eine vollständige Sicherung ist für die Wiederherstellung erforderlich.
+## Daten und Aktualisierungen
 
-Ab 1.24.0 kannst du unter **Einstellungen → Allgemein → Aktualisierungen** nach neuen Versionen suchen. Die Prüfung beim Start ist freiwillig und zunächst ausgeschaltet. Eine angebotene Version wird erst nach deiner Zustimmung heruntergeladen und installiert. Notenblick wird dabei geschlossen und anschließend wieder geöffnet. Deine Noten werden nicht übertragen. Die Aktualisierungseinstellungen werden getrennt von deinen Noten auf diesem Rechner gespeichert.
+Schülerdaten bleiben ausschließlich im Ordner **Daten** und werden nicht an externe Dienste übertragen. Sichere diesen Ordner regelmäßig zusätzlich auf einem anderen Datenträger. TXT-Notfalllisten helfen beim Nachlesen; zur vollständigen Wiederherstellung dient eine Sicherung.
 
-Der Updater berücksichtigt ausschließlich freigegebene stabile GitHub Releases. Eine Änderung am Quellcode allein löst keine Aktualisierung aus. Bei der Installation werden nur **Notenblick.exe** und der vollständige Ordner **Programm** ausgetauscht; **Daten bleibt unangetastet**. Wenn die Vorbereitung oder Prüfung scheitert, wird nichts installiert. Für einen unterbrochenen Austausch ist eine Wiederherstellung vorgesehen; ihr vollständiger praktischer Windows-Test folgt mit Version 1.25.0.
+Unter **Einstellungen → Allgemein → Aktualisierungen** kannst du nach freigegebenen Versionen suchen. Die Prüfung beim Start ist freiwillig und zunächst ausgeschaltet. Download und Installation beginnen erst nach deiner Zustimmung. Dabei werden ausschließlich **Notenblick.exe** und der vollständige Ordner **Programm** ersetzt; **Daten bleibt unangetastet**.
 
-Manuelle Updates bleiben möglich: **Notenblick schließen, Daten sichern und ausschließlich Notenblick.exe sowie den vollständigen Ordner Programm ersetzen. Daten vollständig behalten.** Bewahre auch bei Verwendung des Updaters regelmäßig eigene Sicherungen auf.
+Manuell aktualisieren: Notenblick schließen, Daten sichern, EXE und vollständigen Programmordner ersetzen. **Daten vollständig behalten.**
 
-Version 1.24.0 wurde auf ausdrücklichen Wunsch des Herausgebers mit gezielten Abschlussprüfungen veröffentlicht. Es gab keinen erneuten vollständigen Release-Testlauf. Der genaue Umfang und offene Praxistests stehen im [Prüfbericht](docs/PRUEFBERICHT-1.24.0.md).
+## Lizenz und Kontakt
 
-## Voraussetzungen
+Copyright © 2026 Sebastian Müller. Eigene Quellen: **GNU GPL Version 3** mit [Bibliotheksausnahme](LICENSE-EXCEPTION) ([Lizenztext](LICENSE), `GPL-3.0-only WITH GPL-3.0-linking-exception`). Für Drittanbieter gelten ihre [eigenen Lizenzen](THIRD-PARTY-NOTICES.md). Windows, .NET Framework und WebView2 Runtime stellt Microsoft separat bereit.
 
-- **Windows x86/x64:** .NET Framework 4.8 oder neuer und Microsoft Edge WebView2 Runtime.
-- **Windows ARM64:** Für native Ausführung Windows 11 ab 24H2, .NET Framework 4.8.1 und ARM64-WebView2. Dieselbe EXE unterstützt beide Prozessorfamilien; native ARM64-Ausführung wurde für 1.23.2 innerhalb von Parallels praktisch bestätigt.
-- Ein beschreibbarer Programmordner. Anwendersystem ist Windows.
+Fehler und Vorschläge bitte über [GitHub Issues](https://github.com/sappelmueller/Notenblick/issues) melden – mit erfundenen Beispielen und ohne echte Schülerdaten oder Zugangsdaten. Sicherheitslücken: [SECURITY.md](SECURITY.md).
 
-## Lizenz und Entwicklung
-
-Copyright © 2026 Sebastian Müller. Die eigenen Quellen stehen unter **GNU GPL Version 3** mit [Bibliotheksausnahme](LICENSE-EXCEPTION) ([Lizenztext](LICENSE), `GPL-3.0-only WITH GPL-3.0-linking-exception`). Drittanbieter behalten ihre [eigenen Lizenzen](THIRD-PARTY-NOTICES.md). Windows, .NET Framework und WebView2 Runtime stellt Microsoft separat bereit.
-
-Fehler und Vorschläge bitte über GitHub Issues melden – mit erfundenen Beispielen und ohne echte Schülerdaten, Notenlisten, Sicherungen oder Zugangsdaten. Für Sicherheitslücken gilt [SECURITY.md](SECURITY.md).
-
-[Änderungen](AENDERUNGEN.md) · [Prüfberichte](PRUEFBERICHT.md) · [Mitmachen](CONTRIBUTING.md) · [Technischer Einstieg](docs/PROJEKTUEBERSICHT.md)
+[Änderungen](AENDERUNGEN.md) · [Prüfberichte](PRUEFBERICHT.md) · [Mitmachen](CONTRIBUTING.md) · [Entwicklung](ENTWICKLUNG.md)

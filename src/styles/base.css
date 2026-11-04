@@ -9,7 +9,21 @@
   --accent:#255d47;
   --soft:#e8f0e9;
   --line:#d7e0d7;
-  --red:#a22d24
+  --red:#a22d24;
+  --control-border:#7b8d7f;
+  --surface-hover:#eef3ec;
+  --accent-hover:#194934;
+  --error-surface:#faece8;
+  --warning-surface:#f6efdf;
+  --warning-ink:#6a4e20;
+  --focus:#a6500a;
+  --radius:6px;
+  --space-1:4px;
+  --space-2:8px;
+  --space-3:12px;
+  --space-4:16px;
+  --space-5:24px;
+  --control-height:44px
 }
 * {
   box-sizing:border-box
@@ -18,12 +32,13 @@ body {
   margin:0
 }
 :focus-visible {
-  outline:3px solid #a6500a;
+  outline:3px solid var(--focus);
   outline-offset:3px
 }
-h1,h2,h3,p {
+h1,h2,h3,h4,h5,h6,p {
   margin-top:0
 }
+h1,h2,h3,h4,h5,h6{overflow-wrap:anywhere}
 h1 {
   font-size:1.9rem;
   line-height:1.25;
@@ -48,7 +63,7 @@ p {
   outline:none
 }
 .main-panel:focus-visible,[role=tabpanel]:focus-visible {
-  outline:3px solid #a6500a;
+  outline:3px solid var(--focus);
   outline-offset:4px
 }
 .blank h1 {
