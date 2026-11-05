@@ -26,6 +26,7 @@ for name in manifest['documents']:
  assert len(rows[0])==count+4
  if count>3:
   assert model['sections'][0]['description'] in str(sheet.cell(5,2).value)
+  assert sheet.row_dimensions[5].height>=len(str(sheet.cell(5,2).value).splitlines())*float(sheet.cell(5,2).font.sz)*1.3+6
   for column in section['columns'][1:count+1]:
    if '0 %' in column.get('fullLabel',''):assert column['fullLabel'] in rows[0]
   assert any('0 % – zählt nicht zur Gesamtnote' in label for label in rows[0])

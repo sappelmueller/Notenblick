@@ -1,0 +1,57 @@
+{
+  "version": "1.26.0",
+  "branch": "entwicklung/1.26.0",
+  "baseline": "dee1ba605a00e36c7cd77588937bfae2298e54fe",
+  "test_version": true,
+  "official_release": false,
+  "approved_update": false,
+  "catalogue_groups": 93,
+  "final_full_catalogue_completed": false,
+  "final_scope": "Auf ausdrücklichen Wunsch keine weiteren großen Testläufe. Abschließender Build und vollständige Paketprüfung; vorherige Entwicklungsnachweise und gezielte Korrekturprüfungen getrennt.",
+  "native_updater_checks_during_development": 171,
+  "known_export_failures_fixed": [
+    "0-%-Hinweise in Excel/CSV",
+    "Höhe mehrzeiliger Excel-Hinweise",
+    "Halbjahreslegende",
+    "Klassendurchschnitt beim Druck nicht vom letzten Schüler trennen",
+    "Kompakte Fachübersicht im Gesamtexport"
+  ],
+  "targeted_export_checks": {
+    "area_counts": [
+      3,
+      5,
+      8,
+      20
+    ],
+    "pdf_ua_cases": 4,
+    "openxml_cases": 8,
+    "print_documents": 23,
+    "print_rendered_pages": 115,
+    "collection_document_cases": 17,
+    "collection_archives": 3
+  },
+  "historical_runs": [
+    {
+      "report": "reports/20261105T191943897772Z/summary.json",
+      "status": "failed",
+      "sha256": "0d75c17d80e78fb1b17fe32f88880ec2e38b3a8428bead39d24e57eb5473725b"
+    },
+    {
+      "report": "reports/20261105T193930950080Z/summary.json",
+      "status": "passed",
+      "sha256": "23a9f1a44ba13bcb8fead0d0cbe3426395ac57a7047f9a28d24329ccc76ccece"
+    },
+    {
+      "report": "reports/20261105T194156420670Z/summary.json",
+      "status": "failed",
+      "sha256": "7542c9dcf32b450382a79c1135167ad8bc6fee43971a7adef617f450ffdc2f37"
+    }
+  ],
+  "windows_gui_tested": false,
+  "nvda_tested": false,
+  "braille_tested": false,
+  "arm64_live_tested": false,
+  "microsoft_office_live_tested": false,
+  "windows_update_installation_tested": false,
+  "github_actions_used": false
+}

@@ -33,7 +33,7 @@ Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digi
 
 Notenblick ist für Tastatur, NVDA und Braille entwickelt. Links, echte Registerkarten, kurze Beschriftungen und eine klare Fokusführung unterstützen die Bedienung. **F1** erklärt den aktuellen Arbeitsschritt; Eingabe und Umschalt+Eingabe führen durch die schnelle Noteneingabe.
 
-Version 1.25.1 wurde vom Herausgeber unter Windows praktisch erfolgreich getestet und zur Veröffentlichung freigegeben. [Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe der Testversion](docs/HILFE-1.26.0-QUELLE.md) · [Testhinweise 1.26.0](docs/TESTVERSION-1.26.0.md) · [Offizieller Prüfstand 1.25.1](docs/PRUEFBERICHT-1.25.1.md)
+Version 1.25.1 wurde vom Herausgeber unter Windows praktisch erfolgreich getestet und zur Veröffentlichung freigegeben. [Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe der Testversion](docs/HILFE-1.26.0-QUELLE.md) · [Testhinweise 1.26.0](docs/TESTVERSION-1.26.0.md) · [Prüfstand der Testversion](docs/PRUEFBERICHT-1.26.0.md) · [Offizieller Prüfstand 1.25.1](docs/PRUEFBERICHT-1.25.1.md)
 
 ## Daten und Aktualisierungen
 

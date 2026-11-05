@@ -1,5 +1,9 @@
 # Prüfberichte
 
+Aktuelle Testversion: **Notenblick 1.26.0** in `entwicklung/1.26.0`. [Testbericht](docs/PRUEFBERICHT-1.26.0.md) · [Prüfumfang](docs/qa-1.26.0.json). Umfangreiche Entwicklungsprüfungen und gezielte Exportkorrekturen; auf ausdrücklichen Wunsch kein weiterer großer Gesamtlauf zum Abschluss. Die praktische Windows-/NVDA-/Braille-/ARM64-Abnahme steht noch aus.
+
+## Offizielle Version
+
 Aktuelle offizielle Version: **Notenblick 1.25.1**, am **4. November 2026** durch Sebastian Müller nach erfolgreichem Windows-Praxistest ausdrücklich freigegeben. Der [Versionsbericht](docs/PRUEFBERICHT-1.25.1.md) dokumentiert die sechs gezielten Prüfgruppen mit 168 nativen Updaterprüfungen, zwölf zusätzlichen Dialog-/axe-Fällen sowie die unveränderte Übernahme der getesteten Anwendung. Die [kompakten Nachweise](docs/qa-1.25.1.json) erhalten die ursprünglichen Prüfstände.
 
 Für die Veröffentlichung wurden keine Anwendungstests oder Programmbuilds wiederholt. Neu kontrolliert werden Quell-/Paketidentität, vollständige Dateiliste, Prüfsummen, Updater-Kompatibilität und veröffentlichte Downloads. Die allgemeine Windows-Praxisabnahme wird von nicht gesondert protokollierten Hilfetechnik-, Office-, Druck- und Windows-Störfalltests unterschieden.

@@ -29,11 +29,11 @@ const server=http.createServer((req,res)=>{const p=path.resolve(root,'.'+new URL
  const manifest=JSON.parse(fs.readFileSync(path.join(out,'manifest.json')));
  await page.evaluate(()=>{window.print=()=>{window.printCalls=(window.printCalls||0)+1;};window.NRDesktop={available:true,call:async op=>{if(op!=='print-preview')throw Error('unexpected');window.previewCalls=(window.previewCalls||0)+1;return true;}};});
  for(const name of manifest.documents){const model=JSON.parse(fs.readFileSync(path.join(out,name+'.json')));await page.evaluate(r=>Notenblick.printReport(r),model);
-  assert.equal(await page.locator('#printOutput').count(),1);assert.equal(await page.locator('#printOutput tfoot').count(),await page.evaluate(r=>Notenblick.reportTables(r).filter(s=>s.footer).length,model));
-  assert.equal(await page.locator('#printOutput tfoot').first().evaluate(el=>getComputedStyle(el).display),'table-footer-group');
+  assert.equal(await page.locator('#printOutput').count(),1);assert.equal(await page.locator('#printOutput [data-report-footer]').count(),await page.evaluate(r=>Notenblick.reportTables(r).filter(s=>s.footer).length,model));
+  assert.equal(await page.locator('#printOutput .report-final-rows').first().evaluate(el=>getComputedStyle(el).display),'table-row-group');
   // Do not emulate a print-media exit before taking the print snapshot: that
   // correctly triggers the application's cleanup and removes its @page rule.
-  await page.emulateMedia({media:'print'});assert.equal(await page.locator('#printOutput tfoot').first().evaluate(el=>getComputedStyle(el).display),'table-row-group');
+  await page.emulateMedia({media:'print'});assert.equal(await page.locator('#printOutput .report-final-rows').first().evaluate(el=>getComputedStyle(el).breakInside),'avoid');
   assert.equal(await page.locator('#printOutput').count(),1);
   await page.pdf({path:path.join(out,name+'-print.pdf'),preferCSSPageSize:true,printBackground:false});await page.evaluate(()=>window.dispatchEvent(new Event('afterprint')));assert.equal(await page.locator('#printOutput').count(),0);await page.emulateMedia({media:null});
  }

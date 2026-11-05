@@ -1,6 +1,6 @@
 # Entwicklung und Erstellung
 
-Aktueller Entwicklungsstand: **Notenblick 1.26.0 – Testversion** in `entwicklung/1.26.0`. Frei verwaltbare Leistungsbereiche betreffen Berechnung, Oberfläche und Ausgaben; für diese Entwicklung gilt der vollständige automatische Prüfkatalog. Die praktische Windows-/NVDA-/Braille-/ARM64-Abnahme und die ausdrückliche Veröffentlichungsfreigabe stehen noch aus. [Testhinweise](docs/TESTVERSION-1.26.0.md).
+Aktueller Entwicklungsstand: **Notenblick 1.26.0 – Testversion** in `entwicklung/1.26.0`. Frei verwaltbare Leistungsbereiche betreffen Berechnung, Oberfläche und Ausgaben; der vollständige automatische Prüfkatalog bleibt dokumentiert. Zum Abschluss dieser Testversion hat der Herausgeber weitere große Testläufe ausdrücklich ausgeschlossen. Nach den letzten Exportkorrekturen werden nur Build und Paketprüfung abgeschlossen; ein vollständiger aktueller Gesamtnachweis wird nicht behauptet. Die praktische Windows-/NVDA-/Braille-/ARM64-Abnahme und die ausdrückliche Veröffentlichungsfreigabe stehen noch aus. [Testhinweise](docs/TESTVERSION-1.26.0.md).
 
 Zuletzt offiziell freigegeben: **1.25.1** am 4. November 2026. Die damalige unveränderte Übernahme ist im [Versionsbericht](docs/PRUEFBERICHT-1.25.1.md) dokumentiert.
 
