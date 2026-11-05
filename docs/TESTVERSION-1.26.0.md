@@ -8,7 +8,7 @@ ZIP vollständig entpacken und Notenblick.exe starten. Der vollständige Ordner 
 
 Zum Testen neben der bisherigen Ausgabe einen eigenen Ordner verwenden. Für einen vorhandenen Testbestand: Notenblick schließen, Daten zusätzlich sichern und nur Notenblick.exe sowie den vollständigen Ordner Programm ersetzen. Daten behalten. Die Testversion wird vom öffentlichen Updater noch nicht angeboten. Nach späterer Freigabe ist das direkte Update von 1.25.1 auf 1.26.0 vorbereitet; es benötigt keine Zwischenversion.
 
-Die frühere Forderung nach einer vollständigen Altbestandsmigration in Format 2 wurde durch den ausdrücklichen Auftrag des Herausgebers ersetzt. Der Dateicontainer bleibt kompatibel zum 1.25.1-Updater. Es gibt keine Rückkonvertierung neuer Bereiche für alte Programme. Für eine Rückkehr eine passende Sicherung verwenden.
+Wenn du zur bisherigen Version zurückkehren möchtest, verwende dafür einen getrennten Ordner mit einer passenden Sicherung.
 
 ## Praktische Prüfung
 
