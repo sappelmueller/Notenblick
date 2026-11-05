@@ -22,7 +22,8 @@ pages=continuations=0
 for name in names:
  model=json.loads((OUT/(name+'.json')).read_text());section=model['sections'][0];footer=section['footer'];expected={c['label']:v for c,v in zip(section['columns'],footer)}
  text=(OUT/(name+'.txt')).read_text(encoding='utf-8-sig')
- assert not section.get('description') # population checked independently in v1130.cjs
+ description=section.get('description','')
+ assert not description or description.startswith('Nicht gewichtet (0 %): ') and description.endswith('Diese Bereiche zählen nicht zur Gesamtnote.') # no repeated population explanation
  assert text.count('Klassendurchschnitt')==1
  for column,value in zip(section['columns'][1:],footer[1:]):assert column['label']+': '+value['text'] in text
  rows=list(csv.reader(io.StringIO((OUT/(name+'.csv')).read_text(encoding='utf-8-sig')),delimiter=';'))

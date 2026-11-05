@@ -1,6 +1,8 @@
 # Entwicklung und Erstellung
 
-Aktueller Stand: **Notenblick 1.25.1**, offiziell freigegeben am 4. November 2026 nach erfolgreichem Windows-Praxistest. Die gezielten Updater-/Dialogprüfungen werden übernommen; zur Veröffentlichung keine erneuten Anwendungstests oder Programmbuilds. [Freigabe und Nachweise](docs/PRUEFBERICHT-1.25.1.md).
+Aktueller Entwicklungsstand: **Notenblick 1.26.0 – Testversion** in `entwicklung/1.26.0`. Frei verwaltbare Leistungsbereiche betreffen Berechnung, Oberfläche und Ausgaben; für diese Entwicklung gilt der vollständige automatische Prüfkatalog. Die praktische Windows-/NVDA-/Braille-/ARM64-Abnahme und die ausdrückliche Veröffentlichungsfreigabe stehen noch aus. [Testhinweise](docs/TESTVERSION-1.26.0.md).
+
+Zuletzt offiziell freigegeben: **1.25.1** am 4. November 2026. Die damalige unveränderte Übernahme ist im [Versionsbericht](docs/PRUEFBERICHT-1.25.1.md) dokumentiert.
 
 Historischer Abschluss 1.25.0: Der vollständige Audit und die ressourcenschonende Testverwaltung sind abgeschlossen. Das Release übernimmt das getestete Programm unverändert; sein Entwicklungsbranch wird nach Veröffentlichung und Downloadkontrolle gelöscht. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
 
@@ -35,4 +37,4 @@ Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in [LICENSE-EXCEPTION](LICENSE
 
 Die frühere ausführliche Architekturbeschreibung bis 1.14 ist als [historischer Hintergrund](docs/archiv/ENTWICKLUNG-bis-1.14.md) erhalten. Ihre damaligen Versionslisten, Beschriftungen und Befehle sind keine aktuellen Vorgaben.
 
-Für 1.25.0 werden der vollständige Audit, sämtliche erhaltenen Einzelbelege und der Doppelbuild-Nachweis wiederverwendet. Nach der Nutzerfreigabe ändern sich nur Dokumentation, Quellcodearchiv und externe Veröffentlichungsmetadaten. Keine erneuten Anwendungs-/Exportprüfungen oder Builds: [Abschluss und Nachweis](docs/PRUEFBERICHT-1.25.0.md). Die reduzierte Freigabe von [1.24.0](docs/PRUEFBERICHT-1.24.0.md) bleibt ein historischer Sonderfall.
+Historische Veröffentlichung 1.25.0: Der vollständige Audit, die erhaltenen Einzelbelege und der Doppelbuild-Nachweis wurden wiederverwendet. Nach der Nutzerfreigabe änderten sich nur Dokumentation, Quellcodearchiv und externe Veröffentlichungsmetadaten. [Abschluss und Nachweis](docs/PRUEFBERICHT-1.25.0.md). Diese unveränderte Übernahme und die reduzierte Freigabe von [1.24.0](docs/PRUEFBERICHT-1.24.0.md) ersetzen keine Prüfungen geänderter Programmquellen.

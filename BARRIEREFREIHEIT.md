@@ -2,6 +2,8 @@
 
 Notenblick wird für blinde und sehende Lehrkräfte entwickelt. Tastatur, NVDA und Braille gehören zum Bedienkonzept.
 
+**Testversion 1.26.0:** Fachbezogene Leistungsbereiche verwenden dieselben Registerkarten und Fokusregeln. Im gemeinsamen Gewichtungsdialog haben wiederholte Aktionen einen Bereichsnamen; Gesamtnote und Anteile innerhalb der gemeinsamen Note sind getrennt beschriftet. Neue Bereiche, ungültige Verteilungen und geänderte Durchschnitte bleiben per Tastatur erreichbar. Die reale Windows-/NVDA-/Braille-/ARM64-Abnahme dieser Version steht noch aus. [Testhinweise](docs/TESTVERSION-1.26.0.md).
+
 ## So ist die Bedienung aufgebaut
 
 - **Hauptbereiche und Fächer:** Links und Kurzbefehle führen zum gewünschten Bereich. Direkte Kurzbefehle setzen den Fokus auf die vorhandene Überschrift; bei Fächern gehört der aktive Notenbereich zur Ansage.

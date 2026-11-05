@@ -40,9 +40,9 @@ const server=http.createServer((req,res)=>{const p=path.resolve(root,'.'+new URL
  assert.equal(await page.evaluate(()=>window.printCalls||0),0);assert.equal(await page.evaluate(()=>window.previewCalls),manifest.documents.length);
  checks.push(manifest.documents.length+' reale Chromium-A4-Druckrender: native Vorschauanforderung simuliert, CSS-Ausrichtung und vollständige Ergebniszeile; Tabellenfuß wird nur einmal ausgegeben');
  await page.evaluate(()=>{delete window.NRDesktop;});
- // The recommendation changes with actual report width in the existing dialog.
+ // The complete export keeps its page recommendation when screen columns are hidden.
  await page.evaluate(()=>{const A=Notenblick;A.W().columns=['exam','test','written','oral'];A.activateGroup('notes','overview');});await open();await page.locator('#exportFormat').selectOption('print');assert.match(await page.locator('#exportPrintHint').textContent(),/A4 quer/);await page.keyboard.press('Escape');
- await page.evaluate(()=>{const A=Notenblick;A.W().columns=[];A.rendered={};A.renderOverview();});await open();await page.locator('#exportFormat').selectOption('print');assert.match(await page.locator('#exportPrintHint').textContent(),/A4 hoch/);await page.keyboard.press('Escape');
- assert.equal(await page.evaluate(()=>JSON.stringify(Notenblick.data)),raw);assert.deepEqual(errors,[]);checks.push('Quer-/Hochformatempfehlung folgt dem Layout; Notendaten unverändert. Windows/WebView2/NVDA-Liveprüfung bleibt offen.');
+ await page.evaluate(()=>{const A=Notenblick;A.W().columns=[];A.rendered={};A.renderOverview();});await open();await page.locator('#exportFormat').selectOption('print');assert.match(await page.locator('#exportPrintHint').textContent(),/A4 quer/);await page.keyboard.press('Escape');
+ assert.equal(await page.evaluate(()=>JSON.stringify(Notenblick.data)),raw);assert.deepEqual(errors,[]);checks.push('Seitenausrichtung folgt dem vollständigen Bericht unabhängig von ausgeblendeten Bildschirmspalten; Notendaten unverändert. Windows/WebView2/NVDA-Liveprüfung bleibt offen.');
  fs.writeFileSync(path.join(__dirname,'v1130-browser-results.json'),JSON.stringify({checks,chromium:browser.version(),windows:false,webview2Live:false,word:false,nvda:false},null,2));await client.detach();await browser.close();server.close();console.log('1.13 Chromium:',checks.length,'Prüfgruppen');
 })().catch(async e=>{console.error(e);await browser?.close();server.close();process.exitCode=1;});

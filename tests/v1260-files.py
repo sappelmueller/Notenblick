@@ -24,6 +24,11 @@ for name in manifest['documents']:
  book=load_workbook(OUT/(name+'.xlsx'));assert len(book.worksheets)==1
  sheet=book.worksheets[0];excel=''.join(str(c.value) for row in sheet for c in row if c.value is not None)
  assert len(rows[0])==count+4
+ if count>3:
+  assert model['sections'][0]['description'] in str(sheet.cell(5,2).value)
+  for column in section['columns'][1:count+1]:
+   if '0 %' in column.get('fullLabel',''):assert column['fullLabel'] in rows[0]
+  assert any('0 % – zählt nicht zur Gesamtnote' in label for label in rows[0])
  assert len(doc.tables[0].columns)==min(count,5)+4
  assert len(doc.tables)==1+max(0,(count-5+4)//5)
  assert [c.text for c in doc.tables[0].rows[0].cells][-3:]==['Gesamt','Halbjahr','Zeugnis']
