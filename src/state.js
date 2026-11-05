@@ -12,9 +12,11 @@ Notenblick.esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({
   '"': '&quot;',
   "'": '&#39;'
 })[c]);
-Notenblick.kinds = Object.keys(Notenblick.N.KINDS);
+Object.defineProperty(Notenblick,'kinds',{get:()=>Notenblick.getCourse&&Notenblick.data&&Notenblick.getCourse()?Notenblick.N.areaIds(Notenblick.getCourse()):Notenblick.N.newAreas().map(a=>a.id)});
+Object.defineProperty(Notenblick,'kindLabels',{get:()=>Notenblick.N.areaLabels(Notenblick.getCourse?.())});
+Notenblick.kindLabel=(id,c=Notenblick.getCourse())=>Notenblick.N.areaLabel(c,id);
 Notenblick.mainKeys = ['home','notes', 'admin', 'backup', 'settings', 'help'];
-Notenblick.noteKeys = ['overview', 'assessments', ...Notenblick.kinds, 'pupil'];
+Object.defineProperty(Notenblick,'noteKeys',{get:()=>['overview','assessments',...Notenblick.kinds,'pupil']});
 Notenblick.extraKeys = ['homework', 'notebook'];
 Notenblick.data = Notenblick.N.upgrade(Notenblick.N.blank());
 Notenblick.store = null;

@@ -9,9 +9,10 @@ Notenblick.defaults = () => ({
   view: 'overview',
   extra: 'homework',
   search: '',
-  columns: ['exam', 'test', 'written', 'oral'],
+  columns: [...(Notenblick.N.courseMode(Notenblick.getCourse())==='grouped'?['written']:[]),...Notenblick.kinds],
   showExited: false,
   selected: {},
+  hiddenTabs: [],knownKinds:[...Notenblick.kinds],
   entryMode: 'table',
   studentIndex: 0,
   assessmentFilter: 'all',
@@ -36,7 +37,7 @@ Notenblick.calculation = function(c, sid, data=Notenblick.data) {
 // individual results until NR.show applies the course's rounding for display.
 Notenblick.classAverages = function(c,data=Notenblick.data) {
  const A=Notenblick,results=A.N.activeStudents(data,c).map(s=>A.calculation(c,s.id,data));
- return {categories:Object.fromEntries(['written',...A.kinds].map(k=>[k,A.N.average(results.map(r=>({value:r.categories[k]})))])),total:A.N.average(results.map(r=>({value:r.total}))),finals:A.N.classFinalAverages(data,c)};
+ return {categories:Object.fromEntries(['written',...A.N.areaIds(c)].map(k=>[k,A.N.average(results.map(r=>({value:r.categories[k]})))])),total:A.N.average(results.map(r=>({value:r.total}))),finals:A.N.classFinalAverages(data,c)};
 };
 const assessmentStats = new WeakMap();
 Notenblick.assessmentStats = function(a,c=Notenblick.getCourse(),data=Notenblick.data) {
@@ -48,7 +49,7 @@ Notenblick.assessmentStats = function(a,c=Notenblick.getCourse(),data=Notenblick
 };
 Notenblick.W = function W() {
   if (!Notenblick.ui.workspaces[Notenblick.ui.course]) Notenblick.ui.workspaces[Notenblick.ui.course] = Notenblick.defaults();
-  return Notenblick.attachSort(Notenblick.ui.workspaces[Notenblick.ui.course]);
+  const w=Notenblick.ui.workspaces[Notenblick.ui.course],c=Notenblick.getCourse();if(c){const ids=Notenblick.N.areaIds(c),known=new Set(w.knownKinds||ids),shown=new Set(w.columns);for(const id of ids)if(!known.has(id))shown.add(id);w.columns=[...(Notenblick.N.courseMode(c)==='grouped'?['written']:[]),...ids].filter(id=>shown.has(id));w.knownKinds=ids;w.hiddenTabs=(w.hiddenTabs||[]).filter(id=>ids.includes(id));}return Notenblick.attachSort(w);
 };
 Notenblick.b = (action, label, attrs = '', cls = 'button') => `<button type="button" class="${cls}" data-action="${action}" ${attrs}>${label}</button>`;
 Notenblick.opt = (v, label, selected) => `<option value="${Notenblick.esc(v)}"${String(v) === String(selected) ? ' selected' : ''}>${Notenblick.esc(label)}</option>`;
@@ -74,7 +75,7 @@ Notenblick.feedbacks={};
 Notenblick.feedback=function(key,text,announce=true){const A=Notenblick;A.feedbacks[key]=text;const el=(A.ui.main==='backup'&&A.ui.backupView===key?A.$('#backup-message-'+key):null)||A.$('#actionFeedback');if(el){el.textContent=text;el.hidden=!text;}if(text&&announce)A.announce(text);};
 Notenblick.paintFeedback=function(key){const el=Notenblick.$('#backup-message-'+key);if(el){el.textContent=Notenblick.feedbacks[key]||'';el.hidden=!el.textContent;}};
 Notenblick.status=function(text,state=''){Notenblick.saveState=state||'saved';if(Notenblick.ui.main==='backup')Notenblick.updateSaveDetails?.();};
-Notenblick.weightsText = c => Object.keys(Notenblick.N.overallLabels(c)).filter(k => Notenblick.N.Q.from(c.weights.overall[k]).n).map(k => Notenblick.N.overallLabels(c)[k] + ' ' + c.weights.overall[k] + ' %').join(' · ');
+Notenblick.weightsText = c => Object.keys(Notenblick.N.overallLabels(c)).filter(k => Notenblick.N.Q.from(c.weights.overall[k]).n).map(k => Notenblick.N.overallLabels(c)[k] + ' ' + c.weights.overall[k].replace('.',',') + ' %').join(' · ');
 Notenblick.val = id => Notenblick.$('#'+id).dataset.dateValue!==undefined?Notenblick.readDate(id):Notenblick.$('#'+id).value.trim();
 Notenblick.readGrade=function(id){const A=Notenblick,el=A.$('#'+id);try{const grade=el.value.trim()?A.N.grade(el.value):null;el.removeAttribute('aria-invalid');return grade;}catch(e){el.setAttribute('aria-invalid','true');A.focusTarget(el);throw e;}};
 Notenblick.required = (id, label) => {

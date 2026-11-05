@@ -1,10 +1,11 @@
 {
   "name": "notenblick",
-  "version": "1.25.1",
+  "version": "1.26.0",
   "releaseNotes": [
-    "Die automatische Aktualisierungssuche prüft bei jedem Programmstart nach neuen Versionen.",
-    "Bereits gefundene Aktualisierungen bleiben auch ohne Internetverbindung sichtbar.",
-    "Ein klarer Bestätigungsdialog startet die Aktualisierung von Startseite und Einstellungen."
+    "Leistungsbereiche lassen sich je Fach ergänzen, umbenennen und gewichten.",
+    "Neue Fächer starten mit Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %.",
+    "Eine gemeinsame schriftliche Note kann beliebige Leistungsbereiche zusammenfassen.",
+    "Notenübersichten und Exporte passen sich deinen Leistungsbereichen an."
   ],
   "private": true,
   "description": "Lokaler Windows-Notenrechner; Node-Abhängigkeiten ausschließlich für Entwicklungstests",

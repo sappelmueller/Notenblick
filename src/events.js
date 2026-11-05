@@ -36,7 +36,7 @@ document.addEventListener('submit', e => {
   if(e.target.id==='adminViewForm'){e.preventDefault();Notenblick.$('#adminViewDetails').open=false;Notenblick.$('#adminViewSummary').focus();Notenblick.remember();return;}
   if (e.target.id === 'viewForm') {
     e.preventDefault();
-    Notenblick.W().columns = [...document.querySelectorAll('[name=column]:checked')].map(e => e.value);
+    const selected=new Set([...document.querySelectorAll('[name=column]:checked')].map(e=>e.value));Notenblick.W().columns=[...(Notenblick.N.courseMode(Notenblick.getCourse())==='grouped'?['written']:[]),...Notenblick.kinds].filter(id=>selected.has(id));
     Notenblick.W().showExited = !!Notenblick.$('[name=showExited]:checked');
     Notenblick.refreshTable('overview');
     Notenblick.$('#viewDetails').open = false;

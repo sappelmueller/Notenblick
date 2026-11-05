@@ -2,14 +2,18 @@
 
 Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du verwaltest Klassen und Fächer, erfasst Noten oder Punkte und erstellst Berichte für den Schulalltag. Alle Schülerdaten bleiben lokal auf deinem Rechner.
 
-[**Notenblick 1.25.1 für Windows herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.25.1/Notenblick_1.25.1.zip)
+**Entwicklungsstand: 1.26.0 – Testversion, noch nicht zur Veröffentlichung freigegeben.**
 
-Aktuelle Version: **1.25.1**, veröffentlicht am **4. November 2026**. [Was ist neu?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.25.1)
+Diese Version ergänzt frei verwaltbare Leistungsbereiche. Neue Fächer beginnen mit Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %. Namen, Reihenfolge und Anteile verwaltest du im vertrauten Dialog „Notengewichtung“.
+
+[**Offizielle Version 1.25.1 für Windows herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.25.1/Notenblick_1.25.1.zip)
+
+Zuletzt veröffentlichte Version: **1.25.1**, veröffentlicht am **4. November 2026**. [Was ist neu?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.25.1)
 
 ## Das kann Notenblick
 
 - **Organisieren:** Schuljahre, Klassen, Fächer und Schüler verwalten, Schülerlisten übernehmen und mit dem Einrichtungsassistenten starten. Die Startseite führt zum letzten Fach und zu offenen Noteneingaben.
-- **Bewerten:** Klassenarbeiten, Tests, mündliche Klassenrunden und Einzelnoten sowie GFS, Hausaufgaben und Heftbewertungen erfassen. Teilnehmer auswählen, Status und Bemerkungen ergänzen.
+- **Bewerten:** Eigene Leistungsbereiche pro Fach, mündliche Klassenrunden und Einzelnoten in allen Bereichen sowie GFS erfassen. Teilnehmer auswählen, Status und Bemerkungen ergänzen.
 - **Noten und Punkte:** Noten direkt eingeben oder Punkte mit linearen, geknickten und individuellen Notenschlüsseln umrechnen. Ganze, halbe, Viertel- und Zehntelnoten sowie manuelle Anpassungen sind möglich.
 - **Durchschnitte und Zeugnisse:** Gewichtungen festlegen und Ergebnisse nachvollziehen. Halbjahresinformationen mit Viertelnoten, Zeugnisse mit ganzen Noten; festgelegte Abschlussnoten bleiben unabhängig vom Durchschnitt gespeichert.
 - **Sichern und wiederherstellen:** Automatisch speichern, vollständige Sicherungen erstellen und frühere Stände wiederherstellen. TXT-Notfalllisten sind auch ohne das Programm lesbar.
@@ -29,7 +33,7 @@ Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digi
 
 Notenblick ist für Tastatur, NVDA und Braille entwickelt. Links, echte Registerkarten, kurze Beschriftungen und eine klare Fokusführung unterstützen die Bedienung. **F1** erklärt den aktuellen Arbeitsschritt; Eingabe und Umschalt+Eingabe führen durch die schnelle Noteneingabe.
 
-Version 1.25.1 wurde vom Herausgeber unter Windows praktisch erfolgreich getestet und zur Veröffentlichung freigegeben. [Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe](docs/HILFE-1.23.1-QUELLE.md) · [Prüfstand](docs/PRUEFBERICHT-1.25.1.md)
+Version 1.25.1 wurde vom Herausgeber unter Windows praktisch erfolgreich getestet und zur Veröffentlichung freigegeben. [Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe der Testversion](docs/HILFE-1.26.0-QUELLE.md) · [Testhinweise 1.26.0](docs/TESTVERSION-1.26.0.md) · [Offizieller Prüfstand 1.25.1](docs/PRUEFBERICHT-1.25.1.md)
 
 ## Daten und Aktualisierungen
 

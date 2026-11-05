@@ -1,7 +1,7 @@
 {
   "document": "Hilfe",
   "version": "1.23.1",
-  "source_ref": "sappelmueller/Notenblick@fe68459026d3b2dcd031718001549ed9210d925d",
+  "source_ref": "Notenblick 1.26.0 – docs/HILFE-1.26.0-QUELLE.md",
   "intro": "Du möchtest etwas erledigen und weißt nicht genau, wo? Wähle das passende Thema. Hier findest du die Schritte für die tägliche Arbeit mit Notenblick. Alle Tastenkombinationen stehen unter „Tastatur“.",
   "topics": [
     {
@@ -192,10 +192,10 @@
           "id": "noten-mundliche-bewertungen-wiederfinden"
         },
         {
-          "heading": "Hausaufgaben und Heftführung",
+          "heading": "Weitere Leistungsbereiche",
           "paragraphs": [
-            "Für „Hausaufgabe“ und „Heftbewertung“ legst du Leistungen genauso an wie einen Test: Bezeichnung und Datum eingeben, Teilnehmer prüfen und Noten erfassen.",
-            "Ihre Gewichtung innerhalb des Fachs bestimmst du unter „Notengewichtung“. Eine Punktebewertung mit Notenschlüssel ist für diese beiden Leistungsarten nicht vorgesehen."
+            "Neue Fächer beginnen mit Klassenarbeiten, Tests und Mündlich. Brauchst du zum Beispiel Hausaufgaben, Heftführung oder Referate, öffne im Fach „Notengewichtung“ und füge den Bereich hinzu. Er beginnt mit 0 %. Die bisherigen Anteile bleiben gleich.",
+            "In jedem Bereich kannst du Noten direkt eingeben oder Punkte mit Notenschlüssel nutzen. Mit „Einzelnote eintragen“ bewertest du einen Schüler ohne Klassenrunde. Namen und Reihenfolge der Bereiche änderst du ebenfalls unter „Notengewichtung“."
           ],
           "id": "noten-hausaufgaben-und-heftfuhrung"
         },
@@ -248,8 +248,8 @@
         {
           "heading": "Noten oder Punkte eingeben?",
           "paragraphs": [
-            "Bei Klassenarbeiten, Tests und mündlichen Noten kannst du entweder die Note direkt eintragen oder Punkte verwenden. „Noten direkt eingeben“ ist die normale Einstellung.",
-            "Bei „Punkte mit Notenschlüssel“ trägst du die erreichten Punkte ein. Notenblick zeigt dir die passende Note. Hausaufgaben und Heftführung bleiben bei der direkten Noteneingabe."
+            "Du kannst in jedem Leistungsbereich Noten direkt eingeben oder Punkte mit einem Notenschlüssel bewerten. Die direkte Noteneingabe ist voreingestellt.",
+            "Bei „Punkte mit Notenschlüssel“ trägst du die erreichten Punkte ein. Notenblick zeigt dir die passende Note. Bereits eingegebene Noten bleiben beim Wechsel erhalten."
           ],
           "id": "punkte-noten-oder-punkte-eingeben"
         },
@@ -319,24 +319,29 @@
         {
           "heading": "Die Standardgewichtung",
           "paragraphs": [
-            "Bei der üblichen Einstellung zählen schriftliche und mündliche Leistungen jeweils mit 50 Prozent. Innerhalb der schriftlichen Note zählen Klassenarbeiten mit 80 Prozent, Tests mit 20 Prozent. Mit „Notengewichtung“ im geöffneten Fach – oder Strg+G – kannst du diese Aufteilung anpassen.",
-            "Ändere nur die Anteile, die du wirklich brauchst, und prüfe sie vor dem Speichern. Die Gewichtung einer einzelnen Klassenarbeit stellst du getrennt bei „Gewichtung der Leistung“ ein."
+            "Neue Fächer starten mit Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %. Jeder Bereich zählt unmittelbar zur Gesamtnote. Mit „Notengewichtung“ im geöffneten Fach – oder Strg+G – passt du die Anteile an.",
+            "Ein Bereich mit 0 % behält seine Noten und seinen Durchschnitt, zählt aber nicht zur Gesamtnote. Bereiche ohne bewertete Noten werden bei der Berechnung ausgelassen. Eine fehlende Note ist niemals eine 0."
           ],
           "id": "berechnung-die-standardgewichtung"
         },
         {
           "heading": "Berechnungsart und individuelle Anteile",
           "paragraphs": [
-            "Öffne im Fach „Notengewichtung“. Bei „Berechnungsart“ wählst du zwischen „Schriftliche Leistungen zusammenfassen“ und „Leistungsarten einzeln gewichten“. Bei der ersten Variante bilden Klassenarbeiten und Tests zunächst die schriftliche Note. Bei der zweiten kannst du jeder Leistungsart einen eigenen Anteil geben.",
-            "Passe die Prozentwerte an und prüfe, ob die Verteilung stimmt. Mit „Durchschnitte vergleichen“ kannst du sehen, wie sich deine Änderungen auswirken. Erst „Speichern“ übernimmt die neue Gewichtung für das Fach. „Gewichtung der Leistung“ bei einer einzelnen Arbeit ist davon unabhängig."
+            "Unter „Notengewichtung“ wählst du die Berechnungsart. Bei „Leistungsbereiche einzeln gewichten“ verteilst du insgesamt 100 %. Eine Eingabe verändert die anderen Anteile nicht. „Gleichmäßig verteilen“ teilt die Anteile bewusst neu auf.",
+            "Bei „Schriftliche Note zusammenfassen“ wählst du mit „Zur gemeinsamen Note“ die zugehörigen Bereiche. Ihre Anteile ergeben innen 100 %. Die gemeinsame Note zählt anschließend mit ihrem eigenen Anteil zur Gesamtnote. Dieser Anteil und die übrigen Bereiche ergeben außen ebenfalls 100 %. Die gemeinsame Note darf auch anders heißen.",
+            "Ein Bereich wechselt erst mit 0 % zur gemeinsamen Note oder wieder heraus. Im Ziel beginnt er mit 0 %. Verteile die übrigen Anteile anschließend passend. Beim Wechsel der Berechnungsart werden die bisherigen Anteile umgerechnet. Erfordert die Umrechnung eine Rundung, entscheidest du über die gerundeten Werte.",
+            "„Durchschnitte vergleichen“ zeigt die bisherigen und neuen Ergebnisse. Bei tatsächlichen Änderungen bestätigst du die Übernahme vor dem Speichern. Gerade bei fehlenden Bereichsnoten können die beiden Berechnungsarten andere Durchschnitte liefern. Festgelegte Halbjahres- und Zeugnisnoten bleiben erhalten.",
+            "Füge Bereiche hinzu oder ändere unter „Bereich bearbeiten“ den Namen. Mit „Nach oben“ und „Nach unten“ legst du die Reihenfolge für Reiter, Tabellen und Berichte fest. Leere, nicht gewichtete Bereiche kannst du entfernen; vorhandene Leistungen überträgst du vorher vollständig in einen anderen Bereich. Der ursprüngliche mündliche Bereich bleibt für Einzelnoten und Klassenrunden erhalten, auch unter einem neuen Namen. Verschobene Einzelnoten und Klassenrunden behalten ihre Bearbeitungsform.",
+            "Ausgeblendete leere Bereiche findest du im aufklappbaren Abschnitt „Ausgeblendete Bereiche“. Änderungen bleiben bis zum Speichern im Dialog. Mit Abbrechen verwirfst du sie."
           ],
           "id": "berechnung-berechnungsart-und-individuelle-anteile"
         },
         {
           "heading": "Gewichtung aus einem anderen Fach übernehmen",
           "paragraphs": [
-            "Öffne im Fach „Notengewichtung“ und wähle „Aus anderem Fach übernehmen“. Suche das andere Fach aus und prüfe die vorgeschlagenen Anteile.",
-            "Mit „Übernehmen“ erscheinen die Werte zunächst im Dialog. Erst mit „Speichern“ werden sie für dein Fach übernommen. Falls du schon Änderungen gemacht hast, fragt Notenblick vor dem Ersetzen nach."
+            "Öffne im Fach „Notengewichtung“ und wähle „Aus anderem Fach übernehmen“. Suche das Quellfach aus. Die Vorlage enthält Bereiche, Namen, Reihenfolge, Berechnungsart und Anteile.",
+            "Hat das Zielfach eigene belegte Bereiche, ordnest du ihre Leistungen den passenden Bereichen der Vorlage zu. Alle Noten, Punkte, Bemerkungen und festgelegten Abschlussnoten bleiben erhalten. Nachkommastellen und Rundung werden nur auf Wunsch mit übernommen.",
+            "„Übernehmen“ lädt zunächst den Entwurf. Prüfe die Durchschnitte und wähle anschließend Speichern. Bis dahin kannst du die Übernahme abbrechen."
           ],
           "id": "berechnung-gewichtung-aus-einem-anderen-fach-ubernehmen"
         },
@@ -462,8 +467,8 @@
         {
           "heading": "Mündliche Noten und Abschlussnoten im Bericht",
           "paragraphs": [
-            "Mündliche Einzelnoten lassen sich genauso ausgeben wie andere Bewertungen. Bei gemeinsam angelegten mündlichen Leistungen erscheint die gemeinsame Leistung; bei Einzelnoten stehen die betreffenden Schüler und ihre Ergebnisse im Mittelpunkt.",
-            "Festgelegte Halbjahres- und Zeugnisnoten werden in den passenden Fach- und Schülerberichten getrennt vom berechneten Durchschnitt dargestellt."
+            "Mündliche Einzelnoten erscheinen kompakt mit Datum, Schüler, Bezeichnung und Note. Klassenrunden mit mehreren Einträgen erhalten eine Tabelle. Einzelnoten und Klassenrunden bleiben auch nach dem Verschieben in einen anderen Bereich vollständig enthalten.",
+            "Notenübersichten enthalten die Leistungsbereiche in deiner Fachreihenfolge, den Gesamtdurchschnitt sowie die festgelegten Halbjahres- und Zeugnisnoten. PDF, Word und Druck zeigen bis zu fünf Bereiche gemeinsam; weitere folgen in beschrifteten Ergänzungstabellen. Excel und CSV behalten die breite Übersicht. TXT bleibt eine lineare Liste."
           ],
           "id": "export-mundliche-noten-und-abschlussnoten-im-bericht"
         },
@@ -595,16 +600,16 @@
         {
           "heading": "Die Notenansicht einstellen",
           "paragraphs": [
-            "Unter „Gliederung der Notenverwaltung“ wählst du „Kompakt“ oder „Nach Leistungsarten“. Bei „Nach Leistungsarten“ kannst du einzelne Registerkarten unter „Sichtbare Leistungsarten“ ausblenden; die gespeicherten Noten bleiben erhalten.",
-            "Bei „Beim Öffnen eines Fachs“ entscheidest du zwischen „Immer die Notenübersicht öffnen“ und „Zuletzt verwendeten Bereich öffnen“. Diese Einstellung gilt auch, wenn du „Noten“ über Alt+N öffnest. In einzelnen Notenansichten stehen dir zusätzlich die Möglichkeiten unter „Ansicht anpassen“ zur Verfügung."
+            "Unter „Gliederung der Notenverwaltung“ wählst du „Kompakt“ oder „Nach Leistungsarten“. Kompakt fasst die Leistungen in einer Registerkarte zusammen. Nach Leistungsarten zeigt die Bereiche des geöffneten Fachs als eigene Registerkarten.",
+            "„Sichtbare Leistungsarten“ blendet Registerkarten nur im ausgewählten Fach aus. In der Notenübersicht wählst du über „Ansicht anpassen“ die sichtbaren Bereichsspalten. Gespeicherte Noten, Berechnungen und vollständige Exporte bleiben erhalten. Neue Bereiche sind zunächst sichtbar."
           ],
           "id": "einstellungen-die-notenansicht-einstellen"
         },
         {
           "heading": "Vorgaben für neue Fächer",
           "paragraphs": [
-            "Unter „Einstellungen → Notenberechnung“ findest du „Vorgaben für neue Fächer“. Hier stellst du die Berechnungsart, Gewichtungen und die Anzeige der Durchschnitte für künftig angelegte Fächer ein.",
-            "Vorhandene Fächer bleiben unverändert. Ihre Anteile änderst du unter „Gewichtung vorhandener Fächer“ oder direkt im Fach über „Notengewichtung“."
+            "Unter Einstellungen → Berechnung legst du die Bereiche und Anteile für anschließend neu angelegte Fächer fest. Der Aufbau entspricht dem Dialog „Notengewichtung“. Ohne eigene Vorgaben gelten Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %.",
+            "Vorhandene Fächer bleiben unverändert. Ihre Bereiche und Anteile änderst du unter „Gewichtung vorhandener Fächer“ oder direkt im Fach über „Notengewichtung“. Jede Vorlage wird unabhängig kopiert."
           ],
           "id": "einstellungen-vorgaben-fur-neue-facher"
         }

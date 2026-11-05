@@ -21,10 +21,10 @@ for item in manifest['reports']:
  if name=='precision-4':assert any(c.number_format=='0.0000' for sheet in workbook for row in sheet for c in row if c.data_type=='n')
  if name.startswith('few'):
   assert len(doc.tables)==6 if name=='few' else len(doc.tables)<=6
-  assert len(doc.tables[0].columns)==8
-  assert [c.text for c in doc.tables[0].rows[0].cells]==['Schüler','KA','Tests','Schriftlich','Mündlich','Gesamt','Halbjahr','Zeugnis']
+  assert len(doc.tables[0].columns)==7
+  assert [c.text for c in doc.tables[0].rows[0].cells]==['Schüler','Klassenarbeiten','Tests','Mündlich','Gesamt','Halbjahr','Zeugnis']
   assert not any('Teil ' in p.text for p in doc.paragraphs)
-  assert all(s.get('overview') is not True or len(s['columns'])==8 for s in item['layout']['sections'])
+  assert all(s.get('overview') is not True or len(s['columns'])==7 for s in item['layout']['sections'])
  if csv_rows[0]==['Abschnitt','Schüler','Bezug','Angabe','Wert']:assert all(len(r)==5 for r in csv_rows)
  with zipfile.ZipFile(OUT/(name+'.docx')) as z:
   xml=ET.fromstring(z.read('word/document.xml'));tables=xml.findall('.//w:tbl',ns)
@@ -49,7 +49,7 @@ for item in manifest['reports']:
 checks.append(f"{len(manifest['reports'])} Fälle in TXT/CSV/Word/Excel/PDF; Word zusätzlich tatsächlich in LibreOffice gerendert: {pages} echte Seiten, alle Modellwerte/Noten/Bemerkungen, Zahlentypen/Präzision, Kopf-/Fußzeilen, Tags, Tabellenbreiten und Textgrenzen geprüft")
 before=manifest['baseline'];after=summary['few'];assert after['tables']<before['wordTables']/10 and after['wordPages']<=8 and after['pdfPages']<=8;assert after['wordPages']<before['wordPages']/3
 checks.append(f"Synthetischer identischer 23-Schüler-Fall: Word {before['wordPages']} → {after['wordPages']} Seiten, PDF {before['pdfPages']} → {after['pdfPages']} Seiten, Word-Tabellen {before['wordTables']} → {after['tables']}; privates Negativbeispiel unabhängig mit 38 Seiten/138 Tabellen bestätigt, keine privaten Inhalte in Tests")
-checks.append('Achtspaltenübersicht bleibt ein zusammenhängendes A4-Querformat-Word-Table mit allen Abschlussnoten; dynamische Zusatzarten in Fachberichtteilen, keine horizontal geteilte Übersicht oder künstlichen Seitenumbrüche; Bemerkungen optional, keine normalen Berechnungsstatusabschnitte')
+checks.append('Übersicht der tatsächlichen Leistungsbereiche bleibt ein zusammenhängendes A4-Querformat-Word-Table mit allen Abschlussnoten; dynamische Zusatzarten in Fachberichtteilen, keine horizontal geteilte Übersicht oder künstlichen Seitenumbrüche; Bemerkungen optional, keine normalen Berechnungsstatusabschnitte')
 r=subprocess.run(['python3','dev/openxml-check.py',*office],cwd=ROOT,capture_output=True,text=True,timeout=180);assert r.returncode==0,r.stdout+r.stderr
 r=subprocess.run([os.environ.get('NOTENBLICK_VERAPDF',str(ROOT/'.tools/verapdf/verapdf')),'--format','xml','--flavour','ua1',*pdfs],capture_output=True,text=True,timeout=180);assert r.returncode==0,r.stdout+r.stderr
 reports=[x for x in ET.fromstring(r.stdout).iter() if x.tag.endswith('validationReport')];assert len(reports)==len(pdfs) and all(x.attrib.get('isCompliant')=='true' for x in reports)

@@ -1,5 +1,11 @@
 # Technischer Einstieg
 
+Entwicklungsstand **Notenblick 1.26.0 – Testversion**. Zuletzt offiziell freigegeben: 1.25.1. Entwicklung in `entwicklung/1.26.0`; keine Veröffentlichung ohne praktische Prüfung und ausdrückliche Freigabe.
+
+`domain/areas.js` liefert die geordneten fachbezogenen Leistungsbereiche und ihre stabilen Zuordnungen. `assessment.kind` verweist auf diese IDs; `oralEntry` beschreibt davon unabhängig die Erfassungsform. `evaluation.js` berechnet alle Bereiche mit derselben exakten Bruchrechnung. Der gemeinsame Gewichtungseditor wird in Fachdialog, Einstellungen und Einrichtung verwendet. Exporte/TXT verwenden dieselben Fachdefinitionen.
+
+Der Dateicontainer bleibt `version: 1`, Aktualisierungsdeskriptor `dataSchema: 1`. Damit akzeptiert der unveränderte 1.25.1-Updater das später ausdrücklich freigegebene Programmupdate. Es gibt keine Format-2-Migration und keine zusätzliche Zwischenversion. Neue Programmfunktionen setzen 1.26 voraus; eine Rückkehr zu älterer Software verwendet eine passende ältere Sicherung. Der Updater ersetzt weiterhin ausschließlich EXE und vollständigen Programmordner und schreibt niemals nach Daten.
+
 Notenblick 1.25.1 (offiziell freigegeben am 4. November 2026; Grundlage 1.25.0): Windows, .NET Framework 4.8, WinForms und WebView2. Ziel ausschließlich `sappelmueller/Notenblick`, ID `1432518047`; privat oder öffentlich. Actions aus. Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in LICENSE-EXCEPTION. Vor Änderungen [AGENTS.md](../AGENTS.md) beachten.
 
 ## Aufbau

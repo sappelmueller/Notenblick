@@ -15,7 +15,7 @@ NR.calculateCore = function(d,c,studentId,period,kinds,overall,list=NR.assessmen
     categories[kind] = NR.average(values);
     counts[kind] = values.length;
   }
-  categories.written = NR.average(['exam', 'test'].map(k => ({
+  categories.written = NR.average(Object.keys(writtenWeights).map(k => ({
     value: categories[k],
     weight: writtenWeights[k]
   })));
@@ -24,7 +24,7 @@ NR.calculateCore = function(d,c,studentId,period,kinds,overall,list=NR.assessmen
     weight: c.weights.overall[k]
   })));
   const missing = Object.keys(overall).filter(k => NR.Q.from(c.weights.overall[k]).n > 0n && categories[k] === null).map(k => overall[k]);
-  if (Object.hasOwn(overall,'written') && NR.Q.from(c.weights.overall.written).n > 0n) for (const k of ['exam', 'test']) if (NR.Q.from(c.weights.written[k]).n > 0n && categories[k] === null) missing.push(kinds[k]);
+  if (Object.hasOwn(overall,'written') && NR.Q.from(c.weights.overall.written).n > 0n) for (const k of NR.groupIds(c)) if (NR.Q.from(c.weights.written[k]).n > 0n && categories[k] === null) missing.push(kinds[k]);
   return {
     total,
     categories,
@@ -32,13 +32,13 @@ NR.calculateCore = function(d,c,studentId,period,kinds,overall,list=NR.assessmen
     missing: [...new Set(missing)]
   };
 };
-NR.courseMode=c=>c.calculationMode==='direct'?'direct':'grouped';
-NR.overallLabels=c=>NR.courseMode(c)==='direct'?NR.KINDS:NR.OVERALL;
-NR.writtenWeights=c=>NR.courseMode(c)==='direct'?{exam:c.weights.overall.exam,test:c.weights.overall.test}:c.weights.written;
-NR.areaWeight=function(c,k){const o=c.weights.overall;if(NR.courseMode(c)==='direct')return k==='written'?NR.Q.from(o.exam).add(NR.Q.from(o.test)):NR.Q.from(o[k]);return ['exam','test'].includes(k)?NR.Q.from(o.written).mul(NR.Q.from(c.weights.written[k])).div(NR.Q.from(100)):NR.Q.from(o[k]);};
+NR.courseMode=c=>c?.calculationMode==='direct'?'direct':'grouped';
+NR.overallLabels=c=>NR.courseMode(c)==='direct'?NR.areaLabels(c):{written:NR.areaLabel(c,'written'),...Object.fromEntries(NR.areas(c).filter(a=>!NR.groupIds(c).includes(a.id)).map(a=>[a.id,a.name]))};
+NR.writtenWeights=c=>NR.courseMode(c)==='direct'?Object.fromEntries(NR.groupIds(c).map(id=>[id,c.weights.overall[id]||'0'])):c.weights.written;
+NR.areaWeight=function(c,k){const o=c.weights.overall;if(NR.courseMode(c)==='direct')return k==='written'?NR.groupIds(c).reduce((q,id)=>q.add(o[id]||'0'),new NR.Q(0)):NR.Q.from(o[k]||'0');return NR.groupIds(c).includes(k)?NR.Q.from(o.written).mul(c.weights.written[k]||'0').div(100):NR.Q.from(o[k]||'0');};
 NR.assessmentStudents=(d,c,a,includeArchived=false)=>NR.activeStudents(d,c,includeArchived).filter(s=>!a.participantIds||a.participantIds.includes(s.id));
 NR.calculate=function(d,c,sid,period='all'){
- const result=NR.calculateCore(d,c,sid,period,NR.KINDS,NR.overallLabels(c),NR.assessments(d,c.id,period),NR.writtenWeights(c));
+ const result=NR.calculateCore(d,c,sid,period,NR.areaLabels(c),NR.overallLabels(c),NR.assessments(d,c.id,period),NR.writtenWeights(c));
  if(period!=='all'&&!NR.courseRange(d,c)||NR.legacyPending?.(d,c.id)){result.total=null;result.blocked=true;}
  return result;
 };

@@ -1,5 +1,16 @@
 # Änderungen
 
+## 1.26.0 – Testversion
+
+- Eigene Leistungsbereiche je Fach hinzufügen, umbenennen, sortieren und gewichten. Neue Fächer starten direkt mit 50 % Klassenarbeiten, 10 % Tests und 40 % Mündlich.
+- Die gemeinsame schriftliche Note kann frei gewählte Bereiche zusammenfassen und anders heißen. Einzelne Prozentänderungen lassen die übrigen Anteile unverändert; Verteilen erfolgt bewusst.
+- Alle Bereiche unterstützen Einzelnoten und Punkte. Verschobene Einzelnoten und Klassenrunden behalten ihre Bearbeitungsform.
+- Der gemeinsame Gewichtungsdialog zeigt bei Notenänderungen einen Vergleich vor dem Speichern. Fachvorlagen lassen sich vollständig übernehmen; belegte abweichende Bereiche werden ausdrücklich zugeordnet.
+- Ansichten, Exporte und TXT-Notfalllisten verwenden dieselben Fachbereiche. PDF/Word zeigen fünf Bereiche gemeinsam, weitere in Ergänzungstabellen; Excel/CSV bleiben breit und TXT linear.
+- Manuell bearbeitete TXT-Dateien bleiben auch an aktuellen Ausgabepfaden geschützt. Hilfe und F1 erklären die neue Bedienung.
+
+Noch kein offizielles Release. Der Updateweg von 1.25.1 bleibt ohne Zwischenversion möglich; die Testausgabe wird nicht automatisch angeboten. [Testhinweise](docs/TESTVERSION-1.26.0.md).
+
 ## 1.25.1 – 4. November 2026
 
 - Bei aktivierter Startprüfung einmal pro Programmstart nach Aktualisierungen suchen. Die bisherige 24-Stunden-Sperre entfällt, auch nach fehlgeschlagenen Prüfungen. Manuelle und automatische Anfragen werden zusammengeführt.

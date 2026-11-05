@@ -183,3 +183,5 @@ dialog[data-size=wide]{width:min(1120px,calc(100% - 24px))}
   font-size:.87rem;
   color:var(--muted)
 }
+/* The existing percentage form grows with the subject's area list. */
+.area-weight-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));gap:1rem}.area-weight-row{min-width:0;padding:1rem;border:1px solid var(--border,#cbd5ce);border-radius:.6rem;background:var(--surface,#fff)}.area-weight-row .button-row{gap:.5rem}.area-weight-row details{margin-top:.5rem}.area-weight-row summary{cursor:pointer}.area-weight-row details .field{margin-top:.8rem}.area-weight-row .hint{margin:.4rem 0}

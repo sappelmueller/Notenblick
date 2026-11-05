@@ -5,6 +5,7 @@
   "domain/arithmetic.js",
   "domain/points.js",
   "domain/names.js",
+  "domain/areas.js",
   "domain/records.js",
   "domain/transfers.js",
   "domain/migrations.js",
