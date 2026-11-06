@@ -2,7 +2,18 @@
 (function(A){'use strict';
 const text=globalThis.NRHelp,contexts=globalThis.NRHelpContexts.contexts;
 A.helpSection=function(index){const route=typeof index==='string'?{section_id:index}:contexts[index];if(!route)throw Error('Unbekannter Hilfekontext.');for(const topic of text.topics){const section=topic.sections.find(s=>s.id===route.section_id);if(section)return{topic,section,route};}throw Error('Hilfestelle fehlt.');};
-A.helpParagraphs=s=>s.paragraphs.map(p=>'<p>'+A.esc(p)+'</p>').join('');
+// Only the small, fixed markup used by our offline help; all text is escaped first.
+const inline=value=>A.esc(value).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+A.helpParagraphs=s=>s.paragraphs.map(block=>{
+ const lines=block.split('\n');
+ if(lines.every(line=>/^\d+\. /.test(line)))return '<ol>'+lines.map(line=>'<li>'+inline(line.replace(/^\d+\. /,''))+'</li>').join('')+'</ol>';
+ if(lines.every(line=>line.startsWith('- ')))return '<ul>'+lines.map(line=>'<li>'+inline(line.slice(2))+'</li>').join('')+'</ul>';
+ if(lines.length>2&&lines[0].startsWith('|')&&/^\|[ :|\-]+\|$/.test(lines[1])){
+  const cells=line=>line.slice(1,-1).split('|').map(cell=>cell.trim()),headers=cells(lines[0]);
+  return '<div class="help-table"><table aria-label="'+A.esc(s.heading)+'"><thead><tr>'+headers.map(cell=>'<th scope="col">'+inline(cell)+'</th>').join('')+'</tr></thead><tbody>'+lines.slice(2).map(line=>'<tr>'+cells(line).map(cell=>'<td>'+inline(cell)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+ }
+ return '<p>'+inline(block)+'</p>';
+}).join('');
 A.renderHelp=function(){
  const root=A.$('#help');if(!root.querySelector('#helpTabs')){
   root.innerHTML='<div class="page-heading"><h1>Hilfe</h1></div><p class="help-intro">'+A.esc(text.intro)+'</p><ul id="helpTabs" class="tabs area-tabs help-tabs">'+text.topics.map(t=>`<li><a id="help-tab-${t.id}" href="#help-panel-${t.id}" data-key="${t.id}">${A.esc(t.title)}</a></li>`).join('')+'</ul>'+text.topics.map(t=>`<div class="help-topic" id="help-panel-${t.id}" hidden><h2>${A.esc(t.title)}</h2>${t.sections.map(s=>`<div class="help-passage"><h3 id="${s.id}">${A.esc(s.heading)}</h3>${A.helpParagraphs(s)}</div>`).join('')}</div>`).join('');

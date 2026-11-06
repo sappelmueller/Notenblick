@@ -4,8 +4,9 @@
   "releaseNotes": [
     "Leistungsbereiche lassen sich je Fach ergänzen, umbenennen und gewichten.",
     "Neue Fächer starten mit Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %.",
-    "Eine gemeinsame schriftliche Note kann beliebige Leistungsbereiche zusammenfassen.",
-    "Notenübersichten und Exporte passen sich deinen Leistungsbereichen an."
+    "Die Gewichtung zeigt die gemeinsame schriftliche Note und die Gesamtnote in zwei getrennten Schritten.",
+    "Notenübersichten und Exporte passen sich deinen Leistungsbereichen an.",
+    "Einheitliche Leistungsbereiche, klarere mündliche Ansichten und vollständig überarbeitete Hilfe mit F1."
   ],
   "private": true,
   "description": "Lokaler Windows-Notenrechner; Node-Abhängigkeiten ausschließlich für Entwicklungstests",

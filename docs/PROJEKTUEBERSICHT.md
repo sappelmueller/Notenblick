@@ -8,6 +8,8 @@ Der Dateicontainer bleibt `version: 1`, Aktualisierungsdeskriptor `dataSchema: 1
 
 Notenblick 1.25.1 (offiziell freigegeben am 4. November 2026; Grundlage 1.25.0): Windows, .NET Framework 4.8, WinForms und WebView2. Ziel ausschließlich `sappelmueller/Notenblick`, ID `1432518047`; privat oder öffentlich. Actions aus. Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in LICENSE-EXCEPTION. Vor Änderungen [AGENTS.md](../AGENTS.md) beachten.
 
+Bedienungsüberarbeitung vom 6. November: `weight-editor.js` trennt die gemeinsame schriftliche Note und Gesamtnote innerhalb desselben Editors. Fachdialog, Standardvorgaben und Einrichtung verwenden ihn unverändert gemeinsam. Die Hilfedaten behalten neun Themen, 77 Abschnittskennungen und dieselben F1-Zuordnungen; `helpParagraphs` stellt den begrenzten Markdown-Umfang der Hilfe zentral als Absätze, Listen und Tabellen dar. Keine zusätzliche Bibliothek, keine zweite Hilfequelle zur Laufzeit. Berechnung, Dateiformat, Speicherung, native Aktualisierung und Exportrenderer wurden bei dieser Überarbeitung nicht verändert.
+
 ## Aufbau
 
 | Ordner | Aufgabe |

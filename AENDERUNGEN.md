@@ -2,6 +2,11 @@
 
 ## 1.26.0 – Testversion
 
+- Notengewichtung verständlicher: Schriftliche Note und Gesamtnote stehen in zwei getrennten Abschnitten mit eigenen Summen. Umrechnungen direkt bei der Auswahl prüfen; Sortieren unter „Bereich bearbeiten“.
+- Mündliche Noten über „Gemeinsame Bewertungen“ oder „Einzelnoten“ auswählen. „Ansicht anpassen“ bleibt getrennt davon erhalten.
+- Einheitliche Aktionen in allen Leistungsbereichen, hilfreiche Leerzustände, mehrzeilige Registerkarten und ein klar abgesetzter Gewichtungsschalter. Bereiche mit 0 % werden kurz und einmalig erklärt.
+- Die gesamte neue Hilfe mit neun Themen und 77 Abschnitten ist offline verfügbar. Schrittlisten und Tabellen funktionieren auch in F1; Zuordnungen und Rückkehrfokus bleiben erhalten.
+
 - Eigene Leistungsbereiche je Fach hinzufügen, umbenennen, sortieren und gewichten. Neue Fächer starten direkt mit 50 % Klassenarbeiten, 10 % Tests und 40 % Mündlich.
 - Die gemeinsame schriftliche Note kann frei gewählte Bereiche zusammenfassen und anders heißen. Einzelne Prozentänderungen lassen die übrigen Anteile unverändert; Verteilen erfolgt bewusst.
 - Alle Bereiche unterstützen Einzelnoten und Punkte. Verschobene Einzelnoten und Klassenrunden behalten ihre Bearbeitungsform.

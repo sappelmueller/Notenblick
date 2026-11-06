@@ -4,7 +4,7 @@ Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du verwaltest
 
 **Entwicklungsstand: 1.26.0 – Testversion, noch nicht zur Veröffentlichung freigegeben.**
 
-Diese Version ergänzt frei verwaltbare Leistungsbereiche. Neue Fächer beginnen mit Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %. Namen, Reihenfolge und Anteile verwaltest du im vertrauten Dialog „Notengewichtung“.
+Diese Version ergänzt frei verwaltbare Leistungsbereiche. Neue Fächer beginnen mit Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %. Namen, Reihenfolge und Anteile verwaltest du im vertrauten Dialog „Notengewichtung“. Schriftliche Note und Gesamtnote sind klar getrennt. Einheitliche Leistungsbereiche und die vollständig überarbeitete Offline-Hilfe mit F1 erleichtern die Bedienung.
 
 [**Offizielle Version 1.25.1 für Windows herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.25.1/Notenblick_1.25.1.zip)
 

@@ -369,8 +369,8 @@ section{min-width:0}
 
 main>.mode-notice,main>.error{margin:0 0 20px}
 /* Shared 1.4 presentation controls. */
-.notes-navigation{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:25px}
-.notes-navigation .area-tabs{flex:0 1 auto;border:0;margin:0;padding:0;min-width:200px}
+.notes-navigation{display:flex;flex-direction:column;align-items:flex-start;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:25px}
+.notes-navigation .area-tabs{flex:0 1 auto;width:100%;border:0;margin:0;padding:0;min-width:200px}
 .notes-navigation .weight-action{margin-left:0;flex-shrink:0;min-height:42px}
 .selection-area{margin-bottom:26px}.selection-area .selection{margin-bottom:0}
 .quick-links{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-wrap:wrap;gap:9px}
@@ -571,3 +571,8 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 
 
 .update-card .button-row .button,.update-settings .button-row .button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+
+/* Keep distribution levels and oral selection apart from view controls. */
+.weight-section{min-width:0;margin-block:20px}.weight-section legend{font-weight:700}.weight-distribution{margin-top:12px}.weight-add{margin-block:20px}.weight-add .field{max-width:30rem}.area-weight-row .field{margin-bottom:8px}.area-weight-row details .button-row{margin-block:8px}.area-weight-row .check{margin-block:10px}.written-total{align-self:start}
+.oral-view-controls{padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.help-passage ul,.help-passage ol,.help-context ul,.help-context ol{padding-left:1.6em;margin-block:10px 18px}.help-passage li,.help-context li{margin-block:6px}.help-table{max-width:100%;margin-block:14px 20px}.help-table table{width:100%;min-width:0;table-layout:fixed}.help-table th,.help-table td{white-space:normal;overflow-wrap:anywhere;padding:10px;vertical-align:top}.help-context{overflow-wrap:anywhere}

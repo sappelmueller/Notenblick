@@ -1,8 +1,8 @@
 {
   "document": "Hilfe",
-  "version": "1.23.1",
+  "version": "1.26.0",
   "source_ref": "Notenblick 1.26.0 – docs/HILFE-1.26.0-QUELLE.md",
-  "intro": "Du möchtest etwas erledigen und weißt nicht genau, wo? Wähle das passende Thema. Hier findest du die Schritte für die tägliche Arbeit mit Notenblick. Alle Tastenkombinationen stehen unter „Tastatur“.",
+  "intro": "Du möchtest eine Note eintragen, etwas nachschlagen oder eine Einstellung ändern? Wähle das passende Thema. Hier findest du kurze Anleitungen mit den Schritten, die du gerade brauchst. Die wichtigsten Tastenkombinationen stehen unter „Tastatur“.",
   "topics": [
     {
       "id": "einstieg",
@@ -11,42 +11,47 @@
         {
           "heading": "Was ist Notenblick?",
           "paragraphs": [
-            "Mit Notenblick verwaltest du deine Klassen, Fächer und Noten in einem Programm. Deine Daten bleiben auf deinem Computer. Du kannst auch ohne Internetverbindung arbeiten.",
-            "Über die Hauptnavigation erreichst du „Start“, „Noten“, „Verwaltung“, „Sicherung“, „Einstellungen“ und „Hilfe“."
+            "Mit Notenblick verwaltest du deine Schuljahre, Klassen, Fächer und Noten an einem Ort. Deine Daten liegen auf deinem Computer. Zum Arbeiten brauchst du keine Internetverbindung.",
+            "Die Hauptbereiche sind **Start**, **Noten**, **Verwaltung**, **Sicherung**, **Einstellungen** und **Hilfe**. Du kannst alles mit der Maus oder der Tastatur bedienen."
           ],
           "id": "einstieg-was-ist-notenblick"
         },
         {
           "heading": "Notenblick zum ersten Mal einrichten",
           "paragraphs": [
-            "Wähle „Jetzt einrichten“. Die Einrichtung führt dich durch die fünf Schritte „Schuljahr und Klassen“, „Fächer“, „Schülerlisten“, „Grundeinstellungen“ und „Einrichtung überprüfen“.",
-            "Lege zuerst das Schuljahr und deine Klassen an. Wähle für jede Klasse „Halbjahresinformation – Viertelnoten“ oder „Halbjahreszeugnis – ganze Noten“. Danach fügst du die Fächer hinzu. Schülerlisten kannst du gleich übernehmen oder später in der Verwaltung ergänzen.",
-            "In den „Grundeinstellungen“ bestimmst du unter anderem Namensdarstellung und Notenberechnung. Prüfe am Schluss die Zusammenfassung und wähle „Einrichtung abschließen“. Mit „Zurück“ kannst du Angaben korrigieren. „Einrichtung beenden“ fragt nach, bevor du ungespeicherte Eingaben verwirfst."
+            "Wähle auf der Startseite **„Jetzt einrichten“**. Der Assistent führt dich durch fünf Schritte:",
+            "1. **Schuljahr und Klassen:** Gib das Schuljahr ein und lege die Klassen an. Wähle für jede Klasse, ob sie zum Halbjahr eine **Halbjahresinformation mit Viertelnoten** oder ein **Halbjahreszeugnis mit ganzen Noten** erhält.\n2. **Fächer:** Ergänze die Fächer deiner Klassen.\n3. **Schülerlisten:** Trage Schüler ein oder füge eine Namensliste ein. Du kannst das auch später nachholen.\n4. **Grundeinstellungen:** Prüfe die Namensdarstellung und die Notengewichtung. Neue Fächer verwenden zunächst **50 % Klassenarbeiten, 10 % Tests und 40 % Mündlich**.\n5. **Einrichtung überprüfen:** Kontrolliere deine Angaben und bestätige die Einrichtung mit dem Schalter im letzten Schritt.",
+            "Mit **„Zurück“** korrigierst du frühere Angaben. Wenn du die Einrichtung vorzeitig beendest, fragt Notenblick nach, bevor Eingaben verworfen werden."
           ],
           "id": "einstieg-notenblick-zum-ersten-mal-einrichten"
         },
         {
           "heading": "Die Startseite",
           "paragraphs": [
-            "„Weiterarbeiten“ bringt dich zu deinem zuletzt verwendeten Fach. Unter „Meine Fächer“ öffnest du deine Fächer direkt. „Offene Noteneingaben“ zeigt, wo noch Noten oder Statusangaben fehlen.",
-            "Bei mehr als fünf offenen Leistungen kannst du über „Weitere offene Leistungen anzeigen“ die übrigen aufrufen. Neue Klassen, Fächer und Schüler legst du nicht hier, sondern unter „Verwaltung“ an."
+            "Auf **Start** findest du drei schnelle Wege zurück zu deiner Arbeit:",
+            "- **Weiterarbeiten:** Öffnet das zuletzt verwendete Fach.\n- **Meine Fächer:** Öffnet ein Fach direkt.\n- **Offene Noteneingaben:** Zeigt Leistungen, bei denen noch Einträge fehlen. Über **„Weitere offene Leistungen anzeigen“** findest du gegebenenfalls die übrigen.",
+            "Neue Klassen, Fächer und Schüler legst du unter **Verwaltung** an."
           ],
           "id": "einstieg-die-startseite"
         },
         {
           "heading": "Ein Fach öffnen",
           "paragraphs": [
-            "Öffne „Noten“ und wähle oben Klasse und Fach. Unter „Meine Fächer“ erreichst du die häufig verwendeten Fächer direkt. Alt+1 bis Alt+9 öffnen die ersten neun fest zugeordneten Fachzugriffe; jede Ziffer steht für eine bestimmte Kombination aus Klasse und Fach. Alt+0 öffnet „Alle Klassen und Fächer“ und schließt die Auswahl beim erneuten Drücken wieder.",
-            "Unter „Einstellungen → Darstellung → Beim Öffnen eines Fachs“ legst du fest, ob Notenblick immer die „Notenübersicht“ oder den zuletzt verwendeten Bereich öffnet. Das gilt auch beim Wechsel über Alt+N. Die Auswahl von Klasse und Fach steht weiterhin oberhalb der Fachüberschrift."
+            "1. Öffne **Noten**.\n2. Wähle oben deine **Klasse** und das **Fach**. Je nach Einstellung kannst du stattdessen einen Fach-Schnellzugriff verwenden.\n3. Arbeite in **Übersicht**, einem Leistungsbereich oder **Schüler** weiter.",
+            "Mit **Alt+1 bis Alt+9** öffnest du zugeordnete Fächer direkt. **Alt+0** führt zur Auswahl aller Klassen und Fächer.",
+            "Unter **Einstellungen → Darstellung → Beim Öffnen eines Fachs** entscheidest du, ob sich zuerst die Notenübersicht oder der zuletzt verwendete Bereich öffnet."
           ],
           "id": "einstieg-ein-fach-offnen"
         },
         {
           "heading": "Programmstart und Aktualisierung",
           "paragraphs": [
-            "Entpacke Notenblick vollständig und starte „Notenblick.exe“. Unter „Einstellungen → Allgemein“ entscheidest du, ob beim nächsten Start die Startseite oder deine letzte Ansicht erscheint.",
-            "Unter „Einstellungen → Allgemein → Aktualisierung prüfen“ suchst du nach einer neuen Version. Wenn „Beim Start nach Aktualisierungen suchen“ aktiviert ist, prüft Notenblick bei jedem Programmstart einmal im Hintergrund. „Was ist neu?“ zeigt die Neuerungen. „Jetzt aktualisieren“ öffnet die Bestätigung; erst „Aktualisierung starten“ beginnt den Austausch. Deine Noten und Einstellungen bleiben erhalten.",
-            "Bei einer manuellen Aktualisierung beendest du Notenblick und ersetzt nur „Notenblick.exe“ und den vollständigen Ordner „Programm“. Behalte deinen bisherigen Ordner „Daten“. Für einen Computerwechsel kopierst du den gesamten Notenblick-Ordner."
+            "Entpacke Notenblick vollständig und starte **Notenblick.exe**. Im entpackten Ordner liegen außerdem **Programm** und **Daten**. Im Ordner **Daten** liegen deine Noten und Sicherungen.",
+            "Unter **Einstellungen → Allgemein** kannst du festlegen, ob beim Start die Startseite oder die letzte Ansicht erscheint.",
+            "**Neue Version prüfen:**",
+            "1. Öffne **Einstellungen → Allgemein**.\n2. Wähle **„Aktualisierung prüfen“**.\n3. Wenn eine neue Version angeboten wird, lies bei Bedarf **„Was ist neu?“**.\n4. Entscheide dich für **„Jetzt aktualisieren“** und bestätige anschließend mit **„Aktualisierung starten“**.",
+            "Die freiwillige Suche **„Beim Start nach Aktualisierungen suchen“** prüft bei jedem Programmstart einmal im Hintergrund. Deine Schülernoten werden dabei nicht übertragen.",
+            "**Manuelle Aktualisierung:** Beende Notenblick. Ersetze **nur Notenblick.exe und den vollständigen Ordner Programm**. **Daten** bleibt unverändert. Für einen Computerwechsel kopierst du dagegen den ganzen Notenblick-Ordner."
           ],
           "id": "einstieg-programmstart-und-aktualisierung"
         }
@@ -59,57 +64,59 @@
         {
           "heading": "Schuljahre und Arbeitsjahr",
           "paragraphs": [
-            "Unter „Verwaltung → Schuljahre“ legst du ein Schuljahr an oder bearbeitest ein vorhandenes. Mit „Als Arbeitsjahr verwenden“ wählst du das Schuljahr, das Notenblick dir zuerst anbietet.",
-            "Ein vergangenes Schuljahr kannst du mit „Schuljahr abschließen“ vor Änderungen schützen. Alle Noten bleiben lesbar. Falls du etwas nachtragen musst, wähle „Schuljahr wieder öffnen“."
+            "Unter **Verwaltung → Schuljahre** legst du ein Schuljahr an oder bearbeitest ein vorhandenes.",
+            "- **Als Arbeitsjahr verwenden:** Dieses Schuljahr wird dir normalerweise zuerst angeboten.\n- **Schuljahr abschließen:** Schützt die vorhandenen Einträge vor versehentlichen Änderungen. Du kannst sie weiterhin lesen.\n- **Schuljahr wieder öffnen:** Ermöglicht spätere Korrekturen."
           ],
           "id": "verwaltung-schuljahre-und-arbeitsjahr"
         },
         {
           "heading": "Klassen und Fächer",
           "paragraphs": [
-            "Unter „Verwaltung → Klassen“ kannst du „Klasse anlegen“ oder „Klasse übernehmen“ wählen. Bei „Klasse übernehmen“ kommen Schüler, Fächer und Gewichtungen aus der bisherigen Klasse mit. Die alten Einzelnoten bleiben im bisherigen Schuljahr.",
-            "Unter „Verwaltung → Fächer“ legst du ein Fach an oder wählst „Fach übernehmen“. Beim Bearbeiten kannst du „Fachname“ und „Fachkürzel“ festlegen. Das Kürzel macht die Fachzugriffe übersichtlicher.",
-            "Mit „Ausblenden“ nimmst du Klassen oder Fächer aus deiner täglichen Auswahl, ohne ihre Noten zu löschen. Über „Ausgeblendete Klassen anzeigen“ oder „Ausgeblendete Fächer anzeigen“ findest du sie wieder."
+            "**Klasse anlegen:** Öffne **Verwaltung → Klassen**, wähle **„Klasse anlegen“** und trage die Angaben ein.",
+            "**Klasse übernehmen:** Wähle **„Klasse übernehmen“**, um Schüler, Fächer und Gewichtungen aus einer bisherigen Klasse zu übernehmen. Die alten Einzelnoten bleiben im alten Schuljahr.",
+            "**Fach anlegen:** Öffne **Verwaltung → Fächer** und wähle **„Fach anlegen“**. Beim Bearbeiten kannst du den Namen und ein kurzes Fachkürzel festlegen. Mit **„Fach übernehmen“** kannst du ein vorhandenes Fach als Grundlage verwenden.",
+            "Du kannst eine Klasse oder ein Fach **ausblenden**, ohne ihre Noten zu löschen. Über **„Ausgeblendete Klassen anzeigen“** beziehungsweise **„Ausgeblendete Fächer anzeigen“** findest du sie wieder."
           ],
           "id": "verwaltung-klassen-und-facher"
         },
         {
           "heading": "Schüler hinzufügen",
           "paragraphs": [
-            "Wähle unter „Verwaltung → Schüler“ eine Klasse und dann „Schüler hinzufügen“. Trage Vorname und Nachname ein. Bei gleichen Namen hilft ein „Namenszusatz“.",
-            "Über „Bearbeiten“ kannst du Namen und Fachteilnahmen ändern. Mit „Schüler auswählen“ unter „Fächer“ bestimmst du, wer an diesem Fach teilnimmt. Das ist unabhängig davon, wer an einer einzelnen Leistung teilnimmt."
+            "1. Öffne **Verwaltung → Schüler** und wähle die Klasse.\n2. Wähle **„Schüler hinzufügen“**.\n3. Gib **Vorname** und **Nachname** ein. Bei gleichen Namen kannst du einen **Namenszusatz** eintragen.\n4. Speichere den Schüler.",
+            "Über **„Bearbeiten“** änderst du später die Angaben. Welche Schüler ein Fach besuchen, stellst du bei den Fachteilnahmen ein."
           ],
           "id": "verwaltung-schuler-hinzufugen"
         },
         {
           "heading": "Schülerliste übernehmen",
           "paragraphs": [
-            "Mit „Schülerliste übernehmen“ fügst du mehrere Schüler auf einmal hinzu. Du kannst „Aus einer bisherigen Klasse“ wählen oder eine Namensliste einfügen.",
-            "Wähle die „Namensreihenfolge“ und dann „Vorschau“. Prüfe besonders doppelte Namen und mehrteilige Nachnamen. Erst anschließend übernimmst du die Liste."
+            "Wenn du mehrere Schüler hinzufügen möchtest:",
+            "1. Öffne **Verwaltung → Schüler** und wähle **„Schülerliste übernehmen“**.\n2. Übernimm die Namen aus einer bisherigen Klasse oder füge deine Namensliste ein.\n3. Wähle die passende **Namensreihenfolge**.\n4. Öffne die **Vorschau** und prüfe die Namen, besonders bei Doppelnamen oder gleichen Vor- und Nachnamen.\n5. Übernimm die Liste erst, wenn alles stimmt."
           ],
           "id": "verwaltung-schulerliste-ubernehmen"
         },
         {
           "heading": "Fachteilnahmen und Klassenwechsel",
           "paragraphs": [
-            "Wenn ein Schüler ein Fach nicht mehr besucht, passe seine Fachteilnahme über „Bearbeiten“ an. Seine bisherigen Bewertungen werden dadurch nicht einfach gelöscht.",
-            "Mit „Versetzen“ übernimmst du einen Schüler in eine andere Klasse. Die bisherigen Noten bleiben in der früheren Klasse. In der neuen Klasse beginnt die Notenerfassung neu. Unter „Noten vor dem Klassenwechsel anzeigen“ kannst du die alten Noten weiterhin nachlesen."
+            "**Fachteilnahme ändern:** Bearbeite den Schüler oder die Schülerauswahl des Fachs. Du bestimmst damit, wer das Fach besucht. Bei einer einzelnen Klassenarbeit kannst du zusätzlich festlegen, wer daran teilnimmt. Beides ist unabhängig voneinander.",
+            "**Schüler versetzen:** Wähle beim Schüler **„Versetzen“** und die neue Klasse. Die bisherigen Noten bleiben in der früheren Klasse erhalten. In der neuen Klasse beginnt die Notenerfassung neu.",
+            "Über **„Noten vor dem Klassenwechsel anzeigen“** kannst du frühere Bewertungen nachlesen."
           ],
           "id": "verwaltung-fachteilnahmen-und-klassenwechsel"
         },
         {
           "heading": "Wenn ein Schüler die Klasse verlässt",
           "paragraphs": [
-            "Über „Teilnahme beenden“ kennzeichnest du einen Schüler als ehemalig. Die bisherigen Noten bleiben erhalten. Mit „Wieder aufnehmen“ kannst du ihn bei Bedarf zurückholen.",
-            "Über „Ehemalige anzeigen“ kannst du ausgeschiedene Schüler in den Notenansichten bei Bedarf wieder einblenden."
+            "Wähle beim betreffenden Schüler **„Teilnahme beenden“**. Seine Noten bleiben erhalten, aber er erscheint nicht mehr in der normalen Auswahl der aktiven Schüler.",
+            "Mit **„Ehemalige anzeigen“** blendest du ihn bei Bedarf wieder ein. Wenn er zurückkommt, kannst du **„Wieder aufnehmen“** wählen."
           ],
           "id": "verwaltung-wenn-ein-schuler-die-klasse-verlasst"
         },
         {
           "heading": "Neues Schuljahr übernehmen",
           "paragraphs": [
-            "Lege zunächst das neue Schuljahr an. Öffne dann „Verwaltung → Klassen“ und wähle „Klasse übernehmen“. Wähle die bisherige Klasse aus und gib den neuen Klassennamen ein.",
-            "Schüler, Fächer und Gewichtungen werden übernommen. Alte Einzelnoten bleiben beim alten Schuljahr; die neue Notenerfassung beginnt leer. Du kannst anschließend weitere Klassen und Fächer ergänzen."
+            "1. Lege unter **Verwaltung → Schuljahre** das neue Schuljahr an.\n2. Öffne **Verwaltung → Klassen** und wähle **„Klasse übernehmen“**.\n3. Wähle die bisherige Klasse und gib ihren Namen für das neue Schuljahr ein.\n4. Prüfe Schüler, Fächer und Gewichtungen.",
+            "Die alten Einzelnoten bleiben im bisherigen Schuljahr. Im neuen Schuljahr startest du mit leeren Notenlisten."
           ],
           "id": "verwaltung-neues-schuljahr-ubernehmen"
         }
@@ -122,120 +129,140 @@
         {
           "heading": "Klasse, Fach und Ansicht wählen",
           "paragraphs": [
-            "Öffne „Noten“ und wähle oben Klasse und Fach. Die Überschrift darunter zeigt dir, in welchem Fach du arbeitest. In der Registerkarte „Übersicht“ findest du die Noten und Durchschnitte der Klasse sowie die festgelegten Halbjahres- und Zeugnisnoten. Je nach Einstellung folgen eigene Registerkarten für Leistungsarten oder die gemeinsame Registerkarte „Leistungen“. Unter „Schüler“ siehst du die Noten einer Person.",
-            "Mit Strg+1, Strg+2 und weiteren Ziffern öffnest du die sichtbaren Registerkarten der Reihe nach. Der Fokus springt direkt zur Überschrift des gewählten Bereichs. Mit den Pfeiltasten innerhalb einer Registerkartenliste bleibt der Fokus dagegen auf der Registerkarte."
+            "Öffne **Noten** und wähle oben **Klasse** und **Fach**. Die Fachüberschrift zeigt dir, wo du gerade arbeitest.",
+            "- **Übersicht:** Bereichsdurchschnitte, Gesamtdurchschnitt sowie festgelegte Halbjahres- und Zeugnisnoten.\n- **Leistungsbereiche:** Klassenarbeiten, Tests, Mündlich und deine selbst angelegten Bereiche wie Präsentationen. Hier findest und bearbeitest du die einzelnen Leistungen.\n- **Schüler:** Alle Noten eines bestimmten Schülers.",
+            "Je nach Einstellung stehen die Leistungsbereiche in **eigenen Registerkarten** oder gemeinsam unter **Leistungen**. Mit **Strg+1, Strg+2** und den weiteren Ziffern öffnest du die sichtbaren Registerkarten der Reihe nach."
           ],
           "id": "noten-klasse-fach-und-ansicht-wahlen"
         },
         {
           "heading": "Eine Leistung anlegen",
           "paragraphs": [
-            "Öffne ein Fach und wähle „Leistung hinzufügen“ oder drücke Strg+N. Wähle „Klassenarbeit“, „Test“, „Mündliche Noten für mehrere Schüler“, „Mündliche Einzelnote“, „Hausaufgabe“ oder „Heftbewertung“. Trage bei einer gemeinsamen Leistung „Bezeichnung“ und „Datum“ ein, passe bei Bedarf „Gewichtung der Leistung“ und „Teilnehmer auswählen“ an und wähle „Speichern“. Anschließend kannst du Noten eintragen.",
-            "Besonders schnell geht es mit Strg+Umschalt+K für eine Klassenarbeit, Strg+Umschalt+T für einen Test und Strg+Umschalt+M für mündliche Noten mehrerer Schüler. Weitere Leistungsarten erreichst du über Strg+N."
+            "Eine **Leistung** ist zum Beispiel „Klassenarbeit 2“, „Vokabeltest“ oder „Präsentation zum Mittelalter“. Der **Leistungsbereich** bestimmt, zu welcher Gruppe sie zählt.",
+            "**So legst du eine Leistung an:**",
+            "1. Öffne das Fach und wähle **„Leistung hinzufügen“** oder **Strg+N**.\n2. Wähle den passenden Leistungsbereich. In neuen Fächern sind **Klassenarbeiten**, **Tests** und **Mündlich** vorhanden. Selbst angelegte Bereiche stehen ebenfalls zur Auswahl.\n3. Gib eine **Bezeichnung** und das **Datum** ein.\n4. Prüfe bei Bedarf **„Gewichtung der Leistung“** und die **Teilnehmer**.\n5. Wähle **„Speichern“**. Anschließend kannst du die Noten eintragen.",
+            "Befindest du dich bereits in der Registerkarte **Präsentationen**, gehört eine dort neu angelegte Leistung automatisch zu diesem Bereich. Für einen einzigen Schüler kannst du direkt **„Einzelnote eintragen“** wählen."
           ],
           "id": "noten-eine-leistung-anlegen"
         },
         {
           "heading": "Ein Datum eingeben",
           "paragraphs": [
-            "Datumseingaben bestehen aus Tag, Monat und Jahr. Du kannst die Teile einzeln bearbeiten oder ein vollständiges Datum wie „23.10.2026“ einfügen.",
-            "Wähle das tatsächliche Datum der Leistung. Es ist unter anderem wichtig für die Halbjahresberechnung. Wenn das Datum nicht zum Schuljahr passt, fordert Notenblick dich zur Korrektur auf."
+            "Gib **Tag**, **Monat** und **Jahr** ein. Du kannst die Teile einzeln bearbeiten oder ein vollständiges Datum wie **23.10.2026** einfügen.",
+            "Verwende das tatsächliche Datum der Leistung. Notenblick ordnet sie damit unter anderem dem richtigen Halbjahr zu. Passt das Datum nicht zum Schuljahr, fordert dich Notenblick zur Korrektur auf."
           ],
           "id": "noten-ein-datum-eingeben"
         },
         {
           "heading": "Teilnehmer auswählen",
           "paragraphs": [
-            "Bei „Wer nimmt teil?“ ist normalerweise „Ganze Klasse“ ausgewählt. Soll nur ein Teil der Klasse bewertet werden, öffne „Teilnehmer auswählen“, wähle „Nur ausgewählte Schüler“ und aktiviere die gewünschten Kontrollkästchen. Jeder Schülername gehört direkt zum zugehörigen Kontrollkästchen.",
-            "Mit „Schüler suchen“ findest du Namen schneller. „Alle auswählen“ und „Auswahl aufheben“ ändern die Auswahl; die Anzahl der ausgewählten Schüler steht darüber. Mindestens ein Schüler muss teilnehmen. Wenn zu einem Schüler schon etwas gespeichert wurde, bleibt seine Teilnahme geschützt."
+            "Normalerweise ist **„Ganze Klasse“** ausgewählt. Wenn nur bestimmte Schüler teilnehmen:",
+            "1. Öffne **„Teilnehmer auswählen“**.\n2. Wähle **„Nur ausgewählte Schüler“**.\n3. Markiere die gewünschten Namen. Mit **„Schüler suchen“** findest du sie schneller.\n4. Kontrolliere die angezeigte Anzahl und übernimm die Auswahl.",
+            "**„Alle auswählen“** und **„Auswahl aufheben“** helfen bei längeren Listen. Mindestens ein Schüler muss teilnehmen. Bereits gespeicherte Bewertungen dürfen nicht durch eine nachträgliche Änderung der Teilnahme verloren gehen."
           ],
           "id": "noten-teilnehmer-auswahlen"
         },
         {
           "heading": "Gewichtung einer einzelnen Leistung und GFS",
           "paragraphs": [
-            "Mit „Gewichtung der Leistung“ bestimmst du, wie stark eine einzelne Arbeit oder ein einzelner Test innerhalb seiner Leistungsart zählt. „1“ bedeutet einfach, „2“ doppelt. Die prozentualen Anteile der Leistungsarten stellst du getrennt unter „Notengewichtung“ ein.",
-            "Über „Als GFS kennzeichnen“ kannst du eine GFS markieren. Die Kennzeichnung ändert die Gewichtung nicht automatisch; dafür gelten deine schulischen Vorgaben."
+            "**„Gewichtung der Leistung“** bestimmt, wie stark eine konkrete Arbeit oder ein konkreter Test **innerhalb seines Bereichs** zählt.",
+            "- **1:** einfach.\n- **2:** doppelt.",
+            "**Beispiel:** Ein Test mit Gewichtung 2 zählt bei der Berechnung des Testdurchschnitts doppelt so stark wie ein Test mit Gewichtung 1.",
+            "Wie stark **der gesamte Bereich** zur Fachnote zählt, stellst du unter **„Notengewichtung“** ein. Das ist eine andere Einstellung.",
+            "Mit **„Als GFS kennzeichnen“** markierst du eine GFS. Die Kennzeichnung ändert die Gewichtung nicht selbst. Beachte dafür die Regeln deiner Schule."
           ],
           "id": "noten-gewichtung-einer-einzelnen-leistung-und-gfs"
         },
         {
           "heading": "Noten für alle Schüler eingeben",
           "paragraphs": [
-            "Öffne eine vorhandene Leistung über ihre Bezeichnung und wähle „Noten bearbeiten“. Unter „Alle Schüler“ trägst du die Noten in der Tabelle ein. Mit Eingabe übernimmst du die Note und gehst zum nächsten sichtbaren Schüler; mit Umschalt+Eingabe zum vorherigen. Über „Schüler suchen“ kannst du die Tabelle eingrenzen. Nicht angezeigte Schüler und ihre Noten bleiben erhalten.",
-            "Mit Strg+Umschalt+1 öffnest du „Alle Schüler“, mit Strg+Umschalt+2 „Einzeln“. Beide Befehle führen direkt zur passenden Überschrift. Wenn du fertig bist, wähle „Fertig“; über „Schließen“ kommst du zur vorherigen Liste zurück. Offene oder fehlerhafte Eingaben dürfen nicht unbemerkt verloren gehen."
+            "1. Öffne die Leistung über ihre **Bezeichnung**.\n2. Wähle **„Noten bearbeiten“**.\n3. Unter **„Alle Schüler“** trägst du die Noten in der Tabelle ein.\n4. Mit **Eingabe** übernimmst du einen Wert und wechselst zum nächsten sichtbaren Schüler; mit **Umschalt+Eingabe** zum vorherigen.\n5. Wähle **„Fertig“**, wenn du die Eingabe abgeschlossen hast. Mit **„Schließen“** kommst du zur vorherigen Ansicht zurück.",
+            "Mit **„Schüler suchen“** kannst du die Liste eingrenzen. Nicht angezeigte Schüler und ihre Noten bleiben erhalten. Fehlerhafte Eingaben müssen vor dem Wechsel korrigiert werden."
           ],
           "id": "noten-noten-fur-alle-schuler-eingeben"
         },
         {
           "heading": "Einen Schüler einzeln bewerten",
           "paragraphs": [
-            "Wähle bei einer geöffneten Noteneingabe „Einzeln“ oder drücke Strg+Umschalt+2. Du siehst jeweils einen Schüler mit seinem Eingabefeld. Trage „Note“, „Status“ und bei Bedarf eine „Bemerkung“ ein. Mit „Vorheriger Schüler“, „Nächster Schüler“ und „Nächster ohne Eintrag“ wechselst du zur gewünschten Person.",
-            "Über Strg+Umschalt+1 kehrst du zu „Alle Schüler“ zurück. Du kannst auch die beiden Registerkarten normal mit der Tastatur bedienen; dabei bleibt der Fokus auf der gewählten Registerkarte."
+            "In einer geöffneten Noteneingabe kannst du zwischen **„Alle Schüler“** und **„Einzeln“** wechseln.",
+            "1. Wähle **„Einzeln“** oder drücke **Strg+Umschalt+2**.\n2. Trage die **Note** oder **Punkte** für den angezeigten Schüler ein.\n3. Ergänze bei Bedarf **Status** und **Bemerkung**.\n4. Wechsle mit **„Vorheriger Schüler“**, **„Nächster Schüler“** oder **„Nächster ohne Eintrag“** weiter.",
+            "Mit **Strg+Umschalt+1** kehrst du zu **„Alle Schüler“** zurück. Möchtest du dagegen eine eigenständige Bewertung nur für eine Person anlegen, wähle im Leistungsbereich **„Einzelnote eintragen“**."
           ],
           "id": "noten-einen-schuler-einzeln-bewerten"
         },
         {
           "heading": "Mündliche Noten erfassen",
           "paragraphs": [
-            "Für eine gemeinsame mündliche Bewertung öffnest du „Leistung hinzufügen“ und wählst „Mündliche Noten für mehrere Schüler“. Nach „Bezeichnung“, „Datum“ und gegebenenfalls der Teilnehmerauswahl trägst du die Noten unter „Alle Schüler“ oder „Einzeln“ ein. Direkt dorthin gelangst du auch mit Strg+Umschalt+M.",
-            "Möchtest du nur einen Schüler bewerten, wähle „Mündliche Einzelnote“ oder im Bereich „Mündlich“ den Schalter „Einzelnote eintragen“. Dort legst du Schüler, Note, Datum, Bezeichnung und gegebenenfalls eine Bemerkung fest. „Speichern und nächste“ erleichtert mehrere aufeinanderfolgende Einzelnoten."
+            "Du hast zwei Möglichkeiten:",
+            "- **Gemeinsame Bewertung:** Du legst eine mündliche Leistung für mehrere Schüler an, zum Beispiel eine Unterrichtsrunde.\n- **Einzelnote:** Du bewertest gezielt einen Schüler, zum Beispiel für einen Unterrichtsbeitrag.",
+            "**Gemeinsame Bewertung anlegen:** Öffne **Mündlich**, wähle **„Leistung hinzufügen“** beziehungsweise die entsprechende Aktion für mehrere Schüler, gib Bezeichnung und Datum ein und trage anschließend die Noten ein. Schnell geht es auch mit **Strg+Umschalt+M**.",
+            "**Einzelnote anlegen:** Wähle **„Einzelnote eintragen“**, den Schüler, die Note und das Datum. Ergänze bei Bedarf eine Bezeichnung oder Bemerkung. Mit **„Speichern und nächste“** kannst du direkt weitere Einzelnoten erfassen.",
+            "Wenn du **Mündlich** in **Mitarbeit** umbenennst, bleiben diese Funktionen erhalten."
           ],
           "id": "noten-mundliche-noten-erfassen"
         },
         {
           "heading": "Mündliche Bewertungen wiederfinden",
           "paragraphs": [
-            "Unter „Mündlich“ kannst du bei „Ansicht“ zwischen „Klassenübersicht“ und „Einzelnoten“ wechseln. Die Klassenübersicht zeigt gemeinsam angelegte mündliche Leistungen. Unter „Einzelnoten“ findest du die einzeln erfassten Bewertungen.",
-            "Mit „Einzelnoten suchen“ und „Ansicht anpassen“ kannst du die Liste eingrenzen. Über „Anzeigen“ öffnest du eine vorhandene Einzelnote. Zum Ändern wählst du danach „Noten bearbeiten“."
+            "Öffne den Leistungsbereich **Mündlich** beziehungsweise seinen selbst vergebenen Namen. Wähle im Feld **„Mündliche Noten anzeigen“**:",
+            "- **Gemeinsame Bewertungen:** Die mündlichen Leistungen, die du für mehrere Schüler angelegt hast.\n- **Einzelnoten:** Die Bewertungen, die du einzeln erfasst hast.",
+            "Die Auswahl **„Ansicht anpassen“** hat eine andere Aufgabe: Bei gemeinsamen Bewertungen wechselst du dort zwischen **Notentabelle** und **Leistungsliste**. Bei Einzelnoten findest du dort weitere Filter- und Sortiermöglichkeiten.",
+            "Über die Suche findest du eine bestimmte Leistung oder Person. Mit **„Anzeigen“** öffnest du eine gespeicherte Einzelnote; über **„Noten bearbeiten“** kannst du sie ändern."
           ],
           "id": "noten-mundliche-bewertungen-wiederfinden"
         },
         {
           "heading": "Weitere Leistungsbereiche",
           "paragraphs": [
-            "Neue Fächer beginnen mit Klassenarbeiten, Tests und Mündlich. Brauchst du zum Beispiel Hausaufgaben, Heftführung oder Referate, öffne im Fach „Notengewichtung“ und füge den Bereich hinzu. Er beginnt mit 0 %. Die bisherigen Anteile bleiben gleich.",
-            "In jedem Bereich kannst du Noten direkt eingeben oder Punkte mit Notenschlüssel nutzen. Mit „Einzelnote eintragen“ bewertest du einen Schüler ohne Klassenrunde. Namen und Reihenfolge der Bereiche änderst du ebenfalls unter „Notengewichtung“."
+            "Zusätzlich zu Klassenarbeiten, Tests und Mündlich kannst du eigene Bereiche wie **Präsentationen**, **Kopfrechnen** oder **Heftführung** anlegen.",
+            "1. Öffne im Fach **„Notengewichtung“**.\n2. Trage unter **„Neuer Leistungsbereich“** den gewünschten Namen ein.\n3. Wähle **„Leistungsbereich hinzufügen“**.\n4. Lege bei Bedarf seinen Prozentanteil fest und speichere die Änderung.",
+            "Ein neuer Bereich beginnt mit **0 %**. Seine Noten sind sichtbar, zählen aber erst dann zur Gesamtnote, wenn du ihm einen Anteil gibst.",
+            "Der neue Bereich funktioniert wie die bisherigen: Du kannst eine Leistung für mehrere Schüler oder eine **Einzelnote** anlegen, direkte Noten eintragen oder mit Punkten bewerten. Namen und Reihenfolge änderst du ebenfalls unter **„Notengewichtung“**."
           ],
           "id": "noten-hausaufgaben-und-heftfuhrung"
         },
         {
           "heading": "Status und Bemerkungen",
           "paragraphs": [
-            "Wenn eine Bewertung noch aussteht, lasse sie „Noch offen“. Unter „Status“ kannst du „Bewertet“, „Gefehlt“, „Nachschreibtermin“ oder „Nicht gewertet“ auswählen. Nur gewertete Noten zählen zum Durchschnitt; eine fehlende Note wird niemals als Null gerechnet.",
-            "Unter „Bemerkung“ kannst du eine kurze Erklärung festhalten, etwa zu einer besonderen Leistung oder einem Nachschreibtermin. Die Bemerkung bleibt bei der Bewertung gespeichert."
+            "Ein leeres Notenfeld ist **keine Note 0**. Wenn eine Bewertung noch fehlt, lasse den Eintrag offen.",
+            "Unter **„Status“** kannst du festhalten, ob ein Schüler **Bewertet**, **Gefehlt**, zum **Nachschreibtermin** vorgesehen oder **Nicht gewertet** ist. Nur tatsächlich gewertete Noten zählen zum Durchschnitt.",
+            "Unter **„Bemerkung“** kannst du zum Beispiel einen Nachschreibtermin oder eine besondere Leistung notieren. Die Bemerkung bleibt beim jeweiligen Eintrag gespeichert."
           ],
           "id": "noten-status-und-bemerkungen"
         },
         {
           "heading": "Leistungen ansehen, bearbeiten und schließen",
           "paragraphs": [
-            "Öffne eine vorhandene Leistung über ihre Bezeichnung. Zunächst siehst du die gespeicherten Ergebnisse. Mit „Noten bearbeiten“ öffnest du die Eingabe; „Fertig“ bringt dich zur Ergebnisansicht zurück, „Schließen“ zur vorherigen Liste. Eine neu angelegte Leistung startet direkt mit der Noteneingabe.",
-            "Wenn du während der Eingabe zwischen Bereichen wechselst, prüft Notenblick die noch offenen Werte. Ungültige Eingaben musst du zuerst korrigieren. Auch „Fortsetzen“ auf der Startseite bringt dich zu einer offenen Leistung."
+            "Öffne eine Leistung über ihre Bezeichnung. Du siehst zuerst die gespeicherten Ergebnisse.",
+            "- **Noten bearbeiten:** Öffnet die Eingabe.\n- **Fertig:** Beendet die Bearbeitung und zeigt wieder die Ergebnisse.\n- **Schließen:** Führt zur vorherigen Leistungsliste oder Notentabelle zurück.",
+            "Bei einer neu angelegten Leistung öffnet Notenblick direkt die Eingabe. Ungültige oder noch nicht abgeschlossene Eingaben werden beim Wechsel geschützt."
           ],
           "id": "noten-leistungen-ansehen-bearbeiten-und-schliessen"
         },
         {
           "heading": "Eine Leistung nachträglich ändern oder löschen",
           "paragraphs": [
-            "Wenn Bezeichnung, Datum, Teilnehmer oder „Gewichtung der Leistung“ nicht stimmen, öffne bei der Leistung „Bearbeiten“. Bereits gespeicherte Noten sollen dabei erhalten bleiben.",
-            "„Löschen“ entfernt eine Leistung und ihre Bewertungen. Prüfe deshalb die Rückfrage sorgfältig. Für eine einzelne falsche Note musst du nicht die ganze Leistung löschen: Öffne „Noten bearbeiten“ und korrigiere den betreffenden Eintrag."
+            "Öffne bei der betreffenden Leistung **„Bearbeiten“**, wenn du ihre **Bezeichnung**, das **Datum**, die **Teilnehmer** oder die **Gewichtung der Leistung** ändern möchtest. Vorhandene Noten bleiben dabei erhalten.",
+            "**„Löschen“** entfernt die Leistung einschließlich ihrer Bewertungen. Kontrolliere deshalb die Rückfrage sorgfältig.",
+            "Wenn nur eine einzelne Note falsch ist, musst du nicht die ganze Leistung löschen: Öffne **„Noten bearbeiten“** und korrigiere den Eintrag."
           ],
           "id": "noten-eine-leistung-nachtraglich-andern-oder-loschen"
         },
         {
           "heading": "Notentabelle und Leistungsliste",
           "paragraphs": [
-            "In den Leistungsarten wählst du über „Ansicht anpassen“ bei „Darstellung“ zwischen „Notentabelle“ und „Leistungsliste“. In der Notentabelle stehen die Schüler in den Zeilen und die Leistungen in den Spalten.",
-            "Bei vielen Arbeiten oder Tests kannst du weitere Spalten aufrufen. Die Leistungsliste zeigt jede Leistung mit Datum und dem bisherigen Erfassungsstand. Über die Bezeichnung öffnest du ihre Ergebnisse."
+            "Über **„Ansicht anpassen“ → „Darstellung“** kannst du in einem Leistungsbereich zwischen zwei Formen wechseln:",
+            "- **Notentabelle:** Schüler stehen in den Zeilen, Leistungen in den Spalten. Gut für den direkten Vergleich.\n- **Leistungsliste:** Jede Leistung steht mit Datum und Erfassungsstand in einer eigenen Zeile. Gut, wenn du eine bestimmte Arbeit suchst.",
+            "Bei vielen Leistungen kannst du in der Notentabelle ältere oder neuere Spalten aufrufen. Mit der Suche findest du bestimmte Schüler oder Leistungen schneller."
           ],
           "id": "noten-notentabelle-und-leistungsliste"
         },
         {
           "heading": "Die Schüleransicht",
           "paragraphs": [
-            "Öffne die Registerkarte „Schüler“ und wähle eine Person. Du siehst ihren Gesamtdurchschnitt, die einzelnen Leistungsbereiche und die festgelegten Halbjahres- und Zeugnisnoten. Darunter stehen ihre Einzelnoten.",
-            "Über „Ansicht anpassen“ kannst du die Einzelnoten „Nach Leistungsart“ oder „Nach Datum“ anordnen und „Nur mit Eintrag“ wählen. Bei einem Klassenwechsel lassen sich frühere Noten über „Noten vor dem Klassenwechsel anzeigen“ nachlesen."
+            "Öffne im Fach die Registerkarte **„Schüler“** und wähle eine Person. Du siehst ihren Gesamtdurchschnitt, die Bereichsdurchschnitte, festgelegte Halbjahres- und Zeugnisnoten sowie ihre einzelnen Bewertungen.",
+            "Unter **„Ansicht anpassen“** kannst du die Bewertungen **nach Leistungsbereich** oder **nach Datum** anordnen und auf Einträge mit Bewertung eingrenzen.",
+            "Bei einem Klassenwechsel findest du frühere Noten unter **„Noten vor dem Klassenwechsel anzeigen“**."
           ],
           "id": "noten-die-schuleransicht"
         }
@@ -248,57 +275,62 @@
         {
           "heading": "Noten oder Punkte eingeben?",
           "paragraphs": [
-            "Du kannst in jedem Leistungsbereich Noten direkt eingeben oder Punkte mit einem Notenschlüssel bewerten. Die direkte Noteneingabe ist voreingestellt.",
-            "Bei „Punkte mit Notenschlüssel“ trägst du die erreichten Punkte ein. Notenblick zeigt dir die passende Note. Bereits eingegebene Noten bleiben beim Wechsel erhalten."
+            "Du kannst Leistungen auf zwei Arten bewerten:",
+            "- **Direkte Note:** Du trägst die gewünschte Note ein.\n- **Punkte mit Notenschlüssel:** Du trägst die erreichten Punkte ein. Notenblick berechnet daraus die Note.",
+            "Für neue Leistungen ist die direkte Noteneingabe voreingestellt. Die Punktebewertung ist in **allen Leistungsbereichen** möglich, auch bei selbst angelegten Bereichen wie Kopfrechnen."
           ],
           "id": "punkte-noten-oder-punkte-eingeben"
         },
         {
           "heading": "Punktebewertung einschalten",
           "paragraphs": [
-            "Lege zuerst die Leistung an und öffne „Noten bearbeiten“. Wähle „Eingabeart ändern“ und dann bei „Eingabeart“ den Eintrag „Punkte mit Notenschlüssel“.",
-            "Gib bei „Maximal erreichbare Punkte“ die Gesamtpunktzahl der Arbeit ein. Wähle unter „Notenschlüssel“ die gewünschte Berechnung und unter „Notenabstufung“ die Genauigkeit. Mit „Einstellungen übernehmen“ bestätigst du deine Auswahl."
+            "1. Lege die Leistung an und öffne **„Noten bearbeiten“**.\n2. Wähle **„Eingabeart ändern“**.\n3. Stelle **„Punkte mit Notenschlüssel“** ein.\n4. Gib bei **„Maximal erreichbare Punkte“** die höchste Punktzahl ein, zum Beispiel **20**.\n5. Wähle den **Notenschlüssel** und die gewünschte **Notenabstufung**.\n6. Bestätige mit **„Einstellungen übernehmen“**.",
+            "Anschließend gibst du bei den Schülern die erreichten Punkte ein. Wenn bereits Noten vorhanden sind, prüfe beim Umstellen die angezeigten Hinweise, bevor du etwas übernimmst."
           ],
           "id": "punkte-punktebewertung-einschalten"
         },
         {
           "heading": "Die drei Notenschlüssel",
           "paragraphs": [
-            "„Linear“: Die Noten werden gleichmäßig zwischen voller Punktzahl (Note 1) und null Punkten (Note 6) verteilt.",
-            "„Mit Knick“: Du bestimmst bei „Note 4 bei (%)“, ab welchem Prozentwert mindestens die Note 4 erreicht wird.",
-            "„Individuelle Notengrenzen“: Du legst für die Noten 1 bis 5 eigene Mindestgrenzen fest. Verwende dafür den Notenschlüssel, der zu den Vorgaben deiner Schule passt."
+            "| Notenschlüssel | Was bedeutet das? |\n| --- | --- |\n| **Linear** | Die Noten werden gleichmäßig zwischen voller Punktzahl (Note 1) und null Punkten (Note 6) verteilt. |\n| **Mit Knick** | Du legst fest, ab welchem Prozentwert die Note 4 erreicht wird. |\n| **Individuelle Notengrenzen** | Du bestimmst selbst, welche Mindestpunktzahl für die Noten 1 bis 5 nötig ist. |",
+            "**Beispiel:** Wenn in deiner Schule die Note 4 ab **50 %** gilt, kannst du bei **„Mit Knick“** diesen Wert einstellen. Bei 20 möglichen Punkten liegt diese Grenze dann bei 10 Punkten. Welche Note die übrigen Punktzahlen ergeben, zeigt dir die Notentabelle.",
+            "Verwende den Notenschlüssel, der zu den Regeln deiner Schule passt."
           ],
           "id": "punkte-die-drei-notenschlussel"
         },
         {
           "heading": "Ganze, halbe, Viertel- und Zehntelnoten",
           "paragraphs": [
-            "Unter „Notenabstufung“ wählst du „Ganze Noten“, „Halbe Noten“, „Viertelnoten“ oder „Zehntelnoten“. Das betrifft die Note, die aus der erreichten Punktzahl entsteht.",
-            "Nicht verwechseln mit „Punkteschritte“ in der angezeigten Notentabelle: Dort bestimmst du nur, ob die Tabelle ganze, halbe oder Zehntelpunkte auflistet."
+            "Unter **„Notenabstufung“** bestimmst du, in welchen Schritten Noten aus Punkten entstehen:",
+            "- **Ganze Noten:** zum Beispiel 2 oder 3.\n- **Halbe Noten:** zum Beispiel 2,5.\n- **Viertelnoten:** zum Beispiel 2,25 oder 2,75.\n- **Zehntelnoten:** zum Beispiel 2,3 oder 2,7.",
+            "**Wichtig:** **„Punkteschritte“** ist etwas anderes. Damit stellst du nur ein, welche Punktzahlen in der Notentabelle aufgelistet werden – zum Beispiel ganze oder halbe Punkte."
           ],
           "id": "punkte-ganze-halbe-viertel-und-zehntelnoten"
         },
         {
           "heading": "Punkte eintragen",
           "paragraphs": [
-            "Gib unter „Punkte“ oder „Erreichte Punkte“ zum Beispiel „17,5“ ein. Null Punkte sind möglich; ein leeres Feld bedeutet, dass noch keine Punkte vorliegen. Notenblick ermittelt die Note mit dem gewählten Notenschlüssel und zeigt sie dir an.",
-            "Mit Eingabe übernimmst du den Wert und wechselst zum nächsten sichtbaren Schüler, mit Umschalt+Eingabe zum vorherigen. Die gespeicherte Note wird angesagt. Du kannst jederzeit „Notenschlüssel anzeigen“ wählen und die Bewertung prüfen."
+            "Trage die erreichten Punkte in das Feld **„Punkte“** oder **„Erreichte Punkte“** ein. Du kannst zum Beispiel **17,5** eingeben.",
+            "- **0 Punkte:** Der Schüler hat null Punkte erreicht.\n- **Leeres Feld:** Es liegt noch kein Punkteergebnis vor.",
+            "Notenblick zeigt die daraus berechnete Note. Mit **Eingabe** übernimmst du die Punkte und wechselst zum nächsten sichtbaren Schüler; mit **Umschalt+Eingabe** zum vorherigen.",
+            "Mit **„Notenschlüssel anzeigen“** kannst du jederzeit nachschauen, welche Note zu einer Punktzahl gehört."
           ],
           "id": "punkte-punkte-eintragen"
         },
         {
           "heading": "Eine berechnete Note anpassen",
           "paragraphs": [
-            "Wenn du bei einer Punktebewertung bewusst eine andere Note vergeben möchtest, wähle „Note anpassen“. Die erreichten Punkte und die berechnete Note bleiben nachvollziehbar. Mit „Berechnete Note übernehmen“ kannst du später zur Note des Notenschlüssels zurückkehren.",
-            "Wenn du den Notenschlüssel nachträglich änderst, prüfe vorher die angezeigten Auswirkungen auf vorhandene Noten. Gespeicherte Punkte und bewusst festgelegte Noten dürfen nicht verloren gehen."
+            "Wenn du bewusst eine andere Note geben möchtest, wähle bei dem Schüler **„Note anpassen“** und trage die gewünschte Note ein.",
+            "Die erreichten Punkte und die ursprünglich berechnete Note bleiben nachvollziehbar. Mit **„Berechnete Note übernehmen“** kannst du die Anpassung später zurücknehmen.",
+            "Änderst du den Notenschlüssel nachträglich, zeigt dir Notenblick, welche gespeicherten Bewertungen davon betroffen sind. Prüfe diesen Hinweis, bevor du die Änderung bestätigst."
           ],
           "id": "punkte-eine-berechnete-note-anpassen"
         },
         {
           "heading": "Notenschlüssel anzeigen und ausgeben",
           "paragraphs": [
-            "Mit „Notenschlüssel anzeigen“ öffnest du die „Notentabelle“. Unter „Punktzahl prüfen“ kannst du eine Punktzahl ausprobieren, ohne eine Schülernote zu verändern.",
-            "Bei „Punkteschritte“ wählst du „Ganze Punkte“, „Halbe Punkte“ oder „Zehntelpunkte“. Mit „Notenschlüssel als PDF speichern“ erhältst du eine eigene Datei zum Nachschlagen oder Weitergeben."
+            "Wähle **„Notenschlüssel anzeigen“**, um die **Notentabelle** zu öffnen.",
+            "- Unter **„Punktzahl prüfen“** kannst du eine Punktzahl ausprobieren. Das verändert keine Schülernote.\n- Mit **„Punkteschritte“** bestimmst du, ob die Tabelle zum Beispiel ganze, halbe oder Zehntelpunkte zeigt.\n- Mit **„Notenschlüssel als PDF speichern“** erhältst du die Tabelle als Datei."
           ],
           "id": "punkte-notenschlussel-anzeigen-und-ausgeben"
         }
@@ -311,94 +343,116 @@
         {
           "heading": "Wie der Durchschnitt entsteht",
           "paragraphs": [
-            "Notenblick verwendet nur Bewertungen, die tatsächlich zählen. Eine fehlende Note wird nicht als Null gewertet. Gibt es in einer Leistungsart noch keine gewertete Note, wird sie bei der vorläufigen Berechnung ausgelassen.",
-            "Die verschiedenen Leistungen werden zuerst mit ihrer „Gewichtung der Leistung“ berücksichtigt, danach gelten die Anteile aus „Notengewichtung“. Die Anzeige kann gerundet oder gekürzt werden; für die Berechnung bleiben die genauen Werte erhalten."
+            "Notenblick berechnet die Durchschnitte in zwei Schritten:",
+            "1. Zuerst werden die Noten **innerhalb eines Leistungsbereichs** zusammengefasst. Hier zählt bei Bedarf die **„Gewichtung der Leistung“**, zum Beispiel einfach oder doppelt.\n2. Anschließend werden die **Bereichsdurchschnitte** mit den Prozentanteilen aus **„Notengewichtung“** zur Fachnote verrechnet.",
+            "**Beispiel:** Zwei Tests erhalten die Noten 2 und 4. Zählt der erste Test einfach und der zweite doppelt, ergibt sich für **Tests** der Durchschnitt **3,33…**. Anschließend zählt dieser Testdurchschnitt mit dem für **Tests** festgelegten Prozentanteil zur Fachnote.",
+            "Fehlt in einem Bereich noch jede gewertete Note, zählt der Bereich beim vorläufigen Durchschnitt **nicht als 0**. Ein Strich bedeutet daher nicht die Note 6."
           ],
           "id": "berechnung-wie-der-durchschnitt-entsteht"
         },
         {
           "heading": "Die Standardgewichtung",
           "paragraphs": [
-            "Neue Fächer starten mit Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %. Jeder Bereich zählt unmittelbar zur Gesamtnote. Mit „Notengewichtung“ im geöffneten Fach – oder Strg+G – passt du die Anteile an.",
-            "Ein Bereich mit 0 % behält seine Noten und seinen Durchschnitt, zählt aber nicht zur Gesamtnote. Bereiche ohne bewertete Noten werden bei der Berechnung ausgelassen. Eine fehlende Note ist niemals eine 0."
+            "Ein neues Fach beginnt mit dieser Verteilung:",
+            "| Leistungsbereich | Anteil an der Gesamtnote |\n| --- | ---: |\n| Klassenarbeiten | 50 % |\n| Tests | 10 % |\n| Mündlich | 40 % |\n| **Zusammen** | **100 %** |",
+            "**Beispiel:** Ein Schüler hat in allen drei Bereichen den Durchschnitt 2. Dann beträgt sein Gesamtdurchschnitt ebenfalls 2.",
+            "Du kannst die Verteilung für jedes Fach ändern: Öffne das Fach und wähle **„Notengewichtung“** oder **Strg+G**."
           ],
           "id": "berechnung-die-standardgewichtung"
         },
         {
           "heading": "Berechnungsart und individuelle Anteile",
           "paragraphs": [
-            "Unter „Notengewichtung“ wählst du die Berechnungsart. Bei „Leistungsbereiche einzeln gewichten“ verteilst du insgesamt 100 %. Eine Eingabe verändert die anderen Anteile nicht. „Gleichmäßig verteilen“ teilt die Anteile bewusst neu auf.",
-            "Bei „Schriftliche Note zusammenfassen“ wählst du mit „Zur gemeinsamen Note“ die zugehörigen Bereiche. Ihre Anteile ergeben innen 100 %. Die gemeinsame Note zählt anschließend mit ihrem eigenen Anteil zur Gesamtnote. Dieser Anteil und die übrigen Bereiche ergeben außen ebenfalls 100 %. Die gemeinsame Note darf auch anders heißen.",
-            "Ein Bereich wechselt erst mit 0 % zur gemeinsamen Note oder wieder heraus. Im Ziel beginnt er mit 0 %. Verteile die übrigen Anteile anschließend passend. Beim Wechsel der Berechnungsart werden die bisherigen Anteile umgerechnet. Erfordert die Umrechnung eine Rundung, entscheidest du über die gerundeten Werte.",
-            "„Durchschnitte vergleichen“ zeigt die bisherigen und neuen Ergebnisse. Bei tatsächlichen Änderungen bestätigst du die Übernahme vor dem Speichern. Gerade bei fehlenden Bereichsnoten können die beiden Berechnungsarten andere Durchschnitte liefern. Festgelegte Halbjahres- und Zeugnisnoten bleiben erhalten.",
-            "Füge Bereiche hinzu oder ändere unter „Bereich bearbeiten“ den Namen. Mit „Nach oben“ und „Nach unten“ legst du die Reihenfolge für Reiter, Tabellen und Berichte fest. Leere, nicht gewichtete Bereiche kannst du entfernen; vorhandene Leistungen überträgst du vorher vollständig in einen anderen Bereich. Der ursprüngliche mündliche Bereich bleibt für Einzelnoten und Klassenrunden erhalten, auch unter einem neuen Namen. Verschobene Einzelnoten und Klassenrunden behalten ihre Bearbeitungsform.",
-            "Ausgeblendete leere Bereiche findest du im aufklappbaren Abschnitt „Ausgeblendete Bereiche“. Änderungen bleiben bis zum Speichern im Dialog. Mit Abbrechen verwirfst du sie."
+            "Unter **„Notengewichtung“** entscheidest du, wie die Bereiche zur Fachnote zählen. Es gibt zwei Möglichkeiten.",
+            "**A. Leistungsbereiche einzeln gewichten – der Standard**",
+            "Jeder Bereich erhält einen eigenen Anteil an der Gesamtnote. Verteile insgesamt **100 %**. Du kannst die Zahlen einzeln ändern oder mit **„Gleichmäßig verteilen“** alle vorhandenen Anteile neu aufteilen.",
+            "**Beispiel:** Klassenarbeiten 50 %, Tests 10 %, Mündlich 40 %.",
+            "**B. Schriftliche Note zusammenfassen**",
+            "Hier werden zuerst mehrere Bereiche zu einer schriftlichen Note zusammengefasst. Danach bestimmst du, wie stark diese schriftliche Note und die übrigen Bereiche zur Gesamtnote zählen. Der Dialog zeigt dafür zwei klar getrennte Schritte:",
+            "**1. Schriftliche Note**",
+            "„Diese Bereiche bilden zusammen die schriftliche Note.“",
+            "| Bereich | Anteil innerhalb der schriftlichen Note |\n| --- | ---: |\n| Klassenarbeiten | 80 % |\n| Tests | 20 % |\n| **Zusammen** | **100 %** |",
+            "**2. Gesamtnote**",
+            "„Lege fest, wie stark die schriftliche Note und die übrigen Bereiche zählen.“",
+            "| Bereich | Anteil an der Gesamtnote |\n| --- | ---: |\n| Schriftlich | 50 % |\n| Mündlich | 50 % |\n| **Zusammen** | **100 %** |",
+            "So kannst du zum Beispiel **Klassenarbeiten und Tests gemeinsam** gewichten, ohne dass sie zur Gesamtnote doppelt zählen.",
+            "**Bereiche zuordnen:** Bei einem Bereich kannst du **„Gehört zur schriftlichen Note“** auswählen. Soll er wieder direkt zur Gesamtnote zählen, hebst du die Auswahl auf. Wird die schriftliche Note umbenannt, passt sich dieser Text an. Bevor du die Zuordnung änderst, setze den Anteil dieses Bereichs auf **0 %**. Im neuen Abschnitt beginnt er ebenfalls mit 0 %. Danach verteilst du die Prozente neu.",
+            "**Bezeichnung ändern:** Die gemeinsame Note darf auch anders heißen, zum Beispiel **„Schriftliche Leistungen“**. An der Berechnung ändert das nichts.",
+            "**Bereiche verwalten:** Unter **„Bereich bearbeiten“** kannst du einen Namen ändern oder den Bereich mit **„Nach oben“** und **„Nach unten“** sortieren. Ein leerer Bereich lässt sich entfernen, sobald er 0 % hat. Enthält er schon Leistungen, überträgst du diese vorher in einen anderen Bereich. Die Noten bleiben erhalten. Der besondere Bereich für mündliche Einzelnoten und Klassenrunden bleibt bestehen, darf aber umbenannt werden.",
+            "**Neue Bereiche:** Gib unter **„Neuer Leistungsbereich“** einen Namen ein und wähle **„Leistungsbereich hinzufügen“**. Neue Bereiche beginnen mit 0 %. Die übrigen Anteile bleiben unverändert.",
+            "**Änderungen prüfen:** Mit **„Durchschnitte vergleichen“** siehst du, ob sich Schülerdurchschnitte verändern. Wenn das der Fall ist, bestätigst du die Änderung vor dem Speichern. Festgelegte Halbjahres- und Zeugnisnoten ändern sich dabei nicht.",
+            "**Berechnungsart wechseln:** Notenblick versucht, deine bisherigen Anteile passend zu übernehmen. Wenn die Prozente nicht genau übernommen werden können, zeigt es dir die gerundeten Werte **direkt bei der Auswahl der Berechnungsart**. Prüfe sie und entscheide, ob du sie verwenden möchtest.",
+            "**Gut zu wissen:** Bereiche ohne gewertete Noten werden bei der vorläufigen Berechnung ausgelassen. Deshalb können die beiden Berechnungsarten bei noch fehlenden Noten zu unterschiedlichen Durchschnitten führen."
           ],
           "id": "berechnung-berechnungsart-und-individuelle-anteile"
         },
         {
           "heading": "Gewichtung aus einem anderen Fach übernehmen",
           "paragraphs": [
-            "Öffne im Fach „Notengewichtung“ und wähle „Aus anderem Fach übernehmen“. Suche das Quellfach aus. Die Vorlage enthält Bereiche, Namen, Reihenfolge, Berechnungsart und Anteile.",
-            "Hat das Zielfach eigene belegte Bereiche, ordnest du ihre Leistungen den passenden Bereichen der Vorlage zu. Alle Noten, Punkte, Bemerkungen und festgelegten Abschlussnoten bleiben erhalten. Nachkommastellen und Rundung werden nur auf Wunsch mit übernommen.",
-            "„Übernehmen“ lädt zunächst den Entwurf. Prüfe die Durchschnitte und wähle anschließend Speichern. Bis dahin kannst du die Übernahme abbrechen."
+            "Wenn ein anderes Fach bereits passende Leistungsbereiche und Gewichtungen hat, kannst du sie als Vorlage nutzen:",
+            "1. Öffne im Zielfach **„Notengewichtung“**.\n2. Wähle **„Aus anderem Fach übernehmen“**.\n3. Wähle das **Quellfach**.\n4. Entscheide, ob auch **Nachkommastellen und Rundung** übernommen werden sollen.\n5. Hat dein Zielfach eigene Bereiche mit Leistungen, wähle aus, in welchen Bereich die vorhandenen Leistungen übernommen werden sollen.\n6. Wähle **„Übernehmen“**, prüfe die Anteile und bei Bedarf **„Durchschnitte vergleichen“**. Erst mit **„Speichern“** änderst du das Fach.",
+            "Übernommen werden die Leistungsbereiche, ihre Namen und Reihenfolge, die Berechnungsart und die Prozente. **Deine vorhandenen Einzelnoten werden nicht gelöscht.** Die Vorlage wird in dein Fach kopiert; spätere Änderungen im Quellfach wirken sich nicht darauf aus."
           ],
           "id": "berechnung-gewichtung-aus-einem-anderen-fach-ubernehmen"
         },
         {
           "heading": "Runden oder Kürzen",
           "paragraphs": [
-            "Unter „Durchschnitt anzeigen“ wählst du „Nachkommastellen“ und „Verfahren“. Bei zwei Nachkommastellen wird aus 2,678 durch „Runden“ die Anzeige 2,68 und durch „Kürzen“ die Anzeige 2,67.",
-            "Das ändert weder deine Einzelnoten noch die Grundlage der Berechnung. Vorgaben für neue Fächer findest du unter „Einstellungen → Notenberechnung“."
+            "Unter **„Durchschnitt anzeigen“** legst du fest, wie viele **Nachkommastellen** angezeigt werden und ob Notenblick **rundet** oder **kürzt**.",
+            "| Einstellung | Anzeige bei 2,678 und zwei Nachkommastellen |\n| --- | ---: |\n| Runden | 2,68 |\n| Kürzen | 2,67 |",
+            "Das verändert nur die **Anzeige** des Durchschnitts, nicht die zugrunde liegende Berechnung oder deine Einzelnoten. Allgemeine Vorgaben für neue Fächer findest du unter **Einstellungen → Berechnung**."
           ],
           "id": "berechnung-runden-oder-kurzen"
         },
         {
           "heading": "Halbjahresinformation und Zeugnisse",
           "paragraphs": [
-            "Bei einer „Halbjahresinformation – Viertelnoten“ sind zum Beispiel 1,75 oder 2,25 möglich. Beim „Halbjahreszeugnis – ganze Noten“ und beim Jahreszeugnis verwendest du ganze Noten von 1 bis 6.",
-            "Die Ausgabe zum Halbjahr stellst du für jede Klasse unter „Verwaltung → Klassen → Bearbeiten“ ein. Sie gilt für alle Fächer dieser Klasse."
+            "Welche Noten zum Halbjahr möglich sind, stellst du **für jede Klasse** unter **Verwaltung → Klassen → Bearbeiten** ein.",
+            "| Ausgabe | Mögliche Noten |\n| --- | --- |\n| **Halbjahresinformation** | Viertelnoten, zum Beispiel 1,75 oder 2,25 |\n| **Halbjahreszeugnis** | Ganze Noten von 1 bis 6 |\n| **Jahreszeugnis** | Ganze Noten von 1 bis 6 |",
+            "Die Halbjahresausgabe gilt dann für alle Fächer dieser Klasse."
           ],
           "id": "berechnung-halbjahresinformation-und-zeugnisse"
         },
         {
           "heading": "Abschlussnoten festlegen",
           "paragraphs": [
-            "Öffne die „Notenübersicht“ und wähle „Abschlussnoten“. Mit Strg+Umschalt+A kannst du dieses Menü direkt öffnen. Entscheide dich für „Halbjahresinformation festlegen“ beziehungsweise „Halbjahreszeugnis festlegen“ oder „Zeugnisnoten festlegen“. Die angebotene Halbjahresausgabe richtet sich nach der Klasse.",
-            "Für die ganze Klasse siehst du den bisherigen Durchschnitt und, soweit möglich, einen Notenvorschlag. Mit „Offene Vorschläge übernehmen“ füllst du nur noch offene Noten; „Nur offene Noten anzeigen“ macht die Liste übersichtlicher. Du kannst auch die Note eines einzelnen Schülers direkt in der Notenübersicht festlegen.",
-            "Die Entscheidung triffst du selbst: Ein Vorschlag ist keine automatisch festgeschriebene Zeugnisnote. Bereits festgelegte Noten bleiben unverändert, bis du sie bewusst änderst."
+            "1. Öffne das gewünschte Fach unter **Noten → Übersicht**.\n2. Wähle **„Abschlussnoten“**. Mit **Strg+Umschalt+A** kannst du das Menü ebenfalls öffnen.\n3. Wähle **„Halbjahresinformation festlegen“**, **„Halbjahreszeugnis festlegen“** oder **„Zeugnisnoten festlegen“**, je nachdem, welche Ausgabe du brauchst.\n4. Prüfe die Durchschnitte und Notenvorschläge.\n5. Trage die gewünschten Noten ein und speichere sie.",
+            "Mit **„Offene Vorschläge übernehmen“** füllst du nur noch freie Felder. **„Nur offene Noten anzeigen“** blendet bereits erledigte Einträge aus. Du kannst eine Note auch direkt bei einem einzelnen Schüler in der Notenübersicht festlegen.",
+            "**Wichtig:** Der Vorschlag ist eine Hilfe. Die tatsächliche Halbjahres- oder Zeugnisnote legst **du** fest. Sie wird nicht automatisch durch den Durchschnitt ersetzt."
           ],
           "id": "berechnung-abschlussnoten-festlegen"
         },
         {
           "heading": "Welche Leistungen zählen zum Halbjahr?",
           "paragraphs": [
-            "Für den Vorschlag zum Halbjahr zählen Leistungen vom 1. August bis einschließlich 31. Januar. Für den Jahresvorschlag zählen die Leistungen des gesamten Schuljahres. Entscheidend ist das eingetragene Datum der Leistung.",
-            "Der berechnete Vorschlag ist eine Hilfe. Die Halbjahres- oder Zeugnisnote entscheidest und speicherst du selbst."
+            "Für den Vorschlag zum **Halbjahr** berücksichtigt Notenblick Leistungen vom **1. August bis einschließlich 31. Januar**. Für den **Jahresvorschlag** zählen die Leistungen des gesamten Schuljahres.",
+            "Entscheidend ist das **Datum der Leistung**. Trage es deshalb richtig ein. Die endgültige Halbjahres- oder Zeugnisnote legst du selbst fest."
           ],
           "id": "berechnung-welche-leistungen-zahlen-zum-halbjahr"
         },
         {
           "heading": "Abschlussklassen",
           "paragraphs": [
-            "In Abschlussklassen, etwa Hauptschule 9 oder Realschule 10, kannst du „Halbjahreszeugnis – ganze Noten“ wählen. Die Halbjahresnoten werden dann als ganze Noten festgelegt.",
-            "Bei der Jahresabschlussnote dienen die berechneten Durchschnitte nur zur Orientierung. Prüfungsleistungen und besondere Abschlussregeln musst du selbst berücksichtigen; Notenblick berechnet sie nicht automatisch ein."
+            "In Abschlussklassen, zum Beispiel Hauptschule 9 oder Realschule 10, kann die Klasse ein **Halbjahreszeugnis mit ganzen Noten** erhalten.",
+            "Für den Jahresabschluss zeigt Notenblick dir die errechneten Durchschnitte als Orientierung. **Prüfungsleistungen und besondere Abschlussregeln** musst du selbst berücksichtigen. Sie werden nicht automatisch eingerechnet."
           ],
           "id": "berechnung-abschlussklassen"
         },
         {
           "heading": "Festgelegte Noten bleiben bestehen",
           "paragraphs": [
-            "Eine gespeicherte Halbjahres- oder Zeugnisnote ändert sich nicht von selbst, auch wenn später neue Einzelnoten dazukommen. Du kannst sie jederzeit wieder öffnen und bewusst ändern.",
-            "Unter „Weitere Informationen“ findest du bei vorhandenen Abschlussnoten Angaben zur ursprünglichen Festlegung. Der „Klassendurchschnitt“ in der Notenübersicht berücksichtigt bei Abschlussnoten nur bereits festgelegte Noten."
+            "Wenn du eine Halbjahres- oder Zeugnisnote gespeichert hast, bleibt sie erhalten – auch wenn du später weitere Einzelnoten eingibst oder eine Gewichtung änderst.",
+            "Du kannst die Note bewusst neu festlegen. Unter **„Weitere Informationen“** findest du bei vorhandenen Abschlussnoten Angaben zur Festlegung.",
+            "Der **Klassendurchschnitt** bei Abschlussnoten bezieht nur bereits festgelegte Abschlussnoten ein."
           ],
           "id": "berechnung-festgelegte-noten-bleiben-bestehen"
         },
         {
           "heading": "Wenn ein Durchschnitt fehlt",
           "paragraphs": [
-            "Siehst du statt eines Durchschnitts einen Strich, fehlen möglicherweise noch gewertete Leistungen. Prüfe die Noten und den „Status“ der Einträge.",
-            "Ein Bereich, der noch keine gewertete Note enthält, wird bei der vorläufigen Berechnung nicht als Note 6 oder 0 behandelt."
+            "Steht statt eines Durchschnitts ein **Strich**, prüfe zuerst:",
+            "1. Sind im betreffenden Leistungsbereich schon Noten eingetragen?\n2. Stehen die Einträge auf **„Bewertet“**?\n3. Ist der Schüler an diesen Leistungen beteiligt?",
+            "Ohne gewertete Noten zeigt Notenblick keinen erfundenen Durchschnitt. Eine fehlende Note wird **nie als 0 oder 6** eingesetzt."
           ],
           "id": "berechnung-wenn-ein-durchschnitt-fehlt"
         }
@@ -411,80 +465,80 @@
         {
           "heading": "Einen Bericht öffnen",
           "paragraphs": [
-            "Möchtest du etwas aus dem aktuellen Fach ausgeben, wähle „Exportieren“ oder drücke Strg+E. In einer einzelnen Leistung heißt der Schalter „Leistung exportieren“. Wenn du Schuljahr, Klasse, Fach und Bericht erst auswählen möchtest, öffne „Sicherung → Exportieren“ und nutze „Ausgewählte Noten exportieren“.",
-            "Wähle den gewünschten Inhalt, prüfe im Dialog Umfang und Ausgabeformat und starte mit „Exportieren“ beziehungsweise „Drucken“. Der Bericht verändert keine deiner Noten."
+            "1. Öffne **Noten** und wähle das gewünschte Fach.\n2. Wähle **„Exportieren“** oder drücke **Strg+E**. Bei einer einzelnen geöffneten Arbeit heißt der Schalter **„Leistung exportieren“**.\n3. Prüfe **Inhalt**, **Umfang** und **Ausgabeformat**, soweit sie angeboten werden.\n4. Wähle **„Exportieren“** oder **„Drucken“**.",
+            "Alternativ kannst du unter **Sicherung → Exportieren** zuerst Schuljahr, Klasse, Fach und Bericht auswählen. Ein Export verändert keine Noten."
           ],
           "id": "export-einen-bericht-offnen"
         },
         {
           "heading": "Was kann ich exportieren?",
           "paragraphs": [
-            "„Notenübersicht“: Die Durchschnitte und festgelegten Halbjahres- und Zeugnisnoten der Schüler. „Leistungsliste“: Die angelegten Leistungen mit Datum und bisherigem Durchschnitt.",
-            "„Fachbericht mit Einzelnoten“: Die Fachübersicht zusammen mit den vorhandenen Einzelnoten. Du kannst außerdem einzelne Leistungsarten, eine bestimmte Leistung oder Berichte für einzelne Schüler ausgeben."
+            "| Bericht | Das steht darin |\n| --- | --- |\n| **Notenübersicht** | Bereichsdurchschnitte, Gesamtdurchschnitt und festgelegte Halbjahres- und Zeugnisnoten der Klasse. |\n| **Leistungsliste** | Angelegte Leistungen mit Datum, Anzahl erfasster Noten und, soweit vorhanden, Durchschnitt. |\n| **Einzelne Leistung** | Die Ergebnisse einer bestimmten Arbeit, eines Tests oder einer anderen Leistung. |\n| **Fachbericht mit Einzelnoten** | Notenübersicht und die vorhandenen Einzelbewertungen des Fachs. |\n| **Schülerbericht** | Überblick und einzelne Bewertungen eines bestimmten Schülers. |",
+            "Du kannst außerdem bestimmte Leistungsbereiche und alle Schülerberichte einzeln ausgeben."
           ],
           "id": "export-was-kann-ich-exportieren"
         },
         {
           "heading": "Welcher Bericht ist für mich der richtige?",
           "paragraphs": [
-            "Für eine schnelle Übersicht über die aktuellen Durchschnitte der Klasse wähle „Notenübersicht“. Möchtest du sehen, welche Arbeiten oder Tests angelegt sind, nutze „Leistungsliste“. Brauchst du die einzelnen Bewertungen des Fachs, eignet sich „Fachbericht mit Einzelnoten“.",
-            "Für ein Gespräch über einen bestimmten Schüler sind „Schülerberichte“ praktisch. Möchtest du nur eine Klassenarbeit ausgeben, öffne diese und wähle „Leistung exportieren“. Für alle Schuljahre zusammen nutze „Sicherung → Exportieren → Alle Noten exportieren“."
+            "- **Für die Notenkonferenz:** **Notenübersicht**.\n- **Zum Prüfen, welche Arbeiten schon angelegt wurden:** **Leistungsliste**.\n- **Für eine vollständige Übersicht eines Fachs:** **Fachbericht mit Einzelnoten**.\n- **Für ein Gespräch über einen Schüler:** **Schülerbericht**.\n- **Für die Ergebnisse einer Klassenarbeit:** Arbeit öffnen und **„Leistung exportieren“** wählen.\n- **Für sämtliche Schuljahre:** **Sicherung → Exportieren → Alle Noten exportieren**."
           ],
           "id": "export-welcher-bericht-ist-fur-mich-der-richtige"
         },
         {
           "heading": "Aktuelle Filter oder alle Einträge?",
           "paragraphs": [
-            "Unter „Umfang“ wählst du bei passenden Berichten „Mit aktuellen Filtern“ oder „Alle Einträge“. „Mit aktuellen Filtern“ berücksichtigt die aktuelle Suche und die eingestellten Filter, auch bei mehrseitigen Tabellen. „Alle Einträge“ berücksichtigt den vollständigen Bestand des ausgewählten Berichts.",
-            "Wenn du zuvor nach einem Schüler oder einer Leistung gesucht hast, kontrolliere vor dem Export, ob du wirklich nur diese Auswahl oder alles ausgeben möchtest."
+            "Im Exportdialog kannst du bei passenden Berichten unter **„Umfang“** wählen:",
+            "- **Mit aktuellen Filtern:** Nur die Ergebnisse, die zu deiner aktuellen Suche und deinen Filtern passen – auch wenn die Tabelle mehrere Seiten hat.\n- **Alle Einträge:** Den vollständigen Bestand des gewählten Berichts.",
+            "**Beispiel:** Du hast vorher nach einem Schüler gesucht. Möchtest du trotzdem die ganze Klasse ausgeben, wähle **„Alle Einträge“**."
           ],
           "id": "export-aktuelle-filter-oder-alle-eintrage"
         },
         {
           "heading": "Einzelne oder alle Schülerberichte",
           "paragraphs": [
-            "Wähle bei „Ausgabe“ entweder „Ausgewählter Schüler“ oder „Alle Schüler einzeln“. Bei „Ausgewählter Schüler“ bestimmst du die Person im Feld „Schüler“. „Alle Schüler einzeln“ erstellt ein ZIP-Archiv mit je einem Bericht pro Schüler.",
-            "Unter „Leistungen“ entscheidest du zwischen „Alle Leistungen“ und „Nur mit Eintrag“. Mit „Anordnung“ wählst du „Nach Leistungsart“ oder „Nach Datum“. Bei Bedarf kannst du „Ehemalige Schüler einbeziehen“. Kontrolliere anschließend „Ausgabeformat“ und wähle „Exportieren“."
+            "1. Öffne den Export für **Schülerberichte**.\n2. Wähle unter **„Ausgabe“** entweder **„Ausgewählter Schüler“** oder **„Alle Schüler einzeln“**.\n3. Bei **„Ausgewählter Schüler“** wählst du die Person im Feld **„Schüler“**.\n4. Stelle bei Bedarf **„Leistungen“** auf **„Alle Leistungen“** oder **„Nur mit Eintrag“** und wähle unter **„Anordnung“** zwischen der Gruppierung nach Leistungsbereich und nach Datum.\n5. Wenn nötig, aktiviere **„Ehemalige Schüler einbeziehen“**.\n6. Wähle das **Ausgabeformat** und starte den Export.",
+            "Bei **„Alle Schüler einzeln“** erhältst du ein **ZIP-Archiv** mit einer Datei pro Schüler. Für diesen Sammel-Export steht kein direktes Drucken zur Verfügung."
           ],
           "id": "export-einzelne-oder-alle-schulerberichte"
         },
         {
           "heading": "Ausgabeformat wählen",
           "paragraphs": [
-            "Unter „Ausgabeformat“ wählst du „PDF“ zum Lesen und Weitergeben, „Word“ zum Bearbeiten, „Excel“ oder „CSV“ für Tabellen und „Text“ für eine einfache Textdatei. „Drucken“ öffnet die Druckausgabe.",
-            "Bei „Alle Schüler einzeln“ entsteht ein ZIP-Archiv mit den einzelnen Berichten. Direktes Drucken steht dafür nicht zur Verfügung. Wähle das Format passend dazu, was du mit der Datei anschließend vorhast."
+            "| Format | Besonders geeignet für |\n| --- | --- |\n| **PDF** | Lesen, Drucken und Weitergeben ohne spätere Bearbeitung. |\n| **Word** | Berichte, die du noch bearbeiten möchtest. |\n| **Excel** | Tabellen, mit denen du weiterarbeiten möchtest. |\n| **CSV** | Weiterverarbeitung in anderen Tabellenprogrammen. |\n| **Text (TXT)** | Einfache, gut lesbare Notenlisten ohne besonderes Programm. |\n| **Drucken** | Eine unmittelbare Papierausgabe. |",
+            "Je nach gewähltem Bericht stehen nicht alle Formate zur Verfügung. Wähle das Format passend zu deinem Zweck."
           ],
           "id": "export-ausgabeformat-wahlen"
         },
         {
           "heading": "Bemerkungen und Punktzahlen",
           "paragraphs": [
-            "Mit „Bemerkungen einbeziehen“ legst du fest, ob zusätzliche Hinweise zu Bewertungen erscheinen. Bei geeigneten Schülerberichten kannst du „Punktzahlen einbeziehen“ wählen. Dann siehst du neben der Note auch die erreichten Punkte.",
-            "Bei punktbewerteten Einzelleistungen stehen die Maximalpunkte und der verwendete Notenschlüssel beim Bericht. Die Schüler sollen dort möglichst übersichtlich mit „Punkte – Note“ dargestellt werden, statt mit wiederholten Einzelangaben."
+            "Im Exportdialog kannst du bei passenden Berichten **„Bemerkungen einbeziehen“** auswählen. So erscheinen zusätzliche Hinweise zu Leistungen und Schülernoten nur dann, wenn du sie brauchst.",
+            "Mit **„Punktzahlen einbeziehen“** ergänzt du bei geeigneten Schülerberichten die erreichten Punkte. Bei einer einzelnen Arbeit mit Notenschlüssel stehen die **maximale Punktzahl** und der **Notenschlüssel** zusammen am Anfang. Die Ergebnisse der Schüler folgen übersichtlich darunter."
           ],
           "id": "export-bemerkungen-und-punktzahlen"
         },
         {
           "heading": "Mündliche Noten und Abschlussnoten im Bericht",
           "paragraphs": [
-            "Mündliche Einzelnoten erscheinen kompakt mit Datum, Schüler, Bezeichnung und Note. Klassenrunden mit mehreren Einträgen erhalten eine Tabelle. Einzelnoten und Klassenrunden bleiben auch nach dem Verschieben in einen anderen Bereich vollständig enthalten.",
-            "Notenübersichten enthalten die Leistungsbereiche in deiner Fachreihenfolge, den Gesamtdurchschnitt sowie die festgelegten Halbjahres- und Zeugnisnoten. PDF, Word und Druck zeigen bis zu fünf Bereiche gemeinsam; weitere folgen in beschrifteten Ergänzungstabellen. Excel und CSV behalten die breite Übersicht. TXT bleibt eine lineare Liste."
+            "**Mündliche Einzelnoten** stehen kompakt mit Datum, Schüler, Bezeichnung und Note im Bericht. **Gemeinsame Bewertungen** erscheinen als Tabelle. Auch wenn du eine solche Leistung später in einen anderen Bereich verschiebst, bleiben ihre Einträge und die gewohnte Bearbeitung erhalten.",
+            "Die **Notenübersicht** zeigt die Leistungsbereiche in deiner festgelegten Reihenfolge sowie den Gesamtdurchschnitt und die Abschlussnoten. Bei PDF, Word und Druck bleiben bis zu **fünf Leistungsbereiche** zusammen mit den wichtigsten Noten in der Haupttabelle. Weitere Bereiche folgen übersichtlich in zusätzlichen Tabellen. **Excel und CSV** können eine breitere Tabelle zeigen; **TXT** bleibt gut lesbar, ohne breite Spaltentabellen."
           ],
           "id": "export-mundliche-noten-und-abschlussnoten-im-bericht"
         },
         {
           "heading": "Alle Noten exportieren",
           "paragraphs": [
-            "Öffne „Sicherung → Exportieren“. Unter „Alle Noten exportieren“ wählst du „Text (TXT)“, „Word“ oder „PDF“ als „Ausgabeformat“. Mit „Alle Noten exportieren“ erhältst du ein ZIP-Archiv mit lesbaren Dateien aller Schuljahre, Klassen und Fächer. Du kannst diese Dateien auch ohne Notenblick öffnen.",
-            "Für eine bestimmte Klasse oder ein Fach nutze im selben Bereich „Ausgewählte Noten exportieren“. Soll die gesamte Notenverwaltung später wiederhergestellt werden können, brauchst du statt eines Exports eine vollständige Sicherung."
+            "1. Öffne **Sicherung → Exportieren**.\n2. Gehe zu **„Alle Noten exportieren“**.\n3. Wähle das **Ausgabeformat**: **Text (TXT)**, **Word** oder **PDF**.\n4. Wähle **„Alle Noten exportieren“**.",
+            "Du erhältst ein **ZIP-Archiv** mit lesbaren Dateien aus allen Schuljahren, Klassen und Fächern. Für nur ein Fach oder eine Klasse nutze **„Ausgewählte Noten exportieren“**."
           ],
           "id": "export-alle-noten-exportieren"
         },
         {
           "heading": "Export ist keine Sicherung",
           "paragraphs": [
-            "Exportierte Berichte kannst du lesen, drucken oder weitergeben. Du kannst daraus aber nicht einfach deine komplette Notenverwaltung wiederherstellen. Nutze dafür „Vollständige Sicherung erstellen“ unter „Sicherung → Sicherung erstellen“.",
-            "Die Berichte enthalten Schülerdaten. Speichere und teile sie deshalb nur an dafür vorgesehenen, geschützten Orten."
+            "Mit einem Export kannst du Noten **lesen, drucken oder weitergeben**. Für eine spätere vollständige Wiederherstellung deiner Notenverwaltung brauchst du dagegen eine **vollständige Sicherung**.",
+            "Öffne dafür **Sicherung → Sicherung erstellen**. Bewahre Berichte und Sicherungen geschützt auf, denn sie enthalten Schülerdaten."
           ],
           "id": "export-export-ist-keine-sicherung"
         }
@@ -497,64 +551,70 @@
         {
           "heading": "Automatisch speichern",
           "paragraphs": [
-            "Notenblick speichert deine Arbeit normalerweise automatisch. Du musst nach jeder Note nicht selbst speichern. Mit Strg+S kannst du bei Bedarf eine zusätzliche Speicherung anstoßen.",
-            "Falls etwas noch nicht gespeichert werden konnte, zeigt Notenblick einen Hinweis. Prüfe den „Speicherstatus“, bevor du die Anwendung schließt."
+            "Notenblick speichert deine Arbeit normalerweise **automatisch**. Du musst nicht nach jeder Note auf „Speichern“ drücken.",
+            "Mit **Strg+S** kannst du eine zusätzliche Speicherung auslösen. Wenn etwas noch nicht gespeichert werden konnte, zeigt Notenblick einen Hinweis. Prüfe dann unter **Sicherung → Speicherstatus**, ob alles aktuell ist, bevor du das Programm beendest."
           ],
           "id": "sicherung-automatisch-speichern"
         },
         {
           "heading": "Speicherstatus prüfen",
           "paragraphs": [
-            "Unter „Sicherung → Speicherstatus“ siehst du, ob deine Noten gespeichert sind und wann das zuletzt geschehen ist. Dort steht auch, ob deine automatischen Notenlisten aktuell sind.",
-            "Mit „Datenordner öffnen“ gelangst du zu deinen Dateien. „Erneut speichern“ ist hilfreich, wenn noch Änderungen ausstehen."
+            "1. Öffne **Sicherung → Speicherstatus**.\n2. Prüfe, ob deine **Noten** gespeichert sind und wann zuletzt gespeichert wurde.\n3. Prüfe, ob die **automatischen Notenlisten** aktuell sind.",
+            "Mit **„Datenordner öffnen“** erreichst du deine Dateien. **„Erneut speichern“** versucht, noch ausstehende Änderungen zu sichern. Mit **„Automatische Notenlisten prüfen“** kannst du fehlende oder veraltete Textdateien aktualisieren lassen."
           ],
           "id": "sicherung-speicherstatus-prufen"
         },
         {
           "heading": "Automatische Notenlisten",
           "paragraphs": [
-            "Notenblick legt im Ordner „Daten → Notenlisten“ zusätzlich lesbare Textdateien an. Darin findest du Schülerlisten, Notenübersichten, einzelne Leistungen und Schülerberichte. Wenn du Notenblick einmal nicht öffnen kannst, kannst du deine Noten dort trotzdem nachlesen.",
-            "Bei Leistungen mit Punkten stehen Notenschlüssel und Maximalpunktzahl einmal am Anfang der Leistungsdatei. Darunter reicht pro Schüler eine Zeile mit Punkten und Note. Bei bewusst geänderten Noten oder besonderen Statusangaben wird das kenntlich gemacht. Unter „Sicherung → Speicherstatus“ kannst du mit „Automatische Notenlisten prüfen“ fehlende oder veraltete Listen neu erstellen lassen. Die Textlisten ersetzen keine vollständige Sicherung."
+            "Im Ordner **Daten → Notenlisten** legt Notenblick zusätzlich **lesbare TXT-Dateien** an. Du kannst darin deine Noten auch dann nachschlagen, wenn das Programm einmal nicht startet.",
+            "Die Dateien sind nach Schuljahr, Klasse und Fach geordnet. Du findest dort unter anderem:",
+            "- **Schülerlisten:** Wer gehört zur Klasse?\n- **Notenübersichten:** Welche Bereichsdurchschnitte und Abschlussnoten haben die Schüler?\n- **Einzelne Leistungen:** Welche Noten wurden zum Beispiel in einer bestimmten Klassenarbeit vergeben?\n- **Schülernoten:** Welche Bewertungen liegen für einen einzelnen Schüler vor?",
+            "Die Texte zeigen die vorhandenen Leistungsbereiche mit ihren tatsächlichen Namen. **Leere Bereiche mit 0 %** werden weggelassen. Bei Punktebewertungen stehen die **maximale Punktzahl und der Notenschlüssel** einmal vor den Ergebnissen; bei den Schülern stehen nur die nötigen Angaben wie Punkte, Note und gegebenenfalls Status oder Bemerkung.",
+            "Unter **Sicherung → Speicherstatus → Automatische Notenlisten prüfen** lässt du die Listen bei Bedarf neu erstellen. **Die TXT-Dateien dienen zum Nachlesen, nicht zur vollständigen Wiederherstellung.** Dafür brauchst du eine Sicherung."
           ],
           "id": "sicherung-automatische-notenlisten"
         },
         {
           "heading": "Vollständige Sicherung erstellen",
           "paragraphs": [
-            "Öffne „Sicherung → Sicherung erstellen“ und wähle „Vollständige Sicherung erstellen“. Die Datei enthält deine Schuljahre, Klassen, Schüler, Fächer, Bewertungen und die benötigten Einstellungen.",
-            "Bewahre regelmäßig eine zusätzliche Sicherungsdatei an einem anderen geschützten Speicherort auf. So bist du auch bei einem Defekt deines Computers vorbereitet."
+            "1. Öffne **Sicherung → Sicherung erstellen**.\n2. Wähle **„Vollständige Sicherung erstellen“**.\n3. Speichere die Sicherungsdatei an einem geschützten Ort.",
+            "Die Sicherung enthält die Daten, die du für eine Wiederherstellung benötigst: Schuljahre, Klassen, Schüler, Fächer, Leistungen, Noten und Einstellungen.",
+            "Lege regelmäßig zusätzlich eine Kopie **außerhalb des Notenblick-Ordners** ab, zum Beispiel auf einem dafür vorgesehenen geschützten Datenträger."
           ],
           "id": "sicherung-vollstandige-sicherung-erstellen"
         },
         {
           "heading": "Sicherung aus Datei wiederherstellen",
           "paragraphs": [
-            "Öffne „Sicherung → Wiederherstellen“ und wähle „Sicherungsdatei auswählen“. Prüfe vor dem Bestätigen, von wann die Sicherung stammt und welchen Datenbestand sie enthält.",
-            "Beim Wiederherstellen wird der aktuelle Arbeitsstand durch den gewählten Sicherungsstand ersetzt. Notenblick legt vorher eine zusätzliche Sicherung an. Wenn du unsicher bist, brich ab und prüfe erst die vorhandenen Daten."
+            "**Achtung:** Beim Wiederherstellen wird dein aktueller Arbeitsstand durch den Stand der ausgewählten Sicherung ersetzt.",
+            "1. Öffne **Sicherung → Wiederherstellen**.\n2. Wähle **„Sicherungsdatei auswählen“**.\n3. Prüfe das **Datum** und die Angaben zur ausgewählten Sicherung.\n4. Bestätige die Wiederherstellung nur, wenn du diesen Stand wirklich verwenden möchtest.",
+            "Notenblick erstellt vorher eine zusätzliche Sicherung deines aktuellen Bestands. Wenn du unsicher bist, brich den Vorgang ab."
           ],
           "id": "sicherung-sicherung-aus-datei-wiederherstellen"
         },
         {
           "heading": "Einen früheren Speicherstand öffnen",
           "paragraphs": [
-            "Unter „Sicherung → Wiederherstellen“ findest du „Früheren Stand auswählen“. Suche den passenden Zeitpunkt und kontrolliere die Angaben, bevor du die Wiederherstellung bestätigst. Der aktuelle Arbeitsstand wird vorher zusätzlich gesichert.",
-            "„Letzte Änderung rückgängig“ betrifft dagegen die letzte Bearbeitung in der laufenden Sitzung. Für weiter zurückliegende Änderungen brauchst du einen früheren Speicherstand."
+            "Unter **Sicherung → Wiederherstellen** kannst du **„Früheren Stand auswählen“**. Suche den gewünschten Zeitpunkt aus und prüfe die Vorschau. Vor der Wiederherstellung wird dein aktueller Bestand zusätzlich gesichert.",
+            "**„Letzte Änderung rückgängig“** ist etwas anderes: Damit nimmst du die letzte Bearbeitung in der laufenden Sitzung zurück. Für ältere Änderungen brauchst du einen früheren Speicherstand."
           ],
           "id": "sicherung-einen-fruheren-speicherstand-offnen"
         },
         {
           "heading": "Alte Sicherungen bereinigen",
           "paragraphs": [
-            "Unter „Sicherung erstellen“ zeigt Notenblick auch deine automatischen Sicherungen an. Mit „Alte Sicherungen bereinigen“ kannst du Speicherplatz freimachen.",
-            "Vor dem Entfernen wird angezeigt, wie viele ältere Sicherungen betroffen sind. Die neuesten und besonders geschützten Sicherungen sowie deine aktuellen Noten bleiben erhalten."
+            "Unter **Sicherung → Sicherung erstellen** kannst du auch **„Alte Sicherungen bereinigen“** wählen.",
+            "Notenblick zeigt vorher an, wie viele ältere Sicherungen entfernt werden sollen. Die neuesten und besonders geschützten Sicherungen sowie deine aktuellen Noten bleiben erhalten."
           ],
           "id": "sicherung-alte-sicherungen-bereinigen"
         },
         {
           "heading": "Wenn etwas nicht stimmt",
           "paragraphs": [
-            "Wenn eine Datei nicht mehr geöffnet werden kann, verwende eine vorhandene Sicherung. Bei älteren Daten oder einer ungespeicherten Arbeitskopie können unter „Wiederherstellen“ zusätzliche Möglichkeiten erscheinen.",
-            "Bewahre deinen Ordner „Daten“ auch bei einer Programmaktualisierung auf. Ein Word-, PDF- oder Textbericht ist keine vollständige Notenblick-Sicherung."
+            "Wenn du deine Noten nicht mehr öffnen kannst, **lösche oder ersetze nicht vorschnell den Ordner Daten**.",
+            "Prüfe unter **Sicherung → Wiederherstellen**, ob ein früherer Speicherstand oder eine Sicherungsdatei zur Verfügung steht. Falls Notenblick nicht startet, kannst du deine Noten oft noch in **Daten → Notenlisten** nachlesen.",
+            "**Bei einer Aktualisierung gilt immer:** Nur **Notenblick.exe** und den vollständigen Ordner **Programm** austauschen. **Daten** behalten. Ein PDF-, Word- oder TXT-Bericht ersetzt keine vollständige Sicherung."
           ],
           "id": "sicherung-wenn-etwas-nicht-stimmt"
         }
@@ -567,49 +627,56 @@
         {
           "heading": "Allgemein",
           "paragraphs": [
-            "Unter „Einstellungen → Allgemein“ wählst du bei „Beim Programmstart“ zwischen „Startseite öffnen“ und „Letzte Ansicht öffnen“. Das ändert nicht deine Noten.",
-            "Mit „Aktualisierung prüfen“ suchst du nach einer freigegebenen Version. Die Suche beim Programmstart ist freiwillig und lässt sich über „Beim Start nach Aktualisierungen suchen“ einschalten. Deine Noten werden dabei nicht übertragen.",
-            "Eine gefundene Version erscheint auch auf der Startseite. „Später aktualisieren“ blendet sie vorübergehend aus. „Hinweis zu Version … nicht mehr anzeigen“ gilt nur für diese Version. Bei einem Fehler kannst du über „Fehlerdetails kopieren“ eine technische Beschreibung kopieren und normal weiterarbeiten."
+            "Unter **Einstellungen → Allgemein** legst du bei **„Beim Programmstart“** fest, ob Notenblick die **Startseite** oder deine **letzte Ansicht** öffnet.",
+            "Mit **„Aktualisierung prüfen“** kannst du freiwillig nach einer freigegebenen Version suchen. **„Beim Start nach Aktualisierungen suchen“** schaltet die automatische Prüfung ein oder aus. Dabei werden keine Schülernoten hochgeladen.",
+            "Eine angebotene Aktualisierung erscheint auch auf der Startseite. Mit **„Später aktualisieren“** verschiebst du sie. **„Hinweis zu Version … nicht mehr anzeigen“** blendet nur den Hinweis zu dieser Version aus. Wenn die Prüfung fehlschlägt, kannst du über **„Fehlerdetails kopieren“** die Fehlermeldung für eine Nachfrage bereitstellen; du kannst normal weiterarbeiten."
           ],
           "id": "einstellungen-allgemein"
         },
         {
           "heading": "Klassenreihenfolge",
           "paragraphs": [
-            "Unter „Einstellungen → Darstellung“ wählst du bei „Klassenreihenfolge“ zwischen „Aufsteigend“ und „Absteigend“. Standard ist „Aufsteigend“. So kannst du zum Beispiel erst die 5. Klassen oder zuerst die 10. Klassen anzeigen lassen.",
-            "Diese Reihenfolge gilt auch für die Fachzugriffe. Die Fächer einer Klasse bleiben alphabetisch geordnet."
+            "Unter **Einstellungen → Darstellung → Klassenreihenfolge** wählst du:",
+            "- **Aufsteigend:** Zum Beispiel 5a vor 6a.\n- **Absteigend:** Zum Beispiel 10a vor 9a.",
+            "Die Einstellung verändert nur die Reihenfolge der Klassen und Fachzugriffe, nicht deine Noten. Die Fächer innerhalb einer Klasse bleiben alphabetisch sortiert."
           ],
           "id": "einstellungen-klassenreihenfolge"
         },
         {
           "heading": "Schnellzugriffe auswählen",
           "paragraphs": [
-            "Unter „Einstellungen → Darstellung“ wählst du bei „Klassen- und Fachauswahl“ zwischen „Schnellzugriff“ und „Auswahlfelder“. Mit „Schnellzugriffe auswählen“ legst du bis zu 16 Fächer fest. Die ersten neun angezeigten Fachzugriffe erreichst du mit Alt+1 bis Alt+9. Ein Fach behält seine Nummer, bis du die Auswahl oder Reihenfolge selbst änderst.",
-            "Alt+0 öffnet „Alle Klassen und Fächer“; erneutes Alt+0 schließt die Auswahl. Bei der Darstellung „Auswahlfelder“ bringt dich Alt+0 direkt zum Feld „Klasse“. Auch Fächer ohne eigene Ziffer bleiben dort erreichbar."
+            "Unter **Einstellungen → Darstellung → Klassen- und Fachauswahl** entscheidest du zwischen **„Auswahlfelder“** und **„Schnellzugriff“**.",
+            "So legst du Schnellzugriffe fest:",
+            "1. Wähle **„Schnellzugriff“**.\n2. Öffne **„Schnellzugriffe auswählen“**.\n3. Markiere bis zu **16 Fächer**.\n4. Speichere deine Auswahl.",
+            "Die ersten neun zugeordneten Fächer erreichst du mit **Alt+1 bis Alt+9**. Mit **Alt+0** öffnest du **„Alle Klassen und Fächer“**; ein zweites Alt+0 schließt die Auswahl. Wenn du Auswahlfelder benutzt, führt dich Alt+0 direkt zur **Klasse**."
           ],
           "id": "einstellungen-schnellzugriffe-auswahlen"
         },
         {
           "heading": "Schülernamen und Sortierung",
           "paragraphs": [
-            "Unter „Schülernamen“ legst du bei „Namensdarstellung“ fest, ob zuerst Vorname oder Nachname erscheint. Mit „Sortieren nach“ und „Reihenfolge“ bestimmst du die Anordnung der Schüler.",
-            "Diese Auswahl hat nichts mit der neuen „Klassenreihenfolge“ zu tun. Keine der Einstellungen verändert deine Noten."
+            "Unter **Einstellungen → Darstellung → Schülernamen** legst du die Reihenfolge der Namen fest:",
+            "- **Vorname Nachname**: zum Beispiel Anna Beispiel.\n- **Nachname, Vorname**: zum Beispiel Beispiel, Anna.",
+            "Mit **„Sortieren nach“** und **„Reihenfolge“** bestimmst du, wie die Schülerlisten angeordnet werden. Keine dieser Einstellungen verändert Noten."
           ],
           "id": "einstellungen-schulernamen-und-sortierung"
         },
         {
           "heading": "Die Notenansicht einstellen",
           "paragraphs": [
-            "Unter „Gliederung der Notenverwaltung“ wählst du „Kompakt“ oder „Nach Leistungsarten“. Kompakt fasst die Leistungen in einer Registerkarte zusammen. Nach Leistungsarten zeigt die Bereiche des geöffneten Fachs als eigene Registerkarten.",
-            "„Sichtbare Leistungsarten“ blendet Registerkarten nur im ausgewählten Fach aus. In der Notenübersicht wählst du über „Ansicht anpassen“ die sichtbaren Bereichsspalten. Gespeicherte Noten, Berechnungen und vollständige Exporte bleiben erhalten. Neue Bereiche sind zunächst sichtbar."
+            "Unter **Einstellungen → Darstellung → Gliederung der Notenverwaltung** hast du zwei Möglichkeiten:",
+            "- **Kompakt:** Alle Leistungen stehen gemeinsam in der Registerkarte **Leistungen**. Dort kannst du nach einem Leistungsbereich filtern.\n- **Nach Leistungsarten:** Jeder sichtbare Leistungsbereich – zum Beispiel **Klassenarbeiten**, **Mündlich** oder **Präsentationen** – hat eine eigene Registerkarte.",
+            "Unter **„Sichtbare Leistungsarten“** kannst du Registerkarten für das ausgewählte Fach ausblenden. Die Leistungen bleiben erhalten.",
+            "In der **Notenübersicht** legst du unter **„Ansicht anpassen“** zusätzlich fest, welche Bereichsdurchschnitte als **Spalten** erscheinen. Neue Bereiche werden zunächst angezeigt. Ausgeblendete Spalten verändern weder die Berechnung noch den vollständigen Export."
           ],
           "id": "einstellungen-die-notenansicht-einstellen"
         },
         {
           "heading": "Vorgaben für neue Fächer",
           "paragraphs": [
-            "Unter Einstellungen → Berechnung legst du die Bereiche und Anteile für anschließend neu angelegte Fächer fest. Der Aufbau entspricht dem Dialog „Notengewichtung“. Ohne eigene Vorgaben gelten Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %.",
-            "Vorhandene Fächer bleiben unverändert. Ihre Bereiche und Anteile änderst du unter „Gewichtung vorhandener Fächer“ oder direkt im Fach über „Notengewichtung“. Jede Vorlage wird unabhängig kopiert."
+            "Öffne **Einstellungen → Berechnung**, um die Leistungsbereiche und Gewichtungen für **zukünftig angelegte Fächer** festzulegen.",
+            "Ohne eigene Vorgaben beginnt jedes neue Fach mit **Klassenarbeiten 50 %**, **Tests 10 %** und **Mündlich 40 %**. Du kannst die Bereiche und Anteile hier genauso bearbeiten wie unter **„Notengewichtung“** in einem Fach.",
+            "**Bereits angelegte Fächer ändern sich dadurch nicht.** Für diese wählst du im selben Bereich **„Gewichtung vorhandener Fächer“** oder öffnest das Fach und dort **„Notengewichtung“**."
           ],
           "id": "einstellungen-vorgaben-fur-neue-facher"
         }
@@ -622,64 +689,64 @@
         {
           "heading": "So bewegst du dich durch Notenblick",
           "paragraphs": [
-            "Mit Tab und Umschalt+Tab gehst du zum nächsten beziehungsweise vorherigen Bedienelement. In einer Registerkartenliste wechselst du mit Pfeil links und rechts, mit Pos1 und Ende zur ersten oder letzten Registerkarte. Eingabe oder Leertaste öffnet die gewählte Registerkarte; der Fokus bleibt dabei auf ihr.",
-            "Wenn du dagegen einen Bereich über eine Tastenkombination öffnest, springt der Fokus zur passenden Überschrift. Escape schließt eine geöffnete Hilfe, ein Menü oder einen geeigneten Dialog und führt an die vorherige Stelle zurück. Noch nicht abgeschlossene Eingaben bleiben geschützt."
+            "- **Tab:** Zum nächsten Bedienelement.\n- **Umschalt+Tab:** Zum vorherigen Bedienelement.\n- **Pfeil links/rechts:** Zwischen Registerkarten wechseln.\n- **Pos1/Ende:** Zur ersten oder letzten Registerkarte.\n- **Eingabe oder Leertaste:** Ausgewählte Registerkarte öffnen.",
+            "Bei normaler Bedienung bleibt der Fokus auf der Registerkarte. Wenn du eine Registerkarte **per Tastenkombination** öffnest, springt der Fokus zur Überschrift des Inhalts.",
+            "**Escape** schließt geeignete Dialoge, Menüs und die Hilfe. Danach kehrst du zur vorherigen Stelle zurück. Noch offene Eingaben werden nicht einfach verworfen."
           ],
           "id": "tastatur-so-bewegst-du-dich-durch-notenblick"
         },
         {
           "heading": "Hauptbereiche",
           "paragraphs": [
-            "Alt+S: „Start“. Alt+N: „Noten“. Alt+V: „Verwaltung“. Alt+I: „Sicherung“. Alt+E: „Einstellungen“. Alt+H: „Hilfe“. Danach steht der Fokus auf der Überschrift des geöffneten Bereichs. In „Noten“ bleibt die Auswahl von Klasse und Fach oberhalb dieser Überschrift.",
-            "Alt+N beachtet „Beim Öffnen eines Fachs“: je nach Einstellung erscheint die „Notenübersicht“ oder der zuletzt verwendete Bereich. Bei Alt+N und Alt+1 bis Alt+9 wird der aktive Notenbereich zusammen mit dem Fach angesagt."
+            "| Tastenkombination | Öffnet |\n| --- | --- |\n| **Alt+S** | Start |\n| **Alt+N** | Noten |\n| **Alt+V** | Verwaltung |\n| **Alt+I** | Sicherung |\n| **Alt+E** | Einstellungen |\n| **Alt+H** | Hilfe |",
+            "Der Fokus steht anschließend auf der Überschrift des geöffneten Bereichs. **Alt+N** beachtet, ob du beim Fachöffnen immer die **Notenübersicht** oder den zuletzt verwendeten Bereich sehen möchtest. Die Auswahl von Klasse und Fach bleibt darüber."
           ],
           "id": "tastatur-hauptbereiche"
         },
         {
           "heading": "Klassen und Fächer",
           "paragraphs": [
-            "Alt+1 bis Alt+9: Öffnet das jeweils zugeordnete Fach in seiner Klasse. Die Nummern entsprechen den ersten neun Fachzugriffen und ändern sich nicht allein dadurch, dass du ein anderes Fach öffnest. Ist eine Nummer nicht belegt, hörst du „Kein Fach zugeordnet.“",
-            "Alt+0: Öffnet „Alle Klassen und Fächer“. Erneutes Alt+0 schließt die Auswahl wieder. Bei dauerhaft angezeigten Auswahlfeldern springt Alt+0 zum Feld „Klasse“."
+            "- **Alt+1 bis Alt+9:** Öffnet das jeweils zugeordnete Fach. Wenn eine Nummer nicht belegt ist, meldet Notenblick das kurz.\n- **Alt+0:** Öffnet **„Alle Klassen und Fächer“**. Nochmals Alt+0 schließt die Auswahl. Bei dauerhaften Auswahlfeldern führt Alt+0 zum Feld **„Klasse“**."
           ],
           "id": "tastatur-klassen-und-facher"
         },
         {
           "heading": "Registerkarten",
           "paragraphs": [
-            "Strg+1 öffnet die erste sichtbare Registerkarte, Strg+2 die zweite und so weiter. Es gelten nur die tatsächlich angezeigten Registerkarten; „Schüler“ hat keine feste Sondernummer. Nach der Tastenkombination steht der Fokus auf der Überschrift des geöffneten Inhalts. Ist die Nummer nicht belegt, hörst du „Keine Registerkarte vorhanden.“",
-            "Strg+Tab und Strg+Umschalt+Tab wechseln zur nächsten beziehungsweise vorherigen Hauptregisterkarte. Innerhalb einer geöffneten Noteneingabe wählst du mit Strg+Umschalt+1 „Alle Schüler“ und mit Strg+Umschalt+2 „Einzeln“. Die normale Registerkartenbedienung mit Pfeiltasten und Eingabe bleibt unverändert."
+            "- **Strg+1, Strg+2 usw.:** Öffnet die erste, zweite oder weitere **sichtbare** Registerkarte. Die Nummern hängen davon ab, welche Leistungsbereiche gerade angezeigt werden.\n- **Strg+Tab:** Nächste Hauptregisterkarte.\n- **Strg+Umschalt+Tab:** Vorherige Hauptregisterkarte.\n- **Strg+Umschalt+1:** In einer geöffneten Noteneingabe **„Alle Schüler“**.\n- **Strg+Umschalt+2:** In einer geöffneten Noteneingabe **„Einzeln“**.",
+            "Über die Tastenkombination springt der Fokus zur Inhaltsüberschrift. Die normale Bedienung mit den Pfeiltasten innerhalb der Registerkarten bleibt davon unberührt."
           ],
           "id": "tastatur-registerkarten"
         },
         {
           "heading": "Leistungen und Berichte",
           "paragraphs": [
-            "Strg+N öffnet „Leistung hinzufügen“. Strg+Umschalt+K legt eine Klassenarbeit an, Strg+Umschalt+T einen Test, Strg+Umschalt+M mündliche Noten für mehrere Schüler. Strg+Umschalt+A öffnet „Abschlussnoten“ für das gewählte Fach.",
-            "Strg+G öffnet „Notengewichtung“. Strg+E öffnet „Exportieren“ zur aktuellen Notenansicht; außerhalb der Noten führt es zu „Sicherung → Exportieren“. Strg+S löst bei Bedarf eine zusätzliche Speicherung aus. Die Befehle zum Anlegen oder Bearbeiten gelten nur in einem passenden, bearbeitbaren Fach."
+            "| Tastenkombination | Aktion |\n| --- | --- |\n| **Strg+N** | Leistung hinzufügen |\n| **Strg+Umschalt+K** | Klassenarbeit anlegen |\n| **Strg+Umschalt+T** | Test anlegen |\n| **Strg+Umschalt+M** | Mündliche Bewertung für mehrere Schüler anlegen |\n| **Strg+Umschalt+A** | Abschlussnoten öffnen |\n| **Strg+G** | Notengewichtung öffnen |\n| **Strg+E** | Exportieren; außerhalb des Notenbereichs zu Sicherung → Exportieren |\n| **Strg+S** | Zusätzlich speichern |",
+            "Einige Aktionen sind nur möglich, wenn ein Fach geöffnet ist und du es bearbeiten darfst."
           ],
           "id": "tastatur-leistungen-und-berichte"
         },
         {
           "heading": "Schnelle Noteneingabe",
           "paragraphs": [
-            "Eingabe: Note oder Punkte übernehmen und zum nächsten sichtbaren Schüler wechseln. Umschalt+Eingabe: Übernehmen und zum vorherigen sichtbaren Schüler zurückkehren.",
-            "Strg+Eingabe: Beim Festlegen der Abschlussnoten für eine Klasse zum nächsten sichtbaren Schüler wechseln."
+            "- **Eingabe:** Die Note oder Punktzahl übernehmen und zum **nächsten sichtbaren Schüler** wechseln.\n- **Umschalt+Eingabe:** Übernehmen und zum **vorherigen sichtbaren Schüler** wechseln.\n- **Strg+Eingabe:** Beim Festlegen von Abschlussnoten zum **nächsten sichtbaren Schüler** wechseln.",
+            "Der Fokus springt jeweils in das passende Eingabefeld des nächsten oder vorherigen Schülers. So kannst du mehrere Noten zügig nacheinander erfassen."
           ],
           "id": "tastatur-schnelle-noteneingabe"
         },
         {
           "heading": "Hilfe und Schließen",
           "paragraphs": [
-            "F1 zeigt dir Hilfe zu der Stelle, an der du gerade arbeitest. Bei einem geöffneten Dialog werden deine Eingaben dabei nicht verworfen. Escape führt dich von der Hilfe zurück zur vorherigen Stelle.",
-            "Alt+F4 beendet Notenblick. Schließe vorher noch offene Eingaben ab. In einer geöffneten Noteneingabe bringt Escape dich zum vorherigen Arbeitsbereich zurück, soweit keine ungeprüften Eingaben im Weg stehen."
+            "Mit **F1** öffnest du die Hilfe **zum aktuellen Arbeitsschritt**. Auch aus einem offenen Dialog heraus bleiben deine bisherigen Eingaben erhalten. Mit **Escape** kehrst du zur vorherigen Stelle zurück.",
+            "Mit **Alt+F4** schließt du Notenblick. Beende zuvor offene Eingaben. **Escape** bringt dich in einer Noteneingabe zurück, soweit keine Eingabe erst geprüft werden muss."
           ],
           "id": "tastatur-hilfe-und-schliessen"
         },
         {
           "heading": "Wenn eine Tastenkombination nicht reagiert",
           "paragraphs": [
-            "Nicht jede Tastenkombination passt zu jedem Bereich. Wenn du noch kein Fach geöffnet hast oder eine Eingabe zuerst abgeschlossen werden muss, bleibt der aktuelle Arbeitsstand erhalten. Nicht belegte Fachziffern und Registerkartennummern werden kurz angesagt, ohne den Fokus zu verändern.",
-            "Alle Funktionen kannst du auch über die Schalter und Registerkarten bedienen. Falls eine Tastenkombination von Windows oder NVDA belegt ist, nutze den entsprechenden Schalter in Notenblick."
+            "Manche Befehle funktionieren nur im passenden Bereich. Wenn beispielsweise noch kein Fach geöffnet ist oder eine Eingabe korrigiert werden muss, bleibt Notenblick an der aktuellen Stelle.",
+            "Du kannst **alle Funktionen auch über die Schalter, Auswahlfelder und Registerkarten** erreichen. Falls Windows oder NVDA eine Tastenkombination selbst verwendet, nutze den entsprechenden Schalter in Notenblick."
           ],
           "id": "tastatur-wenn-eine-tastenkombination-nicht-reagiert"
         }

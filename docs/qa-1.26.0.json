@@ -53,5 +53,34 @@
   "arm64_live_tested": false,
   "microsoft_office_live_tested": false,
   "windows_update_installation_tested": false,
-  "github_actions_used": false
+  "github_actions_used": false,
+  "usability_help_revision": {
+    "date": "2026-11-06",
+    "baseline": "d395161c0e79d6324638eec7986b228b323449da",
+    "help_topics": 9,
+    "help_sections": 77,
+    "f1_base_contexts": 49,
+    "ids_unchanged": true,
+    "v1260_groups": 21,
+    "browser_groups": 6,
+    "axe_cases": 25,
+    "browser_report": "reports/20261106T073659502286Z/summary.json",
+    "f1_report": "reports/20261106T073420563417Z/summary.json",
+    "f1_tasks_passed": true,
+    "final_full_catalogue_completed": false,
+    "domain_storage_exports_native_unchanged": true,
+    "oral_report": "reports/20261106T073923524029Z/summary.json",
+    "v190_groups": 11,
+    "runtime_inputs_sha256": {
+      "src/app/weight-editor.js": "91303b3f6ff8eae3042ed42a6761449c1a47cfb8af57a4b2446a825ceb70be2c",
+      "src/data/HILFE-1.23.0.json": "9a9b12b353a79e50d1e4afca3a26c83f5d0c08399795c6850b9d8b240482274f",
+      "src/styles/views.css": "70cde42521a75bf0a39a4f2ca6c86897e747ebde0532fe518832d111f07bcfcf",
+      "src/views/assessments.js": "ee7a1b847895fb2348b6a0672ff24739409fde5af238571e297c5124dd830545",
+      "src/views/grades.js": "82efcf416a358c754ad29193a233e699b14850c935a60b911ea695de4fe8c93d",
+      "src/views/help.js": "198274092c949ee7fb8a020f768e74aa32e81c2348200d02330fbe8752bf9784",
+      "src/views/oral.js": "660889f1bee369490fe9a3c4e360fd240fd01771fd98d56565dee7cfc1ca6b0a",
+      "src/views/pupil.js": "8a76ffbd35be090cd7e367cabef48d1dd37189268092fd88f3bc7f9a57063102"
+    },
+    "help_source_sha256": "123fcff0a85a3b6cdb37ea6de3e9b8950d0aa342584089e43dc1c17cad6498a0"
+  }
 }

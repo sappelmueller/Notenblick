@@ -1,6 +1,21 @@
 # Notenblick 1.26.0 – Testbericht
 
-Stand: 5. November 2026. Vollständige Testversion in `entwicklung/1.26.0`, ausgehend von der offiziellen Version 1.25.1. Kein offizielles Release und keine öffentliche Updaterfreigabe.
+Stand: 6. November 2026. Vollständige Testversion in `entwicklung/1.26.0`, ausgehend von der offiziellen Version 1.25.1. Kein offizielles Release und keine öffentliche Updaterfreigabe.
+
+## Bedienung und Hilfe – 6. November 2026
+
+Ausgangspunkt dieser gezielten Überarbeitung: Entwicklungscommit `d395161c0e79d6324638eec7986b228b323449da`.
+
+- Direkte Gewichtung sprachlich gekürzt; Sortieraktionen im vorhandenen Ausklappbereich. Die zusammengefasste Berechnung hat zwei getrennte Abschnitte mit eigenen Summen und Verteilaktionen. Die gemeinsame Note wird genau einmal in der Gesamtnote gewichtet.
+- Umrechnung und gerundete neue Werte stehen unmittelbar unter der Berechnungsart. Bestätigungen und der Vergleich der Schülerdurchschnitte bleiben erhalten. Derselbe Editor versorgt Fachdialog, Standardvorgaben und Einrichtung.
+- Einheitliche Aktionen und Leerzustände aller Leistungsbereiche, klare mündliche Auswahl, umgebrochene Registerkarten und abgesetzte Gewichtung. 0-%-Hinweis einmal oberhalb der Übersicht mit Tabellenbeschreibung für Screenreader.
+- Die bereitgestellte Hilfe vollständig übernommen: neun Themen, 77 Abschnitte, alle Kennungen und 49 Basiskontexte erhalten. Absätze, Hervorhebungen, nummerierte Schritte, Listen und Tabellen werden zentral sowohl in der Vollhilfe als auch in F1 dargestellt. Redaktionelle Einbauhinweise werden nicht angezeigt.
+
+Gezielt erfolgreich geprüft: 21 Gruppen in `v1260`, sechs Gruppen mit allen 49 F1-Kontexten in `v1230`, 13 Gruppen in `v1231` sowie elf Gruppen für die mündlichen Bedienabläufe in `v190`. Die Inhalte aller 77 Abschnitte wurden mit den Hilfedaten und der Markdown-Quelle verglichen; ihre Kennungen sind zum Ausgangsstand identisch. Chromium bestand sechs Bediengruppen und **25 axe-Fälle**, darunter alle neun Hilfethemen, fünf Fenster-/Zoomfälle der Gewichtung und schmale Hilfetabellen bei 320 Pixel bzw. 200-%-CSS-Zoom. Die Bildschirmdarstellung von Gewichtung, mehrzeiligen Reitern und Berechnungshilfe wurde zusätzlich visuell kontrolliert.
+
+Unveränderte Durchschnitte wurden für beide Berechnungsarten exakt geprüft, ebenso Entwürfe, Zuordnung bei 0 %, Umbenennen, Sortieren, Übertragung, Bestätigungen, Abbruch und neue Bereiche. Vier Exportfälle mit 3/5/8/20 Bereichen wurden erzeugt; TXT und CSV blieben vor/nach dem unveränderten Gewichtungsentwurf bytegleich. Bei dieser Überarbeitung wurden Domain-Berechnung, Speicherung/Sicherung, sämtliche Exportvorlagen, automatische TXT-Erzeugung und native Dateien nicht geändert. Frühere unabhängige Office-/PDF-Validatoren wurden nicht erneut vollständig ausgeführt. Kein großer Gesamttest und keine Releasefreigabe.
+
+Lokale Einzelprotokolle: `reports/20261106T073420563417Z` (F1/Hilfe und vorheriger Testfallfehler), `reports/20261106T073659502286Z` (korrigierte 1.26-Gruppen vollständig erfolgreich), `reports/20261106T073923524029Z` (abschließende mündliche Bedienprüfung erfolgreich). Fehler beim neu ergänzten Testablauf (nicht verworfener Einstellungsentwurf bzw. Auswahl eines verdeckten Einstellungsbuttons) wurden im Test korrigiert. Keine offenen Fehler in den abgeschlossenen gezielten Prüfungen.
 
 ## Änderungen
 

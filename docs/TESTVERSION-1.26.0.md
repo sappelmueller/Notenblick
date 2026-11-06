@@ -10,6 +10,14 @@ Zum Testen neben der bisherigen Ausgabe einen eigenen Ordner verwenden. Für ein
 
 Wenn du zur bisherigen Version zurückkehren möchtest, verwende dafür einen getrennten Ordner mit einer passenden Sicherung.
 
+## Neu in dieser Testfassung vom 6. November
+
+- Unter „Notengewichtung“ stehen die schriftliche Note und die Gesamtnote getrennt untereinander. Beide Verteilungen ergeben jeweils 100 %. Mit F1 findest du die Erklärung und Beispiele.
+- „Nach oben“ und „Nach unten“ stehen im Abschnitt „Bereich bearbeiten“. Vor einer neuen Zuordnung muss der Bereich 0 % haben.
+- Im mündlichen Bereich zwischen „Gemeinsame Bewertungen“ und „Einzelnoten“ wechseln. „Ansicht anpassen“ steuert weiterhin die Darstellung.
+- In allen Leistungsbereichen stehen „Leistung hinzufügen“, „Einzelnote eintragen“ und „Exportieren“ in derselben Reihenfolge.
+- Die vollständig neue Hilfe mit Schrittlisten und Tabellen auch aus offenen Dialogen mit F1 öffnen und mit Escape zur Eingabe zurückkehren.
+
 ## Praktische Prüfung
 
 1. Einrichten, ein Fach öffnen und den Standard Klassenarbeiten 50 %, Tests 10 %, Mündlich 40 % prüfen.
