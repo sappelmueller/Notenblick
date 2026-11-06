@@ -1,8 +1,8 @@
 # Entwicklung und Erstellung
 
-Entwicklung **1.27.0 – Testversion** in `entwicklung/1.27.0`, ausgehend von `main`/`2de1783` (offiziell 1.26.0). Technischer, gerenderter visueller, sprachlicher und barrierefreier Audit mit gezielten Korrekturen. Der vollständige vorhandene Katalog wird über die intelligente Prüfverwaltung abgeschlossen; keine Veröffentlichung oder Updaterfreigabe. [Auditbericht](docs/PRUEFBERICHT-1.27.0.md).
+Aktueller offizieller Stand: **Notenblick 1.27.0**, veröffentlicht am 6. November 2026. Der geprüfte Entwicklungscommit `345c293ff09f5695038beb06187bfd98ab501188` und das Windows-ZIP werden unverändert übernommen. Sebastian Müller hat Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und ausdrücklich freigegeben. [Audit und Freigabe](docs/PRUEFBERICHT-1.27.0.md).
 
-Letzte offizielle Veröffentlichung: **Notenblick 1.26.0**, offiziell veröffentlicht am 6. November 2026 nach praktischer Windows-Prüfung und ausdrücklicher Freigabe durch Sebastian Müller. Der vollständige automatische Katalog mit 93 Pflichtgruppen und zwei bytegleichen Builds ist abgeschlossen. Der geprüfte Programmstand und das Windows-ZIP werden unverändert übernommen; nur Dokumentation und externe Veröffentlichungsdateien werden abgeschlossen. Keine erneuten Funktionsprüfungen oder Programmbuilds. [Freigabe und Nachweise](docs/PRUEFBERICHT-1.26.0.md).
+Vorhandene Nachweise: 95 erfolgreiche Pflichtgruppen, 180.000 Noteneinträge, zwei bytegleiche Builds und vollständige Paketprüfung. Der Veröffentlichungsabschluss ändert nur Dokumentation und externe Freigabedateien; keine erneuten Programmtests oder Builds. Der Entwicklungsbranch wird nach Veröffentlichung und Downloadkontrolle gelöscht.
 
 Historischer Abschluss 1.25.0: Der vollständige Audit und die ressourcenschonende Testverwaltung sind abgeschlossen. Das Release übernimmt das getestete Programm unverändert; sein Entwicklungsbranch wird nach Veröffentlichung und Downloadkontrolle gelöscht. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
 

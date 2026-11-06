@@ -1,6 +1,6 @@
 # Änderungen
 
-## 1.27.0 – Testversion
+## 1.27.0 – 6. November 2026
 
 - Schutzsicherungen vor Änderungen an Leistungsbereichen auch unter Wiederherstellen auswählen.
 - Alle sichtbaren, belegten Leistungsbereiche beim gleichmäßigen Verteilen berücksichtigen.
@@ -9,7 +9,7 @@
 - Halbjahresauswahl in schmalen Dialogen ohne abgeschnittene zweite Textzeile.
 - Kürzere, verständliche Speicherhinweise und konkrete Hilfe bei nicht erreichbaren Exportordnern.
 
-Gezielter Feinschliff am bestehenden Programm. Berechnungsformeln, gespeicherte Noten, Datenformat, native Speicherung und Updateinstallation bleiben erhalten. Praktische Windows-/NVDA-/Braille-/ARM64-Abnahme steht aus. Kein offizielles Release und keine Updaterfreigabe. [Audit und Prüfgrenzen](docs/PRUEFBERICHT-1.27.0.md).
+Gezielter Feinschliff am bestehenden Programm. Berechnungsformeln, gespeicherte Noten, Datenformat, native Speicherung und Updateinstallation bleiben erhalten. Sebastian Müller hat Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und die unveränderte Ausgabe ausdrücklich freigegeben. Das geprüfte Windows-ZIP bleibt bytegleich; der direkte Wechsel von 1.26.0 ist freigegeben. Beim Update bleiben alle Daten unangetastet. [Audit und Prüfgrenzen](docs/PRUEFBERICHT-1.27.0.md).
 
 ## 1.26.0 – 6. November 2026
 

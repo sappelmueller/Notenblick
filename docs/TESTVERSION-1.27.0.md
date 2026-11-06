@@ -1,4 +1,8 @@
-# Notenblick 1.27.0 praktisch prüfen
+# Praxisprüfung 1.27.0 – abgeschlossen
+
+**Am 6. November 2026 bestätigt:** Sebastian Müller hat die unveränderte Ausgabe unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und ausdrücklich freigegeben. Dieser Plan bleibt zur Nachvollziehbarkeit erhalten. [Freigabe und Prüfstand](PRUEFBERICHT-1.27.0.md).
+
+Verwendeter Prüfplan:
 
 ZIP vollständig in einen eigenen Testordner entpacken und `Notenblick.exe` starten. Der vollständige Ordner `Programm` muss daneben liegen. Die Ausgabe enthält die vorhandenen x86-, x64- und ARM64-Bibliotheken. `Daten` wird beim ersten Start angelegt.
 
@@ -10,4 +14,4 @@ Für einen vorhandenen Testbestand Notenblick schließen und Daten zusätzlich s
 4. Unter Sicherung → Wiederherstellen → Früheren Stand auswählen nach einer Bereichsänderung den Eintrag „vor Änderung der Leistungsbereiche“ prüfen. Eine Auswahl allein darf nichts wiederherstellen.
 5. Startseite, Exportbereich, Gewichtung und Notenübersicht mit NVDA/Braille, kleinen Fenstern und der eigenen Windows-Skalierung verwenden. Start unter x64 beziehungsweise ARM64 prüfen.
 
-Berechnung, gespeicherte Abschlussnoten und automatische TXT-Listen verwenden weiterhin die bestehenden Verfahren. 1.27.0 wird noch nicht vom öffentlichen Updater angeboten. Veröffentlichung erst nach praktischer Prüfung und ausdrücklicher Freigabe.
+Berechnung, gespeicherte Abschlussnoten und automatische TXT-Listen verwenden weiterhin die bestehenden Verfahren. Die praktische Prüfung und ausdrückliche Freigabe sind abgeschlossen. Der öffentliche Updater bietet die offizielle Ausgabe 1.27.0 an; beim Update bleibt Daten unangetastet.

@@ -1,6 +1,6 @@
-# Qualitätsaudit 1.27.0 – Testversion
+# Qualitätsaudit und Veröffentlichung 1.27.0
 
-Basis: offizielles `main`/`2de1783e9d2a7d1b20ec01ddf2245986a839987e` (1.26.0). Entwicklung ausschließlich in `entwicklung/1.27.0`. Kein Merge, Tag, offizielles Release oder öffentliche Updaterfreigabe.
+Basis: offizielles `main`/`2de1783e9d2a7d1b20ec01ddf2245986a839987e` (1.26.0). Geprüfter Entwicklungscommit: `345c293ff09f5695038beb06187bfd98ab501188`. Nach praktischer Prüfung durch Sebastian Müller am 6. November 2026 ausdrücklich freigegeben: Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung. Offizielles Release `v1.27.0`; direkter Updateweg aus 1.26.0.
 
 ## Konkrete Korrekturen
 
@@ -29,14 +29,22 @@ Die Aufnahmen unter `tests/visual/v1270` werden tatsächlich visuell betrachtet,
 
 ## Automatischer Abschluss
 
-**Abgeschlossen: 95 von 95 Pflichtgruppen erfolgreich**, einschließlich 180.000 synthetischer Noteneinträge, zwei sauberer bytegleicher Builds sowie vollständiger Paket-/Entpackprüfung. Zusätzlicher gerenderter Audit: 155 Aufnahmen und 98 axe-Prüfungen. [Kompakte Nachweise](qa-1.27.0.json). Die praktische Windows-Abnahme bleibt getrennt.
+**Abgeschlossen: 95 von 95 Pflichtgruppen erfolgreich**, einschließlich 180.000 synthetischer Noteneinträge, zwei sauberer bytegleicher Builds sowie vollständiger Paket-/Entpackprüfung. Zusätzlicher gerenderter Audit: 155 Aufnahmen und 98 axe-Prüfungen. [Kompakte Nachweise](qa-1.27.0.json). Die anschließend vom Herausgeber bestätigte Windows-Abnahme ist unten getrennt dokumentiert.
 
-Ausgeführt wird `TZ=UTC python3 dev/manage.py release`: der vollständige Katalog mit 95 Gruppen, dem vorhandenen 180.000-Ergebnisse-Test, zwei sauberen bytegleichen Builds, vollständigen Archiv-/Hash-/Entpackprüfungen und Startprüfung der entpackten Oberfläche. Vorherige gültige Einzelbelege werden übernommen. Fehler werden innerhalb desselben Plans mit `release --retry` fortgesetzt; keine zusätzliche große Lastprüfung außerhalb des vorhandenen Katalogs.
+Der abgeschlossene Lauf `TZ=UTC python3 dev/manage.py release` umfasst: der vollständige Katalog mit 95 Gruppen, dem vorhandenen 180.000-Ergebnisse-Test, zwei sauberen bytegleichen Builds, vollständigen Archiv-/Hash-/Entpackprüfungen und Startprüfung der entpackten Oberfläche. Vorherige gültige Einzelbelege werden übernommen. Fehler werden innerhalb desselben Plans mit `release --retry` fortgesetzt; keine zusätzliche große Lastprüfung außerhalb des vorhandenen Katalogs.
 
-Der konkrete Endstatus und die kompakten Prüfdaten werden in `qa-1.27.0.json` nach Abschluss festgehalten. Eine Anzahl erfolgreicher Diagnoseläufe allein ist kein vollständiger Abschlussnachweis. Vollständige lokale Berichte besitzen Quellen-, Werkzeug-, Ausgaben- und Einzelbelegbindungen; `manage.py status` muss sie bestätigen. Ein späterer reiner Dokumentationsabschluss übernimmt nur weiterhin gültige Belege und verpackt den endgültigen Quellstand erneut.
+Endstatus und kompakte Prüfdaten sind in `qa-1.27.0.json` festgehalten. Dieser Nachweis bleibt als historischer Stand vor der praktischen Freigabe unverändert. Eine Anzahl erfolgreicher Diagnoseläufe allein ist kein vollständiger Abschlussnachweis. Vollständige lokale Berichte besitzen Quellen-, Werkzeug-, Ausgaben- und Einzelbelegbindungen; `manage.py status` muss sie bestätigen. Der reine Veröffentlichungsabschluss übernimmt diese Entwicklungsnachweise und ergänzt die ausdrückliche Praxisfreigabe. Nur das Quellcode-ZIP wird aus dem endgültigen Git-Baum neu verpackt.
 
 ## Prüfgrenzen und Praxisabnahme
 
-Automatisiert wird unter Linux/.NET und Chromium geprüft. **Keine reale Windows-, NVDA-, Braille-, UIA-, ARM64- oder Microsoft-Office-Praxisprüfung für 1.27.0.** CSS-Zoom ist keine echte Windows-Anzeigeskalierung. Native Speicher- und Updatertests unter .NET auf Linux sind keine vollständige Windows-Updateinstallation oder Windows-Rückfallprüfung. Der Starter wird als Windows-Programm gebaut und auf seine Architektur und Dateivollständigkeit geprüft; der wirkliche Windows-Start bleibt praktisch abzunehmen.
+Automatisiert wird unter Linux/.NET und Chromium geprüft. Der ausführende Entwicklungsagent hat keine reale Windows-, NVDA-, Braille-, UIA-, ARM64- oder Microsoft-Office-Praxisprüfung durchgeführt. Die spätere Praxisprüfung durch Sebastian Müller umfasst Windows x64 und ARM64, NVDA, Braille und Aktualisierung. CSS-Zoom ist keine echte Windows-Anzeigeskalierung. Native Speicher- und Updatertests unter .NET auf Linux sind keine vollständige Windows-Updateinstallation oder Windows-Rückfallprüfung. Der Starter wird als Windows-Programm gebaut und auf seine Architektur und Dateivollständigkeit geprüft; der wirkliche Windows-Start ist durch die Herausgeberprüfung bestätigt.
 
-1.27.0 bleibt Testversion mit `approved: false`. Der Herausgeber prüft vor einer Veröffentlichung insbesondere die korrigierten Fokusabläufe mit NVDA/Braille, den Start unter x64/ARM64 und die eigene Windows-Skalierung. [Kurzer Praxisprüfplan](TESTVERSION-1.27.0.md).
+## Freigabe und Veröffentlichung am 6. November 2026
+
+Sebastian Müller bestätigt die erfolgreiche praktische Prüfung unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung. Die konkrete Version ist ausdrücklich zur offiziellen Veröffentlichung freigegeben. [Abgeschlossener Praxisprüfplan](TESTVERSION-1.27.0.md).
+
+Keine Programmänderungen, erneuten Programmtests oder Builds beim Release. Der freigegebene Programmstand wird vollständig nach `main` übernommen; nur Dokumentation und externe Veröffentlichungsmetadaten ändern sich. Historische Prüfnachweise bleiben erhalten.
+
+Das geprüfte Windows-ZIP bleibt bytegleich: **2.112.066 Bytes**, SHA-256 `9233425f6fdcc39eeab3d00d90426373f46d691c46f447d21ff93dae08714810`. Die vollständige Dateiliste und sämtliche Einzelhashes stimmen mit dem geprüften Deskriptor überein. Der externe Deskriptor erhält `approved: true`, `minimumUpdater: 1.24.0` und unverändert `dataSchema: 1`; damit ist der direkte Wechsel von 1.26.0 möglich. Der unveränderte Installer ersetzt ausschließlich `Notenblick.exe` und den vollständigen Ordner `Programm`. `Daten` bleibt unangetastet.
+
+Stabiles Release mit Tag `v1.27.0`, Windows-ZIP, vollständigem Quellcode, Prüfsummen und freigegebenem Deskriptor. Öffentliche Downloads und endgültigen Git-Baum abgleichen; erst danach den vollständig übernommenen Entwicklungsbranch löschen. Kein neuer automatischer Gesamtprüflauf wird behauptet.
