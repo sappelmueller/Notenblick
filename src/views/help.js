@@ -1,12 +1,12 @@
 /* Authoritative offline help; one source for the full help and short F1 excerpts. */
 (function(A){'use strict';
 const text=globalThis.NRHelp,contexts=globalThis.NRHelpContexts.contexts;
-A.helpSection=function(index){const route=typeof index==='string'?{section_id:index}:contexts[index];if(!route)throw Error('Unbekannter Hilfekontext.');for(const topic of text.topics){const section=topic.sections.find(s=>s.id===route.section_id);if(section)return{topic,section,route};}throw Error('Hilfestelle fehlt.');};
+A.helpSection=function(index){const route=typeof index==='string'?{section_id:index}:contexts[index];if(!route)throw Error('Unbekannter Hilfekontext.');for(const topic of text.topics){const section=topic.sections.find(s=>s.id===route.section_id);if(section){if(index===0&&A.setupDraft){const step=A.setupDraft.step,steps=section.paragraphs.find(p=>p.startsWith('1. '))?.split('\n'),line=steps?.[step-1];if(line)return{topic,route,section:{...section,heading:'Einrichtung – '+(A.$('#setupStepTitle')?.textContent||section.heading),paragraphs:[line,section.paragraphs.at(-1)]}};}return{topic,section,route};}}throw Error('Hilfestelle fehlt.');};
 // Only the small, fixed markup used by our offline help; all text is escaped first.
 const inline=value=>A.esc(value).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
 A.helpParagraphs=s=>s.paragraphs.map(block=>{
  const lines=block.split('\n');
- if(lines.every(line=>/^\d+\. /.test(line)))return '<ol>'+lines.map(line=>'<li>'+inline(line.replace(/^\d+\. /,''))+'</li>').join('')+'</ol>';
+ if(lines.every(line=>/^\d+\. /.test(line)))return '<ol'+(lines[0].startsWith('1. ')?'':' start="'+parseInt(lines[0],10)+'"')+'>'+lines.map(line=>'<li>'+inline(line.replace(/^\d+\. /,''))+'</li>').join('')+'</ol>';
  if(lines.every(line=>line.startsWith('- ')))return '<ul>'+lines.map(line=>'<li>'+inline(line.slice(2))+'</li>').join('')+'</ul>';
  if(lines.length>2&&lines[0].startsWith('|')&&/^\|[ :|\-]+\|$/.test(lines[1])){
   const cells=line=>line.slice(1,-1).split('|').map(cell=>cell.trim()),headers=cells(lines[0]);
@@ -27,7 +27,7 @@ A.helpContext=function(el=document.activeElement){
  const within=s=>!!el?.closest?.(s),dialog=A.$('#dialog'),has=s=>!!dialog.querySelector(s);
  if(A.contextHelp)return A.contextHelp.index;
  if(dialog.open){
-  if(A.setupDraft)return 0;
+  if(A.setupDraft){if(within('#setupWeightEditor,#setup-adjust-weights'))return 27;return 0;}
   if(within('#halfYearReport,#confirmHalfYearChange,#halfYearWarning')&&has('#className'))return 'berechnung-halbjahresinformation-und-zeugnisse';
   if(within('.participation-options'))return 13;
   if(within('#a-weight,#a-gfs,#q-weight,#q-gfs'))return 14;
@@ -85,6 +85,7 @@ A.helpContext=function(el=document.activeElement){
  if(['exit-student','unexit-student'].includes(action))return 10;
  if(action==='choose-shortcuts')return 46;
 
+ if(within('#defaultWeightEditor'))return 27;
  if(within('#class,#course,#quickSelection,#allSelection'))return 2;
  if(within('#allNotesFormat'))return 33;
  if(within('[data-action=regenerate]'))return 38;

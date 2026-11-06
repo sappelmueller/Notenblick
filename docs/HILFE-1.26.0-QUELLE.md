@@ -19,7 +19,7 @@ Wähle auf der Startseite **„Jetzt einrichten“**. Der Assistent führt dich 
 1. **Schuljahr und Klassen:** Gib das Schuljahr ein und lege die Klassen an. Wähle für jede Klasse, ob sie zum Halbjahr eine **Halbjahresinformation mit Viertelnoten** oder ein **Halbjahreszeugnis mit ganzen Noten** erhält.
 2. **Fächer:** Ergänze die Fächer deiner Klassen.
 3. **Schülerlisten:** Trage Schüler ein oder füge eine Namensliste ein. Du kannst das auch später nachholen.
-4. **Grundeinstellungen:** Prüfe die Namensdarstellung und die Notengewichtung. Neue Fächer verwenden zunächst **50 % Klassenarbeiten, 10 % Tests und 40 % Mündlich**.
+4. **Grundeinstellungen:** Prüfe die Namensdarstellung und die Notengewichtung. Mit **„Gewichtung anpassen“** öffnest du denselben Editor wie in den Einstellungen. Ohne eigene Vorgaben verwenden neue Fächer **50 % Klassenarbeiten, 10 % Tests und 40 % Mündlich**.
 5. **Einrichtung überprüfen:** Kontrolliere deine Angaben und bestätige die Einrichtung mit dem Schalter im letzten Schritt.
 
 Mit **„Zurück“** korrigierst du frühere Angaben. Wenn du die Einrichtung vorzeitig beendest, fragt Notenblick nach, bevor Eingaben verworfen werden.
@@ -134,6 +134,8 @@ Die alten Einzelnoten bleiben im bisherigen Schuljahr. Im neuen Schuljahr starte
 - **Schüler:** Alle Noten eines bestimmten Schülers.
 
 Je nach Einstellung stehen die Leistungsbereiche in **eigenen Registerkarten** oder gemeinsam unter **Leistungen**. Mit **Strg+1, Strg+2** und den weiteren Ziffern öffnest du die sichtbaren Registerkarten der Reihe nach.
+
+Unter **„Notenübersicht“** heißt die Tabelle **„Durchschnitte und Zeugnisnoten“**. In den Leistungsbereichen findest du **„Notentabelle“** oder **„Leistungsliste“**, bei mündlichen Einzelbewertungen und Schülernoten **„Einzelnoten“**.
 
 ### Eine Leistung anlegen
 
@@ -386,6 +388,8 @@ Unter **„Notengewichtung“** entscheidest du, wie die Bereiche zur Fachnote z
 
 **A. Leistungsbereiche einzeln gewichten – der Standard**
 
+**Gleichmäßig verteilen:** Bei drei Bereichen entstehen zum Beispiel 33,34 %, 33,33 % und 33,33 %. Gespeichert werden genau diese Werte. Bereits gespeicherte, bewusst gewählte Prozente bleiben beim Öffnen unverändert.
+
 Jeder Bereich erhält einen eigenen Anteil an der Gesamtnote. Verteile insgesamt **100 %**. Du kannst die Zahlen einzeln ändern oder mit **„Gleichmäßig verteilen“** alle vorhandenen Anteile neu aufteilen.
 
 **Beispiel:** Klassenarbeiten 50 %, Tests 10 %, Mündlich 40 %.
@@ -424,9 +428,9 @@ So kannst du zum Beispiel **Klassenarbeiten und Tests gemeinsam** gewichten, ohn
 
 **Neue Bereiche:** Gib unter **„Neuer Leistungsbereich“** einen Namen ein und wähle **„Leistungsbereich hinzufügen“**. Neue Bereiche beginnen mit 0 %. Die übrigen Anteile bleiben unverändert.
 
-**Änderungen prüfen:** Mit **„Durchschnitte vergleichen“** siehst du, ob sich Schülerdurchschnitte verändern. Wenn das der Fall ist, bestätigst du die Änderung vor dem Speichern. Festgelegte Halbjahres- und Zeugnisnoten ändern sich dabei nicht.
+**Änderungen prüfen:** Mit **„Durchschnitte vergleichen“** siehst du zuerst, wie viele Schüler einen anderen Durchschnitt haben. Öffne **„Unterschiede anzeigen“**, um die veränderten Schüler und Zeiträume zu prüfen. Mit **„Alle Schüler anzeigen“** blendest du auch unveränderte Ergebnisse ein. Die Tabelle lässt sich jederzeit wieder schließen. Wenn sich Durchschnitte ändern, markiere **„Änderungen übernehmen“** und wähle **„Speichern“**. Festgelegte Halbjahres- und Zeugnisnoten ändern sich dabei nicht.
 
-**Berechnungsart wechseln:** Notenblick versucht, deine bisherigen Anteile passend zu übernehmen. Wenn die Prozente nicht genau übernommen werden können, zeigt es dir die gerundeten Werte **direkt bei der Auswahl der Berechnungsart**. Prüfe sie und entscheide, ob du sie verwenden möchtest.
+**Berechnungsart wechseln:** Notenblick rechnet deine Anteile direkt um. Automatisch erzeugte Prozente haben höchstens zwei Nachkommastellen und ergeben zusammen genau 100 %. Zum Beispiel werden aus 50 % Klassenarbeiten und 10 % Tests gemeinsam 60 % Schriftlich; innerhalb davon zählen Klassenarbeiten 83,33 % und Tests 16,67 %. Die neuen Werte stehen in den beiden Berechnungsabschnitten. Eine zusätzliche Rundungsbestätigung entfällt. Erst wenn sich Schülerdurchschnitte ändern, prüfst und bestätigst du die Auswirkungen vor dem Speichern.
 
 **Gut zu wissen:** Bereiche ohne gewertete Noten werden bei der vorläufigen Berechnung ausgelassen. Deshalb können die beiden Berechnungsarten bei noch fehlenden Noten zu unterschiedlichen Durchschnitten führen.
 
@@ -442,6 +446,8 @@ Wenn ein anderes Fach bereits passende Leistungsbereiche und Gewichtungen hat, k
 6. Wähle **„Übernehmen“**, prüfe die Anteile und bei Bedarf **„Durchschnitte vergleichen“**. Erst mit **„Speichern“** änderst du das Fach.
 
 Übernommen werden die Leistungsbereiche, ihre Namen und Reihenfolge, die Berechnungsart und die Prozente. **Deine vorhandenen Einzelnoten werden nicht gelöscht.** Die Vorlage wird in dein Fach kopiert; spätere Änderungen im Quellfach wirken sich nicht darauf aus.
+
+Prüfe die kurze Vergleichsvorschau. Unter **„Unterschiede anzeigen“** stehen zunächst nur veränderte Schülerdurchschnitte. Wenn sich Werte ändern, bestätige **„Änderungen übernehmen“** vor dem Speichern. Die Vorlage allein verändert noch keine Noten.
 
 ### Runden oder Kürzen
 
@@ -731,6 +737,8 @@ In der **Notenübersicht** legst du unter **„Ansicht anpassen“** zusätzlich
 Ohne eigene Vorgaben beginnt jedes neue Fach mit **Klassenarbeiten 50 %**, **Tests 10 %** und **Mündlich 40 %**. Du kannst die Bereiche und Anteile hier genauso bearbeiten wie unter **„Notengewichtung“** in einem Fach.
 
 **Bereits angelegte Fächer ändern sich dadurch nicht.** Für diese wählst du im selben Bereich **„Gewichtung vorhandener Fächer“** oder öffnest das Fach und dort **„Notengewichtung“**.
+
+Automatische Umrechnungen und **„Gleichmäßig verteilen“** verwenden höchstens zwei Nachkommastellen und ergeben genau 100 %. Ohne Schülerbewertungen brauchst du keine zusätzliche Umrechnung zu bestätigen.
 
 ## Tastatur
 

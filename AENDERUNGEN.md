@@ -2,6 +2,11 @@
 
 ## 1.26.0 – Testversion
 
+- Automatische Prozentverteilungen mit höchstens zwei Nachkommastellen und exakt 100 %. Eigene gespeicherte Werte bleiben beim Öffnen unverändert.
+- Berechnungsart direkt wechseln; nur tatsächlich veränderte Schülerdurchschnitte vor dem Speichern bestätigen. Kompakter Vergleich mit aufklappbaren Unterschieden und optional allen Schülern.
+- Einrichtungsassistent mit frei verwaltbaren Bereichen und angepassten Vorgaben korrigiert. F1 erklärt den jeweiligen Schritt oder die gerade bearbeitete Gewichtung.
+- Kompakte Gewichtungszeilen und eindeutige Tabellenüberschriften, einschließlich „Durchschnitte und Zeugnisnoten“ in der Notenübersicht.
+
 - Notengewichtung verständlicher: Schriftliche Note und Gesamtnote stehen in zwei getrennten Abschnitten mit eigenen Summen. Umrechnungen direkt bei der Auswahl prüfen; Sortieren unter „Bereich bearbeiten“.
 - Mündliche Noten über „Gemeinsame Bewertungen“ oder „Einzelnoten“ auswählen. „Ansicht anpassen“ bleibt getrennt davon erhalten.
 - Einheitliche Aktionen in allen Leistungsbereichen, hilfreiche Leerzustände, mehrzeilige Registerkarten und ein klar abgesetzter Gewichtungsschalter. Bereiche mit 0 % werden kurz und einmalig erklärt.

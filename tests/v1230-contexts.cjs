@@ -58,7 +58,7 @@ module.exports=async function prepare(index){
  case 44:settings('display');return select('#setting-notesLayout');
  case 45:settings('display');return select('#setting-classOrder');
  case 46:settings('display');return select('[data-action=choose-shortcuts]');
- case 47:settings('calculation');return select('#default-calculationMode');
+ case 47:settings('calculation');return select('#settings-calculation h2');
  case 48:A.activateGroup('main','help');return select('#help-tab-einstieg');
  default:throw Error('Missing context '+index);
  }

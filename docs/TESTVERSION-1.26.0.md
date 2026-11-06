@@ -10,7 +10,14 @@ Zum Testen neben der bisherigen Ausgabe einen eigenen Ordner verwenden. Für ein
 
 Wenn du zur bisherigen Version zurückkehren möchtest, verwende dafür einen getrennten Ordner mit einer passenden Sicherung.
 
-## Neu in dieser Testfassung vom 6. November
+## Letzter Feinschliff vom 6. November
+
+- „Gleichmäßig verteilen“ und Umrechnungen erzeugen höchstens zwei Nachkommastellen, beispielsweise 83,33 % und 16,67 %. Die gespeicherten Werte entsprechen der Anzeige und ergeben genau 100 %.
+- Die Umrechnung erfolgt sofort. Wenn sich Schülerdurchschnitte ändern, erscheint vor dem Speichern „Neue Gewichtung prüfen“. „Unterschiede anzeigen“ klappt die Tabelle auf und wieder zu; „Alle Schüler anzeigen“ erweitert sie. Mit „Änderungen übernehmen“ und „Speichern“ bestätigst du.
+- F1 im Assistenten erklärt den aktuellen Schritt. Beim Bearbeiten der Gewichtung öffnet F1 die Berechnungshilfe und kehrt mit Escape zur unveränderten Eingabe zurück.
+- Die Notenübersicht besitzt die Tabellenüberschrift „Durchschnitte und Zeugnisnoten“.
+
+## Weitere Verbesserungen dieser Testfassung vom 6. November
 
 - Unter „Notengewichtung“ stehen die schriftliche Note und die Gesamtnote getrennt untereinander. Beide Verteilungen ergeben jeweils 100 %. Mit F1 findest du die Erklärung und Beispiele.
 - „Nach oben“ und „Nach unten“ stehen im Abschnitt „Bereich bearbeiten“. Vor einer neuen Zuordnung muss der Bereich 0 % haben.

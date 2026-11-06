@@ -2,6 +2,20 @@
 
 Stand: 6. November 2026. Vollständige Testversion in `entwicklung/1.26.0`, ausgehend von der offiziellen Version 1.25.1. Kein offizielles Release und keine öffentliche Updaterfreigabe.
 
+## Letzter Feinschliff und vollständige technische Prüfung
+
+Ausgangspunkt: `0e3383e966f7d97b4321b4f371662de832b72097`. Automatische Verteilungen und Umrechnungen verwenden gespeicherte Hundertstel und ergeben exakt 100 %. Bewusst gespeicherte vierstellige Werte bleiben beim unveränderten Öffnen erhalten. Die zentrale exakte Notenberechnung bleibt bestehen.
+
+Der gemeinsame Editor zeigt kompakte Zeilen und zwei getrennte Verteilungen bei zusammengefasster Berechnung. Eine Rundungsbestätigung entfällt. Nur tatsächlich veränderte Schülerdurchschnitte erfordern die Übernahmebestätigung. Die Vergleichstabelle ist eingeklappt, zeigt zunächst nur Änderungen und kann auf alle Schüler erweitert werden.
+
+Der Assistent verwendet denselben Editor; die alte Prüfung auf Hausaufgaben und Heftführung ist entfernt. Zusammenfassung und gespeicherte Vorgaben stimmen in beiden Berechnungsarten überein. F1 erklärt den aktuellen Schritt oder die Gewichtung mit den vorhandenen Hilfetexten. Alle neun Themen, 77 Kennungen, Listen und Tabellen bleiben erhalten. Die Notenübersicht besitzt die eigene H3 „Durchschnitte und Zeugnisnoten“; die Tabellenbenennung der Schüleransicht verbindet die sichtbare Inhalts- und Bereichsüberschrift.
+
+Die gezielten Gruppen v170, v1260, v1260-browser, v170-browser, v1230 und v1231 bestanden vor dem vollständigen Lauf. Geprüft wurden zusätzlich 25 gleichmäßige Verteilungen, beide Umrechnungsrichtungen mit 3/5/8/20 Bereichen, eigene vierstellige Vorgaben, leere/notengleiche/veränderte Bestände, Vergleichsfilter und beide vollständigen Einrichtungsabläufe mit angepasster Vorlage. Keine Änderung an Speicherformat, nativer Aktualisierung oder Exportvorlagen.
+
+Vollständiger Katalog und Auslieferungsprüfung werden mit `dev/manage.py release` ausgeführt; bei Fehlern wird derselbe Katalog über `--retry` mit gültigen Einzelnachweisen fortgesetzt. Kein offizielles Release, Tag, Merge oder öffentlich freigegebenes Update. Der Abschlussnachweis wird nach erfolgreicher technischer Prüfung ergänzt.
+
+Die folgenden Abschnitte dokumentieren vorherige Entwicklungsstände. Sie sind keine Behauptung einer vollständigen Prüfung des späteren Quellstands.
+
 ## Bedienung und Hilfe – 6. November 2026
 
 Ausgangspunkt dieser gezielten Überarbeitung: Entwicklungscommit `d395161c0e79d6324638eec7986b228b323449da`.

@@ -10,6 +10,8 @@ Notenblick 1.25.1 (offiziell freigegeben am 4. November 2026; Grundlage 1.25.0):
 
 Bedienungsüberarbeitung vom 6. November: `weight-editor.js` trennt die gemeinsame schriftliche Note und Gesamtnote innerhalb desselben Editors. Fachdialog, Standardvorgaben und Einrichtung verwenden ihn unverändert gemeinsam. Die Hilfedaten behalten neun Themen, 77 Abschnittskennungen und dieselben F1-Zuordnungen; `helpParagraphs` stellt den begrenzten Markdown-Umfang der Hilfe zentral als Absätze, Listen und Tabellen dar. Keine zusätzliche Bibliothek, keine zweite Hilfequelle zur Laufzeit. Berechnung, Dateiformat, Speicherung, native Aktualisierung und Exportrenderer wurden bei dieser Überarbeitung nicht verändert.
 
+Letzter Feinschliff: `weighting.js` verteilt automatisch in ganzzahligen Hundertsteln mit deterministischer Restverteilung. `weightText` erhält bewusst gespeicherte vierstellige Werte. Moduswechsel benötigen keine eigene Rundungsbestätigung; `weights.js` prüft weiterhin exakte Auswirkungen auf Schülerdurchschnitte und schützt die Übernahme. F1 verwendet für den aktuellen Einrichtungsschritt einen Ausschnitt desselben Hilfetextes; Gewichtungsfelder führen auf den vorhandenen Berechnungsabschnitt. Keine neuen Datenformate oder Exportvorlagen.
+
 ## Aufbau
 
 | Ordner | Aufgabe |
