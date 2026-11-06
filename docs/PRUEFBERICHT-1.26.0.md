@@ -16,37 +16,30 @@ Stand: 6. November 2026. Entwicklungsbranch `entwicklung/1.26.0`. Kein offiziell
 
 Speicherformate, native Aktualisierung, festgelegte Abschlussnoten und Exportvorlagen wurden durch diesen Feinschliff nicht geändert. Fehlende Noten bleiben fehlende Noten und zählen niemals als 0.
 
+Die Paketerstellung schreibt Archive und Prüfsummen zunächst vollständig in eine temporäre Datei. ZIP-Dateien werden vor dem atomaren Ersetzen auf CRC geprüft; eine Unterbrechung erhält die vorherige Ausgabe. Ein kleiner Infrastrukturtest prüft Abbruch, vollständige Veröffentlichung und Bereinigung.
+
 ## Vollständiger technischer Testkatalog
 
-Der bestehende Ablauf `python3 dev/manage.py release` wurde verwendet und nach Korrekturen mit `--retry` fortgesetzt. Testverwaltung und Nachweisprüfung wurden nicht ersetzt.
+**93 von 93 Pflichtgruppen erfolgreich.** Nach Wiederherstellung der Arbeitsumgebung wurde der bestehende vollständige Ablauf `python3 dev/manage.py release` erfolgreich abgeschlossen: `reports/20261106T141037391510Z/summary.json`.
 
-**93 von 93 Pflichtgruppen erfolgreich.** Vollständiger erfolgreicher Lauf: `reports/20261106T132051469707Z/summary.json`. In diesem Lauf wurden 88 Gruppen ausgeführt und fünf gültige Ergebnisse wiederverwendet. Die anschließende Statusprüfung bestätigte aktuellen Quellstand, Werkzeuge, Programmausgabe, unveränderten Arbeitsbaum und gültige vollständige Nachweise.
+In diesem Lauf wurden 93 Gruppen ausgeführt und 0 gültige Nachweise wiederverwendet. Die zuvor verlorenen lokalen Belege wurden nicht als vorhandene Wiederverwendungsnachweise ausgegeben. Bei Fehlern oder Unterbrechungen setzt `--retry` den vorhandenen Plan fort; die Testverwaltung wurde nicht ersetzt oder umgangen.
 
-Abgedeckt sind Gewichtungen und beide Umrechnungsrichtungen, unveränderte und veränderte Durchschnitte, Zuordnung und Übernahme, Assistent und Vorgaben, Hilfe/F1, Tastatur, Fokus, ARIA, Ansichten, Speicherung, Sicherungen, Wiederherstellung, Altdaten, sämtliche Exportformate und automatische TXT-Notenlisten. Zusätzlich geprüft wurden 25 gleichmäßige Verteilungen sowie Umrechnungen mit 3, 5, 8 und 20 Bereichen.
+Abgedeckt sind Gewichtungen, beide Umrechnungsrichtungen, Zuordnung und Übernahme, leere und vorhandene Notenbestände, veränderte und unveränderte Schülerdurchschnitte, Assistent, Standardvorgaben, Hilfe/F1, Tastatur, Fokus, ARIA, Ansichten, Speicherung, Sicherungen, Wiederherstellung und Altdaten. Alle Exportformate sowie automatische TXT-Notenlisten wurden geprüft. Gezielt enthalten sind 25 gleichmäßige Verteilungen und Umrechnungen mit 3, 5, 8 und 20 Bereichen.
 
-Der große synthetische Bestand umfasst 3.000 Schüler, 6.000 Leistungen, 180.000 Noteneinträge und 9.200 TXT-Dateien. Seine 100 weiterhin gültigen mathematischen Teilnachweise mit 3.000 Referenzberechnungen wurden wiederverwendet. Erfolgreiche unveränderte Prüfungen wurden bei Wiederaufnahme nicht pauschal erneut ausgeführt.
+Der große synthetische Bestand umfasst 3.000 Schüler, 6.000 Leistungen, 180.000 Noteneinträge und 9.200 TXT-Dateien sowie 3.000 referenzierte Schülerberechnungen. Die tatsächliche Wiederverwendung mathematischer Teilnachweise steht im kompakten [Prüfumfang](qa-1.26.0.json).
 
-Zwei unabhängige saubere Builds waren bytegleich. Das vollständige Windows-Paket enthielt 92 Dateien: `Notenblick.exe` und 91 Dateien im vollständigen Ordner `Programm`, einschließlich der bisherigen architekturabhängigen Bibliotheken. CRC, Prüfsummen, bytegleiche Entpackung und Start der entpackten Web-Oberfläche bestanden im vollständigen Lauf.
+Zwei unabhängige saubere Builds waren bytegleich. Das vollständige Windows-Paket enthält 92 Dateien: `Notenblick.exe` und 91 Dateien im vollständigen Ordner `Programm`, einschließlich der bisherigen x64-/ARM64-Bibliotheken. CRC, Prüfsummen, bytegleiche Entpackung und Start der entpackten Web-Oberfläche bestanden. Keine persönlichen Schülerdaten sind enthalten.
 
-SHA-256 des dabei geprüften Programmpakets: `20b578857d097aa75f5928709d2d31c95423b6c2303e1f7cc995cb2dd5192948` (2.111.858 Bytes). Diese Angabe dokumentiert den damaligen erfolgreichen Lauf und stellt keinen aktuell verfügbaren Download dar.
+SHA-256 des Programmpakets: `20b578857d097aa75f5928709d2d31c95423b6c2303e1f7cc995cb2dd5192948` (2,111,858 Bytes).
 
-## Ausfall beim Abschluss der Auslieferung
-
-Nach Ergänzung der Abschlussdokumentation sollten die unveränderten erfolgreichen Prüfungen wiederverwendet und die Archive abschließend neu erstellt werden. Dabei wurden unvollständige Dateien in der Arbeitsumgebung erkannt. Die Auslieferungsprüfung hat sie korrekt abgelehnt. Wiederaufnahmen: `reports/20261106T134228845262Z` und `reports/20261106T134516699696Z`.
-
-Während eines weiteren Wiederholungsversuchs fiel die Ausführungsumgebung vollständig aus; zuletzt war selbst `package.json` nicht mehr erreichbar. Der Ausführungsdienst meldete anschließend „No usable execution environment is available“. Eine abschließende aktuelle Paketprüfung und das Speichern des neuen Download-ZIPs konnten deshalb nicht abgeschlossen werden.
-
-Die letzten beiden geprüften Dateien wurden aus dem gesicherten Entwicklungsstand exakt rekonstruiert und anhand ihrer Git-Blob-Kennungen mit dem bereits vollständig getesteten lokalen Stand abgeglichen:
-
-- `src/styles/responsive.css`: `90e07a139a3e2749685e1be2877a3c43709acdaa`
-- `tests/v190-browser.cjs`: `4f16222c1021a39553e5dabf98725fbd3b62e5dd`
-
-Der Programmstand und dieser Bericht sind im Entwicklungsbranch gesichert. **Die angeforderte abschließende ZIP-Auslieferung ist noch offen. Ein älteres oder unvollständiges Archiv wird nicht als fertige neue Testversion angeboten.** Die lokalen ausführlichen Einzelbelege konnten nach dem Umgebungsausfall nicht zusätzlich exportiert werden.
+Nach Ergänzung dieser Dokumentation werden der endgültige Quellstand und die Archive erneut durch denselben Prüfablauf gebunden. Gültige, unveränderte Prüfgruppen und der Doppelbuild-Nachweis bleiben dabei wiederverwendbar. Die endgültigen Paketprüfsummen werden zusammen mit der Testversion bereitgestellt; die Quellcode-ZIP enthält diesen Abschlussstand.
 
 ## Aktualisierung und praktische Abnahme
 
 Der direkte Updateweg 1.25.1 → 1.26.0 bleibt erhalten. Der native Updater ersetzt ausschließlich `Notenblick.exe` und den vollständigen Ordner `Programm`; `Daten` bleibt unangetastet. Die Testausgabe ist nicht öffentlich freigegeben (`approved: false`).
 
+Die ZIP vollständig entpacken und `Notenblick.exe` starten. `Daten` entsteht beim ersten Programmstart. Bei einem vorhandenen Testbestand nur EXE und vollständigen Programmordner ersetzen und Daten behalten. Weitere Hinweise: [Testversion](TESTVERSION-1.26.0.md).
+
 Tatsächlich ausgeführt wurden automatisierte Linux-, .NET-8-, Chromium-, LibreOffice-, Open-XML- und PDF/UA-Prüfungen. Echte Windows-/WebView2-/UIA-/NVDA-/Braille-/ARM64-Tests, Microsoft Office, physischer Druck und die vollständige Windows-Updateinstallation stehen noch aus. CSS-Zoom und simulierte Tastaturbedienung ersetzen diese praktische Abnahme nicht.
 
-Eine offizielle Veröffentlichung erfolgt erst nach Windows-Praxistest und ausdrücklicher Freigabe durch Sebastian Müller.
+Keine offenen Fehler im abgeschlossenen automatisierten Katalog. Eine offizielle Veröffentlichung erfolgt erst nach Windows-Praxistest und ausdrücklicher Freigabe durch Sebastian Müller. Kein Release, Tag, Merge nach `main` oder öffentlich freigegebenes Update wurde vorgenommen.

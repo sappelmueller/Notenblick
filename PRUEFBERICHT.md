@@ -1,6 +1,6 @@
 # Prüfberichte
 
-Aktuelle Testversion: **Notenblick 1.26.0** in `entwicklung/1.26.0`. [Testbericht](docs/PRUEFBERICHT-1.26.0.md) · [Prüfumfang](docs/qa-1.26.0.json). Der vollständige technische Katalog bestand am 6. November mit **93 von 93 Pflichtgruppen**, einschließlich zweier bytegleicher Builds und Paketprüfung. Der spätere abschließende Downloadexport scheiterte am Ausfall der Arbeitsumgebung; ein neues fertiges Download-ZIP ist noch nicht bereitgestellt. Die praktische Windows-/NVDA-/Braille-/ARM64-Abnahme steht aus.
+Aktuelle Testversion: **Notenblick 1.26.0** in `entwicklung/1.26.0`. [Testbericht](docs/PRUEFBERICHT-1.26.0.md) · [Prüfumfang](docs/qa-1.26.0.json). Der vollständige technische Katalog bestand am 6. November mit **93 von 93 Pflichtgruppen**, einschließlich zweier bytegleicher Builds, vollständiger Paketprüfung und Start der entpackten Web-Oberfläche. Die portable Windows-Testversion wird mit Prüfsummen bereitgestellt. Die praktische Windows-/NVDA-/Braille-/ARM64-Abnahme steht aus.
 
 ## Offizielle Version
 
