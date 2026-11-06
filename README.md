@@ -2,13 +2,11 @@
 
 Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du verwaltest Klassen und Fächer, erfasst Noten oder Punkte und erstellst Berichte für den Schulalltag. Alle Schülerdaten bleiben lokal auf deinem Rechner.
 
-**Entwicklungsstand: 1.26.0 – Testversion, noch nicht zur Veröffentlichung freigegeben.**
+[**Aktuelle Version für Windows herunterladen**](https://github.com/sappelmueller/Notenblick/releases/latest/download/Notenblick_1.26.0.zip)
 
-Diese Version ergänzt frei verwaltbare Leistungsbereiche. Neue Fächer beginnen mit Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %. Namen, Reihenfolge und Anteile verwaltest du im vertrauten Dialog „Notengewichtung“. Schriftliche Note und Gesamtnote sind klar getrennt. Automatische Anteile haben höchstens zwei Nachkommastellen; geänderte Schülerdurchschnitte kannst du vor dem Speichern vergleichen. Einheitliche Leistungsbereiche und die vollständig überarbeitete Offline-Hilfe mit F1 erleichtern die Bedienung.
+Aktuelle Version: **1.26.0**, veröffentlicht am **6. November 2026**. [Was ist neu?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.26.0)
 
-[**Offizielle Version 1.25.1 für Windows herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.25.1/Notenblick_1.25.1.zip)
-
-Zuletzt veröffentlichte Version: **1.25.1**, veröffentlicht am **4. November 2026**. [Was ist neu?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.25.1)
+Neu in 1.26: Eigene Leistungsbereiche je Fach und individuelle Gewichtungen. Du wählst zwischen direkter Gewichtung und einer gemeinsamen schriftlichen Note, vergleichst Änderungen vor dem Speichern und findest die Bereiche auch in Notenansichten und Exporten wieder. Die überarbeitete Hilfe erklärt die Bedienung Schritt für Schritt.
 
 ## Das kann Notenblick
 
@@ -25,7 +23,7 @@ Zuletzt veröffentlichte Version: **1.25.1**, veröffentlicht am **4. November 2
 2. **Notenblick.exe** starten. Der vollständige Ordner **Programm** muss daneben liegen; **Daten** entsteht beim ersten Start.
 3. Dem Einrichtungsassistenten folgen oder eine eigene Sicherung wiederherstellen.
 
-Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digital signiert; Windows kann deshalb einen Sicherheitshinweis anzeigen. Quellcode und Prüfsummen stehen beim [Release](https://github.com/sappelmueller/Notenblick/releases/tag/v1.25.1).
+Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digital signiert; Windows kann deshalb einen Sicherheitshinweis anzeigen. Quellcode und Prüfsummen stehen beim [Release](https://github.com/sappelmueller/Notenblick/releases/tag/v1.26.0).
 
 **Voraussetzungen:** Windows x86/x64 mit .NET Framework 4.8 oder neuer und Microsoft Edge WebView2 Runtime. Für native ARM64-Ausführung: Windows 11 ab 24H2, .NET Framework 4.8.1 und ARM64-WebView2. Dieselbe EXE unterstützt beide Prozessorfamilien; die erforderlichen Programm-Bibliotheken liegen bei. Node.js, Python und Office werden für die Anwendung nicht benötigt.
 
@@ -33,13 +31,15 @@ Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digi
 
 Notenblick ist für Tastatur, NVDA und Braille entwickelt. Links, echte Registerkarten, kurze Beschriftungen und eine klare Fokusführung unterstützen die Bedienung. **F1** erklärt den aktuellen Arbeitsschritt; Eingabe und Umschalt+Eingabe führen durch die schnelle Noteneingabe.
 
-Version 1.25.1 wurde vom Herausgeber unter Windows praktisch erfolgreich getestet und zur Veröffentlichung freigegeben. [Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe der Testversion](docs/HILFE-1.26.0-QUELLE.md) · [Testhinweise 1.26.0](docs/TESTVERSION-1.26.0.md) · [Prüfstand der Testversion](docs/PRUEFBERICHT-1.26.0.md) · [Offizieller Prüfstand 1.25.1](docs/PRUEFBERICHT-1.25.1.md)
+Version 1.26.0 wurde vom Herausgeber unter Windows praktisch getestet und zur Veröffentlichung freigegeben. [Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe](docs/HILFE-1.26.0-QUELLE.md) · [Prüfstand](docs/PRUEFBERICHT-1.26.0.md)
 
 ## Daten und Aktualisierungen
 
 Schülerdaten bleiben ausschließlich im Ordner **Daten** und werden nicht an externe Dienste übertragen. Sichere diesen Ordner regelmäßig zusätzlich auf einem anderen Datenträger. TXT-Notfalllisten helfen beim Nachlesen; zur vollständigen Wiederherstellung dient eine Sicherung.
 
 Unter **Einstellungen → Allgemein → Aktualisierungen** kannst du nach freigegebenen Versionen suchen. Die Prüfung beim Start ist freiwillig und zunächst ausgeschaltet. Download und Installation beginnen erst nach deiner Zustimmung. Dabei werden ausschließlich **Notenblick.exe** und der vollständige Ordner **Programm** ersetzt; **Daten bleibt unangetastet**.
+
+Der direkte Wechsel von **1.25.1 auf 1.26.0** ist ohne Zwischenversion möglich.
 
 Manuell aktualisieren: Notenblick schließen, Daten sichern, EXE und vollständigen Programmordner ersetzen. **Daten vollständig behalten.**
 

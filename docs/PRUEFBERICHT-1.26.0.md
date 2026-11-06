@@ -1,6 +1,8 @@
-# Notenblick 1.26.0 – Testbericht
+# Notenblick 1.26.0 – Prüfung und Veröffentlichung
 
-Stand: 6. November 2026. Entwicklungsbranch `entwicklung/1.26.0`. Kein offizielles Release, Tag, Merge nach `main` oder öffentlich freigegebenes Update.
+**Offiziell veröffentlicht am 6. November 2026.** Sebastian Müller hat die fertig entwickelte Ausgabe unter Windows praktisch getestet und ausdrücklich freigegeben. Freigegebener Entwicklungscommit: `9164005e538f5d64109bf53109435e8a8ab4b751`. Seit der Praxisprüfung wurde der Programmstand nicht verändert. Der vollständige Entwicklungsstand ist in `main` enthalten; das stabile Release trägt `v1.26.0`.
+
+Die folgenden technischen Ergebnisse stammen aus der abgeschlossenen Entwicklung. Zur Veröffentlichung wurden keine Funktionsprüfungen und keine Programmbuilds wiederholt. Der unveränderte [kompakte Nachweis](qa-1.26.0.json) bewahrt den damaligen Testversionsstatus und ist kein aktueller Veröffentlichungsstatus.
 
 ## Umgesetzter Feinschliff
 
@@ -32,14 +34,19 @@ Zwei unabhängige saubere Builds waren bytegleich. Das vollständige Windows-Pak
 
 SHA-256 des Programmpakets: `20b578857d097aa75f5928709d2d31c95423b6c2303e1f7cc995cb2dd5192948` (2,111,858 Bytes).
 
-Nach Ergänzung dieser Dokumentation werden der endgültige Quellstand und die Archive erneut durch denselben Prüfablauf gebunden. Gültige, unveränderte Prüfgruppen und der Doppelbuild-Nachweis bleiben dabei wiederverwendbar. Die endgültigen Paketprüfsummen werden zusammen mit der Testversion bereitgestellt; die Quellcode-ZIP enthält diesen Abschlussstand.
+Der vollständige Bericht und die Einzelbeleg-Hashes sind im kompakten Nachweis dokumentiert. In dieser frisch geklonten Arbeitskopie liegen die damaligen lokalen Vollprotokolle und Ausgabekopien nicht vor; eine erneute Validierung dieser lokalen Belege oder ein neuer Release-Prüflauf wird nicht behauptet. Das vorhandene Windows-ZIP stimmt mit der oben dokumentierten Prüfsumme und Größe überein. Das Quellcode-ZIP enthält den endgültigen Git-Baum einschließlich der Freigabedokumentation.
 
 ## Aktualisierung und praktische Abnahme
 
-Der direkte Updateweg 1.25.1 → 1.26.0 bleibt erhalten. Der native Updater ersetzt ausschließlich `Notenblick.exe` und den vollständigen Ordner `Programm`; `Daten` bleibt unangetastet. Die Testausgabe ist nicht öffentlich freigegeben (`approved: false`).
+Der direkte Updateweg **1.25.1 → 1.26.0** benötigt keine Zwischenversion. Der separate Aktualisierungsdeskriptor ist versionsgebunden auf `approved: true` freigegeben; `minimumUpdater: 1.24.0` und `dataSchema: 1` bleiben erhalten. Er enthält Größe und SHA-256 des unveränderten Archivs sowie alle 92 Datei-Einzelhashes. Der native Updater und seine sichere Austausch-/Wiederherstellungslogik bleiben unverändert: ausschließlich `Notenblick.exe` und den vollständigen Ordner `Programm` ersetzen, **Daten unangetastet lassen**.
 
-Die ZIP vollständig entpacken und `Notenblick.exe` starten. `Daten` entsteht beim ersten Programmstart. Bei einem vorhandenen Testbestand nur EXE und vollständigen Programmordner ersetzen und Daten behalten. Weitere Hinweise: [Testversion](TESTVERSION-1.26.0.md).
+Die allgemeine Windows-Praxisabnahme ist durch den Herausgeber bestätigt. Einzelne NVDA-/Braille-/UIA-/ARM64-, Microsoft-Office-, Druck-, Unterbrechungs- und Wiederherstellungsfälle wurden im Veröffentlichungsauftrag nicht gesondert bestätigt und werden nicht als neu geprüft geführt. Die automatisierten Linux-, .NET-8-, Chromium-, LibreOffice-, Open-XML- und PDF/UA-Ergebnisse bleiben die ursprünglichen Entwicklungsnachweise.
 
-Tatsächlich ausgeführt wurden automatisierte Linux-, .NET-8-, Chromium-, LibreOffice-, Open-XML- und PDF/UA-Prüfungen. Echte Windows-/WebView2-/UIA-/NVDA-/Braille-/ARM64-Tests, Microsoft Office, physischer Druck und die vollständige Windows-Updateinstallation stehen noch aus. CSS-Zoom und simulierte Tastaturbedienung ersetzen diese praktische Abnahme nicht.
+## Schlanke Veröffentlichungskontrolle
 
-Keine offenen Fehler im abgeschlossenen automatisierten Katalog. Eine offizielle Veröffentlichung erfolgt erst nach Windows-Praxistest und ausdrücklicher Freigabe durch Sebastian Müller. Kein Release, Tag, Merge nach `main` oder öffentlich freigegebenes Update wurde vorgenommen.
+- Programmquellen, Test-/Buildwerkzeuge, Abhängigkeiten, Version und Datenstruktur gegenüber dem freigegebenen Entwicklungscommit unverändert.
+- Windows-ZIP bytegleich mit dem dokumentierten Prüfartefakt; CRC, vollständige Dateiliste, EXE-Version, enthaltene Quellen, Bibliotheken und Lizenzdateien kontrolliert. Kein Ordner Daten und keine persönlichen Schülerdaten enthalten.
+- Dokumentation aktualisiert; Quellcodearchiv aus dem endgültigen Git-Baum erzeugt. Externe Aktualisierungsdatei und Prüfsummen ergänzt, ohne das Windows-ZIP neu zu packen.
+- Pull Request nach main, Tag v1.26.0 und stabiles öffentliches Release mit Windows-ZIP, vollständigem Quellcode, Aktualisierungsdatei und Prüfsummen. Veröffentlichte Downloads werden byteweise abgeglichen; erst danach wird entwicklung/1.26.0 gelöscht.
+
+Keine offenen Fehler im abgeschlossenen automatisierten Katalog. Die damaligen [Testhinweise](TESTVERSION-1.26.0.md) bleiben ausdrücklich als historischer Plan erhalten.

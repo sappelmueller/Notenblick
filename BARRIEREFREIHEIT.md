@@ -2,7 +2,7 @@
 
 Notenblick wird für blinde und sehende Lehrkräfte entwickelt. Tastatur, NVDA und Braille gehören zum Bedienkonzept.
 
-**Testversion 1.26.0:** Fachbezogene Leistungsbereiche verwenden dieselben Registerkarten und Fokusregeln. Im gemeinsamen Gewichtungsdialog haben wiederholte Aktionen einen Bereichsnamen; Gesamtnote und Anteile innerhalb der gemeinsamen Note sind getrennt beschriftet. Neue Bereiche, ungültige Verteilungen und geänderte Durchschnitte bleiben per Tastatur erreichbar. Die reale Windows-/NVDA-/Braille-/ARM64-Abnahme dieser Version steht noch aus. [Testhinweise](docs/TESTVERSION-1.26.0.md).
+**Version 1.26.0:** Fachbezogene Leistungsbereiche verwenden dieselben Registerkarten und Fokusregeln. Der gemeinsame Gewichtungsdialog benennt die Bereiche und trennt schriftliche Note und Gesamtnote. F1 erklärt den aktuellen Schritt und kehrt zur erhaltenen Eingabe zurück. Der Herausgeber hat diese Version unter Windows praktisch getestet und freigegeben. Gesonderte NVDA-/Braille-/UIA-/ARM64-Messungen werden damit nicht behauptet. [Aktueller Prüfstand](docs/PRUEFBERICHT-1.26.0.md).
 
 ## So ist die Bedienung aufgebaut
 
@@ -32,7 +32,7 @@ Dabei wurden teilweise fehlende Ansagen bei wiederholten Strg-/Alt-Ziffern sowie
 
 Chromium-, Tastatur-, Fokus-, Layout-, Accessibility-Baum- und axe-Prüfungen ergänzen die Praxistests. Sie prüfen technische Zustände und Abläufe, nicht die tatsächlich gesprochene NVDA-Ausgabe oder die Darstellung auf einer Braillezeile.
 
-Die Nutzerabnahme ist keine vollständige Barrierefreiheitszertifizierung. Nicht ausdrücklich bestätigte Einzelprüfungen – etwa mit Microsoft Office, physischem Druck oder allen Windows-Skalierungsstufen – bleiben offen. Aktueller Stand: [Prüfbericht 1.25.0](docs/PRUEFBERICHT-1.25.0.md). Weitere Schritte: [Windows-Prüfplan](docs/WINDOWS-PRUEFUNG.md).
+Die Nutzerabnahme ist keine vollständige Barrierefreiheitszertifizierung. Nicht ausdrücklich bestätigte Einzelprüfungen – etwa mit Microsoft Office, physischem Druck oder allen Windows-Skalierungsstufen – bleiben offen. Aktueller Stand: [Prüfbericht 1.26.0](docs/PRUEFBERICHT-1.26.0.md). Weitere Schritte: [Windows-Prüfplan](docs/WINDOWS-PRUEFUNG.md).
 
 Probleme bitte mit Version, Tastenschritten und erwartetem Verhalten als Issue melden. Keine echten Schülerdaten hochladen.
 

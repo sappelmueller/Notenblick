@@ -1,6 +1,6 @@
 # Versionen veröffentlichen
 
-Aktuell wird **1.26.0** in `entwicklung/1.26.0` als Testversion vorbereitet. Die offizielle Version bleibt **1.25.1**. Bis zur praktischen Prüfung und ausdrücklichen Freigabe bleiben `main`, Tags und offizielle Downloads unverändert; der Entwicklungsbranch bleibt erhalten. Der direkte Updateweg aus 1.25.1 verwendet weiterhin `dataSchema: 1` und benötigt keine Zwischenversion. Die Testausgabe erhält `approved: false`. Der Herausgeber verlangt für den Abschluss ausdrücklich keine weiteren großen Testläufe; Build, Paketprüfung und transparenter Prüfbericht werden abgeschlossen. Dies ist keine Freigabe für ein offizielles Release.
+Aktuell offiziell veröffentlicht: **1.26.0** am **6. November 2026**. Der Herausgeber hat den unveränderten Entwicklungsstand nach praktischem Windows-Test ausdrücklich freigegeben. Das geprüfte Windows-ZIP bleibt bytegleich, der direkte Updateweg aus 1.25.1 ist freigegeben. Einzelheiten: [Prüfung und Veröffentlichung](PRUEFBERICHT-1.26.0.md).
 
 1. Ausschließlich `sappelmueller/Notenblick`, ID `1432518047`, auf einem Entwicklungsbranch bearbeiten. Das Repository ist öffentlich. Name, ID, Sichtbarkeit und deaktivierte Actions vor entfernten Änderungen live prüfen. Keine Daten oder Zugangsdaten einchecken.
 2. Änderungen, Versionsnummer und Hilfe abschließen. `package.json` enthält `releaseNotes`: drei bis fünf ausdrücklich gepflegte Aussagen zur jeweiligen Version. Aus Sicht einer Lehrkraft, kurz und freundlich; keine Dateinamen, Commits, Prüfsummen oder Teststatistiken. Keine automatisch erzeugten GitHub-Änderungslisten verwenden.
@@ -22,6 +22,16 @@ Datum, Git-Commitdatum und fachlich unbeteiligte Dokumente sind keine Gruppenvor
 Verpackung, CRC, vollständige Dateiliste, Einzelhashes und bytegleiche Entpackung werden für die abschließenden Archive erneut kontrolliert. Ein gültiger Startnachweis identischer entpackter Programmbytes darf übernommen werden. `status` prüft alle Pflichtgruppen, ihre kanonischen Befehle, Einzelbelege, Build-Reproduzierbarkeit, vier Archive/Deskriptor-Dateien sowie Quelle, Werkzeuge und Index. Eine Anzahl bestandener Schritte oder ein manuell gesetztes Erfolgsfeld reicht nicht. Die ausdrückliche Herausgeberfreigabe und die getrennten Windows-Praxistests bleiben erforderlich.
 
 Alte Nachweise vor Schema 2 werden einmalig nicht automatisch importiert: Sie enthalten keine vollständigen dauerhaften Ausgabekopien. Vorhandene Werkzeuge werden weiterverwendet; keine pauschale Neuinstallation. Lokale Nachweise bleiben in der Arbeitskopie und werden nicht über GitHub veröffentlicht. Eine Wiederaufnahme setzt deren Erhalt voraus.
+
+## Ausdrückliche Freigabe von 1.26.0 am 6. November 2026
+
+Sebastian Müller hat die fertig entwickelte und unter Windows praktisch getestete Ausgabe 1.26.0 ausdrücklich zur offiziellen Veröffentlichung freigegeben. Seit dieser Prüfung gab es keine Programmänderungen. Er untersagt erneute Funktions-, Berechnungs-, Browser-, NVDA-, ARM64- und Regressionstests sowie unnötige Builds.
+
+Für genau diese Veröffentlichung werden der vollständige Entwicklungsstand `9164005` und das vorhandene, zum kompakten Prüfnachweis bytegleiche Windows-ZIP unverändert übernommen. Der vorhandene Bericht mit 93 erfolgreichen Pflichtgruppen und zwei bytegleichen Builds bleibt der Entwicklungsnachweis. Fehlende lokale Vollprotokolle werden nicht als erneut validiert ausgegeben. Nur Git-, Versions-, Datei-, Archiv-, Prüfsummen- und Veröffentlichungskontrollen durchführen; keinen neuen vollständigen Release-Nachweis behaupten.
+
+Nur Dokumentation und externe Veröffentlichungsdateien abschließen. Das vollständige Quellcode-ZIP aus dem finalen Git-Baum erzeugen. Der versionsgebundene Deskriptor erhält `approved: true`, `minimumUpdater: 1.24.0`, `dataSchema: 1`, die gepflegten Neuerungen sowie Größe/Hash des vorhandenen ZIPs und sämtliche Datei-Einzelhashes. Sicherheits-/Prüfverwaltung, Installationscode und Datenformat bleiben unverändert. Der normale Freigabeweg für künftige Programmänderungen bleibt bestehen.
+
+Pull Request gemäß unverändertem Branchschutz nach main, Tag v1.26.0, stabiles Release mit vier Dateien, öffentliche Downloads und Hashes abgleichen. Den abgeschlossenen Entwicklungsbranch erst danach löschen; eine automatische Branchlöschung beim Merge muss bis dahin ausgeschaltet sein. Historische Tags, Releases und Prüfnachweise erhalten; Actions bleiben deaktiviert.
 
 ## Ausdrückliche Freigabe von 1.25.1 am 4. November 2026
 

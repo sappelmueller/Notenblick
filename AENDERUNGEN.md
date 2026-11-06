@@ -1,25 +1,14 @@
 # Änderungen
 
-## 1.26.0 – Testversion
+## 1.26.0 – 6. November 2026
 
-- Automatische Prozentverteilungen mit höchstens zwei Nachkommastellen und exakt 100 %. Eigene gespeicherte Werte bleiben beim Öffnen unverändert.
-- Berechnungsart direkt wechseln; nur tatsächlich veränderte Schülerdurchschnitte vor dem Speichern bestätigen. Kompakter Vergleich mit aufklappbaren Unterschieden und optional allen Schülern.
-- Einrichtungsassistent mit frei verwaltbaren Bereichen und angepassten Vorgaben korrigiert. F1 erklärt den jeweiligen Schritt oder die gerade bearbeitete Gewichtung.
-- Kompakte Gewichtungszeilen und eindeutige Tabellenüberschriften, einschließlich „Durchschnitte und Zeugnisnoten“ in der Notenübersicht.
+- Eigene Leistungsbereiche je Fach hinzufügen, umbenennen und sortieren. Neue Fächer beginnen mit Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %.
+- Individuelle Anteile festlegen: alle Bereiche direkt gewichten oder mehrere Bereiche zu einer gemeinsamen schriftlichen Note zusammenfassen.
+- Gewichtungen übersichtlicher bearbeiten und Vorlagen aus anderen Fächern übernehmen. Automatische Verteilungen ergeben mit höchstens zwei Nachkommastellen genau 100 %. Geänderte Schülerdurchschnitte vor dem Speichern vergleichen.
+- Einheitliche Notenansichten, Einzelnoten und Punkte in allen Bereichen. Berichte und Exporte berücksichtigen die eigenen Bereiche; manuell bearbeitete TXT-Notfalllisten bleiben geschützt.
+- Vollständig überarbeitete Offline-Hilfe mit Schrittlisten und Beispielen. F1 erklärt den aktuellen Einrichtungsschritt oder die gerade bearbeitete Gewichtung.
 
-- Notengewichtung verständlicher: Schriftliche Note und Gesamtnote stehen in zwei getrennten Abschnitten mit eigenen Summen. Umrechnungen direkt bei der Auswahl prüfen; Sortieren unter „Bereich bearbeiten“.
-- Mündliche Noten über „Gemeinsame Bewertungen“ oder „Einzelnoten“ auswählen. „Ansicht anpassen“ bleibt getrennt davon erhalten.
-- Einheitliche Aktionen in allen Leistungsbereichen, hilfreiche Leerzustände, mehrzeilige Registerkarten und ein klar abgesetzter Gewichtungsschalter. Bereiche mit 0 % werden kurz und einmalig erklärt.
-- Die gesamte neue Hilfe mit neun Themen und 77 Abschnitten ist offline verfügbar. Schrittlisten und Tabellen funktionieren auch in F1; Zuordnungen und Rückkehrfokus bleiben erhalten.
-
-- Eigene Leistungsbereiche je Fach hinzufügen, umbenennen, sortieren und gewichten. Neue Fächer starten direkt mit 50 % Klassenarbeiten, 10 % Tests und 40 % Mündlich.
-- Die gemeinsame schriftliche Note kann frei gewählte Bereiche zusammenfassen und anders heißen. Einzelne Prozentänderungen lassen die übrigen Anteile unverändert; Verteilen erfolgt bewusst.
-- Alle Bereiche unterstützen Einzelnoten und Punkte. Verschobene Einzelnoten und Klassenrunden behalten ihre Bearbeitungsform.
-- Der gemeinsame Gewichtungsdialog zeigt bei Notenänderungen einen Vergleich vor dem Speichern. Fachvorlagen lassen sich vollständig übernehmen; belegte abweichende Bereiche werden ausdrücklich zugeordnet.
-- Ansichten, Exporte und TXT-Notfalllisten verwenden dieselben Fachbereiche. PDF/Word zeigen fünf Bereiche gemeinsam, weitere in Ergänzungstabellen; Excel/CSV bleiben breit und TXT linear.
-- Manuell bearbeitete TXT-Dateien bleiben auch an aktuellen Ausgabepfaden geschützt. Hilfe und F1 erklären die neue Bedienung.
-
-Noch kein offizielles Release. Der Updateweg von 1.25.1 bleibt ohne Zwischenversion möglich; die Testausgabe wird nicht automatisch angeboten. [Testhinweise](docs/TESTVERSION-1.26.0.md).
+Nach erfolgreicher Windows-Praxisprüfung durch Sebastian Müller ausdrücklich zur Veröffentlichung freigegeben. Das geprüfte Windows-ZIP bleibt unverändert. Der Updater bietet den direkten Wechsel von 1.25.1 auf 1.26.0 an und ersetzt ausschließlich EXE und vollständigen Programmordner; Daten bleibt unangetastet. [Freigabe und Prüfstand](docs/PRUEFBERICHT-1.26.0.md).
 
 ## 1.25.1 – 4. November 2026
 

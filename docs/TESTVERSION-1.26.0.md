@@ -1,8 +1,8 @@
-# Notenblick 1.26.0 testen
+# Historischer Praxisprüfplan 1.26.0
 
-Dies ist eine Testversion. Die offizielle Version bleibt bis zur praktischen Prüfung und ausdrücklichen Freigabe bei 1.25.1.
+Dieser Plan dokumentiert die Testphase vor der Freigabe. **1.26.0 ist seit dem 6. November 2026 offiziell veröffentlicht.** Sebastian Müller hat die unveränderte Ausgabe unter Windows praktisch getestet und freigegeben. Die folgenden Testanweisungen und damaligen offenen Punkte bleiben als historische Dokumentation erhalten; sie sind kein Auftrag zu erneuten Tests. Aktuell: [Freigabe](PRUEFBERICHT-1.26.0.md) und [Download und Verwendung](../README.md).
 
-## Starten und aktualisieren
+## Damalige Hinweise zum Starten und Aktualisieren
 
 ZIP vollständig entpacken und Notenblick.exe starten. Der vollständige Ordner Programm muss daneben liegen. Daten wird beim ersten Start angelegt. Dieselbe Ausgabe enthält die vorhandenen x86-, x64- und ARM64-Bibliotheken.
 
@@ -25,7 +25,7 @@ Wenn du zur bisherigen Version zurückkehren möchtest, verwende dafür einen ge
 - In allen Leistungsbereichen stehen „Leistung hinzufügen“, „Einzelnote eintragen“ und „Exportieren“ in derselben Reihenfolge.
 - Die vollständig neue Hilfe mit Schrittlisten und Tabellen auch aus offenen Dialogen mit F1 öffnen und mit Escape zur Eingabe zurückkehren.
 
-## Praktische Prüfung
+## Damaliger praktischer Prüfplan
 
 1. Einrichten, ein Fach öffnen und den Standard Klassenarbeiten 50 %, Tests 10 %, Mündlich 40 % prüfen.
 2. Unter Notengewichtung Kopfrechnen hinzufügen. Der neue Bereich beginnt mit 0 %. Noten eintragen und den Bereichsdurchschnitt mit dem unveränderten Gesamtschnitt vergleichen.

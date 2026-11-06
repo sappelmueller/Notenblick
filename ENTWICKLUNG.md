@@ -1,8 +1,6 @@
 # Entwicklung und Erstellung
 
-Aktueller Entwicklungsstand: **Notenblick 1.26.0 – Testversion** in `entwicklung/1.26.0`. Frei verwaltbare Leistungsbereiche betreffen Berechnung, Oberfläche und Ausgaben; der vollständige automatische Prüfkatalog bleibt dokumentiert. Zum Abschluss dieser Testversion hat der Herausgeber weitere große Testläufe ausdrücklich ausgeschlossen. Nach den letzten Exportkorrekturen werden nur Build und Paketprüfung abgeschlossen; ein vollständiger aktueller Gesamtnachweis wird nicht behauptet. Die praktische Windows-/NVDA-/Braille-/ARM64-Abnahme und die ausdrückliche Veröffentlichungsfreigabe stehen noch aus. [Testhinweise](docs/TESTVERSION-1.26.0.md).
-
-Zuletzt offiziell freigegeben: **1.25.1** am 4. November 2026. Die damalige unveränderte Übernahme ist im [Versionsbericht](docs/PRUEFBERICHT-1.25.1.md) dokumentiert.
+Aktueller Stand: **Notenblick 1.26.0**, offiziell veröffentlicht am 6. November 2026 nach praktischer Windows-Prüfung und ausdrücklicher Freigabe durch Sebastian Müller. Der vollständige automatische Katalog mit 93 Pflichtgruppen und zwei bytegleichen Builds ist abgeschlossen. Der geprüfte Programmstand und das Windows-ZIP werden unverändert übernommen; nur Dokumentation und externe Veröffentlichungsdateien werden abgeschlossen. Keine erneuten Funktionsprüfungen oder Programmbuilds. [Freigabe und Nachweise](docs/PRUEFBERICHT-1.26.0.md).
 
 Historischer Abschluss 1.25.0: Der vollständige Audit und die ressourcenschonende Testverwaltung sind abgeschlossen. Das Release übernimmt das getestete Programm unverändert; sein Entwicklungsbranch wird nach Veröffentlichung und Downloadkontrolle gelöscht. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
 

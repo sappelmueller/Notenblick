@@ -1,6 +1,10 @@
-# Windows-Praxisstand 1.25.1
+# Windows-Praxisstand 1.26.0
 
-Am 4. November 2026 hat Sebastian Müller 1.25.1 unter Windows praktisch erfolgreich getestet und ausdrücklich zur Veröffentlichung freigegeben. Für 1.25.0 wurden zuvor x86 und ARM einschließlich tatsächlicher Aktualisierung bestätigt. Die allgemeine Nutzerabnahme ersetzt keine gesonderten UIA-/NVDA-/Braille-Messprotokolle, Office-/Drucktests oder Windows-Störfall-/Rückfalltests. [Aktueller Prüfbericht](PRUEFBERICHT-1.25.1.md).
+Am 6. November 2026 hat Sebastian Müller bestätigt, dass die fertig entwickelte Testversion 1.26.0 unter Windows praktisch getestet und freigegeben ist. Seit dieser Prüfung wurden keine Programmänderungen vorgenommen. Für die Veröffentlichung werden keine neuen Funktions-, NVDA-, ARM64- oder Regressionstests ausgeführt. Gesonderte UIA-/NVDA-/Braille-, Office-, Druck- oder Update-Störfallprüfungen werden aus der allgemeinen Praxisfreigabe nicht abgeleitet. [Aktueller Prüfbericht](PRUEFBERICHT-1.26.0.md).
+
+## Historischer Praxisstand 1.25.1
+
+Am 4. November 2026 hat Sebastian Müller 1.25.1 unter Windows praktisch erfolgreich getestet und ausdrücklich zur Veröffentlichung freigegeben. Für 1.25.0 wurden zuvor x86 und ARM einschließlich tatsächlicher Aktualisierung bestätigt. Die allgemeine Nutzerabnahme ersetzt keine gesonderten UIA-/NVDA-/Braille-Messprotokolle, Office-/Drucktests oder Windows-Störfall-/Rückfalltests. [Damals gültiger Prüfbericht](PRUEFBERICHT-1.25.1.md).
 
 Die folgenden datierten Pläne bleiben als Prüfhilfe und historischer Hintergrund erhalten.
 
