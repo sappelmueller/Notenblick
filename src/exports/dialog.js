@@ -5,7 +5,7 @@ A.renderReportFile=async function(report,format){
  const value=format==='pdf'?await A.reportPdf(report):format==='docx'?A.reportDocx(report):format==='xlsx'?A.reportXlsx(report):format==='txt'?A.reportText(report):format==='csv'?A.reportCSV(report):null;
  if(value===null)throw Error('Unbekanntes Ausgabeformat.');return value;
 };
-const saveError=error=>Error(error.code==='export-location-unavailable'?'Der Speicherort ist nicht verfügbar.':error.code==='export-permission'?'An diesem Speicherort darf die Datei nicht gespeichert werden.':error.code==='export-invalid-file'?'Die erstellte Datei ist ungültig und wurde nicht gespeichert.':'Die Datei konnte nicht gespeichert werden. Deine Noten bleiben unverändert.');
+const saveError=error=>Error(error.code==='export-location-unavailable'?'Der Speicherort ist nicht verfügbar. Bitte wähle einen anderen Ordner.':error.code==='export-permission'?'An diesem Speicherort darf die Datei nicht gespeichert werden. Bitte wähle einen Ordner, in dem du speichern darfst.':error.code==='export-invalid-file'?'Die erstellte Datei ist ungültig und wurde nicht gespeichert.':'Die Datei konnte nicht gespeichert werden. Deine Noten bleiben unverändert.');
 A.exportFile=async function(context,options,format,prepared,stillRequested=()=>true,notify=true){
  let report,value;
  try{report=prepared||A.buildReport(context,options);if(format==='print')return await A.printReport(report,stillRequested);value=await A.renderReportFile(report,format);}

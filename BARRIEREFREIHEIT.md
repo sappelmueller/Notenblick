@@ -2,7 +2,7 @@
 
 Notenblick wird für blinde und sehende Lehrkräfte entwickelt. Tastatur, NVDA und Braille gehören zum Bedienkonzept.
 
-**Version 1.26.0:** Fachbezogene Leistungsbereiche verwenden dieselben Registerkarten und Fokusregeln. Der gemeinsame Gewichtungsdialog benennt die Bereiche und trennt schriftliche Note und Gesamtnote. F1 erklärt den aktuellen Schritt und kehrt zur erhaltenen Eingabe zurück. Der Herausgeber hat diese Version unter Windows praktisch getestet und freigegeben. Gesonderte NVDA-/Braille-/UIA-/ARM64-Messungen werden damit nicht behauptet. [Aktueller Prüfstand](docs/PRUEFBERICHT-1.26.0.md).
+**Version 1.27.0:** Gezielter Fokus beim Übertragen von Leistungen, bei fehlerhaften Bereichsnamen und fehlenden Einzelnoten. Bestehende Registerkarten, Kurzbefehle und F1-Rückkehr bleiben erhalten. Sebastian Müller hat die unveränderte Ausgabe unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und freigegeben. [Aktueller Prüfstand](docs/PRUEFBERICHT-1.27.0.md).
 
 ## So ist die Bedienung aufgebaut
 
@@ -16,9 +16,11 @@ Notenblick wird für blinde und sehende Lehrkräfte entwickelt. Tastatur, NVDA u
 
 Unter Einstellungen → Allgemein gibt es einen eigenen Abschnitt mit installierter Version, Prüfung und freiwilliger Startprüfung. Eine neue Version erscheint zusätzlich als Hinweiskarte auf Start, ohne den Fokus zu versetzen. „Später“ gilt für die Sitzung; das Kontrollfeld blendet genau diese Version aus.
 
-„Was ist neu?“ beginnt an der Dialogüberschrift. Escape und „Schließen“ führen zum Auslöser zurück. Nach „Jetzt aktualisieren“ zeigt der gemeinsame Fortschrittsdialog die Schritte an. Abbrechen bleibt bis zur sicheren Übergabe möglich; danach wird Notenblick neu gestartet. Die separate Austauschkomponente verwendet Windows-Standardbedienelemente. Ihre tatsächlichen NVDA-/Braille-Ansagen müssen unter Windows geprüft werden.
+„Was ist neu?“ beginnt an der Dialogüberschrift. Escape und „Schließen“ führen zum Auslöser zurück. Nach „Jetzt aktualisieren“ zeigt der gemeinsame Fortschrittsdialog die Schritte an. Abbrechen bleibt bis zur sicheren Übergabe möglich; danach wird Notenblick neu gestartet. Die separate Austauschkomponente verwendet Windows-Standardbedienelemente. Die Bedienung mit NVDA und Braille ist für 1.27.0 durch den Herausgeber praktisch bestätigt; gesonderte Störfall- und UIA-Messungen werden damit nicht behauptet.
 
 ## Bestätigte Praxistests
+
+Am **6. November 2026** hat Sebastian Müller **1.27.0** unter Windows **x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung** als einwandfrei bestätigt und ausdrücklich zur Veröffentlichung freigegeben. Die vorhandenen automatischen Entwicklungsnachweise bleiben erhalten; zum Release wurden keine Programmtests wiederholt.
 
 Am **4. November 2026** hat Sebastian Müller **1.25.0** unter Windows auf **x86 und ARM** sowie die Aktualisierungsprüfung und Updater-Bedienung als erfolgreich bestätigt und zur Veröffentlichung freigegeben. Einzelne Ansagen und technische Messungen werden nur dann als gesondert geprüft geführt, wenn sie ausdrücklich dokumentiert sind. Inzwischen bestätigt der Herausgeber zusätzlich die erfolgreich ausgeführte Aktualisierung unter Windows x86 und ARM. Daraus wird kein gesonderter Fehler-/Unterbrechungs-/Rückfalltest abgeleitet.
 

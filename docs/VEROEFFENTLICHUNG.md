@@ -1,6 +1,6 @@
 # Versionen veröffentlichen
 
-Aktuell offiziell veröffentlicht: **1.26.0** am **6. November 2026**. Der Herausgeber hat den unveränderten Entwicklungsstand nach praktischem Windows-Test ausdrücklich freigegeben. Das geprüfte Windows-ZIP bleibt bytegleich, der direkte Updateweg aus 1.25.1 ist freigegeben. Einzelheiten: [Prüfung und Veröffentlichung](PRUEFBERICHT-1.26.0.md).
+Aktuell offiziell veröffentlicht: **1.27.0** am **6. November 2026**. Sebastian Müller hat den unveränderten Entwicklungsstand unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und ausdrücklich freigegeben. Windows-ZIP bytegleich, direkter Updateweg aus 1.26.0 freigegeben. [Audit und Veröffentlichungsnachweis](PRUEFBERICHT-1.27.0.md).
 
 1. Ausschließlich `sappelmueller/Notenblick`, ID `1432518047`, auf einem Entwicklungsbranch bearbeiten. Das Repository ist öffentlich. Name, ID, Sichtbarkeit und deaktivierte Actions vor entfernten Änderungen live prüfen. Keine Daten oder Zugangsdaten einchecken.
 2. Änderungen, Versionsnummer und Hilfe abschließen. `package.json` enthält `releaseNotes`: drei bis fünf ausdrücklich gepflegte Aussagen zur jeweiligen Version. Aus Sicht einer Lehrkraft, kurz und freundlich; keine Dateinamen, Commits, Prüfsummen oder Teststatistiken. Keine automatisch erzeugten GitHub-Änderungslisten verwenden.
@@ -22,6 +22,14 @@ Datum, Git-Commitdatum und fachlich unbeteiligte Dokumente sind keine Gruppenvor
 Verpackung, CRC, vollständige Dateiliste, Einzelhashes und bytegleiche Entpackung werden für die abschließenden Archive erneut kontrolliert. Ein gültiger Startnachweis identischer entpackter Programmbytes darf übernommen werden. `status` prüft alle Pflichtgruppen, ihre kanonischen Befehle, Einzelbelege, Build-Reproduzierbarkeit, vier Archive/Deskriptor-Dateien sowie Quelle, Werkzeuge und Index. Eine Anzahl bestandener Schritte oder ein manuell gesetztes Erfolgsfeld reicht nicht. Die ausdrückliche Herausgeberfreigabe und die getrennten Windows-Praxistests bleiben erforderlich.
 
 Alte Nachweise vor Schema 2 werden einmalig nicht automatisch importiert: Sie enthalten keine vollständigen dauerhaften Ausgabekopien. Vorhandene Werkzeuge werden weiterverwendet; keine pauschale Neuinstallation. Lokale Nachweise bleiben in der Arbeitskopie und werden nicht über GitHub veröffentlicht. Eine Wiederaufnahme setzt deren Erhalt voraus.
+
+## Ausdrückliche Freigabe von 1.27.0 am 6. November 2026
+
+Sebastian Müller hat den geprüften Entwicklungscommit `345c293ff09f5695038beb06187bfd98ab501188` unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und ausdrücklich freigegeben. Er untersagt neue Programmänderungen, erneute Programmtests und unnötige Builds. Der vollständige Abschluss mit 95 Pflichtgruppen und zwei bytegleichen Builds wird als vorhandener Entwicklungsnachweis übernommen.
+
+Nur Dokumentation und externe Veröffentlichungsdateien abschließen. Windows-ZIP unverändert übernehmen: 2.112.066 Bytes, SHA-256 `9233425f6fdcc39eeab3d00d90426373f46d691c46f447d21ff93dae08714810`. Sämtliche Dateinamen, Größen und Hashes prüfen. Quellcode-ZIP aus dem endgültigen Git-Baum erzeugen; den separaten Deskriptor auf `approved: true` setzen und seine Prüfsumme nachführen. `minimumUpdater: 1.24.0`, `dataSchema: 1` und alle Programmdateien bleiben unverändert. Direkter Wechsel aus 1.26.0; nur EXE/Programm ersetzen, niemals Daten.
+
+Bestehenden Branchschutz und deaktivierte Actions erhalten. Über Pull Request nach `main` übernehmen, Tag `v1.27.0` und stabiles Release mit vier Dateien veröffentlichen. Öffentliche Downloads, Prüfsummen und endgültigen Quellbaum abgleichen. Erst danach den vollständig übernommenen Entwicklungsbranch löschen. Keinen neuen automatischen Gesamtprüflauf behaupten; historische Prüfnachweise nicht umschreiben.
 
 ## Ausdrückliche Freigabe von 1.26.0 am 6. November 2026
 

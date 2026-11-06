@@ -37,7 +37,7 @@
       throw Error('Ungültige Datendatei: ' + msg);
     };
     if (!d || d.format !== 'notenraum' || d.version !== 1) fail('Format oder Version wird nicht unterstützt.');
-    if(d.appVersion&&/^\d+\.\d+\.\d+$/.test(d.appVersion)&&d.appVersion.split('.').map(Number).some((v,i,parts)=>{const current=[1,26,0];return parts.slice(0,i).every((n,j)=>n===current[j])&&v>current[i];}))fail('Diese Datei stammt aus einer neueren Notenblick-Version. Bitte aktualisiere das Programm.');
+    if(d.appVersion&&/^\d+\.\d+\.\d+$/.test(d.appVersion)&&d.appVersion.split('.').map(Number).some((v,i,parts)=>{const current=NR.ACTIVE_VERSIONS.at(-1).split('.').map(Number);return parts.slice(0,i).every((n,j)=>n===current[j])&&v>current[i];}))fail('Diese Datei stammt aus einer neueren Notenblick-Version. Bitte aktualisiere das Programm.');
     const safeId = v => typeof v === 'string' && /^[a-zA-Z0-9_-]{1,80}$/.test(v) && !['__proto__', 'constructor', 'prototype'].includes(v);
     if (!safeId(d.id) || !safeId(d.commitId) || !Number.isSafeInteger(d.revision) || d.revision < 0 || typeof d.updatedAt !== 'string' || !Number.isFinite(Date.parse(d.updatedAt))) fail('Speicherstand ist beschädigt.');
     const sets = {};

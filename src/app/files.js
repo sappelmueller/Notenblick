@@ -54,7 +54,7 @@ Notenblick.restorePoint = async function restorePoint() {
     throw Error('Die früheren Speicherstände konnten nicht geöffnet werden. Bitte prüfe den Zugriff auf deinen Ordner „Daten“.');
   }
   const versions = [];
-  for await (const [name, h] of dir.entries()) if (h.kind === 'file' && /^(Stand_\d{8,}_[a-zA-Z0-9_-]+|Vor_Wiederherstellung_[a-zA-Z0-9_-]+|Vor_Einstellungen_1-4_[a-zA-Z0-9_-]+|Vor_Muendlich_Zuordnung_[a-zA-Z0-9_-]+)\.json$/.test(name)) {
+  for await (const [name, h] of dir.entries()) if (h.kind === 'file' && /^(Stand_\d{8,}_[a-zA-Z0-9_-]+|Vor_Wiederherstellung_[a-zA-Z0-9_-]+|Vor_Einstellungen_1-4_[a-zA-Z0-9_-]+|Vor_Muendlich_Zuordnung_[a-zA-Z0-9_-]+|Vor_Leistungsbereichen_[a-zA-Z0-9_-]+)\.json$/.test(name)) {
     let text;
     try{text=await(await h.getFile()).text();}
     catch{throw Error('Ein früherer Speicherstand konnte nicht gelesen werden. Bitte prüfe den Zugriff auf deinen Ordner „Daten“ und versuche es erneut.');}
@@ -68,7 +68,7 @@ Notenblick.restorePoint = async function restorePoint() {
   }
   versions.sort((a,b)=>Date.parse(b.at)-Date.parse(a.at)||b.revision-a.revision);
   if (!versions.length) throw Error('Es gibt noch keine lesbaren früheren Speicherstände.');
-  const label=v=>new Date(v.at).toLocaleString('de-DE')+(v.name.startsWith('Vor_Muendlich_Zuordnung_')?' – vor Zuordnung mündlicher Noten':v.name.startsWith('Vor_Einstellungen')?' – vor Übernahme der Einstellungen':v.name.startsWith('Vor_')?' – vor Wiederherstellung':'');
+  const label=v=>new Date(v.at).toLocaleString('de-DE')+(v.name.startsWith('Vor_Leistungsbereichen_')?' – vor Änderung der Leistungsbereiche':v.name.startsWith('Vor_Muendlich_Zuordnung_')?' – vor Zuordnung mündlicher Noten':v.name.startsWith('Vor_Einstellungen')?' – vor Übernahme der Einstellungen':v.name.startsWith('Vor_')?' – vor Wiederherstellung':'');
   Notenblick.modal('Früheren Stand auswählen', `<div class="field"><label for="restorePoint">Gespeicherter Stand</label><select id="restorePoint" aria-describedby="restorePointHint">${versions.map((v,i)=>Notenblick.opt(i,label(v),'0')).join('')}</select><small id="restorePointHint">Die Auswahl allein ändert deine Daten nicht.</small></div><div id="restorePointDetails"></div>`,async()=>{
     const entry=versions[Number(Notenblick.val('restorePoint'))];if(!entry)throw Error('Bitte einen gespeicherten Stand auswählen.');
     const verify=async()=>{const text=await(await entry.handle.getFile()).text(),d=Notenblick.N.validate(JSON.parse(text.replace(/^\ufeff/,'')));if(await Notenblick.N.textDigest(text)!==entry.digest)throw Error('Dieser Speicherstand wurde inzwischen verändert. Bitte wähle ihn erneut aus.');return d;};

@@ -1,0 +1,22 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const fixture=require('./v1260-fixture.cjs');let A,w;const checks=[];
+(async()=>{
+ ({q:A,w}=await require('./load.cjs').load());
+ const $=s=>w.document.querySelector(s),input=(id,value)=>{const el=$('#'+id);el.value=value;el.dispatchEvent(new w.Event('input',{bubbles:true}));},change=(id,value)=>{const el=$('#'+id);el.value=value;el.dispatchEvent(new w.Event('change',{bubbles:true}));};
+ const install=()=>{if($('#dialog').open)A.closeModal({submitted:true});A.data=fixture(A.N,5);A.ui.workspaces={};A.normalizeContext();A.rendered={};A.activateGroup('main','notes');return A.getCourse();};
+ let c=install();A.weightsDialog(c);const before=JSON.stringify(A.data),button=$('[data-area-transfer="area126-3"]');$('#transfer-area126-3').value='area126-4';button.focus();button.click();
+ assert.equal(w.document.activeElement.id,'d-area126-4','Übertragung behält einen sinnvollen Eingabefokus');
+ const projected=A.courseWeights.projection();assert.equal(projected.assessments.find(a=>a.id==='assessment126-3').kind,'area126-4');assert.equal(JSON.stringify(A.data),before);
+ checks.push('Bereichsübertragung: Fokus im Zielanteil, vollständige Ergebnisse nur im Entwurf, Originaldaten unverändert');
+ c=install();A.weightsDialog(c);const name=$('#name-test');name.closest('details').open=true;name.focus();change('name-test','Klassenarbeiten');assert.equal($('#dialogError').hidden,false);assert.equal(w.document.activeElement.id,'name-test');assert.equal($('#name-test').getAttribute('aria-invalid'),'true');
+ await A.submitModal();assert.equal(w.document.activeElement.id,'name-test','Fehlerfokus beim tatsächlich doppelten Namen');assert.equal(A.getCourse().areas.find(a=>a.id==='test').name,'Tests');change('name-test','Kurztests');assert.equal($('#name-test').hasAttribute('aria-invalid'),false);assert.equal(A.courseWeights.collect().areas.find(a=>a.id==='test').name,'Kurztests');
+ checks.push('Doppelte Bereichsnamen: konkrete Fehlerstelle bleibt erreichbar, korrigierbar und ohne Teilübernahme');
+ c=install();c.areas[3].hidden=true;A.weightsDialog(c);assert.ok($('#d-area126-3'));$('#weightEditor [data-area-equal=overall]').click();const equal=A.courseWeights.collect();assert.equal(equal.weights.overall['area126-3'],'20');assert.equal(Object.values(equal.weights.overall).reduce((q,v)=>q.add(v),new A.N.Q(0)).cmp(100),0n);
+ checks.push('Gleichmäßige Verteilung berücksichtigt alle tatsächlich gezeigten Bereiche, auch belegte alte ausgeblendete Bereiche');
+ c=install();A.quickOral();$('#dialogSave').focus();await A.submitModal();assert.equal(w.document.activeElement.id,'q-grade');assert.equal($('#q-grade').getAttribute('aria-invalid'),'true');input('q-grade','2');await A.submitModal();assert.equal($('#dialog').open,false);assert.equal(A.data.assessments.at(-1).results[c.studentIds[0]].grade,'2');
+ checks.push('Leere Einzelnote: Fehlerfokus und Zustand am Notenfeld, erfolgreiche Korrektur ohne Eingabeverlust');
+ c=install();const original=A.N.clone(A.data),txt=A.N.exportsTXT(original),means=c.studentIds.map(id=>A.N.calculate(original,c,id).total?.fixed(12));original.appVersion=A.version;const reopened=A.N.upgrade(A.N.clone(original));assert.equal(reopened.appVersion,A.version);assert.deepEqual(A.N.clone(A.N.exportsTXT(reopened)),A.N.clone(txt));assert.deepEqual(reopened.courses[0].studentIds.map(id=>A.N.calculate(reopened,reopened.courses[0],id).total?.fixed(12)),means);assert.throws(()=>A.N.validate({...original,appVersion:'99.0.0'}),/neueren/);
+ checks.push('Aktueller Versionsstand und 1.26-Altdaten: wiederholt lesbar, exakt gleiche Durchschnitte/TXT, zukünftige Version abgewiesen');
+ fs.writeFileSync(path.join(__dirname,'v1270-results.json'),JSON.stringify({checks,syntheticOnly:true,windows:false,nvda:false,braille:false,arm64:false},null,2));console.log('1.27:',checks.length,'Regressionsgruppen');await A.workspacePromise;w.close();
+})().catch(async e=>{console.error(e);await A?.workspacePromise;w?.close();process.exitCode=1;});
