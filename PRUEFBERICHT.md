@@ -1,6 +1,6 @@
 # Prüfberichte
 
-Aktuelle Testversion: **Notenblick 1.26.0** in `entwicklung/1.26.0`. [Testbericht](docs/PRUEFBERICHT-1.26.0.md) · [Prüfumfang](docs/qa-1.26.0.json). Bedienung und vollständige Hilfe am 6. November gezielt geprüft, einschließlich 25 Chromium-/axe-Fällen. Umfangreiche frühere Entwicklungsprüfungen und gezielte Exportkorrekturen; auf ausdrücklichen Wunsch kein weiterer großer Gesamtlauf zum Abschluss. Die praktische Windows-/NVDA-/Braille-/ARM64-Abnahme steht noch aus.
+Aktuelle Testversion: **Notenblick 1.26.0** in `entwicklung/1.26.0`. [Testbericht](docs/PRUEFBERICHT-1.26.0.md) · [Prüfumfang](docs/qa-1.26.0.json). Der vollständige technische Katalog bestand am 6. November mit **93 von 93 Pflichtgruppen**, einschließlich zweier bytegleicher Builds und Paketprüfung. Der spätere abschließende Downloadexport scheiterte am Ausfall der Arbeitsumgebung; ein neues fertiges Download-ZIP ist noch nicht bereitgestellt. Die praktische Windows-/NVDA-/Braille-/ARM64-Abnahme steht aus.
 
 ## Offizielle Version
 

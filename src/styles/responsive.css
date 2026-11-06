@@ -282,3 +282,5 @@
 
 @media(max-width:420px){#dialogForm{padding:14px}#dialogTitle{font-size:1.1rem}#dialog .button{max-width:100%;min-width:0;overflow-wrap:anywhere}#dialog .check{min-width:0;overflow-wrap:anywhere}.final-tools>*{max-width:100%}}
 #dialogContent{overflow-wrap:anywhere}
+
+@media(max-width:700px){.area-weight-row>.field{display:block}.area-weight-row>.field label{margin-bottom:6px}}

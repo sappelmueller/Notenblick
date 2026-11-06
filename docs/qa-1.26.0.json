@@ -6,8 +6,8 @@
   "official_release": false,
   "approved_update": false,
   "catalogue_groups": 93,
-  "final_full_catalogue_completed": false,
-  "final_scope": "Auf ausdrücklichen Wunsch keine weiteren großen Testläufe. Abschließender Build und vollständige Paketprüfung; vorherige Entwicklungsnachweise und gezielte Korrekturprüfungen getrennt.",
+  "final_full_catalogue_completed": true,
+  "final_scope": "Vollständiger technischer Katalog bestanden; abschließende ZIP-Bereitstellung nach Dokumentationsabschluss durch Ausfall der Ausführungsumgebung blockiert.",
   "native_updater_checks_during_development": 171,
   "known_export_failures_fixed": [
     "0-%-Hinweise in Excel/CSV",
@@ -82,5 +82,57 @@
       "src/views/pupil.js": "8a76ffbd35be090cd7e367cabef48d1dd37189268092fd88f3bc7f9a57063102"
     },
     "help_source_sha256": "123fcff0a85a3b6cdb37ea6de3e9b8950d0aa342584089e43dc1c17cad6498a0"
+  },
+  "delivery_finalization_completed": false,
+  "refinement_revision": {
+    "date": "2026-11-06",
+    "full_catalogue": {
+      "report": "reports/20261106T132051469707Z/summary.json",
+      "status": "passed",
+      "groups": 93,
+      "executed": 88,
+      "reused": 5,
+      "status_audit_before_documentation": {
+        "release_current": true,
+        "evidence_current": true,
+        "index_matches_tested_files": true,
+        "source_current": true,
+        "tools_current": true,
+        "runtime_current": true
+      }
+    },
+    "large": {
+      "students": 3000,
+      "assessments": 6000,
+      "grade_entries": 180000,
+      "txt_files": 9200,
+      "reference_calculations": 3000,
+      "math_sections_reused": 100
+    },
+    "two_clean_builds_byte_identical": true,
+    "verified_runtime_archive": {
+      "bytes": 2111858,
+      "sha256": "20b578857d097aa75f5928709d2d31c95423b6c2303e1f7cc995cb2dd5192948",
+      "files": 92,
+      "program_files": 91,
+      "crc_passed": true,
+      "extracted_byte_identity_passed": true,
+      "extracted_browser_start_passed": true,
+      "currently_downloadable": false
+    },
+    "exact_recovered_tested_blobs": {
+      "src/styles/responsive.css": "90e07a139a3e2749685e1be2877a3c43709acdaa",
+      "tests/v190-browser.cjs": "4f16222c1021a39553e5dabf98725fbd3b62e5dd"
+    },
+    "final_delivery": {
+      "status": "blocked",
+      "reason": "Execution environment became unavailable during final repackaging; incomplete archives rejected.",
+      "retry_reports": [
+        "reports/20261106T134228845262Z",
+        "reports/20261106T134516699696Z"
+      ],
+      "local_receipts_exported": false
+    },
+    "real_windows_nvda_braille_arm64_tests": false
   }
 }
