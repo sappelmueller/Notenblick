@@ -1,5 +1,7 @@
 # Versionen veröffentlichen
 
+**1.27.0 wird ausschließlich als Testversion im Branch `entwicklung/1.27.0` erstellt.** Der vollständige Prüfkatalog läuft mit gültigen Einzelbelegen, Wiederaufnahme, Doppelbuild und Paketprüfung. Der separate Aktualisierungsdeskriptor bleibt `approved: false`. Kein Merge, Tag, GitHub Release oder Aufräumen des Entwicklungsbranches vor praktischer Prüfung und ausdrücklicher Freigabe.
+
 Aktuell offiziell veröffentlicht: **1.26.0** am **6. November 2026**. Der Herausgeber hat den unveränderten Entwicklungsstand nach praktischem Windows-Test ausdrücklich freigegeben. Das geprüfte Windows-ZIP bleibt bytegleich, der direkte Updateweg aus 1.25.1 ist freigegeben. Einzelheiten: [Prüfung und Veröffentlichung](PRUEFBERICHT-1.26.0.md).
 
 1. Ausschließlich `sappelmueller/Notenblick`, ID `1432518047`, auf einem Entwicklungsbranch bearbeiten. Das Repository ist öffentlich. Name, ID, Sichtbarkeit und deaktivierte Actions vor entfernten Änderungen live prüfen. Keine Daten oder Zugangsdaten einchecken.

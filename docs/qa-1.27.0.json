@@ -1,0 +1,536 @@
+{
+  "version": "1.27.0",
+  "branch": "entwicklung/1.27.0",
+  "baseline": "2de1783e9d2a7d1b20ec01ddf2245986a839987e",
+  "test_version": true,
+  "official_release": false,
+  "approved_update": false,
+  "catalogue_groups": 95,
+  "final_full_catalogue_completed": true,
+  "full_catalogue_report": "reports/20261106T205538344401Z/summary.json",
+  "full_catalogue_report_sha256": "55418b9952d1d67913ad48ab74f267abf63ff6af005ce53ec6c3573d9ba33478",
+  "scope": "Vollständiger vorhandener Katalog; gültige Einzelbelege wiederverwendet, Fehler innerhalb desselben Plans fortgesetzt.",
+  "resolved_validation_failure": "README um die Entwicklungsversion ergänzt; Programm-, Dokument- und PDF/UA-Prüfungen nicht abgeschwächt.",
+  "large_data": {
+    "passed": 10,
+    "years": 10,
+    "students": 3000,
+    "assessments": 6000,
+    "results": 180000,
+    "calculations": 3000,
+    "txtFiles": 9200
+  },
+  "additional_browser_audit": {
+    "rendered_screenshots": 155,
+    "axe_cases": 98,
+    "checks": [
+      "49 tatsächlich gerenderte Arbeitskontexte als vollständige Aufnahmen; alle sichtbaren ARIA-Verweise auf vorhandenem Ziel",
+      "Echte Tastatur: Übertragen, gezielter Fehlerfokus bei doppeltem Namen, Korrektur und F1-Rückkehr ohne Feld-/Datenverlust",
+      "Leere Einzelnote: wirklicher Fehlerfokus, F1-Rückkehr und erfolgreiche Eingabe mit Dezimalkomma",
+      "Gerenderte Start-/Exportansicht: Fachname ohne unnötige Umbrüche, Abstand zwischen Exportauswahl und Aktion",
+      "20 lange Bereichsnamen und 42 Schüler: Übersicht, Matrix, Schüler und Gewichtung in fünf Größen-/Zoomfällen bis 400 %, mit axe",
+      "Schreibgeschützte Gewichtung, Leistungsmenü und alle neun Hilfethemen zusätzlich gerendert",
+      "19 weitere Dialog-/Sonderzustände mit Archiv, Wiederherstellung, Bereinigung, Fortschritt, Vergleich und Übernahme in drei Größen-/Zoomfällen gerendert und mit axe geprüft",
+      "Alle fünf Einrichtungsschritte in drei Größen-/Zoomfällen tatsächlich gerendert und per Weiter-Schalter erreicht"
+    ],
+    "chromium": "156.0.8078.47"
+  },
+  "two_clean_byte_identical_builds": true,
+  "windows_package": {
+    "runtime_files": 92,
+    "program_files": 91,
+    "anyCPU": true,
+    "dataIncluded": false,
+    "all_file_hashes_verified": true,
+    "archive": {
+      "bytes": 2112066,
+      "name": "Notenblick_1.27.0.zip",
+      "sha256": "9233425f6fdcc39eeab3d00d90426373f46d691c46f447d21ff93dae08714810"
+    }
+  },
+  "windows_gui_tested": false,
+  "nvda_tested": false,
+  "braille_tested": false,
+  "windows_uia_tested": false,
+  "native_arm64_tested": false,
+  "microsoft_office_live_tested": false,
+  "windows_installation_and_rollback_tested": false,
+  "github_actions_used": false,
+  "groups": [
+    {
+      "name": "infrastructure",
+      "receipt_sha256": "6b8a7491684d1265812f706a9bfa3ad72a51dfe36c0c40c6c9163821695f42af",
+      "reused_in_completion": false
+    },
+    {
+      "name": "domain-storage",
+      "receipt_sha256": "53d04e766ddc6550e660421734c17db90131b08efb2c8ca921f0d6c75495ad20",
+      "reused_in_completion": true
+    },
+    {
+      "name": "transfers",
+      "receipt_sha256": "2996420b69a79ce6c689b7224e3614a842195496f4a26dd73ae6a3ab5f10dd7d",
+      "reused_in_completion": true
+    },
+    {
+      "name": "ui",
+      "receipt_sha256": "0d536d63f14ea67ce192c084c4a834119d6aaf3b5af6e1ea96eb5aca9b632d2c",
+      "reused_in_completion": true
+    },
+    {
+      "name": "new-features",
+      "receipt_sha256": "5cac5a73b84ec0607e6fbe2ecdd7f289b8887f7ac32953de130bca0dafaf6005",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v140",
+      "receipt_sha256": "c721570a0ecd5c85263b217237d65bbe48e9da58c30aa3019ba4115bf24c365b",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v150",
+      "receipt_sha256": "b16885650856ddeb4d336f0bf31c9e7b311191eb44763dadcd4733d30fca37e2",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v160",
+      "receipt_sha256": "ddb48c28594992276c6e1400a59dc26e048f49486d0fb8a8ee089ab02d814788",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v170",
+      "receipt_sha256": "8f904831ff4a653c3c09036759a444c2a9bac820a9bab3fcd03ab6ab4e2430dc",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v180",
+      "receipt_sha256": "0f7adca2370aec40a51938f850f8dfba657104c9dbef5944c659b054950b7bec",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v190",
+      "receipt_sha256": "e8cc42254c2f37aa98bb96d071e624d33b3f6393211e258ae591f9bb83ccc3e6",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1100",
+      "receipt_sha256": "5257cef822da57b22abc693f64fa4fb55e6a891a8fea086834096f29fd35755f",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1110",
+      "receipt_sha256": "ec737c6a1983c797bbf1fd6bca4eddec16993f913978ce60ae6a5324b802c6f6",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1120",
+      "receipt_sha256": "7d0efd6dcfff4a413a142e8475334afa9de150db158777f0eb0b8384714a3dde",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1130",
+      "receipt_sha256": "ac82994f140f99ed11921fb95d72022d702a6499c66d73ea68151d5be5a07791",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1140",
+      "receipt_sha256": "715c7353652d78d0a2c49f5035f544665308928abd74f3e2a7746bfecc965ff8",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1150",
+      "receipt_sha256": "5737c450e2204ba9fd93cd29660282f833e9eba04310ba64ae3dba490fa3f4a6",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1160",
+      "receipt_sha256": "4e7ea1176ab2f5b6a2dc5884784af0d92f4600ed61b11b17a2a5cadc25393611",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1170",
+      "receipt_sha256": "fdd193b88ad2506b2b7213cd1d519a2dbe5bfd6ee376f4b4cdda6feb92150803",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1180",
+      "receipt_sha256": "a0de4926e1c41cb70df8ccd947ba7bd9f50ccde9f064dfe802d4d6af12b5dfbc",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1190",
+      "receipt_sha256": "a233b7ab002dfd20bb5a280f3d4c77c35d8bd2bd4191cb1f52b5dec00c3ea325",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1200",
+      "receipt_sha256": "9618ea9b00c62df05e747250f12c468016971d52f55021d696441eb86c980832",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1201",
+      "receipt_sha256": "760a109dfa42b5056bc2a30d1332622ac315b2168219d985916f8096855ae15b",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1202",
+      "receipt_sha256": "25ecbaeb53256a72acd281ea90efa7c72c401826f1366ac7a268a1824c45e274",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1203",
+      "receipt_sha256": "ead8267e8d4aab88533dc855514c26b9229105aa2ace224f02c124b66761e659",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1210",
+      "receipt_sha256": "26455781ebe1669a538d7587e02621b32e7370a8301566b47f84362fd62f655c",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1211",
+      "receipt_sha256": "cb3bb4b2d5e2a99b8e8fad578bd521cc7f7abdb4d6fdcbffdf901109bd2c9e30",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1220",
+      "receipt_sha256": "13615a0388c6c868f469acf1b013893798f7a3cefcce7006bace4064e5ac2c7f",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1230",
+      "receipt_sha256": "9e19ddfd4f0e82836b76e77dcbcd9c6d6fb9df021ac193418efbda631a1014ef",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1231",
+      "receipt_sha256": "6f05756d9e2cf29cb8d564dd77435c5e11ff4d119b53cfb77b7e24b58672f0f3",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1260",
+      "receipt_sha256": "4ef896a35769f5be7a7a14bad7eaa5cd6f8723c4b3b02b216dd6469e1a8bf4dd",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1270",
+      "receipt_sha256": "4cd9f7b978428e5caabdb1d4443b36496d777d22c2957f9c7170c330c5cc102e",
+      "reused_in_completion": true
+    },
+    {
+      "name": "update",
+      "receipt_sha256": "765d9f1c390260e05553b6868ce9aa9342dd8273ed195927be85dde0705e0f02",
+      "reused_in_completion": true
+    },
+    {
+      "name": "native-host",
+      "receipt_sha256": "75de819af20a4f430b50753508cf4fd6cdd2a0fde179e08a75c25a3204cad717",
+      "reused_in_completion": true
+    },
+    {
+      "name": "view-storage",
+      "receipt_sha256": "0e00314c5c3c53a08353d2e3306d864e2fd42e4dd6a410aa26cde672bd76fa1f",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v150-storage",
+      "receipt_sha256": "c4a69d7cf55bf2300c18161586a7fe818c3394d18256bf4e4ac4682084d7c248",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v160-storage",
+      "receipt_sha256": "e5e0114accc10f2f6b16473690a857b5a221e8693ad2e89f3166d6b31ac23327",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v170-storage",
+      "receipt_sha256": "5aa117553d85b3562b4d3fc00a09cdc0b991d1b9722b32fc396320fbb81ad3a5",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v180-storage",
+      "receipt_sha256": "4e639e796fbfd8a0564c90ec1bdd0b047756600e7926436e59a770057cab9c87",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v190-storage",
+      "receipt_sha256": "543ef21a2896b4f5473b1db92fc095eddb0734100b162f564deafeae0f0bbac4",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1110-storage",
+      "receipt_sha256": "abee8c2b89a469657ae94b0ce6307b8b18df1fe181445cd893be3ef66b8e8e7e",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1120-storage",
+      "receipt_sha256": "822b1ed21a6c44f307b4a772ab85eaee1b4702f074bfc99b8622d7ccb1ced978",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1130-storage",
+      "receipt_sha256": "03d584577ec8e98a79bae616e580ea5455415296e6476162b733f024c1b136e0",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1140-storage",
+      "receipt_sha256": "7603dde552df39a424fb27186cbbd96d6073d18fd3f7f92ff0bdc081067c04e2",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1160-storage",
+      "receipt_sha256": "e377b95cb242bb28637ed57242cb5b3735cb3697a3913eb74bcd4a5760228327",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1170-storage",
+      "receipt_sha256": "9bff82c798dd9afc6804a5ca873b5d4dcf76ef6e4a321e68e17ef1ff0c660d77",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1190-storage",
+      "receipt_sha256": "0793fdfe9b861f30238597c48eb127cf74311ee9433f881aacd55d69ea75f306",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1200-storage",
+      "receipt_sha256": "8538d20cd456199421ea1fabab5169e4306a2591efacc95305127b468e4c8c15",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1201-storage",
+      "receipt_sha256": "392ba652781e9c4dd63d0b728d599ebded58916321a3f8b26780787983b2312c",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1202-storage",
+      "receipt_sha256": "2972cc05fc7916a00fe646682c4bac5cc077792ad2809ae7485225817e167f33",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1203-storage",
+      "receipt_sha256": "2692970415f9246417662e5e2cde40bc0898037381ed3d6684acc2c7867cae69",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1210-storage",
+      "receipt_sha256": "ae0e7a1d728a04965e7911bee15778d6d4197404a939cb1cb2a682c38b92e1e9",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1230-storage",
+      "receipt_sha256": "0303b181e336d73f6eec224732081abbb581d65fef8ff9c85c8c46e650dc3da3",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1260-storage",
+      "receipt_sha256": "25e972bab4d8badf29f6213fc43f21d29f94897e4099d5ea8d2609cf867cdd8e",
+      "reused_in_completion": true
+    },
+    {
+      "name": "workflow",
+      "receipt_sha256": "23e586267348296ac65f9fe4fab35ce5975bef17adb9ef0ccbf1641aaad7fe88",
+      "reused_in_completion": true
+    },
+    {
+      "name": "large",
+      "receipt_sha256": "5217136d7f23d5625ba443f93f7324db9da37bcae66dfbe9935dacd674effbd1",
+      "reused_in_completion": true
+    },
+    {
+      "name": "loader",
+      "receipt_sha256": "b71876c00f1ca8dfbe77de6f08e18726ec5ec9b8747ecde7d09d712793635fe5",
+      "reused_in_completion": true
+    },
+    {
+      "name": "browser",
+      "receipt_sha256": "597b1da90d7f68a1e2a3d99f8794d9f037997110619510014313d9bf4572a45d",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v170-browser",
+      "receipt_sha256": "ee75c4cedb548d8068f3133b2944a3a8f5c7f9dc2b15685582fc99e4516c9957",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v180-browser",
+      "receipt_sha256": "c7057d7abca27685e4d3646a15d243fe3ba625e4cb2c44514f3c7e8c3d3377c2",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v190-browser",
+      "receipt_sha256": "c88c40fe9c3d43651d60f482dd554f186b60daf2a24027ef4fafa0b69a2e5472",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1100-browser",
+      "receipt_sha256": "1b03acec79cbe708a2cba6953be68bf3302508816f2a7721e0b5d70fd5019f53",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1110-browser",
+      "receipt_sha256": "2bffd08e59d521dac6101658c881affcac065296c9ae51e4c31feadb3c4ac329",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1120-browser",
+      "receipt_sha256": "961b87dcecaeca678c618a1c930aa793f27f65ed0a59de08b9841d9c6dca37c0",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1130-browser",
+      "receipt_sha256": "5a411553adaa875a516572ad003ac7fc81d963087c19a4da956cf048a44eeb06",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1140-browser",
+      "receipt_sha256": "4f81ee76b6fb9e41e2be7e6db9fcc030d843d41762933a1bff0855f9e3318027",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1150-browser",
+      "receipt_sha256": "6c00286123dc0d4e1945ec93550fac692890ba52860e29b9459361e5f8f9752a",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1160-browser",
+      "receipt_sha256": "38bf017582dccf40e84abb9c7b0e0c970eb349e9fac817a3d2ae4c1b648f3737",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1170-browser",
+      "receipt_sha256": "4777586d8f329acd608a6292d06fb3c38c4e0e52c30adb5166fadada9edf6ce6",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1180-browser",
+      "receipt_sha256": "1a7a9974f487e03026a1d8b63aee55f33a9238cd15d4ffca7cd3ab73039642d5",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1190-browser",
+      "receipt_sha256": "8082c3e1438ef75c53696d40ce60f07af76cf3944237f943db163f0a67a26473",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1200-browser",
+      "receipt_sha256": "d79fb5de316f988d442db3a29130e87fae1c788ef7b99c217f7256dd8a1a0d4a",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1201-browser",
+      "receipt_sha256": "c58a817908095ed91408438ada1421455d057b09f82691e2a7c6eb8b35d83103",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1202-browser",
+      "receipt_sha256": "e4d60f6acb5a334857b323450267df160d61eb4eb9011e1cf7306305f1b4bb9b",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1203-browser",
+      "receipt_sha256": "0a6364c3fa0cf52254e310819ab9afd4f8ebadb1d86081c0982a6700200657a4",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1210-browser",
+      "receipt_sha256": "d24d9a1ec9f8c08674f25be381b37f5cd144550b9423addf9afaf10c7911c181",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1211-browser",
+      "receipt_sha256": "9f4f0e52d55e8c8efd93f9f0a708211df04455e4ca181a069a5f9a6a131d6395",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1220-browser",
+      "receipt_sha256": "717a971cd41c9799c0fc9a1cf9a957c90a3d95f9840a7fdc8e42b80c1019c947",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1230-browser",
+      "receipt_sha256": "ad65188e2f4b1127d690ac6764714df586727c7814bdf78de67229d73ae89992",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1260-browser",
+      "receipt_sha256": "994407188788744cbff5de5f6ccb0590383239ba0d4df7cb8c78346bb4956e90",
+      "reused_in_completion": true
+    },
+    {
+      "name": "v1270-browser",
+      "receipt_sha256": "30835c63f40a702bc7e5365309d83123fa2f9ceac1c192c9fa4e8152e658c9b0",
+      "reused_in_completion": true
+    },
+    {
+      "name": "update-browser",
+      "receipt_sha256": "d63747e2aff1865ec06a6d55a7915ed628bb974e686d0dfe441056ed66709fb2",
+      "reused_in_completion": true
+    },
+    {
+      "name": "export-files",
+      "receipt_sha256": "efcf9afbabd4b937b409cd13b337d7c02138b98fed6f451a9736ac09e57d244e",
+      "reused_in_completion": false
+    },
+    {
+      "name": "office-schema",
+      "receipt_sha256": "9cef84089f55a88f7977cc32de20c84178d3d06bc46dc5922b5e332e57a3ceab",
+      "reused_in_completion": false
+    },
+    {
+      "name": "v1120-files",
+      "receipt_sha256": "09bc56e6849e3d25631d2366003225dca31fee7e7c38314dfd3676887ae1d4fd",
+      "reused_in_completion": false
+    },
+    {
+      "name": "v1130-files",
+      "receipt_sha256": "f1ec7cb310e41c0936e8f1f854f7f6363f72cd74fee72036b29a4a816255b90f",
+      "reused_in_completion": false
+    },
+    {
+      "name": "v1140-files",
+      "receipt_sha256": "937561d5b1c76d25488cf814d5aca2414f497dcc5bd6ec8baccbdbcb10eff83b",
+      "reused_in_completion": false
+    },
+    {
+      "name": "v1170-files",
+      "receipt_sha256": "5e405406c86b0b641ba438ba0c7a5d4c40e1b0076169dce7ebc0ce01f0bc62c9",
+      "reused_in_completion": false
+    },
+    {
+      "name": "v1200-files",
+      "receipt_sha256": "8a4127c57febfb8e80a0ce53f41c0a8926a81810cbab3dedc03b3224e5019a9a",
+      "reused_in_completion": false
+    },
+    {
+      "name": "v1201-files",
+      "receipt_sha256": "6cd7c3f31efa727b99632c8c86845573dd097550882e8818667c34f803f712e9",
+      "reused_in_completion": false
+    },
+    {
+      "name": "v1202-files",
+      "receipt_sha256": "9dea68ab34bbcecf58c9b00e10e8e1ef18a81467134297c45d95cb4e9c97372d",
+      "reused_in_completion": false
+    },
+    {
+      "name": "v1203-files",
+      "receipt_sha256": "99c2ef817ff77e84764b93324220df43008063222120c45fa41449d3345d793b",
+      "reused_in_completion": false
+    },
+    {
+      "name": "v1210-files",
+      "receipt_sha256": "fd110e20aa09c5118729d19ae34d2608c3ec6d1c428698386ddbb7b96581d288",
+      "reused_in_completion": false
+    },
+    {
+      "name": "v1211-files",
+      "receipt_sha256": "f7a346bbefea6b0e5e9002d81be6a1df3607e8dc48a568b5c7610b98ea01796f",
+      "reused_in_completion": false
+    },
+    {
+      "name": "v1260-files",
+      "receipt_sha256": "9a4c934e03c6e4cd974caebc63e41866fd6b45464d1e0ed6fcf6512c48538fd8",
+      "reused_in_completion": false
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # Prüfberichte
 
+In Entwicklung: **1.27.0 – Testversion**. [Vollständiger Qualitätsaudit und Prüfgrenzen](docs/PRUEFBERICHT-1.27.0.md). Offizielle Version und öffentliche Updaterfreigabe bleiben 1.26.0.
+
 Aktuelle offizielle Version: **Notenblick 1.26.0**, veröffentlicht am **6. November 2026**. Sebastian Müller hat die unveränderte Testversion unter Windows praktisch getestet und ausdrücklich freigegeben. [Versionsbericht](docs/PRUEFBERICHT-1.26.0.md).
 
 Der vorhandene technische Abschluss dokumentiert **93 von 93 erfolgreiche Pflichtgruppen**, 180.000 synthetische Noteneinträge, zwei bytegleiche Builds und die vollständige Paketprüfung. Die [kompakten Nachweise](docs/qa-1.26.0.json) bleiben unverändert als historischer Prüfstand vor der praktischen Freigabe erhalten; ihre damaligen Testversions- und Praxisstatusfelder beschreiben nicht den heutigen Veröffentlichungsstatus.

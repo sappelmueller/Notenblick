@@ -1,5 +1,16 @@
 # Änderungen
 
+## 1.27.0 – Testversion
+
+- Schutzsicherungen vor Änderungen an Leistungsbereichen auch unter Wiederherstellen auswählen.
+- Alle sichtbaren, belegten Leistungsbereiche beim gleichmäßigen Verteilen berücksichtigen.
+- Tastaturfokus beim Übertragen und bei fehlerhaften Bereichsnamen erhalten; fehlende Einzelnoten direkt am Eingabefeld korrigieren.
+- Fachnamen auf der Startseite ohne unnötig schmale Kacheln; klare Abstände vor Exportaktionen, beim Hinzufügen von Bereichen und im Null-Prozent-Hinweis.
+- Halbjahresauswahl in schmalen Dialogen ohne abgeschnittene zweite Textzeile.
+- Kürzere, verständliche Speicherhinweise und konkrete Hilfe bei nicht erreichbaren Exportordnern.
+
+Gezielter Feinschliff am bestehenden Programm. Berechnungsformeln, gespeicherte Noten, Datenformat, native Speicherung und Updateinstallation bleiben erhalten. Praktische Windows-/NVDA-/Braille-/ARM64-Abnahme steht aus. Kein offizielles Release und keine Updaterfreigabe. [Audit und Prüfgrenzen](docs/PRUEFBERICHT-1.27.0.md).
+
 ## 1.26.0 – 6. November 2026
 
 - Eigene Leistungsbereiche je Fach hinzufügen, umbenennen und sortieren. Neue Fächer beginnen mit Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %.

@@ -442,7 +442,7 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 .home-grid h2{margin-bottom:14px}
 .continue-course{border-left:3px solid var(--accent);padding-left:13px;margin:0 0 18px;line-height:1.5;overflow-wrap:anywhere}
 .continue-year{display:block;font-size:.9rem;font-weight:400;color:var(--muted);margin-top:3px}
-.home-grid .quick-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.5rem,1fr));gap:8px;margin-bottom:14px}
+.home-grid .quick-links{gap:8px;margin-bottom:14px}
 .home-grid .quick-links li{min-width:0}.home-grid .quick-links a{height:100%;padding:8px 10px;min-height:40px}
 .work-list li>div{min-width:0;overflow-wrap:anywhere}.work-list .pending-title{color:var(--ink);font-weight:600;margin-top:5px}.work-list .pending-progress{font-size:.86rem;margin-top:3px}
 .oral-view-controls{display:flex;flex-wrap:wrap;gap:12px 20px;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}
@@ -470,7 +470,7 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 .final-compatibility{white-space:normal;max-width:300px;font-size:.8rem;color:var(--muted)}.final-remark{margin-top:18px}
 .final-information{margin-top:20px}.final-information summary{cursor:pointer;padding:7px 0;font-weight:600}
 .final-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px}.final-meta dt{color:var(--muted)}.final-meta dd{margin:0;font-weight:600;overflow-wrap:anywhere}
-.final-value{font-variant-numeric:tabular-nums;min-height:40px}#halfYearReport{white-space:normal}#halfYearWarning{margin-top:16px}
+.final-value{font-variant-numeric:tabular-nums;min-height:40px}#halfYearReport{white-space:nowrap}#halfYearWarning{margin-top:16px}
 @media(max-width:520px){.final-summary{grid-template-columns:1fr}.final-meta{grid-template-columns:1fr}.final-meta dd{margin-bottom:10px}.final-tools{align-items:flex-start}}
 @media(max-width:420px){#dialog{overflow:auto}#dialogForm{display:block;max-height:none;overflow:visible;padding:16px}#dialogContent{overflow:visible}#dialogError{max-height:none}#dialog .dialog-header{align-items:flex-start;margin-bottom:16px}#dialogTitle{min-width:0;flex:1;font-size:1.1rem}#dialog .close{flex-shrink:0}#dialog .dialog-actions{justify-content:flex-start}}
 
@@ -573,6 +573,10 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 .update-card .button-row .button,.update-settings .button-row .button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
 
 /* Keep distribution levels and oral selection apart from view controls. */
-.weight-section{min-width:0;margin-block:20px}.weight-section legend{font-weight:700}.weight-distribution{margin-top:12px}.weight-add{margin-block:20px}.weight-add .field{max-width:30rem}.area-weight-row .field{margin-bottom:8px}.area-weight-row details .button-row{margin-block:8px}.area-weight-row .check{margin-block:10px}.written-total{align-self:start}
+.weight-section{min-width:0;margin-block:20px}.weight-section legend{font-weight:700}.weight-distribution{margin-top:12px}.weight-add{margin-block:20px}.weight-add .field{max-width:30rem}.weight-add>.button{margin-top:12px}.area-weight-row .field{margin-bottom:8px}.area-weight-row details .button-row{margin-block:8px}.area-weight-row .check{margin-block:10px}.written-total{align-self:start}
 .oral-view-controls{padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid var(--line)}
 .help-passage ul,.help-passage ol,.help-context ul,.help-context ol{padding-left:1.6em;margin-block:10px 18px}.help-passage li,.help-context li{margin-block:6px}.help-table{max-width:100%;margin-block:14px 20px}.help-table table{width:100%;min-width:0;table-layout:fixed}.help-table th,.help-table td{white-space:normal;overflow-wrap:anywhere;padding:10px;vertical-align:top}.help-context{overflow-wrap:anywhere}
+
+/* Keep the existing stacked export actions clear of their preceding fields. */
+#backupExportFields,#backup .backup-block>.field{margin-bottom:18px}
+#overviewZeroHint{margin:0;padding:12px 21px;border-bottom:1px solid var(--line)}

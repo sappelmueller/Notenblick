@@ -1,5 +1,7 @@
 # Technischer Einstieg
 
+Entwicklung **1.27.0 – Qualitätsaudit** auf `entwicklung/1.27.0`, Basis `main`/`2de1783` (1.26.0). Gemeinsamer Gewichtungseditor: einheitliche Sichtbarkeit bei Verteilung, Fokus beim Übertragen und bei Namensfehlern. Wiederherstellung bietet jetzt auch `Vor_Leistungsbereichen_` an. Keine neuen Abhängigkeiten, Datenformate oder Berechnungswege. [Umfang und Prüfgrenzen](PRUEFBERICHT-1.27.0.md).
+
 Offizieller Stand: **Notenblick 1.26.0**, veröffentlicht am 6. November 2026. Der freigegebene Entwicklungsstand `9164005` wird unverändert nach `main` übernommen. Vorhandener vollständiger technischer Abschluss: 93 Pflichtgruppen und zwei bytegleiche Builds. Die praktische Windows-Prüfung und ausdrückliche Herausgeberfreigabe sind bestätigt. [Veröffentlichungsnachweis](PRUEFBERICHT-1.26.0.md).
 
 `domain/areas.js` liefert die geordneten fachbezogenen Leistungsbereiche und ihre stabilen Zuordnungen. `assessment.kind` verweist auf diese IDs; `oralEntry` beschreibt davon unabhängig die Erfassungsform. `evaluation.js` berechnet alle Bereiche mit derselben exakten Bruchrechnung. Der gemeinsame Gewichtungseditor wird in Fachdialog, Einstellungen und Einrichtung verwendet. Exporte/TXT verwenden dieselben Fachdefinitionen.
