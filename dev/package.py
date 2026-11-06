@@ -1,7 +1,20 @@
 """Package the verified runtime and complete editable project separately. No seed data."""
 from pathlib import Path
 from zipfile import ZipFile,ZIP_DEFLATED,ZipInfo
-import json,re,struct,hashlib,os,sys
+import json,re,struct,hashlib,os,sys,tempfile
+from contextlib import contextmanager
+
+@contextmanager
+def atomic_file(path,mode):
+ fd,tmp=tempfile.mkstemp(prefix=path.name+'.',suffix='.tmp',dir=path.parent)
+ try:
+  with os.fdopen(fd,mode) as stream:
+   yield stream
+   stream.flush();os.fsync(stream.fileno())
+  os.replace(tmp,path)
+ finally:
+  if os.path.exists(tmp):os.unlink(tmp)
+
 def add(z,p,name):
  info=ZipInfo(name,(2020,1,1,0,0,0));info.compress_type=ZIP_DEFLATED;info.create_system=3;info.external_attr=(0o100755 if name.endswith(('pre-push','pre-commit')) else 0o100644)<<16
  z.writestr(info,p.read_bytes(),compresslevel=9)
@@ -37,9 +50,11 @@ if len(sys.argv)>1:
  assert audit(Path(sys.argv[2]))['release_current'],'Ein vollständiger aktueller Release-Nachweis fehlt'
  approved=True
 archive=output/('Notenblick_'+version+'.zip')
-with ZipFile(archive,'w',ZIP_DEFLATED,compresslevel=9) as z:
- for p in sorted(dist.rglob('*')):
-  if p.is_file():add(z,p,'Notenblick/'+p.relative_to(dist).as_posix())
+with atomic_file(archive,'w+b') as stream:
+ with ZipFile(stream,'w',ZIP_DEFLATED,compresslevel=9) as z:
+  for p in sorted(dist.rglob('*')):
+   if p.is_file():add(z,p,'Notenblick/'+p.relative_to(dist).as_posix())
+ with ZipFile(stream) as z:assert z.testzip() is None
 with ZipFile(archive) as z:
  assert z.testzip() is None
  names=z.namelist();assert all(n=='Notenblick/Notenblick.exe' or n.startswith('Notenblick/Programm/') for n in names)
@@ -50,10 +65,14 @@ from guard import check_paths,git
 source_paths=git('ls-files','--cached','--others','--exclude-standard','-z').split('\0')
 source_paths=[name for name in source_paths if name and (r/name).is_file()]
 check_paths(source_paths)
-with ZipFile(project,'w',ZIP_DEFLATED,compresslevel=9) as z:
- for name in sorted(set(source_paths)):add(z,r/name,'Notenblick-Projekt/'+name)
+with atomic_file(project,'w+b') as stream:
+ with ZipFile(stream,'w',ZIP_DEFLATED,compresslevel=9) as z:
+  for name in sorted(set(source_paths)):add(z,r/name,'Notenblick-Projekt/'+name)
+ with ZipFile(stream) as z:assert z.testzip() is None
 with ZipFile(project) as z:assert z.testzip() is None
 update_manifest={'schema':1,'repository':'sappelmueller/Notenblick','repositoryId':1432518047,'version':version,'approved':approved,'minimumUpdater':'1.24.0','dataSchema':1,'notes':notes,'archive':{'name':archive.name,'bytes':archive.stat().st_size,'sha256':hashlib.sha256(archive.read_bytes()).hexdigest()},'files':[{'path':p.relative_to(dist).as_posix(),'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(dist.rglob('*')) if p.is_file()]}
-descriptor=output/('Notenblick_'+version+'_Aktualisierung.json');descriptor.write_text(json.dumps(update_manifest,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
+descriptor=output/('Notenblick_'+version+'_Aktualisierung.json')
+with atomic_file(descriptor,'w') as stream:stream.write(json.dumps(update_manifest,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
 report={'version':version,'runtimeFiles':len(names),'programFiles':len(files),'assets':len(assets),'dataIncluded':False,'anyCPU':True,'completeFileHashesVerified':True,'archives':[{'name':p.name,'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in [archive,project]],'updateDescriptor':{'name':descriptor.name,'bytes':descriptor.stat().st_size,'sha256':hashlib.sha256(descriptor.read_bytes()).hexdigest(),'approved':approved}}
-(output/('Notenblick_'+version+'_Pruefsummen.json')).write_text(json.dumps(report,indent=2));print(json.dumps(report,indent=2))
+with atomic_file(output/('Notenblick_'+version+'_Pruefsummen.json'),'w') as stream:stream.write(json.dumps(report,indent=2))
+print(json.dumps(report,indent=2))

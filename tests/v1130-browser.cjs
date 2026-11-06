@@ -29,20 +29,20 @@ const server=http.createServer((req,res)=>{const p=path.resolve(root,'.'+new URL
  const manifest=JSON.parse(fs.readFileSync(path.join(out,'manifest.json')));
  await page.evaluate(()=>{window.print=()=>{window.printCalls=(window.printCalls||0)+1;};window.NRDesktop={available:true,call:async op=>{if(op!=='print-preview')throw Error('unexpected');window.previewCalls=(window.previewCalls||0)+1;return true;}};});
  for(const name of manifest.documents){const model=JSON.parse(fs.readFileSync(path.join(out,name+'.json')));await page.evaluate(r=>Notenblick.printReport(r),model);
-  assert.equal(await page.locator('#printOutput').count(),1);assert.equal(await page.locator('#printOutput tfoot').count(),await page.evaluate(r=>Notenblick.reportTables(r).filter(s=>s.footer).length,model));
-  assert.equal(await page.locator('#printOutput tfoot').first().evaluate(el=>getComputedStyle(el).display),'table-footer-group');
+  assert.equal(await page.locator('#printOutput').count(),1);assert.equal(await page.locator('#printOutput [data-report-footer]').count(),await page.evaluate(r=>Notenblick.reportTables(r).filter(s=>s.footer).length,model));
+  assert.equal(await page.locator('#printOutput .report-final-rows').first().evaluate(el=>getComputedStyle(el).display),'table-row-group');
   // Do not emulate a print-media exit before taking the print snapshot: that
   // correctly triggers the application's cleanup and removes its @page rule.
-  await page.emulateMedia({media:'print'});assert.equal(await page.locator('#printOutput tfoot').first().evaluate(el=>getComputedStyle(el).display),'table-row-group');
+  await page.emulateMedia({media:'print'});assert.equal(await page.locator('#printOutput .report-final-rows').first().evaluate(el=>getComputedStyle(el).breakInside),'avoid');
   assert.equal(await page.locator('#printOutput').count(),1);
   await page.pdf({path:path.join(out,name+'-print.pdf'),preferCSSPageSize:true,printBackground:false});await page.evaluate(()=>window.dispatchEvent(new Event('afterprint')));assert.equal(await page.locator('#printOutput').count(),0);await page.emulateMedia({media:null});
  }
  assert.equal(await page.evaluate(()=>window.printCalls||0),0);assert.equal(await page.evaluate(()=>window.previewCalls),manifest.documents.length);
  checks.push(manifest.documents.length+' reale Chromium-A4-Druckrender: native Vorschauanforderung simuliert, CSS-Ausrichtung und vollständige Ergebniszeile; Tabellenfuß wird nur einmal ausgegeben');
  await page.evaluate(()=>{delete window.NRDesktop;});
- // The recommendation changes with actual report width in the existing dialog.
+ // The complete export keeps its page recommendation when screen columns are hidden.
  await page.evaluate(()=>{const A=Notenblick;A.W().columns=['exam','test','written','oral'];A.activateGroup('notes','overview');});await open();await page.locator('#exportFormat').selectOption('print');assert.match(await page.locator('#exportPrintHint').textContent(),/A4 quer/);await page.keyboard.press('Escape');
- await page.evaluate(()=>{const A=Notenblick;A.W().columns=[];A.rendered={};A.renderOverview();});await open();await page.locator('#exportFormat').selectOption('print');assert.match(await page.locator('#exportPrintHint').textContent(),/A4 hoch/);await page.keyboard.press('Escape');
- assert.equal(await page.evaluate(()=>JSON.stringify(Notenblick.data)),raw);assert.deepEqual(errors,[]);checks.push('Quer-/Hochformatempfehlung folgt dem Layout; Notendaten unverändert. Windows/WebView2/NVDA-Liveprüfung bleibt offen.');
+ await page.evaluate(()=>{const A=Notenblick;A.W().columns=[];A.rendered={};A.renderOverview();});await open();await page.locator('#exportFormat').selectOption('print');assert.match(await page.locator('#exportPrintHint').textContent(),/A4 quer/);await page.keyboard.press('Escape');
+ assert.equal(await page.evaluate(()=>JSON.stringify(Notenblick.data)),raw);assert.deepEqual(errors,[]);checks.push('Seitenausrichtung folgt dem vollständigen Bericht unabhängig von ausgeblendeten Bildschirmspalten; Notendaten unverändert. Windows/WebView2/NVDA-Liveprüfung bleibt offen.');
  fs.writeFileSync(path.join(__dirname,'v1130-browser-results.json'),JSON.stringify({checks,chromium:browser.version(),windows:false,webview2Live:false,word:false,nvda:false},null,2));await client.detach();await browser.close();server.close();console.log('1.13 Chromium:',checks.length,'Prüfgruppen');
 })().catch(async e=>{console.error(e);await browser?.close();server.close();process.exitCode=1;});

@@ -37,6 +37,7 @@
       throw Error('Ungültige Datendatei: ' + msg);
     };
     if (!d || d.format !== 'notenraum' || d.version !== 1) fail('Format oder Version wird nicht unterstützt.');
+    if(d.appVersion&&/^\d+\.\d+\.\d+$/.test(d.appVersion)&&d.appVersion.split('.').map(Number).some((v,i,parts)=>{const current=[1,26,0];return parts.slice(0,i).every((n,j)=>n===current[j])&&v>current[i];}))fail('Diese Datei stammt aus einer neueren Notenblick-Version. Bitte aktualisiere das Programm.');
     const safeId = v => typeof v === 'string' && /^[a-zA-Z0-9_-]{1,80}$/.test(v) && !['__proto__', 'constructor', 'prototype'].includes(v);
     if (!safeId(d.id) || !safeId(d.commitId) || !Number.isSafeInteger(d.revision) || d.revision < 0 || typeof d.updatedAt !== 'string' || !Number.isFinite(Date.parse(d.updatedAt))) fail('Speicherstand ist beschädigt.');
     const sets = {};
@@ -72,21 +73,22 @@
       for (const sid of c.studentIds) if (!sets.students.has(sid) || maps.students.get(sid).classId !== c.classId) fail('Schüler gehört nicht zur Klasse.');
       if (c.inactiveStudentIds && (!Array.isArray(c.inactiveStudentIds) || c.inactiveStudentIds.some(id => !c.studentIds.includes(id)) || new Set(c.inactiveStudentIds).size !== c.inactiveStudentIds.length)) fail('Ungültige Fachteilnahme.');
       if(c.calculationMode!==undefined&&!['grouped','direct'].includes(c.calculationMode))fail('Ungültige Berechnungsart.');
-      NR.weightsValid(c.weights,{mode:c.calculationMode||'grouped',legacy:legacy&&c.weights.overall.other!==undefined,incomplete:!legacy&&!!d.legacyOther?.courses?.some(x=>x.courseId===c.id&&x.status==='pending')});
+      if(c.areas)NR.validateAreas(c);
+      NR.weightsValid(c.weights,{course:c,mode:c.calculationMode||'grouped',legacy:legacy&&c.weights.overall.other!==undefined,incomplete:!legacy&&!!d.legacyOther?.courses?.some(x=>x.courseId===c.id&&x.status==='pending')});
       if(!legacy&&Object.hasOwn(c.weights.overall,'other'))fail('Veraltete aktive Gewichtung.');
       if (![0, 1, 2].includes(c.precision) || !['round', 'truncate'].includes(c.rounding) || !Array.isArray(c.lockedPeriods) || c.lockedPeriods.some(p => !['1', '2'].includes(p))) fail('Ungültige Facheinstellungen.');
     }
     const memberships=new Map(d.courses.map(c=>[c.id,new Set(c.studentIds)]));
     for (const a of d.assessments) {
       txt(a.title, 'Leistungsbezeichnung', 150);
-      if (!sets.courses.has(a.courseId) || !['1', '2'].includes(a.period) || !(Object.hasOwn(NR.KINDS, a.kind)||legacy&&a.kind==='other')) fail('Ungültige Leistung.');
+      if (!sets.courses.has(a.courseId) || !['1', '2'].includes(a.period) || !(NR.areaIds(maps.courses.get(a.courseId)).includes(a.kind)||legacy&&a.kind==='other')) fail('Ungültige Leistung.');
       if (typeof a.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(a.date) || !Number.isFinite(Date.parse(a.date)) || new Date(a.date).toISOString().slice(0, 10) !== a.date) fail('Ungültiges Datum.');
       const w = NR.Q.from(a.weight);
       if (w.cmp(0) <= 0n || w.cmp(100) > 0n) fail('Ungültige Gewichtung der Leistung.');
       if (!a.results || typeof a.results !== 'object' || Array.isArray(a.results)) fail('Leistungen fehlen.');
       const course = maps.courses.get(a.courseId);
       NR.validatePointRecord(a);
-      if(a.oralEntry!==undefined&&(a.kind!=='oral'||!['individual','class'].includes(a.oralEntry)||a.oralEntry==='individual'&&(!Array.isArray(a.participantIds)||a.participantIds.length!==1)))fail('Ungültige mündliche Erfassungsart.');
+      if(a.oralEntry!==undefined&&(!['individual','class','unclassified'].includes(a.oralEntry)||a.oralEntry==='individual'&&(!Array.isArray(a.participantIds)||a.participantIds.length!==1)))fail('Ungültige mündliche Erfassungsart.');
       if(a.participantIds!==undefined&&(!Array.isArray(a.participantIds)||!a.participantIds.length||new Set(a.participantIds).size!==a.participantIds.length||a.participantIds.some(id=>!safeId(id)||!memberships.get(course.id).has(id))||Object.keys(a.results).some(id=>!a.participantIds.includes(id))))fail('Ungültige Teilnahme an der Leistung.');
       for (const [sid, r] of Object.entries(a.results)) {
         if (!safeId(sid) || !memberships.get(course.id).has(sid) || !r || !Object.hasOwn(NR.STATUS, r.status) || typeof r.note !== 'string' || r.note.length > 2000) fail('Ungültige Schülerleistung.');
@@ -126,9 +128,9 @@
     }
     if(d.legacyOther!==undefined){
       const a=d.legacyOther;if(!a||a.version!==1||!Array.isArray(a.assessments)||!Array.isArray(a.courses))fail('Altbestand ist beschädigt.');
-      const keys=new Set();for(const x of a.courses){if(!x||!sets.courses.has(x.courseId)||keys.has(x.courseId)||!['pending','resolved'].includes(x.status))fail('Ungültige Zuordnung des Altbestands.');keys.add(x.courseId);NR.weightsValid({overall:x.overall,written:maps.courses.get(x.courseId).weights.written},{legacy:true});}
+      const keys=new Set();for(const x of a.courses){if(!x||!sets.courses.has(x.courseId)||keys.has(x.courseId)||!['pending','resolved'].includes(x.status))fail('Ungültige Zuordnung des Altbestands.');keys.add(x.courseId);NR.weightsValid({overall:x.overall,written:x.written||maps.courses.get(x.courseId).weights.written},{legacy:true});}
       const ids=new Set();for(const x of a.assessments){if(!x||x.kind!=='other'||!keys.has(x.courseId)||ids.has(x.id))fail('Ungültige Leistung im Altbestand.');ids.add(x.id);}
-      if(a.assessments.length){const projection={...d,appVersion:'1.2.0',legacyOther:undefined,assessments:a.assessments,finals:[],previousFinals:[]};projection.courses=d.courses.map(c=>({...c,calculationMode:'grouped',weights:{overall:a.courses.find(x=>x.courseId===c.id)?.overall||{...NR.defaultWeights().overall,...(c.calculationMode==='direct'?{}:c.weights.overall),other:'0'},written:c.weights.written}}));NR.validate(projection);}
+      if(a.assessments.length){const projection={...d,appVersion:'1.2.0',legacyOther:undefined,assessments:a.assessments,finals:[],previousFinals:[]};projection.courses=d.courses.map(c=>({...c,calculationMode:'grouped',weights:{overall:a.courses.find(x=>x.courseId===c.id)?.overall||{...NR.defaultWeights().overall,...(c.calculationMode==='direct'?{}:c.weights.overall),other:'0'},written:a.courses.find(x=>x.courseId===c.id)?.written||c.weights.written},areas:undefined,writtenIds:undefined,writtenName:undefined}));NR.validate(projection);}
     }
     return d;
   };

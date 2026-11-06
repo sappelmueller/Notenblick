@@ -49,7 +49,7 @@ N.pointResult=function(a,old,value,{status=null}={}){
  if(r.status==='graded'&&r.grade===null)throw Error('Bitte Punkte eingeben oder einen anderen Status wählen.');r.pointStatus=r.status;return r;
 };
 N.pointKeyImpact=function(a,mode,key){
- if(!['direct','points'].includes(mode))throw Error('Unbekannte Eingabeart.');if(mode==='points'&&!['exam','test','oral'].includes(a.kind))throw Error('Für diese Leistungsart ist keine Punktebewertung vorgesehen.');
+ if(!['direct','points'].includes(mode))throw Error('Unbekannte Eingabeart.');
  const next=N.clone(a);if(key)next.pointKey=N.validatePointKey(key);if(mode==='points'&&!next.pointKey)throw Error('Bitte den Notenschlüssel festlegen.');
  const invalid=[],changes=[];let occupied=0;next.inputMode=mode;
  for(const [sid,old]of Object.entries(a.results)){
@@ -67,7 +67,7 @@ N.pointKeyImpact=function(a,mode,key){
 N.validatePointRecord=function(a,r){
  if(a.inputMode!==undefined&&!['direct','points'].includes(a.inputMode))throw Error('Ungültige Eingabeart.');
  if(a.pointKey){const key=N.validatePointKey(a.pointKey);if(JSON.stringify(key)!==JSON.stringify(a.pointKey))throw Error('Ungültig gespeicherter Notenschlüssel.');}
- if(N.isPoints(a)&&(!['exam','test','oral'].includes(a.kind)||!a.pointKey))throw Error('Ungültige Punktebewertung.');
+ if(N.isPoints(a)&&!a.pointKey)throw Error('Ungültige Punktebewertung.');
  if(!r)return;
  for(const key of ['points','calculatedGrade','manualGrade','directGrade'])if(r[key]!==undefined&&r[key]!==null){if(typeof r[key]!=='string')throw Error('Punktdaten müssen als Dezimaltext gespeichert sein.');if(key==='points'){if(!a.pointKey||N.pointValue(r[key],a.pointKey)!==r[key])throw Error('Ungültige Punktzahl.');}else N.grade(r[key]);}
  for(const key of ['pointStatus','directStatus'])if(r[key]!==undefined&&!Object.hasOwn(N.STATUS,r[key]))throw Error('Ungültiger gesicherter Bewertungsstatus.');

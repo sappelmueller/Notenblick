@@ -1,0 +1,790 @@
+{
+  "version": "1.26.0",
+  "branch": "entwicklung/1.26.0",
+  "baseline": "dee1ba605a00e36c7cd77588937bfae2298e54fe",
+  "test_version": true,
+  "official_release": false,
+  "approved_update": false,
+  "catalogue_groups": 93,
+  "final_full_catalogue_completed": true,
+  "final_scope": "Vollständiger technischer Katalog mit 93 Pflichtgruppen und vollständiger portabler Windows-Testversion. Keine offizielle Freigabe.",
+  "native_updater_checks_during_development": 171,
+  "known_export_failures_fixed": [
+    "0-%-Hinweise in Excel/CSV",
+    "Höhe mehrzeiliger Excel-Hinweise",
+    "Halbjahreslegende",
+    "Klassendurchschnitt beim Druck nicht vom letzten Schüler trennen",
+    "Kompakte Fachübersicht im Gesamtexport"
+  ],
+  "targeted_export_checks": {
+    "area_counts": [
+      3,
+      5,
+      8,
+      20
+    ],
+    "pdf_ua_cases": 4,
+    "openxml_cases": 8,
+    "print_documents": 23,
+    "print_rendered_pages": 115,
+    "collection_document_cases": 17,
+    "collection_archives": 3
+  },
+  "historical_runs": [
+    {
+      "report": "reports/20261105T191943897772Z/summary.json",
+      "status": "failed",
+      "sha256": "0d75c17d80e78fb1b17fe32f88880ec2e38b3a8428bead39d24e57eb5473725b"
+    },
+    {
+      "report": "reports/20261105T193930950080Z/summary.json",
+      "status": "passed",
+      "sha256": "23a9f1a44ba13bcb8fead0d0cbe3426395ac57a7047f9a28d24329ccc76ccece"
+    },
+    {
+      "report": "reports/20261105T194156420670Z/summary.json",
+      "status": "failed",
+      "sha256": "7542c9dcf32b450382a79c1135167ad8bc6fee43971a7adef617f450ffdc2f37"
+    }
+  ],
+  "windows_gui_tested": false,
+  "nvda_tested": false,
+  "braille_tested": false,
+  "arm64_live_tested": false,
+  "microsoft_office_live_tested": false,
+  "windows_update_installation_tested": false,
+  "github_actions_used": false,
+  "usability_help_revision": {
+    "date": "2026-11-06",
+    "baseline": "d395161c0e79d6324638eec7986b228b323449da",
+    "help_topics": 9,
+    "help_sections": 77,
+    "f1_base_contexts": 49,
+    "ids_unchanged": true,
+    "v1260_groups": 21,
+    "browser_groups": 6,
+    "axe_cases": 25,
+    "browser_report": "reports/20261106T073659502286Z/summary.json",
+    "f1_report": "reports/20261106T073420563417Z/summary.json",
+    "f1_tasks_passed": true,
+    "final_full_catalogue_completed": false,
+    "domain_storage_exports_native_unchanged": true,
+    "oral_report": "reports/20261106T073923524029Z/summary.json",
+    "v190_groups": 11,
+    "runtime_inputs_sha256": {
+      "src/app/weight-editor.js": "91303b3f6ff8eae3042ed42a6761449c1a47cfb8af57a4b2446a825ceb70be2c",
+      "src/data/HILFE-1.23.0.json": "9a9b12b353a79e50d1e4afca3a26c83f5d0c08399795c6850b9d8b240482274f",
+      "src/styles/views.css": "70cde42521a75bf0a39a4f2ca6c86897e747ebde0532fe518832d111f07bcfcf",
+      "src/views/assessments.js": "ee7a1b847895fb2348b6a0672ff24739409fde5af238571e297c5124dd830545",
+      "src/views/grades.js": "82efcf416a358c754ad29193a233e699b14850c935a60b911ea695de4fe8c93d",
+      "src/views/help.js": "198274092c949ee7fb8a020f768e74aa32e81c2348200d02330fbe8752bf9784",
+      "src/views/oral.js": "660889f1bee369490fe9a3c4e360fd240fd01771fd98d56565dee7cfc1ca6b0a",
+      "src/views/pupil.js": "8a76ffbd35be090cd7e367cabef48d1dd37189268092fd88f3bc7f9a57063102"
+    },
+    "help_source_sha256": "123fcff0a85a3b6cdb37ea6de3e9b8950d0aa342584089e43dc1c17cad6498a0"
+  },
+  "delivery_finalization_completed": true,
+  "refinement_revision": {
+    "date": "2026-11-06",
+    "full_catalogue": {
+      "report": "reports/20261106T141037391510Z/summary.json",
+      "sha256": "60ef7c520c4304b2aacd1485313d6894e9b19c03c5dcf88a3baecfce5d5a3cba",
+      "status": "passed",
+      "groups": 93,
+      "executed": 93,
+      "reused": 0,
+      "source_hash": "f22b014cef71a83a1ce2dba21bfe7b0656fe82877840cba2d1044c48ec45ec8b",
+      "tools_hash": "d80ba777ade0f67b90d5cc3bb36d4882e5da54a80582c105c542507973ec0497",
+      "git_head": "7eaaebb49f6952c5e45c4d76594c9b7286c4fb32"
+    },
+    "large": {
+      "passed": 10,
+      "years": 10,
+      "students": 3000,
+      "assessments": 6000,
+      "results": 180000,
+      "calculations": 3000,
+      "calculationSections": {
+        "executed": 100,
+        "reused": 0,
+        "cases": 3000
+      },
+      "jsonBytes": 37001727,
+      "txtFiles": 9200,
+      "timings": {
+        "validateMs": 273,
+        "serializeMs": 127,
+        "upgradeMs": 510,
+        "calculateAllMs": 307,
+        "txtExportMs": 1604,
+        "nativeAtomicWriteMs": 2177,
+        "nativeReadMs": 503,
+        "startMs": 31669,
+        "fullAutosaveWithTxtMs": 23770,
+        "incrementalAutosaveMs": 24244,
+        "backupRoundTripMs": 1510
+      },
+      "platform": "Linux .NET 8 / jsdom; keine Windows-Performancezusage"
+    },
+    "two_clean_builds_byte_identical": true,
+    "verified_runtime_archive": {
+      "bytes": 2111858,
+      "name": "Notenblick_1.26.0.zip",
+      "sha256": "20b578857d097aa75f5928709d2d31c95423b6c2303e1f7cc995cb2dd5192948"
+    },
+    "checks": [
+      {
+        "task": "infrastructure",
+        "key": "340818191d1d1858623b75a21a0e881d62798bad902f99403c190f33a2ba76de",
+        "receipt": ".build/evidence/tasks/infrastructure/340818191d1d1858623b75a21a0e881d62798bad902f99403c190f33a2ba76de/manifest.json",
+        "receipt_sha256": "44fc841f6b88029a27dc29e249701d83c0f742439f787a32f50eafb03e3d46a5",
+        "reused": false
+      },
+      {
+        "task": "domain-storage",
+        "key": "3693cb778a01a72d284512751fe542b8bf8b8ef7559521bd28f3ad582f301f8f",
+        "receipt": ".build/evidence/tasks/domain-storage/3693cb778a01a72d284512751fe542b8bf8b8ef7559521bd28f3ad582f301f8f/manifest.json",
+        "receipt_sha256": "80161ac7601ee591b1850b861f7de840b9923980d005b39b0d1662460b7b36c1",
+        "reused": false
+      },
+      {
+        "task": "transfers",
+        "key": "983bbe3fbc365ddb13006830f10d3ba881efcccdf54aeb438dd44ae7ff4cbf6f",
+        "receipt": ".build/evidence/tasks/transfers/983bbe3fbc365ddb13006830f10d3ba881efcccdf54aeb438dd44ae7ff4cbf6f/manifest.json",
+        "receipt_sha256": "dfcf484a7bf238797d5e1a84b5f44f9a7c736f04e7b6a26893a7b4cf67ff59d4",
+        "reused": false
+      },
+      {
+        "task": "ui",
+        "key": "e25bd3291fd81fca181305e106db348edfdf00ce0cdb3b405f8a7a494f18e5f1",
+        "receipt": ".build/evidence/tasks/ui/e25bd3291fd81fca181305e106db348edfdf00ce0cdb3b405f8a7a494f18e5f1/manifest.json",
+        "receipt_sha256": "20739537fb09d97b12c4107745789813c4ed9543c140daef49b62344634b2e01",
+        "reused": false
+      },
+      {
+        "task": "new-features",
+        "key": "9be303ecd5593708a4adb4551f7bca5eed6c513a89a8b33e9f8c00f0531b9094",
+        "receipt": ".build/evidence/tasks/new-features/9be303ecd5593708a4adb4551f7bca5eed6c513a89a8b33e9f8c00f0531b9094/manifest.json",
+        "receipt_sha256": "c5a05b3e0f736ca1dd59d5bbe3fa5eb5635f93e94b6d52c0e4e22ed68be9b316",
+        "reused": false
+      },
+      {
+        "task": "v140",
+        "key": "e6e5aed001550398bc2171d314288eb7efd481f0f2d90204c772f85a7316a5ea",
+        "receipt": ".build/evidence/tasks/v140/e6e5aed001550398bc2171d314288eb7efd481f0f2d90204c772f85a7316a5ea/manifest.json",
+        "receipt_sha256": "eb66251382f22e9ca76775d5cc2fd32ac6a9da4194cafe0c8544b321d2c35d4d",
+        "reused": false
+      },
+      {
+        "task": "v150",
+        "key": "68717caf6afa666149570b373f13e78751c4c4b82a6bf748c2bce0be7309f733",
+        "receipt": ".build/evidence/tasks/v150/68717caf6afa666149570b373f13e78751c4c4b82a6bf748c2bce0be7309f733/manifest.json",
+        "receipt_sha256": "5f31169170cc4d4290707471052c504de6410c619c59230701e2fe117b7f6aac",
+        "reused": false
+      },
+      {
+        "task": "v160",
+        "key": "7d07b5d138516e19b2a87d4ecde897d8cae4d64e691a4436b780afe58da0abb1",
+        "receipt": ".build/evidence/tasks/v160/7d07b5d138516e19b2a87d4ecde897d8cae4d64e691a4436b780afe58da0abb1/manifest.json",
+        "receipt_sha256": "4214b2cb26558f2e45816557366f4265e5443c6c33561356436486993e19d6b0",
+        "reused": false
+      },
+      {
+        "task": "v170",
+        "key": "b73e5d86f70d3e0eccaa0c3df31e839a7c851cc2f017b1695785f893ea06a2e9",
+        "receipt": ".build/evidence/tasks/v170/b73e5d86f70d3e0eccaa0c3df31e839a7c851cc2f017b1695785f893ea06a2e9/manifest.json",
+        "receipt_sha256": "1199489ef5b3e2002ec43986043d9d1544c64b563c5fa873073e6dca96fba44b",
+        "reused": false
+      },
+      {
+        "task": "v180",
+        "key": "e6a4a1cb55111e59098806e113d4c38a44029829955fda23ba7ce4b2ee21b482",
+        "receipt": ".build/evidence/tasks/v180/e6a4a1cb55111e59098806e113d4c38a44029829955fda23ba7ce4b2ee21b482/manifest.json",
+        "receipt_sha256": "a5a5362220794444f824588edf457420da077708baec0065b37f02a2659a5432",
+        "reused": false
+      },
+      {
+        "task": "v190",
+        "key": "994836be891053e9f3d128da60f0cf67951f8e5607315db2c23b77b50aeaabf5",
+        "receipt": ".build/evidence/tasks/v190/994836be891053e9f3d128da60f0cf67951f8e5607315db2c23b77b50aeaabf5/manifest.json",
+        "receipt_sha256": "08af00c66eafc46d3965b357d6644d9881067c9420acf68a3bd3e847b1b0fce4",
+        "reused": false
+      },
+      {
+        "task": "v1100",
+        "key": "e9fa542fb51ee96bd4a96bc30b437d9102334975e276d851c83f1bae8c4574ad",
+        "receipt": ".build/evidence/tasks/v1100/e9fa542fb51ee96bd4a96bc30b437d9102334975e276d851c83f1bae8c4574ad/manifest.json",
+        "receipt_sha256": "2212a4ec5b0bfd1d574f2faf265ba4938baf1ddb47854857e9b493794c2f300e",
+        "reused": false
+      },
+      {
+        "task": "v1110",
+        "key": "a62688ae9c7b8ddb109195f574f07bf29ae939bbb172fe5cf78b321eb321410a",
+        "receipt": ".build/evidence/tasks/v1110/a62688ae9c7b8ddb109195f574f07bf29ae939bbb172fe5cf78b321eb321410a/manifest.json",
+        "receipt_sha256": "61ee14d607b4baa3ff5ad00fe489d599f586bfe06b32366ec27e1f112a819ef3",
+        "reused": false
+      },
+      {
+        "task": "v1120",
+        "key": "882129c1b50efe8564aecb43450a52ddbce1d033b52c4f1249afd2a7f4f5c60b",
+        "receipt": ".build/evidence/tasks/v1120/882129c1b50efe8564aecb43450a52ddbce1d033b52c4f1249afd2a7f4f5c60b/manifest.json",
+        "receipt_sha256": "98ae8c87d0fc3957981ed6ec047862701a8858d5fef33730d4a28d117126138b",
+        "reused": false
+      },
+      {
+        "task": "v1130",
+        "key": "51e23c37f87a37afd62877bc5f11f7bc785857ef9085910db07c32e6b76136e9",
+        "receipt": ".build/evidence/tasks/v1130/51e23c37f87a37afd62877bc5f11f7bc785857ef9085910db07c32e6b76136e9/manifest.json",
+        "receipt_sha256": "01983585e4e329e8b9f5e3382f0c8de946ed64ae45802a7afeb24f3eb4e6443b",
+        "reused": false
+      },
+      {
+        "task": "v1140",
+        "key": "3e40ce206817d114199c57632762c0297e183041366853ee68995397495b5f87",
+        "receipt": ".build/evidence/tasks/v1140/3e40ce206817d114199c57632762c0297e183041366853ee68995397495b5f87/manifest.json",
+        "receipt_sha256": "891c8538b5517a7154ebb6baf858e2c1bbe83943e85b57f62eaf3ad359c34176",
+        "reused": false
+      },
+      {
+        "task": "v1150",
+        "key": "d3d5aba48f907fee893af80251ff322ac84b615936355a6c2ae1989314c58d9e",
+        "receipt": ".build/evidence/tasks/v1150/d3d5aba48f907fee893af80251ff322ac84b615936355a6c2ae1989314c58d9e/manifest.json",
+        "receipt_sha256": "5e07c247a92cd92d1c16feda4304c9b1dbef5c42d83acb65e0f538eb90c27cfa",
+        "reused": false
+      },
+      {
+        "task": "v1160",
+        "key": "dbfa18c496528079e2777aac7f27d1f8c10ddd3dbd23f979b09289255fb59dde",
+        "receipt": ".build/evidence/tasks/v1160/dbfa18c496528079e2777aac7f27d1f8c10ddd3dbd23f979b09289255fb59dde/manifest.json",
+        "receipt_sha256": "d058c92aaf5e5a78b67f9f00d5d006a6316f303c562f2e7e2f5434f168a045b7",
+        "reused": false
+      },
+      {
+        "task": "v1170",
+        "key": "3b70c84268304db1d21b3a94849f31fdf14e3071c0cd9968c3d2f7cb30285a5d",
+        "receipt": ".build/evidence/tasks/v1170/3b70c84268304db1d21b3a94849f31fdf14e3071c0cd9968c3d2f7cb30285a5d/manifest.json",
+        "receipt_sha256": "3ce030ef33988804bf4b1d07c1772399f168edb2ee06c687e8fdcc0c36b86d22",
+        "reused": false
+      },
+      {
+        "task": "v1180",
+        "key": "4b246ec2e8939366133f17df527db2a17ad97f9b4e6558d28aefe8667a48b714",
+        "receipt": ".build/evidence/tasks/v1180/4b246ec2e8939366133f17df527db2a17ad97f9b4e6558d28aefe8667a48b714/manifest.json",
+        "receipt_sha256": "653839be248ca5e71d5fa1a48830cd6c6e8308d5a2ac3e5e738cd599aaa92482",
+        "reused": false
+      },
+      {
+        "task": "v1190",
+        "key": "bf0e333b07d5409cb04e04d95581f73b8bba0b6247d8d2ed25e4a72c9c7f8a8c",
+        "receipt": ".build/evidence/tasks/v1190/bf0e333b07d5409cb04e04d95581f73b8bba0b6247d8d2ed25e4a72c9c7f8a8c/manifest.json",
+        "receipt_sha256": "185254a66771c891c6f8712b21370ec2cd4910806e909262a564ae81de218c2b",
+        "reused": false
+      },
+      {
+        "task": "v1200",
+        "key": "bfe6e017f8bb05afc6ffb44d2bbe9d8baf719dc62bbb2f1d4d6dc8e20d414a3f",
+        "receipt": ".build/evidence/tasks/v1200/bfe6e017f8bb05afc6ffb44d2bbe9d8baf719dc62bbb2f1d4d6dc8e20d414a3f/manifest.json",
+        "receipt_sha256": "afc6213efab856413fc15d5a1890ec529033d873cec45651fdad3376f06a9878",
+        "reused": false
+      },
+      {
+        "task": "v1201",
+        "key": "f252e51c8f7d60e43a7b2fdc1d8a7fc31623d961a6cbd67299c333a6e0677031",
+        "receipt": ".build/evidence/tasks/v1201/f252e51c8f7d60e43a7b2fdc1d8a7fc31623d961a6cbd67299c333a6e0677031/manifest.json",
+        "receipt_sha256": "72c6eee9bc8dc46a8384950234f3f780775c26e01b85c3adad983f4128289871",
+        "reused": false
+      },
+      {
+        "task": "v1202",
+        "key": "74bfb0ad9e4e69f707f63bd0011a4b79ab52e7ccd36a5aa3044a6848298e9887",
+        "receipt": ".build/evidence/tasks/v1202/74bfb0ad9e4e69f707f63bd0011a4b79ab52e7ccd36a5aa3044a6848298e9887/manifest.json",
+        "receipt_sha256": "799e8c72042f87a4ad61c819f66355cb0ee6d1e9a9fb2702189ff1b74bdbd7d3",
+        "reused": false
+      },
+      {
+        "task": "v1203",
+        "key": "322d23a9233b77c98e8a0b77514d74c5a05ccebd9dcb32818e8a04d39fd754b7",
+        "receipt": ".build/evidence/tasks/v1203/322d23a9233b77c98e8a0b77514d74c5a05ccebd9dcb32818e8a04d39fd754b7/manifest.json",
+        "receipt_sha256": "7e54622d356c40b6ba14a6825b3ea8a5399b399be048cae62e1422997d2cc314",
+        "reused": false
+      },
+      {
+        "task": "v1210",
+        "key": "a7456674ad6927091d75977f859649fcc197f052a2baeb9d05bb841ac00eeac9",
+        "receipt": ".build/evidence/tasks/v1210/a7456674ad6927091d75977f859649fcc197f052a2baeb9d05bb841ac00eeac9/manifest.json",
+        "receipt_sha256": "64f867c32143ec6dcd3c2d5367fe151ea26cccc876fad577bff300d42b5a7f0c",
+        "reused": false
+      },
+      {
+        "task": "v1211",
+        "key": "f3ceab7b1fe7612d365ad234b09e48983e4086a1a9e41423cda879aed695a7e7",
+        "receipt": ".build/evidence/tasks/v1211/f3ceab7b1fe7612d365ad234b09e48983e4086a1a9e41423cda879aed695a7e7/manifest.json",
+        "receipt_sha256": "28406fb2629ff4015f966f3b28cdb5c1bf02e20a8ad8ee349e0a4d6e5a07ffa6",
+        "reused": false
+      },
+      {
+        "task": "v1220",
+        "key": "8065fa8b76ef356ba36d4953f4dd95204863d8488c500e2bc5bc4af35669a8ab",
+        "receipt": ".build/evidence/tasks/v1220/8065fa8b76ef356ba36d4953f4dd95204863d8488c500e2bc5bc4af35669a8ab/manifest.json",
+        "receipt_sha256": "7cb466fe2ecd9eb0ec0d89ee8a8cce05a55ecc0c935111a5eb1b324d01874dad",
+        "reused": false
+      },
+      {
+        "task": "v1230",
+        "key": "bd96186045a4ec7fe8d75875feda0ff568d1d6a505841ebba4e74925288d6e8c",
+        "receipt": ".build/evidence/tasks/v1230/bd96186045a4ec7fe8d75875feda0ff568d1d6a505841ebba4e74925288d6e8c/manifest.json",
+        "receipt_sha256": "3c317c4b870556a66aaaff1a927278e7090db9de249c58479b2aae244f5db35f",
+        "reused": false
+      },
+      {
+        "task": "v1231",
+        "key": "c1d8f3e586203e52c3e9935ca67a34070e5450ddb8f46746f3a759d9547dad82",
+        "receipt": ".build/evidence/tasks/v1231/c1d8f3e586203e52c3e9935ca67a34070e5450ddb8f46746f3a759d9547dad82/manifest.json",
+        "receipt_sha256": "9b097cbfff9691ada2ca013cfd0305366300b2b7f4458a055a58e830fb9214c3",
+        "reused": false
+      },
+      {
+        "task": "v1260",
+        "key": "f7b9b4117800c4c236125bd5514838a09fef970144d1a194608e7dd455791438",
+        "receipt": ".build/evidence/tasks/v1260/f7b9b4117800c4c236125bd5514838a09fef970144d1a194608e7dd455791438/manifest.json",
+        "receipt_sha256": "1be6c013afbf66c671288ddd8c42dae2cd6fd8996c4303d82a97925c394c0e63",
+        "reused": false
+      },
+      {
+        "task": "update",
+        "key": "d99909a4e0ea222a8fbd38476f12615a6df8ba7e9581b8777841df69bc92edc7",
+        "receipt": ".build/evidence/tasks/update/d99909a4e0ea222a8fbd38476f12615a6df8ba7e9581b8777841df69bc92edc7/manifest.json",
+        "receipt_sha256": "2aa6fa08458d7977cacf79697d9dda89090cd4b5748c14679325322f95feda6b",
+        "reused": false
+      },
+      {
+        "task": "native-host",
+        "key": "58c1b84cc8e93e78aa8c4dd336caf4ad6516f6395e79acd9430fa09c23d009d8",
+        "receipt": ".build/evidence/tasks/native-host/58c1b84cc8e93e78aa8c4dd336caf4ad6516f6395e79acd9430fa09c23d009d8/manifest.json",
+        "receipt_sha256": "2673e36ef1b04ceed8ccd1d401bc2258172620bd6bdd58715c6dc553dc645153",
+        "reused": false
+      },
+      {
+        "task": "view-storage",
+        "key": "cb6db0a0ba0ea656f47c0951fc2e759a43d5df19fbcaca161aee35f19ff745bf",
+        "receipt": ".build/evidence/tasks/view-storage/cb6db0a0ba0ea656f47c0951fc2e759a43d5df19fbcaca161aee35f19ff745bf/manifest.json",
+        "receipt_sha256": "9bbbe9c9fb01888b882716f3d91a3bda7ce748ff0dc5ad7cdcda8d0c09edd05e",
+        "reused": false
+      },
+      {
+        "task": "v150-storage",
+        "key": "7d6a1698188e37ed8ee45e0edcb58091618652cffb28f46e516cf31ecc0ae24d",
+        "receipt": ".build/evidence/tasks/v150-storage/7d6a1698188e37ed8ee45e0edcb58091618652cffb28f46e516cf31ecc0ae24d/manifest.json",
+        "receipt_sha256": "683c79298337b671eaef67340ab419f45a4a2048b0ee93d9eba1199291fe2ea6",
+        "reused": false
+      },
+      {
+        "task": "v160-storage",
+        "key": "3154c00b730d19f98e15123a59ac56e8f39a9101f74c34ab89551874e4b0362d",
+        "receipt": ".build/evidence/tasks/v160-storage/3154c00b730d19f98e15123a59ac56e8f39a9101f74c34ab89551874e4b0362d/manifest.json",
+        "receipt_sha256": "ac175aac621f86d3dfc0c3119b5274e85bfd896cbce585846c9dba350e564de6",
+        "reused": false
+      },
+      {
+        "task": "v170-storage",
+        "key": "a4da9076c7cdfe4f9c9f5cb84d72662f40d6eeb8d934bbb011dbae3d123bed5e",
+        "receipt": ".build/evidence/tasks/v170-storage/a4da9076c7cdfe4f9c9f5cb84d72662f40d6eeb8d934bbb011dbae3d123bed5e/manifest.json",
+        "receipt_sha256": "a9f302ed2399c0fc35dd679986c50387f885a6e2fd083ea0591275d81b75bf63",
+        "reused": false
+      },
+      {
+        "task": "v180-storage",
+        "key": "8316c6e15fddfad9c323a6b4d6a51c39fe4e44870f319568e0b1f5e87ebf1440",
+        "receipt": ".build/evidence/tasks/v180-storage/8316c6e15fddfad9c323a6b4d6a51c39fe4e44870f319568e0b1f5e87ebf1440/manifest.json",
+        "receipt_sha256": "c0156017c99c04c12e1502f95a4f1e7b630822a23dc46305b52322a6debb99ef",
+        "reused": false
+      },
+      {
+        "task": "v190-storage",
+        "key": "c9ee790810c16f0aefa82372087192645d6da91791eb387575e0b0fbf41c9677",
+        "receipt": ".build/evidence/tasks/v190-storage/c9ee790810c16f0aefa82372087192645d6da91791eb387575e0b0fbf41c9677/manifest.json",
+        "receipt_sha256": "6cdef41cf479dc4a4a03931d26a23348f578270667fa8c50182764f81f7fb1fe",
+        "reused": false
+      },
+      {
+        "task": "v1110-storage",
+        "key": "6c51e0a33367058c953c7156788f4092fdf1565fb03b36eb52ceed45fcb4e97e",
+        "receipt": ".build/evidence/tasks/v1110-storage/6c51e0a33367058c953c7156788f4092fdf1565fb03b36eb52ceed45fcb4e97e/manifest.json",
+        "receipt_sha256": "a2af64348ba0ca649514c0578f182c6ecd233de16c205c68ae67025baf792a4e",
+        "reused": false
+      },
+      {
+        "task": "v1120-storage",
+        "key": "cec2dd7d893eba9171fd676ce2690d8df62c4bb100267af13006d9ca330375c7",
+        "receipt": ".build/evidence/tasks/v1120-storage/cec2dd7d893eba9171fd676ce2690d8df62c4bb100267af13006d9ca330375c7/manifest.json",
+        "receipt_sha256": "f464ad82221414617f47768599d796a60a9d05a65598a41b6ce8a952f9e7f78e",
+        "reused": false
+      },
+      {
+        "task": "v1130-storage",
+        "key": "4b12ea6f92b451a2534ab8da258e4b030c0675793b1c9cb56e83075aca73507f",
+        "receipt": ".build/evidence/tasks/v1130-storage/4b12ea6f92b451a2534ab8da258e4b030c0675793b1c9cb56e83075aca73507f/manifest.json",
+        "receipt_sha256": "4974ded3d3aecb80c9b2442890ad728068818dc9f3e77ac26547a63d66053a9b",
+        "reused": false
+      },
+      {
+        "task": "v1140-storage",
+        "key": "6283936d6d77e22c9a56b22cad685665ad72d1f38e45a0b3900839916d11d863",
+        "receipt": ".build/evidence/tasks/v1140-storage/6283936d6d77e22c9a56b22cad685665ad72d1f38e45a0b3900839916d11d863/manifest.json",
+        "receipt_sha256": "97be10d995abf017637b52d98103b858d2175a0ab4fcf3f4e63605a4b176f65f",
+        "reused": false
+      },
+      {
+        "task": "v1160-storage",
+        "key": "b834f3848f5de6938bb79639c3997fbd25760ecb5652769abfe509e0993e9612",
+        "receipt": ".build/evidence/tasks/v1160-storage/b834f3848f5de6938bb79639c3997fbd25760ecb5652769abfe509e0993e9612/manifest.json",
+        "receipt_sha256": "c89120d33f369a71ac32e1f1c5e2110a828917900f67d74c76aa28a299b8396b",
+        "reused": false
+      },
+      {
+        "task": "v1170-storage",
+        "key": "32f19c0f93f22460137d2ede0c0903c23b9527d77b805dab965506080542f12c",
+        "receipt": ".build/evidence/tasks/v1170-storage/32f19c0f93f22460137d2ede0c0903c23b9527d77b805dab965506080542f12c/manifest.json",
+        "receipt_sha256": "412d8e94c7b22b09b64a4493dca4038fa4e746f92d59e528b5bada1569695f1b",
+        "reused": false
+      },
+      {
+        "task": "v1190-storage",
+        "key": "f979c424a1e95b928080f38a0c7abacf06c2b6859537fb63c70a92b5b9ad48f8",
+        "receipt": ".build/evidence/tasks/v1190-storage/f979c424a1e95b928080f38a0c7abacf06c2b6859537fb63c70a92b5b9ad48f8/manifest.json",
+        "receipt_sha256": "f40974c66f00e5d2376914996d80b9f38441e9bac670cbe4337498b85a9261ae",
+        "reused": false
+      },
+      {
+        "task": "v1200-storage",
+        "key": "3d75a2f004bf87df936f3fad33881d39844bc57b5b2beadda27522cae5a6f148",
+        "receipt": ".build/evidence/tasks/v1200-storage/3d75a2f004bf87df936f3fad33881d39844bc57b5b2beadda27522cae5a6f148/manifest.json",
+        "receipt_sha256": "eecc87d337d924eb3410a5a809f41e4f8f988ea9ca6ff0751585785ee9238801",
+        "reused": false
+      },
+      {
+        "task": "v1201-storage",
+        "key": "53655325eee321def5613bfa7f7742d1119417f4400804cfd5d2e6b0c56b6b12",
+        "receipt": ".build/evidence/tasks/v1201-storage/53655325eee321def5613bfa7f7742d1119417f4400804cfd5d2e6b0c56b6b12/manifest.json",
+        "receipt_sha256": "fb462fc3d521c49aeefe8774684e1969c580ff3671d41e578c5772386ebfaac7",
+        "reused": false
+      },
+      {
+        "task": "v1202-storage",
+        "key": "cd355901e66d056b2c5daa80f18c31686ea424420929740d91b6e6ec7067da28",
+        "receipt": ".build/evidence/tasks/v1202-storage/cd355901e66d056b2c5daa80f18c31686ea424420929740d91b6e6ec7067da28/manifest.json",
+        "receipt_sha256": "66ca622cf21c92518691c195a5222deb9ceffe3ad8a26e7b70cf46c95ec1b6fa",
+        "reused": false
+      },
+      {
+        "task": "v1203-storage",
+        "key": "275d9944e5eaf17195b10fcf3005df19c27c26753f017eaf2d612622e19e4f27",
+        "receipt": ".build/evidence/tasks/v1203-storage/275d9944e5eaf17195b10fcf3005df19c27c26753f017eaf2d612622e19e4f27/manifest.json",
+        "receipt_sha256": "f60265047b3d7b891e044f28ed42dc005b5f2437830a509719180758ab3cd7a1",
+        "reused": false
+      },
+      {
+        "task": "v1210-storage",
+        "key": "a5f37550dafaf83db80b6a511c0e55e237e1d2f0644900e04b405713fa37873d",
+        "receipt": ".build/evidence/tasks/v1210-storage/a5f37550dafaf83db80b6a511c0e55e237e1d2f0644900e04b405713fa37873d/manifest.json",
+        "receipt_sha256": "b9461a5b9bcea100b8ee8f4d42dd9fb21c31e7047b4e5efa036f0766b1ced39a",
+        "reused": false
+      },
+      {
+        "task": "v1230-storage",
+        "key": "620cc3ad138d1fb5b38937d8b48eacb24caa3c7662600ba4c66dca9c0b76ee6d",
+        "receipt": ".build/evidence/tasks/v1230-storage/620cc3ad138d1fb5b38937d8b48eacb24caa3c7662600ba4c66dca9c0b76ee6d/manifest.json",
+        "receipt_sha256": "ab1d72b663002ac1c7dbc60e7ef5bb54976c159becc274d67457fe04787bcb87",
+        "reused": false
+      },
+      {
+        "task": "v1260-storage",
+        "key": "8032557a85eb60928ed168bdaa97ac79376c29c77bc737ec0b1f9dcaebbfbfe0",
+        "receipt": ".build/evidence/tasks/v1260-storage/8032557a85eb60928ed168bdaa97ac79376c29c77bc737ec0b1f9dcaebbfbfe0/manifest.json",
+        "receipt_sha256": "fa23d76f3dafd6c859cad82be10659120d7adf8f0913933e8cf12d74cb5fe12a",
+        "reused": false
+      },
+      {
+        "task": "workflow",
+        "key": "a86ce97348fe350d70af327cf801797533a3c878e2abfe7e875edfc77dda3bc2",
+        "receipt": ".build/evidence/tasks/workflow/a86ce97348fe350d70af327cf801797533a3c878e2abfe7e875edfc77dda3bc2/manifest.json",
+        "receipt_sha256": "8f40618da54408237d017bdb6895c1ac56741802fbb8211862ae893ea2b5718f",
+        "reused": false
+      },
+      {
+        "task": "large",
+        "key": "63ade3be98183d8526ae2186f6007da2f647d1048434e2e7caf13cb6ab0727ff",
+        "receipt": ".build/evidence/tasks/large/63ade3be98183d8526ae2186f6007da2f647d1048434e2e7caf13cb6ab0727ff/manifest.json",
+        "receipt_sha256": "77c30852323f4827c577c7ab1c5720f24d87fbeebc3888da7e1bfa885767bfd6",
+        "reused": false
+      },
+      {
+        "task": "loader",
+        "key": "5bc9a83e3e8b468635ff23f7a90a8b4c1ab5ef19e9ebfb139c8fd829edeaf575",
+        "receipt": ".build/evidence/tasks/loader/5bc9a83e3e8b468635ff23f7a90a8b4c1ab5ef19e9ebfb139c8fd829edeaf575/manifest.json",
+        "receipt_sha256": "3f162a1b5b3defdbebb10dccb9c50cf1e5b2e341ff11a814d7b7d5e0df5a513e",
+        "reused": false
+      },
+      {
+        "task": "browser",
+        "key": "f08594cfebe143129fe208833277f358eb57bc55023177e135ff74ce73831678",
+        "receipt": ".build/evidence/tasks/browser/f08594cfebe143129fe208833277f358eb57bc55023177e135ff74ce73831678/manifest.json",
+        "receipt_sha256": "445463678806ee235ddd9c5937362040cbcd04b6b3f22afbb316f2f217794c5d",
+        "reused": false
+      },
+      {
+        "task": "v170-browser",
+        "key": "26ee0abad0c0d9f8884d9ad0d2ca6e6c3663aa82379186c3acb6dc4b20a40f11",
+        "receipt": ".build/evidence/tasks/v170-browser/26ee0abad0c0d9f8884d9ad0d2ca6e6c3663aa82379186c3acb6dc4b20a40f11/manifest.json",
+        "receipt_sha256": "6ea1cb5bc40d08cc44a6c8d668d8c0211d6418fc9a4ebcfb5046fc0109493fd5",
+        "reused": false
+      },
+      {
+        "task": "v180-browser",
+        "key": "16f10563d9939bfb342c8f2786dbcedf4ce80103bcd503d4792e6d811a2f2a6f",
+        "receipt": ".build/evidence/tasks/v180-browser/16f10563d9939bfb342c8f2786dbcedf4ce80103bcd503d4792e6d811a2f2a6f/manifest.json",
+        "receipt_sha256": "5c760c71d5edf7db7133c3204dd86529b1e36fab61558a3d407670b6d560faff",
+        "reused": false
+      },
+      {
+        "task": "v190-browser",
+        "key": "149383a6c7f70c29e9bceae83b6b4674fea58dedee3a08d56fc2e22f9414b0f6",
+        "receipt": ".build/evidence/tasks/v190-browser/149383a6c7f70c29e9bceae83b6b4674fea58dedee3a08d56fc2e22f9414b0f6/manifest.json",
+        "receipt_sha256": "1d5a22b07eb2299200692256bb54103759cb1a1ad20fa919ab2e9773f72750fd",
+        "reused": false
+      },
+      {
+        "task": "v1100-browser",
+        "key": "0de460cb04c6724b591c0c3a46ae1b94958607008c56bab7f2d1ba354a08504f",
+        "receipt": ".build/evidence/tasks/v1100-browser/0de460cb04c6724b591c0c3a46ae1b94958607008c56bab7f2d1ba354a08504f/manifest.json",
+        "receipt_sha256": "75c1b487658106c697fa0a61bb274191c2f82071d042a8e5dda0eb90ef0a7581",
+        "reused": false
+      },
+      {
+        "task": "v1110-browser",
+        "key": "39faadc563873c830ffb63475a274a36f200bcc0e4a84ef8e3857c182a56b33f",
+        "receipt": ".build/evidence/tasks/v1110-browser/39faadc563873c830ffb63475a274a36f200bcc0e4a84ef8e3857c182a56b33f/manifest.json",
+        "receipt_sha256": "33b494d98e21efda9375eb5b626a4be47b92bcb96af88efdb444aa6b1df5988a",
+        "reused": false
+      },
+      {
+        "task": "v1120-browser",
+        "key": "6124a71bcf8d1226ba6d8be365fc820c59753c09eea8044992366a629d7bcf3b",
+        "receipt": ".build/evidence/tasks/v1120-browser/6124a71bcf8d1226ba6d8be365fc820c59753c09eea8044992366a629d7bcf3b/manifest.json",
+        "receipt_sha256": "541db6e316b16b4d7936c9ef2454a5741fb2a7dcb1da0d20fb94225b411dcdba",
+        "reused": false
+      },
+      {
+        "task": "v1130-browser",
+        "key": "1bf432e2d9f2c469cd692f544b5a8dcf53fdd8409c46f4d857e4621f163779f5",
+        "receipt": ".build/evidence/tasks/v1130-browser/1bf432e2d9f2c469cd692f544b5a8dcf53fdd8409c46f4d857e4621f163779f5/manifest.json",
+        "receipt_sha256": "0d1117091b6ebe41b4a15ff3a9ef213e4ab03bfbbc1ebd647efe2f0eeabb8c42",
+        "reused": false
+      },
+      {
+        "task": "v1140-browser",
+        "key": "0ef47a6d62f6940812653f40fc3e9fb684fac56962edd8b064a14cbdc808b64c",
+        "receipt": ".build/evidence/tasks/v1140-browser/0ef47a6d62f6940812653f40fc3e9fb684fac56962edd8b064a14cbdc808b64c/manifest.json",
+        "receipt_sha256": "3d7fbcd450c4714413505fe49765e33ef5bd481edecf8a1f30d9ca52573dc1dd",
+        "reused": false
+      },
+      {
+        "task": "v1150-browser",
+        "key": "6ee8e9a1f598fd7b74a584920f5bf4b7b05d98f7473767ea3003169db46be197",
+        "receipt": ".build/evidence/tasks/v1150-browser/6ee8e9a1f598fd7b74a584920f5bf4b7b05d98f7473767ea3003169db46be197/manifest.json",
+        "receipt_sha256": "6a07b3188bd67437081606e38d72bc5c036181460d6f3fc2f5be84b70261b565",
+        "reused": false
+      },
+      {
+        "task": "v1160-browser",
+        "key": "35d719e3db90dd272772945f2f2708c63f11a07a9a3e3aace879bb0bb7c1712f",
+        "receipt": ".build/evidence/tasks/v1160-browser/35d719e3db90dd272772945f2f2708c63f11a07a9a3e3aace879bb0bb7c1712f/manifest.json",
+        "receipt_sha256": "052d7aebe739970194f4957c61ac944d5c25610b4c44c9c8ad3d4c6995cae005",
+        "reused": false
+      },
+      {
+        "task": "v1170-browser",
+        "key": "547d5aaa78b9d4bca6ca6691f34ef4a8051b823deda1a7ce5d2ab3dba9c86eb4",
+        "receipt": ".build/evidence/tasks/v1170-browser/547d5aaa78b9d4bca6ca6691f34ef4a8051b823deda1a7ce5d2ab3dba9c86eb4/manifest.json",
+        "receipt_sha256": "a41b9881ad8c049543a46015f79dce713905af2e5f5ba99fd05028b8421dbab2",
+        "reused": false
+      },
+      {
+        "task": "v1180-browser",
+        "key": "f38abf687ad4bf7843aef8b44e9e74ae86ace111bdd947639f4f905c677fb10d",
+        "receipt": ".build/evidence/tasks/v1180-browser/f38abf687ad4bf7843aef8b44e9e74ae86ace111bdd947639f4f905c677fb10d/manifest.json",
+        "receipt_sha256": "c0efd2caf4fb8af122288fbf432aea41e756afade975559941800dfac686907b",
+        "reused": false
+      },
+      {
+        "task": "v1190-browser",
+        "key": "d837ae497fd745731ba43c1264d6e49621e42c4e38682d554ccaa36343ffbc84",
+        "receipt": ".build/evidence/tasks/v1190-browser/d837ae497fd745731ba43c1264d6e49621e42c4e38682d554ccaa36343ffbc84/manifest.json",
+        "receipt_sha256": "6ce734cd0b8762c8e010a5d812dd83535f28a6ff57d51d40f918b2a2377f0055",
+        "reused": false
+      },
+      {
+        "task": "v1200-browser",
+        "key": "40c6a5df128f777c18b8a07b3ee2392deff8711a31d5b71db195263865bc17b0",
+        "receipt": ".build/evidence/tasks/v1200-browser/40c6a5df128f777c18b8a07b3ee2392deff8711a31d5b71db195263865bc17b0/manifest.json",
+        "receipt_sha256": "9ad5b9da1946ad74d88dd92374163495cc127f3a637dc23e8a7eba0faaa4f687",
+        "reused": false
+      },
+      {
+        "task": "v1201-browser",
+        "key": "a86e43658f3e4ba84b33112a11d8dddcb48b624db1e236b9436c4ecb666fe478",
+        "receipt": ".build/evidence/tasks/v1201-browser/a86e43658f3e4ba84b33112a11d8dddcb48b624db1e236b9436c4ecb666fe478/manifest.json",
+        "receipt_sha256": "a84ac8e51147238e1c401aac2f5e114eab928b8393cc27d16b2b844fa058f32f",
+        "reused": false
+      },
+      {
+        "task": "v1202-browser",
+        "key": "08ff4ce1d65bbe3d940a7c8cfba6541b626fb05b3ffbb3b13e3841b960b2490e",
+        "receipt": ".build/evidence/tasks/v1202-browser/08ff4ce1d65bbe3d940a7c8cfba6541b626fb05b3ffbb3b13e3841b960b2490e/manifest.json",
+        "receipt_sha256": "7d0c2bdf3d0f7b6e1d55cb98c629ece6790e7a6e9a7ab765cca03ab181c6e28f",
+        "reused": false
+      },
+      {
+        "task": "v1203-browser",
+        "key": "29228672eb894ec2b95e5367dc1ccfb5f0bc0be1e83b92a5a82eb36dfaa3cfb1",
+        "receipt": ".build/evidence/tasks/v1203-browser/29228672eb894ec2b95e5367dc1ccfb5f0bc0be1e83b92a5a82eb36dfaa3cfb1/manifest.json",
+        "receipt_sha256": "15074a4bab1d19c2912306d859db5c061d3959fb39fd810b4d8bf6badc91f4bb",
+        "reused": false
+      },
+      {
+        "task": "v1210-browser",
+        "key": "a7392b1a96cf62bad307c3bf025319e32503b227af7d549e27ad273c804c7b4a",
+        "receipt": ".build/evidence/tasks/v1210-browser/a7392b1a96cf62bad307c3bf025319e32503b227af7d549e27ad273c804c7b4a/manifest.json",
+        "receipt_sha256": "3e0f5adfed2c6a0cf41ddc33e4e6d1bbca7bd8e1d25a6e568e8d86f1ba741931",
+        "reused": false
+      },
+      {
+        "task": "v1211-browser",
+        "key": "960966edc4874946b198b2aeff02760ac0d8c355a1c2ae3d4225f3f0fc4cb55e",
+        "receipt": ".build/evidence/tasks/v1211-browser/960966edc4874946b198b2aeff02760ac0d8c355a1c2ae3d4225f3f0fc4cb55e/manifest.json",
+        "receipt_sha256": "a46a7f470bc7a6b3bba2575df14e7889a1f227566e67e3776cab8a3b666c6ae4",
+        "reused": false
+      },
+      {
+        "task": "v1220-browser",
+        "key": "02e752daa4d97975ef8b4aff0e3c1a349d581cf9163c50c9aaf7dbb7f20231fb",
+        "receipt": ".build/evidence/tasks/v1220-browser/02e752daa4d97975ef8b4aff0e3c1a349d581cf9163c50c9aaf7dbb7f20231fb/manifest.json",
+        "receipt_sha256": "44d25ddd6c1dfed7b3d9b8ef481dc350bd837cb9a4bf4fed6be580ac1b2510b4",
+        "reused": false
+      },
+      {
+        "task": "v1230-browser",
+        "key": "5bf9d56b2f25584cc6f40833b153821f3f4216b5087e51c7e8fb0cfadf7f9697",
+        "receipt": ".build/evidence/tasks/v1230-browser/5bf9d56b2f25584cc6f40833b153821f3f4216b5087e51c7e8fb0cfadf7f9697/manifest.json",
+        "receipt_sha256": "0e2c0cfaaa10feef87ca39651da4b2c577ae82e9b6db8224c0307a8d98c09b1b",
+        "reused": false
+      },
+      {
+        "task": "v1260-browser",
+        "key": "d18c851f0d2e2d6752caa980db02a9bccdaf96f5f4cff141aecfbf16e2f17809",
+        "receipt": ".build/evidence/tasks/v1260-browser/d18c851f0d2e2d6752caa980db02a9bccdaf96f5f4cff141aecfbf16e2f17809/manifest.json",
+        "receipt_sha256": "4c276520492320ff5e38db12d9848e9b564e723b14057cef4974390344027d92",
+        "reused": false
+      },
+      {
+        "task": "update-browser",
+        "key": "aecab37175432723b7fe87f4474bf3a4a717dca3b3287d30879463e10f9cf475",
+        "receipt": ".build/evidence/tasks/update-browser/aecab37175432723b7fe87f4474bf3a4a717dca3b3287d30879463e10f9cf475/manifest.json",
+        "receipt_sha256": "a7dfb4ec452dd3b7e250b61c91c8ee0320281d5f60bc4e29125d5d79fb02ea94",
+        "reused": false
+      },
+      {
+        "task": "export-files",
+        "key": "e6f7d13c832536e257179da5d5093d36b8d92b46c00ec0b9ccf60841de7564cf",
+        "receipt": ".build/evidence/tasks/export-files/e6f7d13c832536e257179da5d5093d36b8d92b46c00ec0b9ccf60841de7564cf/manifest.json",
+        "receipt_sha256": "dad3091fc0fd3305fdf63079a21d359e00d9738a7c58465811d15244c4caef6c",
+        "reused": false
+      },
+      {
+        "task": "office-schema",
+        "key": "b0a527668ed6cffb8e59f790eb34fe4c52a486fd77c89e514104a1ef4bde3a0b",
+        "receipt": ".build/evidence/tasks/office-schema/b0a527668ed6cffb8e59f790eb34fe4c52a486fd77c89e514104a1ef4bde3a0b/manifest.json",
+        "receipt_sha256": "f6389fa6b80da5ff21e5ffe6769df90d2feba355c31ba9285d0aeb0097cc9405",
+        "reused": false
+      },
+      {
+        "task": "v1120-files",
+        "key": "c0ec22ab6137b332f168badce989e2706795637c4d3b380d55cd52c8223f778b",
+        "receipt": ".build/evidence/tasks/v1120-files/c0ec22ab6137b332f168badce989e2706795637c4d3b380d55cd52c8223f778b/manifest.json",
+        "receipt_sha256": "b5259f72aeefc5e04eb93e1e189952fa576c7d0b51790f9adbfeee5f4c7bde1c",
+        "reused": false
+      },
+      {
+        "task": "v1130-files",
+        "key": "8addc9350987b239e026bf4a6070ad7ffd1f2dd2ece5b8ffa10510a7a420094b",
+        "receipt": ".build/evidence/tasks/v1130-files/8addc9350987b239e026bf4a6070ad7ffd1f2dd2ece5b8ffa10510a7a420094b/manifest.json",
+        "receipt_sha256": "9743710c9beb285ab0cb7f4ebf06017edf0bd824edf571e8504d504374ad4847",
+        "reused": false
+      },
+      {
+        "task": "v1140-files",
+        "key": "003d1fd3d4503fdbf3d35bba043a903ece1047e4b923530494bd1e259885a66b",
+        "receipt": ".build/evidence/tasks/v1140-files/003d1fd3d4503fdbf3d35bba043a903ece1047e4b923530494bd1e259885a66b/manifest.json",
+        "receipt_sha256": "477cd8847eb8852b81b6431b6929656e6f6a93c595bc1d96fead81f1cb6e4134",
+        "reused": false
+      },
+      {
+        "task": "v1170-files",
+        "key": "8c611140a1c02a48505083841ebce19409946d9c43ef15f468481c4e4cdba09c",
+        "receipt": ".build/evidence/tasks/v1170-files/8c611140a1c02a48505083841ebce19409946d9c43ef15f468481c4e4cdba09c/manifest.json",
+        "receipt_sha256": "069f8ce07459814ae4306fac2bf3b7e23aca880f71753becc3b4bb1046d6a555",
+        "reused": false
+      },
+      {
+        "task": "v1200-files",
+        "key": "74de4ba04e25c662bfc439f1cead8880a33b25b2c46c86a6568943309e407eca",
+        "receipt": ".build/evidence/tasks/v1200-files/74de4ba04e25c662bfc439f1cead8880a33b25b2c46c86a6568943309e407eca/manifest.json",
+        "receipt_sha256": "945e322241feab6806bddad267eba00b28567f34a86786e398eb42b60c7630c6",
+        "reused": false
+      },
+      {
+        "task": "v1201-files",
+        "key": "82228cbe357cff1b74a45e2137ee9b7f7f3bb8c49ac4b260ab976f00076f48cd",
+        "receipt": ".build/evidence/tasks/v1201-files/82228cbe357cff1b74a45e2137ee9b7f7f3bb8c49ac4b260ab976f00076f48cd/manifest.json",
+        "receipt_sha256": "d4078e57ea931eb312141bc0250a768a223367acc94097bb58fb1cd27501fc71",
+        "reused": false
+      },
+      {
+        "task": "v1202-files",
+        "key": "35e67f82a4f57a0bc0adf33bc24abb8d1d52c77d6fe8bdfcace548bd5cd013b0",
+        "receipt": ".build/evidence/tasks/v1202-files/35e67f82a4f57a0bc0adf33bc24abb8d1d52c77d6fe8bdfcace548bd5cd013b0/manifest.json",
+        "receipt_sha256": "60a34558c2d2639a8a17bc9643542efbb35df68701a2936b8da784b7a82fb1a5",
+        "reused": false
+      },
+      {
+        "task": "v1203-files",
+        "key": "666ba1f79533713f6a291ea44d3b13c2870fecd465a4c3a9cd7c98d189c09d2d",
+        "receipt": ".build/evidence/tasks/v1203-files/666ba1f79533713f6a291ea44d3b13c2870fecd465a4c3a9cd7c98d189c09d2d/manifest.json",
+        "receipt_sha256": "cd03287345f9271f988dc0f2f0021b4e43419e6ac1b86e606e657b278dacf615",
+        "reused": false
+      },
+      {
+        "task": "v1210-files",
+        "key": "388f8fb002fb7b67d5a40983fd26edd507663a6771c91c373b8fc6deb9f90a58",
+        "receipt": ".build/evidence/tasks/v1210-files/388f8fb002fb7b67d5a40983fd26edd507663a6771c91c373b8fc6deb9f90a58/manifest.json",
+        "receipt_sha256": "d21f84039f4ada868e9be9330103fad0edab7c1d38e1e7f908f3892448988a8f",
+        "reused": false
+      },
+      {
+        "task": "v1211-files",
+        "key": "3e0b79291b9ccbdcd06b06e25d8d81ddc496da6a41188699734b39da06455f5c",
+        "receipt": ".build/evidence/tasks/v1211-files/3e0b79291b9ccbdcd06b06e25d8d81ddc496da6a41188699734b39da06455f5c/manifest.json",
+        "receipt_sha256": "e2034be5bd0d568226e02930dc27e4daceb67ccbf59c76d9bcc5645440b8242b",
+        "reused": false
+      },
+      {
+        "task": "v1260-files",
+        "key": "b546880c475f63125723e0bf4b9c248ef15ce690973247a8210ea0f8a5457ba4",
+        "receipt": ".build/evidence/tasks/v1260-files/b546880c475f63125723e0bf4b9c248ef15ce690973247a8210ea0f8a5457ba4/manifest.json",
+        "receipt_sha256": "a5a8c34402dac8a998c99a22160947ae3d2e0bf9fddcaf81a34f48a2f5a4119d",
+        "reused": false
+      }
+    ],
+    "real_windows_nvda_braille_arm64_tests": false
+  }
+}

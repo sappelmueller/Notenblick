@@ -1,6 +1,6 @@
 """Small control scenarios for evidence/retry. Never runs program/release suites."""
 from pathlib import Path
-import contextlib,io,json,os,subprocess,sys,tempfile,time,unittest
+import ast,contextlib,io,json,os,subprocess,sys,tempfile,time,unittest,zipfile
 from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'dev'))
@@ -19,6 +19,27 @@ def workspace():
             M.REPORT.mkdir();yield root
 
 class Management(unittest.TestCase):
+    def test_package_publication_preserves_previous_file_until_complete(self):
+        tree=ast.parse((ROOT/'dev/package.py').read_text())
+        helper=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='atomic_file')
+        namespace={'contextmanager':contextlib.contextmanager,'tempfile':tempfile,'os':os}
+        exec(compile(ast.Module(body=[helper],type_ignores=[]),'package-publication','exec'),namespace)
+        publish=namespace['atomic_file']
+        with tempfile.TemporaryDirectory() as tmp:
+            target=Path(tmp)/'package.zip';previous=b'previous complete package';target.write_bytes(previous)
+            with self.assertRaisesRegex(RuntimeError,'interrupted'):
+                with publish(target,'w+b') as stream:
+                    stream.write(b'incomplete');self.assertEqual(target.read_bytes(),previous)
+                    raise RuntimeError('interrupted')
+            self.assertEqual(target.read_bytes(),previous)
+            self.assertEqual(list(Path(tmp).iterdir()),[target])
+            with publish(target,'w+b') as stream:
+                with zipfile.ZipFile(stream,'w') as archive:archive.writestr('program.txt',b'complete')
+                with zipfile.ZipFile(stream) as archive:self.assertIsNone(archive.testzip())
+                self.assertEqual(target.read_bytes(),previous)
+            with zipfile.ZipFile(target) as archive:self.assertEqual(archive.read('program.txt'),b'complete')
+            self.assertEqual(list(Path(tmp).iterdir()),[target])
+
     def quiet_run(self,name,command,**options):
         with contextlib.redirect_stdout(io.StringIO()):M.run(name,command,task=name,**options)
         return M.STEPS[-1]

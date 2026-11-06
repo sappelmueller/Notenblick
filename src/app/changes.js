@@ -50,25 +50,25 @@ Notenblick.restoreWorkspace = function restoreWorkspace(source=Notenblick.worksp
   Notenblick.ui.workspaces = {};
   if (a.workspaces && typeof a.workspaces === 'object') for (const [id, w] of Object.entries(a.workspaces)) {
     if (!Notenblick.data.courses.some(c => c.id === id) || !w || typeof w !== 'object') continue;
-    const x = Notenblick.defaults();
-    if (Notenblick.noteKeys.includes(w.view)) x.view=w.view; else if(Notenblick.kinds.includes(w.view)||w.view==='extra')x.view='assessments';
-    x.assessmentFilter=Notenblick.kinds.includes(w.assessmentFilter)?w.assessmentFilter:'all';
+    const x = Notenblick.defaults(),course=Notenblick.data.courses.find(c=>c.id===id),courseKinds=Notenblick.N.areaIds(course);x.columns=courseKinds.slice();x.hiddenTabs=Array.isArray(w.hiddenTabs)?w.hiddenTabs.filter(k=>courseKinds.includes(k)):[];
+    if (['overview','assessments',...courseKinds,'pupil'].includes(w.view)) x.view=w.view; else if(courseKinds.includes(w.view)||w.view==='extra')x.view='assessments';
+    x.assessmentFilter=courseKinds.includes(w.assessmentFilter)?w.assessmentFilter:'all';
     x.assessmentId=typeof w.assessmentId==='string'?w.assessmentId:typeof w.selected?.[w.view==='extra'?w.extra:w.view]==='string'&&w.selected[w.view==='extra'?w.extra:w.view]!=='all'?w.selected[w.view==='extra'?w.extra:w.view]:'';
     x.assessmentSearch=typeof w.assessmentSearch==='string'?w.assessmentSearch.slice(0,100):'';
     x.entrySearch=typeof w.entrySearch==='string'?w.entrySearch.slice(0,100):'';
-    x.matrixPages=Object.fromEntries(Notenblick.kinds.filter(k=>Number.isSafeInteger(w.matrixPages?.[k])&&w.matrixPages[k]>=0).map(k=>[k,w.matrixPages[k]]));
+    x.matrixPages=Object.fromEntries(courseKinds.filter(k=>Number.isSafeInteger(w.matrixPages?.[k])&&w.matrixPages[k]>=0).map(k=>[k,w.matrixPages[k]]));
     x.assessmentWorkOpen=w.assessmentWorkOpen===true;
     x.oralAreaView=['matrix','list'].includes(w.oralAreaView)?w.oralAreaView:Notenblick.prefs.areaView;x.oralClassSearch=typeof w.oralClassSearch==='string'?w.oralClassSearch.slice(0,100):(typeof w.search==='string'?w.search.slice(0,100):'');x.oralListSearch=typeof w.oralListSearch==='string'?w.oralListSearch.slice(0,100):(typeof w.assessmentSearch==='string'?w.assessmentSearch.slice(0,100):'');
     x.oralView=w.oralView==='individual'?'individual':'classes';x.oralSearch=typeof w.oralSearch==='string'?w.oralSearch.slice(0,100):'';x.oralStudent=typeof w.oralStudent==='string'?w.oralStudent:'all';x.oralSort=w.oralSort==='student'?'student':'date';x.oralPage=Number.isSafeInteger(w.oralPage)?Math.max(0,w.oralPage):0;x.oralFocusId=typeof w.oralFocusId==='string'?w.oralFocusId:'';
     x.pupil=typeof w.pupil==='string'?w.pupil:'';
     if (Notenblick.extraKeys.includes(w.extra)) x.extra = w.extra;
-    if (Array.isArray(w.columns)) x.columns = [...new Set(w.columns.filter(k => ['written', ...Notenblick.kinds].includes(k)))];
+    if (Array.isArray(w.columns)){x.columns=[...new Set(w.columns.filter(k=>['written',...courseKinds].includes(k)))];for(const k of courseKinds)if(Array.isArray(w.knownKinds)&&!w.knownKinds.includes(k)&&!x.columns.includes(k))x.columns.push(k);}x.knownKinds=courseKinds.slice();
     x.showExited = w.showExited === true;
     x.entryMode = w.entryMode === 'single' ? 'single' : 'table';
     x.search = typeof w.search === 'string' ? w.search.slice(0, 100) : '';
     x.studentIndex = Number.isInteger(w.studentIndex) ? Math.max(0, w.studentIndex) : 0;
     x.selected = {};
-    for (const k of Notenblick.kinds) if (typeof w.selected?.[k] === 'string') x.selected[k] = w.selected[k];
+    for (const k of courseKinds) if (typeof w.selected?.[k] === 'string') x.selected[k] = w.selected[k];
     Notenblick.ui.workspaces[id] = x;
   }
 };

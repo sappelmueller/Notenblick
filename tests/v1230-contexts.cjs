@@ -3,8 +3,8 @@ module.exports=async function prepare(index){
  const A=globalThis.Notenblick,$=s=>document.querySelector(s);
  if(A.contextHelp)A.closeContextHelp();if($('#dialog').open)A.closeModal({submitted:true});
  A.pending.clear();for(const el of document.querySelectorAll('[data-entry][aria-invalid]'))el.removeAttribute('aria-invalid');if($('#pointConfiguration'))$('#pointConfiguration').hidden=true;A.settingsWeights?.saved();A.error();A.entrySession=null;A.setupDraft=null;A.dialogReturn=null;A.dialogBeforeClose=null;A.firstRun=false;
- A.mode='demo';A.data=NR.clone(globalThis.contextFixture);A.rendered={};A.prefs.notesLayout='kinds';A.prefs.visibleKinds=[...A.kinds];A.prefs.courseOpenView='last';A.prefs.selectionMode='quick';
- A.normalizeContext();A.courseNotes(A.data.courses[0].id);A.ui.adminYear=A.ui.year;A.ui.adminClass=A.ui.class;
+ A.mode='demo';A.data=NR.clone(globalThis.contextFixture);for(const c of A.data.courses)c.areas=NR.areas(c);A.ui.workspaces={};A.rendered={};A.prefs.notesLayout='kinds';A.prefs.visibleKinds=[...A.kinds];A.prefs.courseOpenView='last';A.prefs.selectionMode='quick';
+ A.normalizeContext();A.courseNotes(A.data.courses[0].id);A.W().pupil=A.getCourse().studentIds[0];A.ui.adminYear=A.ui.year;A.ui.adminClass=A.ui.class;
  const select=s=>{const e=$(s);if(!e)throw Error('Context '+index+' missing '+s);if(/^H[1-6]$/.test(e.tagName))e.tabIndex=-1;e.focus();return e;};
  const admin=key=>{A.activateGroup('main','admin');A.activateGroup('class',key);};
  const settings=key=>{A.activateGroup('main','settings');A.activateGroup('settings',key);};
@@ -58,7 +58,7 @@ module.exports=async function prepare(index){
  case 44:settings('display');return select('#setting-notesLayout');
  case 45:settings('display');return select('#setting-classOrder');
  case 46:settings('display');return select('[data-action=choose-shortcuts]');
- case 47:settings('calculation');return select('#default-calculationMode');
+ case 47:settings('calculation');return select('#settings-calculation h2');
  case 48:A.activateGroup('main','help');return select('#help-tab-einstieg');
  default:throw Error('Missing context '+index);
  }

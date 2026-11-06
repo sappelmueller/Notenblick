@@ -1,5 +1,7 @@
 # Versionen veröffentlichen
 
+Aktuell offiziell veröffentlicht: **1.26.0** am **6. November 2026**. Der Herausgeber hat den unveränderten Entwicklungsstand nach praktischem Windows-Test ausdrücklich freigegeben. Das geprüfte Windows-ZIP bleibt bytegleich, der direkte Updateweg aus 1.25.1 ist freigegeben. Einzelheiten: [Prüfung und Veröffentlichung](PRUEFBERICHT-1.26.0.md).
+
 1. Ausschließlich `sappelmueller/Notenblick`, ID `1432518047`, auf einem Entwicklungsbranch bearbeiten. Das Repository ist öffentlich. Name, ID, Sichtbarkeit und deaktivierte Actions vor entfernten Änderungen live prüfen. Keine Daten oder Zugangsdaten einchecken.
 2. Änderungen, Versionsnummer und Hilfe abschließen. `package.json` enthält `releaseNotes`: drei bis fünf ausdrücklich gepflegte Aussagen zur jeweiligen Version. Aus Sicht einer Lehrkraft, kurz und freundlich; keine Dateinamen, Commits, Prüfsummen oder Teststatistiken. Keine automatisch erzeugten GitHub-Änderungslisten verwenden.
 3. Gezielte Prüfungen durchführen, Quellen und Dokumente vollständig stagen, dann `TZ=UTC python3 dev/manage.py release`. Alle Gruppen, 180.000 Ergebnisse, Office/PDF/UA/Druck, zwei bytegleiche Builds und vollständige ZIP-/Entpackprüfung müssen bestehen. Fehler stoppen die Freigabe. Bereits nachgewiesene unveränderte Gruppen und zwei saubere bytegleiche Builds werden über ihre Inhalts-, Werkzeug- und Ausgabenachweise übernommen. Fehlt der Doppelbuild-Nachweis für genau diese Build-Eingaben, werden zwei frische unabhängige Builds ausgeführt.
@@ -9,7 +11,7 @@
 7. Nur nach ausdrücklicher Freigabe auf dem geprüften Stand `TZ=UTC python3 dev/package.py --approve-update reports/<Lauf>/summary.json` ausführen. Der Befehl verlangt den gültigen Release-Nachweis, erzeugt dieselben vollständigen Archive und setzt den separaten Deskriptor auf `approved: true`. Archive, Deskriptor, Quellbaum und Prüfsummen erneut abgleichen. Bei geänderten Quellen erneut `release` ausführen: gültige unveränderte Gruppen übernehmen, betroffene neu prüfen und den vollständigen Nachweis für den endgültigen Quellstand zusammensetzen.
 8. Eindeutigen Tag `vX.Y.Z` am freigegebenen Commit und ein stabiles offizielles GitHub Release erstellen. Beifügen: `Notenblick_X.Y.Z.zip`, `Notenblick_X.Y.Z_Quellcode.zip`, `Notenblick_X.Y.Z_Pruefsummen.json` und `Notenblick_X.Y.Z_Aktualisierung.json`. Ein neuer Commit in `main`, ein Entwurf oder ein Prerelease ist keine Aktualisierung. Bei fehlender Windows-Abnahme ausschließlich Testversion/Prerelease und `approved: false` verwenden.
 9. Veröffentlichte Downloads erneut abrufen. Hashes, vollständige Dateiliste, Version, Tag/Quellbaum und Lizenzen abgleichen. Tatsächlichen GitHub-Stand kontrollieren. Bestehende Tags und Downloads nicht ersetzen.
-10. Erst danach vollständig übernommene Entwicklungsbranches löschen. Für 1.25.1 betrifft dies `entwicklung/1.25.1`. Aufgeräumter Regelstand: nur `main`. Die Zwischenentwicklung 1.23.3 wurde bereits in 1.24.0 übernommen. Die drei historischen PR-Referenzen bleiben beim Support; keine weitere Historienbereinigung.
+10. Erst danach vollständig übernommene Entwicklungsbranches löschen. Während Entwicklung und praktischer Prüfung bleibt der jeweilige Entwicklungsbranch erhalten; nach abgeschlossener Veröffentlichung bleibt üblicherweise nur `main`. Die Zwischenentwicklung 1.23.3 wurde bereits in 1.24.0 übernommen. Die drei historischen PR-Referenzen bleiben beim Support; keine weitere Historienbereinigung.
 
 ## Wiederaufnahme ab Entwicklung 1.25.0
 
@@ -20,6 +22,16 @@ Datum, Git-Commitdatum und fachlich unbeteiligte Dokumente sind keine Gruppenvor
 Verpackung, CRC, vollständige Dateiliste, Einzelhashes und bytegleiche Entpackung werden für die abschließenden Archive erneut kontrolliert. Ein gültiger Startnachweis identischer entpackter Programmbytes darf übernommen werden. `status` prüft alle Pflichtgruppen, ihre kanonischen Befehle, Einzelbelege, Build-Reproduzierbarkeit, vier Archive/Deskriptor-Dateien sowie Quelle, Werkzeuge und Index. Eine Anzahl bestandener Schritte oder ein manuell gesetztes Erfolgsfeld reicht nicht. Die ausdrückliche Herausgeberfreigabe und die getrennten Windows-Praxistests bleiben erforderlich.
 
 Alte Nachweise vor Schema 2 werden einmalig nicht automatisch importiert: Sie enthalten keine vollständigen dauerhaften Ausgabekopien. Vorhandene Werkzeuge werden weiterverwendet; keine pauschale Neuinstallation. Lokale Nachweise bleiben in der Arbeitskopie und werden nicht über GitHub veröffentlicht. Eine Wiederaufnahme setzt deren Erhalt voraus.
+
+## Ausdrückliche Freigabe von 1.26.0 am 6. November 2026
+
+Sebastian Müller hat die fertig entwickelte und unter Windows praktisch getestete Ausgabe 1.26.0 ausdrücklich zur offiziellen Veröffentlichung freigegeben. Seit dieser Prüfung gab es keine Programmänderungen. Er untersagt erneute Funktions-, Berechnungs-, Browser-, NVDA-, ARM64- und Regressionstests sowie unnötige Builds.
+
+Für genau diese Veröffentlichung werden der vollständige Entwicklungsstand `9164005` und das vorhandene, zum kompakten Prüfnachweis bytegleiche Windows-ZIP unverändert übernommen. Der vorhandene Bericht mit 93 erfolgreichen Pflichtgruppen und zwei bytegleichen Builds bleibt der Entwicklungsnachweis. Fehlende lokale Vollprotokolle werden nicht als erneut validiert ausgegeben. Nur Git-, Versions-, Datei-, Archiv-, Prüfsummen- und Veröffentlichungskontrollen durchführen; keinen neuen vollständigen Release-Nachweis behaupten.
+
+Nur Dokumentation und externe Veröffentlichungsdateien abschließen. Das vollständige Quellcode-ZIP aus dem finalen Git-Baum erzeugen. Der versionsgebundene Deskriptor erhält `approved: true`, `minimumUpdater: 1.24.0`, `dataSchema: 1`, die gepflegten Neuerungen sowie Größe/Hash des vorhandenen ZIPs und sämtliche Datei-Einzelhashes. Sicherheits-/Prüfverwaltung, Installationscode und Datenformat bleiben unverändert. Der normale Freigabeweg für künftige Programmänderungen bleibt bestehen.
+
+Pull Request gemäß unverändertem Branchschutz nach main, Tag v1.26.0, stabiles Release mit vier Dateien, öffentliche Downloads und Hashes abgleichen. Den abgeschlossenen Entwicklungsbranch erst danach löschen; eine automatische Branchlöschung beim Merge muss bis dahin ausgeschaltet sein. Historische Tags, Releases und Prüfnachweise erhalten; Actions bleiben deaktiviert.
 
 ## Ausdrückliche Freigabe von 1.25.1 am 4. November 2026
 

@@ -101,20 +101,24 @@ Notenblick.fillSelection=function(yid=Notenblick.ui.year,cid=Notenblick.ui.class
  if(quick){const {chosen}=A.shortcutChoices(yid,fid);A.$('#quickSelection').innerHTML=A.quickLinks(chosen,{activeId:fid})+(!chosen.length?'<p class="hint">Keine Schnellzugriffe ausgewählt.</p>':'');}
 
 };
-Notenblick.noteTabKeys=()=>Notenblick.prefs.notesLayout==='kinds'?['overview',...Notenblick.prefs.visibleKinds,'pupil']:['overview','assessments','pupil'];
-Notenblick.assessmentView=kind=>Notenblick.prefs.notesLayout==='kinds'?(Notenblick.prefs.visibleKinds.includes(kind)?kind:'overview'):'assessments';
+Notenblick.visibleKinds=()=>Notenblick.getCourse()?Notenblick.N.visibleAreas(Notenblick.getCourse(),Notenblick.data).map(a=>a.id).filter(id=>!(Notenblick.W().hiddenTabs||[]).includes(id)):Notenblick.kinds;
+Notenblick.noteTabKeys=()=>Notenblick.prefs.notesLayout==='kinds'?['overview',...Notenblick.visibleKinds(),'pupil']:['overview','assessments','pupil'];
+Notenblick.assessmentView=kind=>Notenblick.prefs.notesLayout==='kinds'?(Notenblick.visibleKinds().includes(kind)?kind:'overview'):'assessments';
 Notenblick.mapNotesView=function(key){const A=Notenblick,w=A.W(),keys=A.noteTabKeys();
  if(A.prefs.notesLayout==='compact'&&A.kinds.includes(key)){w.assessmentFilter=key;return'assessments';}
- if(A.prefs.notesLayout==='kinds'&&key==='assessments'){const kind=A.data.assessments.find(a=>a.id===w.assessmentId)?.kind;return A.prefs.visibleKinds.includes(kind)?kind:'overview';}
+ if(A.prefs.notesLayout==='kinds'&&key==='assessments'){const kind=A.data.assessments.find(a=>a.id===w.assessmentId)?.kind;return A.visibleKinds().includes(kind)?kind:'overview';}
  if(A.kinds.includes(key)&&!keys.includes(key)){w.assessmentFilter=key;return keys.includes('assessments')?'assessments':'overview';}
  return keys.includes(key)?key:'overview';
 };
 Notenblick.notePanel=key=>Notenblick.kinds.includes(key)?'notes-'+key:key;
 Notenblick.ensureNoteTabs=function(){
- const A=Notenblick,list=A.$('#noteTabs'),layout=A.prefs.notesLayout+':'+A.prefs.visibleKinds.join(',');if(list.dataset.layout===layout)return;
- const keys=A.noteTabKeys(),labels={overview:'Übersicht',assessments:'Leistungen',pupil:'Schüler',...A.N.KINDS};
- for(const key of ['overview','assessments',...A.kinds,'pupil']){const panel=A.$('#'+A.notePanel(key));panel.hidden=true;panel.removeAttribute('role');panel.removeAttribute('aria-labelledby');if(key==='assessments'||A.kinds.includes(key))panel.innerHTML='';}
- list.innerHTML=keys.map(key=>`<li><a id="tab-${key}" href="#${A.notePanel(key)}" data-key="${key}">${labels[key]}</a></li>`).join('');list.dataset.layout=layout;
+ const A=Notenblick,list=A.$('#noteTabs'),c=A.getCourse(),layout=JSON.stringify([c?.id,A.prefs.notesLayout,A.visibleKinds(),A.kindLabels]);if(list.dataset.layout===layout)return;
+ A.rendered={};const keys=A.noteTabKeys(),labels={overview:'Übersicht',assessments:'Leistungen',pupil:'Schüler',...A.kindLabels};
+ // Keep the three permanent panels; area panels belong to the current subject.
+ for(const panel of document.querySelectorAll('#notesWork > [data-area-panel]'))panel.remove();
+ for(const key of ['overview','assessments','pupil']){const panel=A.$('#'+key);panel.hidden=true;panel.removeAttribute('role');panel.removeAttribute('aria-labelledby');if(key==='assessments')panel.innerHTML='';}
+ for(const id of A.kinds){const panel=document.createElement('div');panel.id='notes-'+id;panel.className='area-panel';panel.dataset.areaPanel=id;panel.hidden=true;A.$('#notesWork').append(panel);}
+ list.innerHTML=keys.map(key=>`<li><a id="tab-${key}" href="#${A.notePanel(key)}" data-key="${key}">${A.esc(labels[key])}</a></li>`).join('');list.dataset.layout=layout;
  A.groups.notes=A.bind('noteTabs',keys,(key,update)=>{A.clearAnnouncement();A.W().view=key;A.showNotesPane(key);if(update)A.remember();});
 };
 Notenblick.refreshCurrent = function refreshCurrent() {

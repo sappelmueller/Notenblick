@@ -82,23 +82,26 @@
     async syncTextLists(d,{force=false}={}){
       const manifestPath='Sicherungen/Notenlistenverzeichnis.json',normal=t=>t.replace(/^\ufeff/,''),textPath=p=>this.textPrefix?this.textPrefix+'/'+p:p;
       let old={};try{old=json(await readAt(this.root,manifestPath))||{};}catch(e){if(!missing(e)&&!(e instanceof SyntaxError))throw e;}
-      const safe=p=>typeof p==='string'&&!p.includes('\\')&&!/[\u0000-\u001f:]/.test(p)&&!p.startsWith('/')&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&p.split('/')[0].toLocaleLowerCase('de')!=='daten'&&(p.split('/').length===3&&p.endsWith('/Schülerliste.txt')||p.split('/').length===4&&p.endsWith('/Notenübersicht.txt')||p.split('/').length===5&&['Schülernoten','Mündliche Noten','Gesicherter Altbestand',...Object.values(N.KINDS)].includes(p.split('/')[3])&&p.endsWith('.txt'));
-      const files=N.exportsTXT(d),previous=[13,14,16,17,18,N.TEXT_LIST_VERSION].includes(old.version)&&Array.isArray(old.files)?[...new Set([...old.files,...(Array.isArray(old.retained)?old.retained:[])])].filter(safe):[],hashes={};
-      // A pending directory can never be mistaken for a complete update.
-      await writeAt(this.root,manifestPath,JSON.stringify({version:N.TEXT_LIST_VERSION,state:'updating',commitId:d.commitId,files:[...new Set([...previous,...Object.keys(files)])],hashes:old.version===N.TEXT_LIST_VERSION?old.hashes||{}:{}}));
-      let written=0;for(const[p,text]of Object.entries(files)){
-        let current;try{current=await readAt(this.root,textPath(p));}catch(e){if(!missing(e))throw e;}
-        if(force||current===undefined||normal(current)!==normal(text)){await writeAt(this.root,textPath(p),text);const verified=await readAt(this.root,textPath(p));if(normal(verified)!==normal(text))throw Error('Die TXT-Datei '+p+' konnte nicht vollständig geprüft werden.');written++;}
-        hashes[p]=await N.textDigest(text);
+      const safe=p=>typeof p==='string'&&!p.includes('\\')&&!/[\u0000-\u001f:]/.test(p)&&!p.startsWith('/')&&p.split('/').every(x=>x&&x!=='.'&&x!=='..'&&!/[<>"|?*\u007f]/.test(x)&&!/[. ]$/.test(x))&&p.split('/')[0].toLocaleLowerCase('de')!=='daten'&&([3,4,5].includes(p.split('/').length))&&p.endsWith('.txt');
+      const recognized=[13,14,16,17,18,19,N.TEXT_LIST_VERSION].includes(old.version),previous=recognized&&Array.isArray(old.files)?[...new Set([...old.files,...(Array.isArray(old.retained)?old.retained:[])])].filter(safe):[],oldHashes=recognized&&old.hashes&&typeof old.hashes==='object'?old.hashes:{},desired=N.exportsTXT(d),hashes={...oldHashes},paths={},active=[],parents=new Set(),retained=new Set(Array.isArray(old.retained)?old.retained.filter(safe):[]);
+      const read=async p=>{try{return await readAt(this.root,textPath(p));}catch(e){if(missing(e))return undefined;throw e;}};
+      const owns=async(p,current)=>typeof current==='string'&&/^[a-f0-9]{64}$/.test(hashes[p]||'')&&await N.textDigest(current)===hashes[p];
+      const checkpoint=async()=>writeAt(this.root,manifestPath,JSON.stringify({version:N.TEXT_LIST_VERSION,state:'updating',commitId:d.commitId,files:[...new Set([...previous,...active])],hashes,paths:{...(old.paths||{}),...paths},retained:[...retained]}));
+      await checkpoint();let written=0;
+      for(const [wanted,text]of Object.entries(desired)){
+        let p=typeof old.paths?.[wanted]==='string'&&safe(old.paths[wanted])&&old.paths[wanted].split('/').slice(0,-1).join('/')===wanted.split('/').slice(0,-1).join('/')?old.paths[wanted]:wanted,current=await read(p);
+        if(current!==undefined&&!await owns(p,current)){
+          retained.add(p);let number=1;const base=wanted.slice(0,-4);do{p=base+' (Notenblick'+(number>1?' '+number:'')+').txt';number++;current=await read(p);if(current!==undefined&&!await owns(p,current))retained.add(p);}while(current!==undefined&&!await owns(p,current));
+        }
+        if(force||current===undefined||normal(current)!==normal(text)){await writeAt(this.root,textPath(p),text);if(normal(await read(p))!==normal(text))throw Error('Die TXT-Datei '+p+' konnte nicht vollständig geprüft werden.');written++;}
+        hashes[p]=await N.textDigest(text);paths[wanted]=p;active.push(p);retained.delete(p);if(active.length%64===0)await checkpoint();
       }
-      const parents=new Set(),retained=[];for(const p of previous){if(Object.hasOwn(files,p))continue;let current;try{current=await readAt(this.root,textPath(p));}catch(e){if(missing(e))continue;throw e;}
-        // Legacy or manually edited files have no verified ownership: retain them.
-        if(old.version!==N.TEXT_LIST_VERSION||typeof old.hashes?.[p]!=='string'||await N.textDigest(current)!==old.hashes[p]){retained.push(p);continue;}
-        await removeAt(this.root,textPath(p));let parts=p.split('/').slice(0,-1);while(parts.length){parents.add(parts.join('/'));parts.pop();}
+      for(const p of previous){if(active.includes(p))continue;const current=await read(p);if(current===undefined){retained.delete(p);continue;}
+        if(!await owns(p,current)){retained.add(p);continue;}await removeAt(this.root,textPath(p));retained.delete(p);delete hashes[p];let parts=p.split('/').slice(0,-1);while(parts.length){parents.add(parts.join('/'));parts.pop();}
       }
       for(const p of [...parents].sort((a,b)=>b.length-a.length)){try{const parts=textPath(p).split('/');let dir=this.root;for(const part of parts.slice(0,-1))dir=await dir.getDirectoryHandle(part);const child=await dir.getDirectoryHandle(parts.at(-1));let empty=true;for await(const entry of child.entries()){empty=false;break;}if(empty)await dir.removeEntry(parts.at(-1));}catch(e){if(!missing(e)&&e.name!=='InvalidModificationError')throw e;}}if(parents.size)writeDirectories.delete(this.root);
-      await writeAt(this.root,manifestPath,JSON.stringify({version:N.TEXT_LIST_VERSION,state:'complete',commitId:d.commitId,files:Object.keys(files),hashes,retained}));
-      this.textCache={commitId:d.commitId,files};this.textWarning=retained.length?retained.length+' ältere oder nachträglich geänderte TXT-Dateien wurden zur Sicherheit beibehalten.':'';return this.lastTextResult={files:Object.keys(files).length,written,retained};
+      const finalHashes=Object.fromEntries(active.map(p=>[p,hashes[p]]));await writeAt(this.root,manifestPath,JSON.stringify({version:N.TEXT_LIST_VERSION,state:'complete',commitId:d.commitId,files:active,hashes:finalHashes,paths,retained:[...retained]}));
+      this.textCache={commitId:d.commitId,files:Object.fromEntries(Object.entries(desired).map(([p,text])=>[paths[p],text]))};this.textWarning=retained.size?retained.size+' ältere oder nachträglich geänderte TXT-Dateien wurden zur Sicherheit beibehalten. Aktuelle Ausgaben erkennst du bei Namenskonflikten am Zusatz Notenblick.':'';return this.lastTextResult={files:active.length,written,retained:[...retained]};
     }
     // Cleanup never trusts a cached or partially received directory listing.
     async backupInventory() {
@@ -111,7 +114,7 @@
       const regular=[],protectedFiles=[],digests=[];
       for(const {name,h} of entries){
         if(h.kind!=='file')continue;
-        const match=/^Stand_(\d{8,})_([a-zA-Z0-9_-]+)\.json$/.exec(name),protectedName=/^(Vor_Wiederherstellung_|Vor_Einstellungen_1-4_|Vor_Muendlich_Zuordnung_|Ansicht_Vor_Wiederherstellung_|Ansicht_Beschaedigt_|Beschaedigt_)[a-zA-Z0-9_-]+\.json$/.test(name)||/^(Vor_Migration_|Vor_Ersetzen_)[a-zA-Z0-9_-]+\.zip$/.test(name);
+        const match=/^Stand_(\d{8,})_([a-zA-Z0-9_-]+)\.json$/.exec(name),protectedName=/^(Vor_Wiederherstellung_|Vor_Einstellungen_1-4_|Vor_Muendlich_Zuordnung_|Vor_Leistungsbereichen_|Ansicht_Vor_Wiederherstellung_|Ansicht_Beschaedigt_|Beschaedigt_)[a-zA-Z0-9_-]+\.json$/.test(name)||/^(Vor_Migration_|Vor_Ersetzen_)[a-zA-Z0-9_-]+\.zip$/.test(name);
         if(!match&&!protectedName)continue;
         let info,text,size;
         try{info=h.meta||await h.getFile();if(protectedName&&Number.isSafeInteger(info.size)){protectedFiles.push({name,size:info.size});continue;}text=await(await h.getFile()).text();size=Number.isSafeInteger(info.size)?info.size:new TextEncoder().encode(text).length;}

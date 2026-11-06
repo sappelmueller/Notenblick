@@ -4,10 +4,10 @@ const crypto=require('node:crypto'),assert=require('node:assert/strict'),fs=requ
 const ctx=await require('./load.cjs').load({cache:new Map()}),{q:A,w}=ctx,$=s=>w.document.querySelector(s),N=w.NR,checks=[];
 try{
  const help=JSON.parse(fs.readFileSync(path.join(__dirname,'../src/data/HILFE-1.23.0.json'))),contexts=JSON.parse(fs.readFileSync(path.join(__dirname,'../src/data/F1-KONTEXTE.json'))).contexts;
- for(const [name,hash]of Object.entries({'HILFE-1.23.0.json':'33035311ebabfbc2f22f87c59f6c7d407489f6ceac353a43f7c28520fe545867','F1-KONTEXTE.json':'2248941d98863327e5fd47f1be129d9b5323a758175e6f074a9443edf5a1b904'}))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'../src/data',name))).digest('hex'),hash);
+ for(const [name,hash]of Object.entries({'HILFE-1.23.0.json':'852c42b6eee5c44f647a16ae69c6c7c02b16bd8faad43d372c21a8a98d976326','F1-KONTEXTE.json':'2248941d98863327e5fd47f1be129d9b5323a758175e6f074a9443edf5a1b904'}))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'../src/data',name))).digest('hex'),hash);
  assert.equal(help.topics.length,9);assert.equal(help.topics.reduce((n,t)=>n+t.sections.length,0),77);assert.equal(contexts.length,49);
  A.activateGroup('main','help');assert.equal($('#help .help-intro').textContent,help.intro);assert.equal(w.document.querySelectorAll('#help [role=tab]').length,9);
- for(const t of help.topics){assert.equal($('#help-tab-'+t.id).textContent,t.title);for(const s of t.sections){const h=$('#'+s.id);assert.equal(h.textContent,s.heading);assert.deepEqual(Array.from(h.parentElement.querySelectorAll('p'),p=>p.textContent),s.paragraphs);}}
+ for(const t of help.topics){assert.equal($('#help-tab-'+t.id).textContent,t.title);for(const s of t.sections){const h=$('#'+s.id);assert.equal(h.textContent,s.heading);require('./help-content.cjs')(assert,h.parentElement,s);}}
  checks.push('JSON wortgetreu: Einleitung, 9 Tabs, 77 H3-Abschnitte und alle Absätze; keine alte Hilfe');
  const fixture=require('./v1210-fixture.cjs')(N),base=fixture.courses[0];fixture.courses.push({...N.clone(base),id:'synthetic-other',name:'Weiteres Fach'});fixture.classes.push({...N.clone(fixture.classes[0]),id:'synthetic-target-class',name:'7z'});
  w.contextFixture=fixture;w.eval('globalThis.prepareContext='+require('./v1230-contexts.cjs').toString());
@@ -18,7 +18,7 @@ try{
   assert.equal(A.helpContext(origin),index,'context '+index+' '+contexts[index].context);
   key('F1');if(index===48){assert.equal(!!A.contextHelp,false);continue;}
   const {section}=A.helpSection(index);assert.equal(w.document.activeElement.id,index===24||$('#dialog').open?'contextHelpTitle':section.id);assert.equal(A.contextHelp.index,index);
-  if($('#dialog').open){assert.equal($('#contextHelpTitle').textContent,section.heading);assert.deepEqual(Array.from($('#contextHelp').querySelectorAll('p'),p=>p.textContent),Array.from(section.paragraphs));for(const[el,v,c]of controls){assert.equal(el.isConnected,true);assert.equal(el.value,v);assert.equal(el.checked,c);}}
+  if($('#dialog').open){assert.equal($('#contextHelpTitle').textContent,section.heading);require('./help-content.cjs')(assert,$('#contextHelp'),section);for(const[el,v,c]of controls){assert.equal(el.isConnected,true);assert.equal(el.value,v);assert.equal(el.checked,c);}}
   assert.equal(JSON.stringify(A.data),raw);key('Escape');assert.equal(w.document.activeElement,node,'return context '+index);assert.equal(JSON.stringify(A.data),raw);for(const[el,v]of controls)assert.equal(el.value,v);
   rows.push({context:contexts[index].context,section:section.id,focusReturned:true,formNodesRetained:true});
  }

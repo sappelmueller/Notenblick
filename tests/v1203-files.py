@@ -36,7 +36,7 @@ for item in manifest['reports']:
     elif 'date' not in cell:assert compact(cell['text']) in compact(excel),(name,'Excel',cell)
  if name=='empty':assert len(doc.tables)==0 and 'Für dieses Fach sind noch keine Noten erfasst.' in txt and 'Für dieses Fach sind noch keine Noten erfasst.' in csv_text and 'Für dieses Fach sind noch keine Noten erfasst.' in excel
  if name=='roster':assert 'Fach Schülerliste' not in txt and 'Schülerliste · Klasse' not in text
- if name=='complete':assert len(doc.tables[0].columns)==8 and len([s for s in item['layout']['sections'] if s.get('overview')])==1
+ if name=='complete':assert len(doc.tables[0].columns)==7 and len([s for s in item['layout']['sections'] if s.get('overview')])==1
  with zipfile.ZipFile(OUT/(name+'.docx')) as z:
   xml=ET.fromstring(z.read('word/document.xml'));tables=xml.findall('.//w:tbl',ns);assert len(tables)==len(item['layout']['sections']);assert all(t.find('w:tr/w:trPr/w:tblHeader',ns) is not None for t in tables);assert not xml.findall('.//w:pageBreakBefore',ns)
  source=OUT/(name+'.pdf');pdf_pages=pdf_check(source,expected,item['layout'],model);reader=PdfReader(source);assert reader.trailer['/Root'].get('/StructTreeRoot') and reader.trailer['/Root']['/Lang']=='de-DE';pdfs.append(str(source));office.extend([str(OUT/(name+'.docx')),str(OUT/(name+'.xlsx'))]);summary[name]={'pdfPages':pdf_pages,'tables':len(doc.tables)}

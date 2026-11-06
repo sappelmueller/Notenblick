@@ -35,3 +35,4 @@
 @media print{#printOutput tfoot{display:table-row-group}#printOutput tfoot th,#printOutput tfoot td{background:#e9f1ec;color:#111;font-weight:700}}
 
 @media print{#printOutput tbody:has(+tfoot){break-after:avoid;page-break-after:avoid}#printOutput tbody:has(+tfoot) tr:last-child{break-after:avoid;page-break-after:avoid}}
+@media print{#printOutput .report-final-rows{break-inside:avoid;page-break-inside:avoid}#printOutput [data-report-footer]>th,#printOutput [data-report-footer]>td{background:#e9f1ec;color:#111;font-weight:700}}

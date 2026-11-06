@@ -49,6 +49,7 @@
       case 'assessment-done': Notenblick.finishAssessment(); break;
       case 'point-settings': Notenblick.editPointSettings(); break;
       case 'open-assessment': Notenblick.openAssessment(id,true); break;
+      case 'area-individual': Notenblick.areaIndividual(el.dataset.kind); break;
       case 'oral-picker': Notenblick.oralPicker(); break;
       case 'final-dialog': Notenblick.finalDialog(id,el.dataset.period||'annual'); break;
       case 'finals-class': Notenblick.finalDialog(null,el.dataset.period||'annual'); break;

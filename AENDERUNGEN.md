@@ -1,5 +1,15 @@
 # Änderungen
 
+## 1.26.0 – 6. November 2026
+
+- Eigene Leistungsbereiche je Fach hinzufügen, umbenennen und sortieren. Neue Fächer beginnen mit Klassenarbeiten 50 %, Tests 10 % und Mündlich 40 %.
+- Individuelle Anteile festlegen: alle Bereiche direkt gewichten oder mehrere Bereiche zu einer gemeinsamen schriftlichen Note zusammenfassen.
+- Gewichtungen übersichtlicher bearbeiten und Vorlagen aus anderen Fächern übernehmen. Automatische Verteilungen ergeben mit höchstens zwei Nachkommastellen genau 100 %. Geänderte Schülerdurchschnitte vor dem Speichern vergleichen.
+- Einheitliche Notenansichten, Einzelnoten und Punkte in allen Bereichen. Berichte und Exporte berücksichtigen die eigenen Bereiche; manuell bearbeitete TXT-Notfalllisten bleiben geschützt.
+- Vollständig überarbeitete Offline-Hilfe mit Schrittlisten und Beispielen. F1 erklärt den aktuellen Einrichtungsschritt oder die gerade bearbeitete Gewichtung.
+
+Nach erfolgreicher Windows-Praxisprüfung durch Sebastian Müller ausdrücklich zur Veröffentlichung freigegeben. Das geprüfte Windows-ZIP bleibt unverändert. Der Updater bietet den direkten Wechsel von 1.25.1 auf 1.26.0 an und ersetzt ausschließlich EXE und vollständigen Programmordner; Daten bleibt unangetastet. [Freigabe und Prüfstand](docs/PRUEFBERICHT-1.26.0.md).
+
 ## 1.25.1 – 4. November 2026
 
 - Bei aktivierter Startprüfung einmal pro Programmstart nach Aktualisierungen suchen. Die bisherige 24-Stunden-Sperre entfällt, auch nach fehlgeschlagenen Prüfungen. Manuelle und automatische Anfragen werden zusammengeführt.

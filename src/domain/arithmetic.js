@@ -60,9 +60,18 @@ NR.grade = function grade(v) {
   if (q.cmp(1) < 0n || q.cmp(6) > 0n) throw Error('Die Note muss zwischen 1 und 6 liegen.');
   return String(Number(s));
 };
-NR.weightsValid = function weightsValid(w, {legacy = false, incomplete = false, mode = 'grouped'} = {}) {
+NR.weightsValid = function weightsValid(w, {legacy = false, incomplete = false, mode = 'grouped', course = null} = {}) {
   if (!['grouped','direct'].includes(mode)) throw Error('Unbekannte Berechnungsart.');
   if(mode==='direct' && Object.hasOwn(w?.overall||{},'written'))throw Error('Direkte Gewichtung darf keinen zusätzlichen schriftlichen Anteil enthalten.');
+  if(course?.areas){
+    const ids=NR.areaIds(course),inside=NR.groupIds(course),outside=mode==='direct'?ids:['written',...ids.filter(id=>!inside.includes(id))];
+    for(const [part,keys] of [['overall',outside],...(mode==='grouped'?[['written',inside]]:[])]){
+      if(!keys.length)throw Error('Bitte Bereiche für die gemeinsame Note wählen.');
+      if(Object.keys(w?.[part]||{}).some(k=>!keys.includes(k)))throw Error('Ein Leistungsbereich wird mehrfach oder falsch gewichtet.');
+      let sum=new NR.Q(0);for(const id of keys){const q=NR.Q.from(w?.[part]?.[id]);if(q.cmp(0)<0n||q.cmp(100)>0n)throw Error('Gewichtungen müssen zwischen 0 und 100 Prozent liegen.');sum=sum.add(q);}
+      if(sum.cmp(100)!==0n)throw Error((part==='written'?'Innerhalb der gemeinsamen Note':'Gesamtgewichtung')+': Die Summe muss 100 Prozent betragen.');
+    }return true;
+  }
   for (const [group, keys] of [['overall', [...Object.keys(mode==='direct'?NR.KINDS:NR.OVERALL),...(legacy?['other']:[])]], ['written', ['exam', 'test']]]) {
     let sum = new NR.Q(0);
     for (const k of keys) {

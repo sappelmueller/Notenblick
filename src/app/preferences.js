@@ -1,6 +1,6 @@
 /* One authoritative set of presentation preferences, persisted only in Ansicht.json. */
 (function(A){'use strict';
-A.preferenceDefaults=()=>({version:1,classOrder:'asc',startupView:'last',courseOpenView:'last',nameFormat:'first-last',sortBy:'last',sortDir:'asc',selectionMode:'quick',notesLayout:'kinds',areaView:'matrix',visibleKinds:[...A.kinds],pupilOrder:'kind',pupilEntries:'all',defaultPrecision:2,defaultRounding:'truncate',defaultCalculationMode:'grouped',defaultWeights:A.N.defaultWeights(),quickIds:null,courseCodes:{}});
+A.preferenceDefaults=()=>({version:1,classOrder:'asc',startupView:'last',courseOpenView:'last',nameFormat:'first-last',sortBy:'last',sortDir:'asc',selectionMode:'quick',notesLayout:'kinds',areaView:'matrix',visibleKinds:[...A.kinds],pupilOrder:'kind',pupilEntries:'all',defaultPrecision:2,defaultRounding:'truncate',defaultCalculationMode:'direct',defaultAreas:A.N.newAreas(),defaultWrittenIds:['exam','test'],defaultWrittenName:'Schriftlich',defaultWeights:{overall:{exam:'50',test:'10',oral:'40'},written:{exam:'80',test:'20'}},quickIds:null,courseCodes:{}});
 A.prefs=A.preferenceDefaults();
 A.restorePreferences=function(workspace){
  const source=workspace.settings||{},old=workspace.workspaces?.[workspace.course]||{},p=A.preferenceDefaults();
@@ -9,7 +9,8 @@ A.restorePreferences=function(workspace){
  if(!workspace.settings){p.sortBy=workspace.main==='admin'?(workspace.adminSort||old.sortBy||'last'):(old.sortBy||workspace.adminSort||'last');p.sortDir=workspace.main==='admin'?(workspace.adminDir||old.sortDir||'asc'):(old.sortDir||workspace.adminDir||'asc');if(!['first','last'].includes(p.sortBy))p.sortBy='last';if(!['asc','desc'].includes(p.sortDir))p.sortDir='asc';}
  if(Array.isArray(source.visibleKinds))p.visibleKinds=A.kinds.filter(k=>source.visibleKinds.includes(k));
  if([0,1,2].includes(source.defaultPrecision))p.defaultPrecision=source.defaultPrecision;
- if(['grouped','direct'].includes(source.defaultCalculationMode)&&source.defaultWeights){try{A.N.weightsValid(source.defaultWeights,{mode:source.defaultCalculationMode});p.defaultCalculationMode=source.defaultCalculationMode;p.defaultWeights=A.N.clone(source.defaultWeights);}catch{A.error?.('Die allgemeinen Gewichtungsvorgaben sind ungültig. Bitte prüfe sie unter Einstellungen.','settings');}}
+ if(['grouped','direct'].includes(source.defaultCalculationMode)&&source.defaultWeights){try{const course={areas:source.defaultAreas,writtenIds:source.defaultWrittenIds,writtenName:source.defaultWrittenName};A.N.weightsValid(source.defaultWeights,{mode:source.defaultCalculationMode,course});if(course.areas){A.N.validateAreas({...course,calculationMode:source.defaultCalculationMode});p.defaultAreas=A.N.clone(course.areas);p.defaultWrittenIds=[...A.N.groupIds(course)];p.defaultWrittenName=course.writtenName||'Schriftlich';}else{p.defaultAreas=A.N.clone(A.N.areas({}));}p.defaultCalculationMode=source.defaultCalculationMode;p.defaultWeights=A.N.clone(source.defaultWeights);}catch{A.error?.('Die allgemeinen Gewichtungsvorgaben sind ungültig. Bitte prüfe sie unter Einstellungen.','settings');}}
+ if(!source.defaultAreas&&source.defaultCalculationMode==='grouped'&&JSON.stringify(source.defaultWeights)===JSON.stringify(A.N.defaultWeights())){const fresh=A.preferenceDefaults();for(const k of ['defaultAreas','defaultWrittenIds','defaultWrittenName','defaultCalculationMode','defaultWeights'])p[k]=fresh[k];}
  if(Array.isArray(source.quickIds))p.quickIds=[...new Set(source.quickIds.filter(x=>typeof x==='string'))].slice(0,16);
  if(source.courseCodes&&typeof source.courseCodes==='object')for(const[id,code]of Object.entries(source.courseCodes))if(A.data.courses.some(c=>c.id===id)&&typeof code==='string'&&code.length<=16&&!/[\r\n\u0000-\u001f]/.test(code))p.courseCodes[id]=code.trim();
  A.prefs=p;A.ui.settingsView=['general','display','calculation'].includes(workspace.settingsView)?workspace.settingsView:'general';
@@ -24,7 +25,7 @@ A.setPreference=function(key,value){
  const p={...A.prefs,[key]:value};
  if(key==='defaultPrecision')p[key]=Number(value);
  const allowed={classOrder:['asc','desc'],startupView:['last','home'],courseOpenView:['last','overview'],nameFormat:['first-last','last-first'],sortBy:['first','last'],sortDir:['asc','desc'],selectionMode:['select','quick'],notesLayout:['compact','kinds'],areaView:['matrix','list'],pupilOrder:['kind','date'],pupilEntries:['all','entered'],defaultPrecision:[0,1,2],defaultRounding:['round','truncate']};
- if(key==='visibleKinds'){if(!Array.isArray(value)||value.some(k=>!A.kinds.includes(k)))throw Error('Bitte gültige Leistungsarten wählen.');p.visibleKinds=A.kinds.filter(k=>value.includes(k));}
+ if(key==='visibleKinds'){if(!Array.isArray(value)||value.some(k=>!A.kinds.includes(k)))throw Error('Bitte gültige Leistungsarten wählen.');p.visibleKinds=A.kinds.filter(k=>value.includes(k));A.W().hiddenTabs=A.kinds.filter(k=>!value.includes(k));}
  else if(!allowed[key]?.includes(p[key]))throw Error('Bitte eine gültige Einstellung wählen.');
  A.prefs=p;A.rendered={};A.remember();
  if(['notesLayout','visibleKinds'].includes(key)&&A.ui.main==='notes'){const focused=document.activeElement?.closest('#noteTabs');A.renderNotes();if(focused)A.$('#noteTabs [aria-selected=true]')?.focus();}
@@ -51,7 +52,7 @@ A.subjectCode=function(c){if(Object.hasOwn(A.prefs.courseCodes,c.id))return A.pr
 A.suggestSubjectCode=function(name){const clean=x=>x.toLocaleLowerCase('de').normalize('NFKC').replace(/[\s,\/–—-]+/g,' ').trim();return (window.NRSubjectCatalog?.subjects||[]).find(x=>x.names.some(n=>clean(n)===clean(name)))?.code||'';};
 A.copyCoursePresentation=function(sourceId,targetId){if(Object.hasOwn(A.prefs.courseCodes,sourceId))A.prefs.courseCodes[targetId]=A.prefs.courseCodes[sourceId];};
 A.copyClassPresentation=function(sourceId,targetId,d=A.data){for(const c of d.courses.filter(c=>c.classId===sourceId)){const target=d.courses.find(x=>x.classId===targetId&&x.name===c.name);if(target)A.copyCoursePresentation(c.id,target.id);}};
-A.newCourseConfig=(p=A.prefs)=>({calculationMode:p.defaultCalculationMode,weights:A.N.clone(p.defaultWeights),precision:p.defaultPrecision,rounding:p.defaultRounding});
+A.newCourseConfig=(p=A.prefs)=>({areas:A.N.clone(p.defaultAreas||A.N.newAreas()),writtenIds:[...(p.defaultWrittenIds||['exam','test'])],writtenName:p.defaultWrittenName||'Schriftlich',calculationMode:p.defaultCalculationMode,weights:A.N.clone(p.defaultWeights),precision:p.defaultPrecision,rounding:p.defaultRounding});
 A.compareClasses=(a,b)=>(A.prefs.classOrder==='desc'?-1:1)*a.name.localeCompare(b.name,'de',{numeric:true,sensitivity:'base'})||a.id.localeCompare(b.id);
 A.sortedClasses=list=>[...list].sort(A.compareClasses);
 A.classesByYear=list=>[...list].sort((a,b)=>A.N.compareSchoolYears(A.data.years.find(y=>y.id===a.yearId),A.data.years.find(y=>y.id===b.yearId))||A.compareClasses(a,b));

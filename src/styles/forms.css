@@ -183,3 +183,11 @@ dialog[data-size=wide]{width:min(1120px,calc(100% - 24px))}
   font-size:.87rem;
   color:var(--muted)
 }
+/* The existing percentage form grows with the subject's area list. */
+.area-weight-list{display:grid;grid-template-columns:minmax(0,1fr);gap:0}.area-weight-row{min-width:0;padding:14px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent}.area-weight-row .button-row{gap:.5rem}.area-weight-row details{margin-top:.5rem}.area-weight-row summary{cursor:pointer}.area-weight-row details .field{margin-top:.8rem}.area-weight-row .hint{margin:.4rem 0}
+
+.area-weight-row>.field{display:grid;grid-template-columns:minmax(0,1fr) minmax(6rem,9rem);align-items:center;gap:12px}.area-weight-row>.field label{margin:0}.area-weight-row>.field input{width:100%;min-width:0}.area-weight-row details{max-width:36rem}.weight-confirmation{border-top:1px solid var(--line);margin-top:18px;padding-top:18px}#weightDifferences{margin-block:16px}#weightDifferences summary{font-weight:600;cursor:pointer}#weightDifferences>.check{margin-block:16px}#weightDifferenceTitle{margin-block:16px 10px}
+
+#weightPreviewTable .changed-average td:last-child{background:var(--soft);font-weight:700;font-size:inherit}#weightPreviewTable .changed-average td:nth-child(3){background:transparent;font-weight:inherit}
+
+.weight-section .area-weight-row>.check{display:inline-flex;margin:4px 18px 4px 0}.weight-section .area-weight-row>details{display:inline-block;vertical-align:top;margin-top:4px;max-width:100%}.weight-section .area-weight-row>details[open]{display:block}.weight-section .area-weight-row>details summary{overflow-wrap:anywhere}

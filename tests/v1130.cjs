@@ -21,7 +21,7 @@ fs.mkdirSync(out,{recursive:true});
   const row=new w.DOMParser().parseFromString(A.overviewTable(),'text/html').querySelector('tfoot tr');
   assert.deepEqual(Array.from(row.cells,el=>el.textContent.trim()).slice(-3),Array.from(s.footer,cell=>cell.text).slice(-3));for(let i=1;i<s.columns.length-3;i++)assert.equal(s.footer[i].text,show(A.classAverages(c).categories[s.columns[i].key],c));
   if(footer)assert.deepEqual(plain(s.footer),footer);footer=plain(s.footer);
-  assert.equal(s.unbroken,true);assert.ok(!s.description);assert.equal(A.reportTables(r).length,1);
+  assert.equal(s.unbroken,true);assert.ok(!s.description||s.description.includes('0 %'));assert.equal(A.reportTables(r).length,1);
   const csv=A.reportCSVRows(r);assert.equal(csv.length,s.rows.length+2);assert.match(csv.at(-1)[0],/^Klassendurchschnitt \(alle aktiven Schüler\)$/);
   assert.equal((A.reportHTML(r).match(/<tfoot>/g)||[]).length,1);
   await write('overview-'+(search===''?'unfiltered':search==='P000'?'filtered':'empty')+'-'+scope,r);
@@ -53,12 +53,12 @@ fs.mkdirSync(out,{recursive:true});
   c=install(60);A.W().columns=['exam','test','written','oral'];
   const ctx=columns===8?A.exportContext('overview'):{...A.exportContext('exam'),type:'matrix',kind:'exam'};
   if(columns!==8){const template=N.clone(A.data.assessments[0]);A.data.assessments=A.data.assessments.filter(a=>a.kind!=='exam');for(let i=0;i<columns-2;i++)A.data.assessments.push({...N.clone(template),id:'wide-'+i,title:'K'+String(i+1).padStart(2,'0')});}
-  const r=A.buildReport(ctx,{scope:'current',remarks:false}),parts=A.reportTables(r);assert.equal(r.sections[0].columns.length,columns);assert.equal(A.reportLayout(r).landscape,true);
+  const r=A.buildReport(ctx,{scope:'current',remarks:false}),parts=A.reportTables(r);assert.equal(r.sections[0].columns.length,columns===8?9:columns);assert.equal(A.reportLayout(r).landscape,true);
   for(const part of parts){assert.equal(part.footer.length,part.columns.length);assert.deepEqual(plain(part.footer),plain(part.sourceIndices.map(i=>r.sections[0].footer[i])));}
   await write('pages-'+columns,r);
  }
- c=install(60);A.W().columns=[];const narrow=A.buildReport(A.exportContext('overview'),{scope:'current',remarks:false});assert.equal(A.reportLayout(narrow).landscape,false);await write('pages-portrait',narrow);
- checks.push('60 Schüler: acht bis zehn zusammenhängende Querformatspalten, vollständige breite Spaltenteile und schmale Hochformattabelle mit korrekter Ergebniszeile');
+ c=install(60);A.W().columns=[];const narrow=A.buildReport(A.exportContext('overview'),{scope:'current',remarks:false});assert.equal(A.reportLayout(narrow).landscape,true);await write('pages-portrait',narrow);
+ checks.push('60 Schüler: acht bis zehn zusammenhängende Querformatspalten, vollständige breite Spaltenteile und vollständige Übersicht unabhängig von ausgeblendeten Bildschirmspalten mit korrekter Ergebniszeile');
  install();original=JSON.stringify(A.data);view=JSON.stringify(A.getWorkspace());
  A.W().pupil=A.getCourse().studentIds[0];view=JSON.stringify(A.getWorkspace());A.output('pupil');
  const output=w.document.querySelector('#exportOutput'),hint=w.document.querySelector('#exportBatchHint'),format=w.document.querySelector('#exportFormat');

@@ -4,13 +4,13 @@ const tick=()=>new Promise(r=>setImmediate(r));let ctx,q,w,d,N;let checks=[];
 const $=s=>d.querySelector(s),v=(id,value)=>$('#'+id).value=value;
 async function action(name,props={}){const el=d.createElement('button');el.dataset.action=name;Object.assign(el.dataset,props);await q.action(el);await tick();}
 async function submit(){assert.ok($('#dialog').open);$('#dialogForm').dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));await tick();}
-async function save(){await submit();assert.equal($('#dialogError').hidden,true,$('#dialogError').textContent);assert.equal($('#dialog').open,false);}
+async function save(){await submit();if($('#confirmWeightChanges')){$('#confirmWeightChanges').checked=true;await submit();}assert.equal($('#dialogError').hidden,true,$('#dialogError').textContent);assert.equal($('#dialog').open,false);}
 function tab(id){$('#'+id).focus();$('#'+id).click();assert.equal($('#'+id).getAttribute('aria-selected'),'true');assert.equal(d.activeElement.id,id);}
 function change(id,value){const el=typeof id==='string'?$('#'+id):id;if(el.type==='checkbox')el.checked=value;else el.value=value;el.dispatchEvent(new w.Event('change',{bubbles:true}));}
 function key(id,key){const el=typeof id==='string'?$('#'+id):id;el.focus();el.dispatchEvent(new w.KeyboardEvent('keydown',{key,bubbles:true,cancelable:true}));}
 function ok(label){checks.push(label);}
 (async()=>{
- ctx=await require('./load.cjs').load();({q,w}=ctx);d=w.document;q.prefs.areaView='list';q.prefs.notesLayout='compact';q.prefs.defaultRounding='round';N=w.NR;
+ ctx=await require('./load.cjs').load();({q,w}=ctx);d=w.document;q.prefs.areaView='list';q.prefs.notesLayout='compact';q.prefs.defaultRounding='round';N=w.NR;Object.assign(q.prefs,{defaultAreas:N.areas({}),defaultCalculationMode:'grouped',defaultWeights:N.defaultWeights()});
  assert.equal(ctx.errors.length,0);assert.equal($('#mainTabs').getAttribute('role'),null);assert.equal($('#mainTabs').closest('nav').getAttribute('aria-label'),'Hauptnavigation');assert.equal($('#mainTabs [role=tab]'),null);assert.equal($('#tab-home').getAttribute('aria-current'),'page');assert.match($('#home h1').textContent,/Willkommen bei Notenblick/);assert.equal($('#selection [type=submit]'),null);ok('Leerer Erststart mit Willkommen; echte Navigationslinks und keine Anzeigen-Aktion');
  $('#tab-admin').click();assert.equal($('#tab-admin').getAttribute('aria-current'),'page');assert.equal(d.activeElement.id,'tab-admin');
  await action('new-year');v('yearLabel','2026/27');await save();assert.equal(q.data.years.length,1);tab('tab-classes');await action('new-class');v('className','6a');await save();assert.equal(q.data.classes[0].name,'6a');ok('Schuljahr und Klasse ohne Ordnerauswahl anlegen');

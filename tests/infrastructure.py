@@ -80,11 +80,12 @@ class Infrastructure(unittest.TestCase):
     def test_current_release_recognizes_own_data_without_migration(self):
         subprocess.run(['node','-e',"const a=require('node:assert/strict'),N=require('./src/core.js'),v=require('./package.json').version,d=N.blank();d.appVersion=v;a.equal(N.isCurrentData(d),true);a.deepEqual(N.upgrade(d),d);"],cwd=ROOT,check=True)
 
-    def test_calculation_and_native_storage_contract_unchanged(self):
-        # The setup-only whole-application freeze is replaced for the authorized
-        # 1.9 feature work. These mathematical/storage modules remain byte-identical.
+    def test_unaffected_migration_transfer_and_native_storage_unchanged(self):
+        # Version 1.26 explicitly generalizes weighting validation and oral capture.
+        # Exact arithmetic is checked semantically by domain/v1260 regressions;
+        # unrelated migration/transfer and native storage remain byte-identical.
         baseline=json.loads((ROOT/'dev/baseline-source.sha256.json').read_text())
-        names=['src/domain/'+name+'.js' for name in ['arithmetic','migrations','oral','weighting','transfers']]
+        names=['src/domain/'+name+'.js' for name in ['migrations','transfers']]
         names+=['native/Storage.cs','native/Migration.cs']
         for name in names:
             self.assertEqual(hashlib.sha256((ROOT/name).read_bytes()).hexdigest(),baseline[name],name)
