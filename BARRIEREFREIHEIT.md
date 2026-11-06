@@ -34,7 +34,7 @@ Dabei wurden teilweise fehlende Ansagen bei wiederholten Strg-/Alt-Ziffern sowie
 
 Chromium-, Tastatur-, Fokus-, Layout-, Accessibility-Baum- und axe-Prüfungen ergänzen die Praxistests. Sie prüfen technische Zustände und Abläufe, nicht die tatsächlich gesprochene NVDA-Ausgabe oder die Darstellung auf einer Braillezeile.
 
-Die Nutzerabnahme ist keine vollständige Barrierefreiheitszertifizierung. Nicht ausdrücklich bestätigte Einzelprüfungen – etwa mit Microsoft Office, physischem Druck oder allen Windows-Skalierungsstufen – bleiben offen. Aktueller Stand: [Prüfbericht 1.26.0](docs/PRUEFBERICHT-1.26.0.md). Weitere Schritte: [Windows-Prüfplan](docs/WINDOWS-PRUEFUNG.md).
+Die Nutzerabnahme ist keine vollständige Barrierefreiheitszertifizierung. Nicht ausdrücklich bestätigte Einzelprüfungen – etwa mit Microsoft Office, physischem Druck oder allen Windows-Skalierungsstufen – bleiben offen. Aktueller Stand: [Prüfbericht 1.27.0](docs/PRUEFBERICHT-1.27.0.md). Weitere Schritte: [Windows-Prüfplan](docs/WINDOWS-PRUEFUNG.md).
 
 Probleme bitte mit Version, Tastenschritten und erwartetem Verhalten als Issue melden. Keine echten Schülerdaten hochladen.
 
