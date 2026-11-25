@@ -46,7 +46,6 @@ await prepare(21);
 await page.getByRole('button',{name:'Leistung hinzufügen',exact:true}).click();
 await page.locator('#draft-title').fill('Synthetischer Testentwurf');
 await page.locator('#newAssessmentMore > summary').click();
-await page.locator('#draft-participation > summary').click();
 for(const [id,section]of [
  ['draft-title','noten-eine-leistung-anlegen'],
  ['draft-date-day','noten-ein-datum-eingeben'],

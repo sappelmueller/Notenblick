@@ -47,6 +47,7 @@ namespace Notenblick.Native {
     case "vault-change": vault.ChangePassword((string)request["currentPassword"],recovery,password); return VaultStatus();
     case "vault-rotate": return FinishVaultAction(()=>vault.Rotate((string)request["currentPassword"],password,recovery,verification));
     case "vault-disable": return FinishVaultAction(()=>vault.Disable(password,recovery));
+    case "vault-stored-backup": return ReadStoredBackup((string)request["path"], (bool?)request["includeEncrypted"] == true);
     case "vault-backup": {
      string text=(string)request["text"]; if(text==null || text.Length>VaultStore.MaxPayload) throw new IOException("Die Sicherung ist zu groß oder leer.");
      byte[] plain=VaultCrypto.Utf8.GetBytes(text);
@@ -62,6 +63,19 @@ namespace Notenblick.Native {
     }
     default: throw new ArgumentException("Diese Funktion wird nicht unterstützt.");
    }
+  }
+  object ReadStoredBackup(string relative, bool includeEncrypted) {
+   if (String.IsNullOrEmpty(relative) || !VaultStore.InBackupFolder(relative) || VaultStore.IsBackupIndex(relative))
+    throw new ArgumentException("Bitte wähle eine Notenblick-Sicherung.");
+   if (vault.Pending) throw new InvalidOperationException("Bitte öffne Notenblick erneut, um die Umstellung abzuschließen.");
+   byte[] bytes = vault.Enabled ? vault.Read(relative) : VaultStore.ReadBounded(Resolve(relative), VaultStore.MaxEnvelope);
+   try {
+    var digest = Convert.ToBase64String(VaultCrypto.Hash(bytes));
+    if (bytes.Length >= VaultCrypto.EnvelopeOverhead && VaultCrypto.IsProtected(bytes))
+     return new { kind = "encrypted", digest, dataBase64 = includeEncrypted ? Convert.ToBase64String(bytes) : null };
+    var backup = VaultStore.ReadStoredBackupJson(bytes, relative);
+    return backup == null ? (object)new { kind = "damaged", digest } : new { kind = "text", digest, text = backup.ToString(Formatting.None) };
+   } finally { VaultCrypto.Clear(bytes); }
   }
   object ProtectedAction(string op,string relative,JObject request){
    if(vault.Locked) throw new InvalidOperationException("Bitte entsperre zuerst deine Noten.");

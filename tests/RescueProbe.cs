@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 using Notenblick.Native;
 
 internal static class RescueProbe {
-    private const string Password = "Notenblick sichert meine Prüfdaten";
+    private const string Password = "Notenblick sichert meine Prüfdaten!1";
     private const string ListPath = "Notenlisten/2026-27/6a/Deutsch/Notenübersicht.txt";
     private const string ListText = "\ufeffDeutsch – fiktive Klasse\r\nErika Beispiel: 2\r\n";
     private const string Legacy = "{\"format\":\"notenraum\",\"version\":1,\"commitId\":\"258\",\"updatedAt\":\"2026-11-25T12:00:00Z\",\"years\":[],\"classes\":[],\"students\":[],\"courses\":[],\"assessments\":[],\"finals\":[]}";
@@ -24,6 +24,12 @@ internal static class RescueProbe {
     private static void Reject(Action action, string caption) {
         try { action(); }
         catch (Exception error) when (error is IOException || error is InvalidDataException || error is InvalidOperationException || error is Newtonsoft.Json.JsonException) { checks++; return; }
+        throw new Exception("Accepted: " + caption);
+    }
+
+    private static void RejectAs<T>(Action action, string caption) where T : Exception {
+        try { action(); }
+        catch (T) { checks++; return; }
         throw new Exception("Accepted: " + caption);
     }
 
@@ -108,7 +114,7 @@ internal static class RescueProbe {
         var legacyBefore = Tree(data);
         var lockPath = Path.Combine(data, "InBenutzung.lock");
         using (var locked = new FileStream(lockPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None))
-        using (var source = new RescueSource(data)) Reject(() => source.Open(null, null, null), "Live Notenblick lock respected");
+        using (var source = new RescueSource(data)) RejectAs<RescueSourceInUseException>(() => source.Open(null, null, null), "Open Notenblick folder has its own status");
         File.Delete(lockPath);
         using (var source = new RescueSource(data)) {
             Check(source.Earlier().Single().Key == Previous, "Old point listed");
@@ -128,11 +134,16 @@ internal static class RescueProbe {
         string key = VaultCrypto.GenerateRecovery();
         string other = VaultCrypto.GenerateRecovery();
         string backupPath = Path.Combine(work, "Geschuetzte-Sicherung.nbx");
+        const string inner = "Sicherungen/Notenblick-Sicherung-2026-11-25.nbx";
+        const string innerPassword = "Unabhängiges Prüfpasswort!9";
         var protectedData = new JObject { ["version"] = 1, ["data"] = JObject.Parse(Legacy), ["lists"] = Lists() };
         using (var vault = new VaultStore(data)) {
             vault.Enable(Password, key, key);
             Check(vault.Exists(ListPath), "Existing text-list migration retains real BOM lists");
             File.WriteAllBytes(backupPath, vault.Backup(Bytes(protectedData.ToString())));
+            var innerKey = VaultCrypto.Random(VaultCrypto.SecretBytes);
+            try { vault.Write(inner, VaultCrypto.SealBackup(innerKey, VaultCrypto.CreateHeader(innerKey, innerPassword, other), Bytes(protectedData.ToString()))); }
+            finally { VaultCrypto.Clear(innerKey); }
         }
         var expected = File.ReadAllBytes(backupPath);
         using (var source = new RescueSource(backupPath)) {
@@ -140,8 +151,9 @@ internal static class RescueProbe {
             Check(source.Protected && !source.IsUnlocked, "Standalone backup detected and locked");
             source.SaveProtected(to);
             Check(Read(to, Path.GetFileName(backupPath)).SequenceEqual(expected) && !source.IsUnlocked, "Exact protected copy available before unlock");
-            Reject(() => source.Open(null, "Falsches Passwort hier", null), "Wrong password");
-            Reject(() => source.Open(null, null, other), "Wrong recovery key");
+            RejectAs<VaultAccessException>(() => source.Open(null, "Falsches Passwort hier", null), "Wrong password");
+            RejectAs<VaultAccessException>(() => source.Open(null, null, other), "Wrong recovery key");
+            RejectAs<VaultAccessException>(() => source.Open(null, null, "unvollständig"), "Malformed recovery key");
             using (var opened = source.Open(null, Password, null)) Check(opened.Lists.Single() == ListPath, "Unlock backup using current password");
         }
         using (var source = new RescueSource(backupPath))
@@ -153,7 +165,7 @@ internal static class RescueProbe {
         var mangledPath = Path.Combine(work, "Veraendert.nbx");
         var altered = (byte[])expected.Clone(); altered[altered.Length - 1] ^= 1;
         File.WriteAllBytes(mangledPath, altered);
-        using (var source = new RescueSource(mangledPath)) Reject(() => source.Open(null, null, key), "Authenticated failure on changes");
+        using (var source = new RescueSource(mangledPath)) RejectAs<InvalidDataException>(() => source.Open(null, null, key), "Authenticated damage distinguished from wrong access");
 
         var before = Tree(data);
         var recovered = Path.Combine(work, "Klar-Bestand");
@@ -165,6 +177,10 @@ internal static class RescueProbe {
                 source.SaveSnapshot(result, recovered);
                 Check(Read(recovered, ListPath).SequenceEqual(Bytes(ListText)), "Full readable data copy includes TXT lists");
             }
+            Check(source.EarlierNeedsCredential(inner) && !source.EarlierNeedsCredential(Previous), "Archived backup requires its own credentials");
+            RejectAs<VaultAccessException>(() => source.Open(inner, Password, null), "Folder password cannot open an independently protected backup");
+            using (var opened = source.Open(inner, innerPassword, null)) Check(opened.Lists.Single() == ListPath, "Archived backup opens with its original password");
+            using (var opened = source.Open(inner, null, other)) Check(opened.Lists.Single() == ListPath, "Archived backup opens with its original recovery key");
         }
         Check(Tree(data).SequenceEqual(before), "Protected source remains byte identical");
         using (var source = new RescueSource(cipher))

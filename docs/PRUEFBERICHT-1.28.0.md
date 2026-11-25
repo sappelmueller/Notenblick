@@ -14,7 +14,7 @@ Entwicklungsstand auf `entwicklung/1.28.0`, ausgehend vom offiziellen 1.27.0. F�
 | Aktualisierung | Echte Paketdateien mit dem Produktionscode von 1.27.0 prüfen. Eingebettete und beigelegte Notfall-EXE abgleichen. Abbruch, blockierte Dateien und fehlende Schreibrechte prüfen. Bei Programmwechsel alle Daten erhalten. |
 | Bestehender Testkatalog | Gezielte Prüfungen und vollständigen Abschluss über `dev/manage.py` ausführen. Gültige Belege wiederverwenden und bei einem Fehler den gleichen Prüflauf fortsetzen. |
 
-## Automatischer Abschluss am 25. November 2026
+## Erster Testbuild vom 25. November 2026
 
 - **100 von 100 Prüfgruppen bestanden.** Erfolgreiche Gruppen wurden beim Fortsetzen wiederverwendet. Der große Referenzbestand umfasste 180.000 Noteneinträge. Exporte wurden in tatsächlichen Office-, PDF-, CSV- und TXT-Dateien geprüft. Für PDF/UA kam veraPDF 1.30.4 zum Einsatz.
 - **Verschlüsselung und Notfallzugriff.** Zwölf native Schutzszenarien bestanden, darunter unabhängige Referenzwerte für Argon2id und AES-256-GCM, sieben erzwungene Prozessabbrüche, falsche Zugangsdaten, veränderte Dateien, Schlüsselwechsel und Sicherungen mit früheren Zugangsdaten. 44 zusätzliche Dateiprüfungen bestätigten den Zugriff auf Sicherungen und unveränderte Originale. Der Lesetest lief auch direkt aus der kompilierten Notfall-EXE mit ihren eingebetteten Bibliotheken unter .NET 8 auf Linux, ohne Notenblick, Programmordner oder WebView2.
@@ -22,6 +22,13 @@ Entwicklungsstand auf `entwicklung/1.28.0`, ausgehend vom offiziellen 1.27.0. F�
 - **Auslieferung.** Zwei saubere Builds waren bytegleich. Archivbestand, Prüfsummen und entpackte Anwendung wurden geprüft. Der unveränderte 1.27.0-Updatercode las das echte Updatearchiv. Das Bereitstellen der eingebetteten Notfall-EXE ließ den synthetischen Ordner `Daten` unverändert. Das Paket enthält die Loader für x64 und ARM64. Der Aktualisierungsdeskriptor der Testversion steht auf `approved: false`.
 
 Vollständiges Windows-ZIP `Notenblick_1.28.0_Windows.zip` mit 10.412.141 Bytes und SHA-256 `7bad4393b9b0bb0f914061307bd7e844f2b38c900100fb9012bd0392ec1cd51f`.
+
+## Überarbeiteter Testbuild
+
+- Passwortschutz mit regulär erstellten, älteren und kopierten Sicherungen prüfen. Vorhandene geschützte Stände mit ihren bisherigen Zugangsdaten öffnen. Einrichtung, Unterbrechung, Ausschalten und erneutes Einschalten mit demselben Übungsbestand durchspielen.
+- Neue Passwörter mit sieben und acht Zeichen sowie fehlenden Zeichenarten prüfen. Einen älteren Zugang beim Öffnen, beim Wechsel des Notfallschlüssels und beim Ausschalten prüfen.
+- Ersteinrichtung, Passwortassistent und neue Leistung bei unterschiedlichen Fenstergrößen visuell und per Tastatur prüfen. Bei der Leistungseingabe beginnt die Tabfolge unter der Überschrift mit „Fertig“ und „Schließen“. Bei Datumsfehlern führt der Fokus zum passenden Feld.
+- Notfallzugriff bei geschlossenem und geöffnetem Notenblick prüfen. Einen früheren Stand auswählen, die Vorschau lesen, Kopien erstellen und die unveränderte Quelle kontrollieren. Den eigenständigen Start auf Windows prüfen.
 
 ## Praktische Abnahme auf Windows
 

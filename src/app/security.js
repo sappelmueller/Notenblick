@@ -3,21 +3,26 @@
 const stepHelp='sicherung-passwortschutz-einrichten',useHelp='sicherung-passwortschutz-verwenden';
 const call=(op,args)=>window.NRDesktop.call(op,args);
 const button=(id,label,kind='button',attrs='')=>'<button type="button" id="'+id+'" class="'+kind+'" '+attrs+'>'+label+'</button>';
-const notice='Bewahre deinen Notfallschlüssel getrennt von deinen Noten auf. Er kann deine Noten auch ohne Passwort öffnen.';
+const notice='Bewahre den Notfallschlüssel getrennt von deinen Noten auf. Damit kannst du deine Noten ohne Passwort öffnen.';
+const passwordRule='Verwende mindestens acht Zeichen, darunter einen Großbuchstaben, einen Kleinbuchstaben, eine Ziffer und ein Sonderzeichen.';
 const keyField=(id,label='Notfallschlüssel')=>A.field(id,label,'','autocomplete="off" autocapitalize="none" spellcheck="false"','password');
-const passField=(id,label='Passwort')=>A.field(id,label,'','autocomplete="off" autocapitalize="none" spellcheck="false"','password');
+const passField=(id,label='Passwort',hint='')=>A.field(id,label,'','autocomplete="off" autocapitalize="none" spellcheck="false"','password',hint);
 const reveal=(id,label='Passwort anzeigen')=>'<label class="check"><input type="checkbox" id="'+id+'"><span>'+label+'</span></label>';
 const value=id=>A.$('#'+id)?.value??'';
 const fail=(id,message)=>{const el=A.$('#'+id);if(el){el.setAttribute('aria-invalid','true');el.focus();}throw Error(message);};
 A.vault={enabled:false,locked:false,pending:false,ready:false,unprotected:[]};
 function wireReveal(root,id,ids){
  root.querySelector('#'+id)?.addEventListener('change',e=>{for(const f of ids){const el=root.querySelector('#'+f);if(el)el.type=e.target.checked?'text':'password';}});
- for(const f of ids)root.querySelector('#'+f)?.addEventListener('input',e=>e.target.removeAttribute('aria-invalid'));
+ for(const f of ids)root.querySelector('#'+f)?.addEventListener('input',e=>{
+  if(e.target.getAttribute('aria-invalid')==='true'&&root.closest('#dialog'))dialogError('');
+  e.target.removeAttribute('aria-invalid');
+ });
 }
 function newPassword(first,second){
  const password=value(first);
  if(password.length>4096||new TextEncoder().encode(password).length>4096)fail(first,'Das Passwort ist zu lang.');
- if([...password].length<12||!password.trim())fail(first,'Wähle ein Passwort mit mindestens zwölf Zeichen, am besten mehrere Wörter.');
+ if(/[\uD800-\uDFFF]/u.test(password))fail(first,'Das Passwort enthält ein ungültiges Zeichen.');
+ if([...password].length<8||!/\p{Lu}/u.test(password)||!/\p{Ll}/u.test(password)||!/\p{Nd}/u.test(password)||!/[\p{P}\p{S}]/u.test(password))fail(first,passwordRule);
  if(password!==value(second))fail(second,'Die beiden Passwörter stimmen nicht überein.');
  return password;
 }
@@ -196,7 +201,7 @@ async function flushForProtection(){
 }
 async function checkTransition(){
  const v=await status().catch(()=>null);
- if(!v?.pending)return;
+ if(!v?.pending)return v;
  await call('vault-lock').catch(()=>{});
  A.vault.locked=true;
  A.afterClose=null;
@@ -204,45 +209,66 @@ async function checkTransition(){
  A.vaultFocus=A.$('#passwordProtectionTitle');
  showGate();
  gateError('Die Umstellung wurde unterbrochen. Öffne deine geschützten Noten erneut, um sie fortzusetzen.');
+ return v;
 }
 function setup(rotate){
  if(!A.canLeave()||A.$('#dialog').open)return;
- let step=0,password='',key='',verification=false;
+ let step=0,password='',key='',verification=false,keyBusy=false,keyStatus='';
  const root=()=>A.$('#dialogContent');
+ const dialog=A.$('#dialog'),title=A.$('#dialogTitle'),footer=A.$('#setupFooterSlot');
+ const save=A.$('#dialogSave');
  const labels=rotate?['Passwort bestätigen','Neuen Notfallschlüssel sichern','Notfallschlüssel ersetzen']:['Passwort festlegen','Notfallschlüssel sichern','Daten verschlüsseln'];
- const notes='<p class="hint">Verwende am besten mehrere Wörter. Einfügen aus einem Passwortmanager ist möglich.</p>';
- const clean=()=>{key=password='';verification=false;root().replaceChildren();call('vault-key-clear').catch(()=>{});};
+ const clean=()=>{
+  key=password='';verification=false;root().replaceChildren();footer.replaceChildren();footer.hidden=true;
+  title.removeAttribute('aria-describedby');delete dialog.dataset.vaultSetup;
+  call('vault-key-clear').catch(()=>{});
+ };
  async function submit(){
+  if(keyBusy)return{keepOpen:true};
   if(!step){
    if(rotate){password=value('vaultSetupPassword');if(!password)fail('vaultSetupPassword','Gib dein aktuelles Passwort ein.');await call('vault-check-password',{password});}
    else password=newPassword('vaultSetupPassword','vaultSetupRepeat');
-   await flushForProtection();key=await call('vault-key');step=1;draw();return{keepOpen:true};
+   await flushForProtection();
+   if(!key)key=await call('vault-key');
+   step=1;draw();return{keepOpen:true};
   }
   if(step===1){
-   if(!verification)throw Error('Speichere die Schlüsseldatei und öffne sie zur Prüfung erneut.');
+   if(!verification){A.focusTarget('vaultKeyRead');throw Error('Öffne die gespeicherte Schlüsseldatei erneut, um sie zu prüfen.');}
    step=2;draw();return{keepOpen:true};
   }
   await flushForProtection();
+  footer.hidden=true;
   try{
    await A.runOperation(labels[2],async progress=>{
     progress(rotate?'Notfallschlüssel wird ersetzt …':'Deine Noten und Sicherungen werden geschützt …');
     await call(rotate?'vault-rotate':'vault-enable',{password,currentPassword:rotate?password:undefined,recovery:key,verification:key});
    });
-  }catch(error){await checkTransition();throw error;}
+  }catch(error){
+   const current=await checkTransition();
+   if(!rotate&&current?.enabled===false)throw Error(message(error)+' Der Passwortschutz ist weiterhin ausgeschaltet.');
+   throw error;
+  }finally{if(dialog.open&&dialog.dataset.vaultSetup)footer.hidden=false;}
   await status();
   A.afterClose=()=>{settingsChanged(rotate?'Neuer Notfallschlüssel geprüft und eingerichtet.':'Passwortschutz eingerichtet.');A.focusTarget('passwordProtectionTitle');};
  }
- function draw(){
-  const title=A.$('#dialogTitle');title.textContent=labels[step];dialogError('');
-  A.$('#dialogSave').textContent=step<2?'Weiter':labels[2];
+ function draw({focus=true}={}){
+  title.textContent=labels[step];dialogError('');
+  title.setAttribute('aria-describedby','vaultSetupStep');
+  save.textContent=step<2?'Weiter':labels[2];
+  footer.hidden=step===0;
+  footer.innerHTML=step?button('vaultSetupBack','Zurück','text-button'):'';
   if(!step){
-   root().innerHTML=(rotate?'<p>Der alte Schlüssel kann weiterhin zu älteren Sicherungen passen. Bewahre ihn dafür getrennt auf.</p>':notes)+passField('vaultSetupPassword',rotate?'Aktuelles Passwort':'Passwort')+(rotate?'':passField('vaultSetupRepeat','Passwort wiederholen'))+reveal('vaultSetupShow');
+   root().innerHTML=(rotate?'<p>Ältere Sicherungen können weiterhin den bisherigen Notfallschlüssel benötigen.</p>':'')+passField('vaultSetupPassword',rotate?'Aktuelles Passwort':'Passwort',rotate?'':passwordRule)+(rotate?'':passField('vaultSetupRepeat','Passwort wiederholen'))+reveal('vaultSetupShow');
+   A.$('#vaultSetupPassword').value=password;
+   if(!rotate)A.$('#vaultSetupRepeat').value=password;
    wireReveal(root(),'vaultSetupShow',['vaultSetupPassword','vaultSetupRepeat']);
   }else if(step===1){
-   root().innerHTML='<p>'+notice+'</p><p>Speichere den Schlüssel und öffne die Datei zur Prüfung erneut.</p>'+keyField('vaultGeneratedKey')+reveal('vaultGeneratedShow','Notfallschlüssel anzeigen')+'<div class="button-row vault-key-actions">'+button('vaultKeySave','Schlüsseldatei speichern','button primary')+button('vaultKeyRead','Gespeicherte Schlüsseldatei prüfen')+button('vaultKeyCopy','Schlüssel kopieren','text-button')+button('vaultKeyPrint','Schlüssel drucken','text-button')+'</div><p id="vaultKeyStatus" class="hint" role="status"></p>';
+   root().innerHTML='<p>'+notice+'</p><p>Speichere die Schlüsseldatei und öffne sie zur Prüfung erneut.</p><div class="button-row vault-key-actions">'+button('vaultKeySave','Schlüsseldatei speichern')+button('vaultKeyRead','Schlüsseldatei prüfen')+'</div><p id="vaultKeyStatus" class="hint" role="status"></p><details><summary>Andere Möglichkeiten zur Aufbewahrung</summary>'+keyField('vaultGeneratedKey')+reveal('vaultGeneratedShow','Notfallschlüssel anzeigen')+'<div class="button-row vault-key-actions">'+button('vaultKeyCopy','Schlüssel kopieren','text-button')+button('vaultKeyPrint','Schlüssel drucken','text-button')+'</div></details>';
    const el=A.$('#vaultGeneratedKey');el.value=key;el.readOnly=true;wireReveal(root(),'vaultGeneratedShow',['vaultGeneratedKey']);
+   A.$('#vaultKeyStatus').textContent=keyStatus;
    const keyAction=(id,op,statusText)=>A.$('#'+id).addEventListener('click',async(e)=>{
-    const target=e.currentTarget;target.disabled=true;dialogError('');
+    if(keyBusy||A.dialogBusy)return;
+    const target=e.currentTarget;keyBusy=true;target.disabled=true;save.disabled=true;dialogError('');
     try{
      const result=await call(op,{recovery:key});
      if(result===false||!target.isConnected)return;
@@ -250,20 +276,25 @@ function setup(rotate){
       if(result!==key)throw Error('Das ist nicht die gerade erstellte Schlüsseldatei. Bitte wähle die passende Datei.');
       verification=true;
      }
+     keyStatus=statusText;
      A.$('#vaultKeyStatus').textContent=statusText;
     }catch(e){dialogError(message(e));}
-    finally{if(target.isConnected){target.disabled=false;target.focus();}}
+    finally{keyBusy=false;if(target.isConnected){save.disabled=false;target.disabled=false;target.focus();}}
    });
    keyAction('vaultKeySave','vault-key-save','Schlüsseldatei gespeichert.');
    keyAction('vaultKeyRead','vault-key-read','Die Schlüsseldatei passt. Du kannst fortfahren.');
    keyAction('vaultKeyCopy','vault-key-copy','Notfallschlüssel kopiert.');
    keyAction('vaultKeyPrint','vault-key-print','Druckauftrag übergeben.');
-  }else root().innerHTML='<p>'+(rotate?'Notenblick prüft den neuen Schlüssel und verschlüsselt den aktuellen Bestand erneut.':'Notenblick schützt jetzt deine Noten, Sicherungen und automatischen Notenlisten. Der Vorgang kann etwas dauern.')+'</p><p class="hint">Früher außerhalb dieses Datenordners gespeicherte Kopien bleiben wie sie sind.</p>'+button('vaultSetupBack','Zurück');
-  if(step===1)root().insertAdjacentHTML('beforeend',button('vaultSetupBack','Zurück','text-button'));
-  A.$('#vaultSetupBack')?.addEventListener('click',()=>{step--;if(step===0){key='';verification=false;}draw();});
-  A.focusTarget(title);
+  }else root().innerHTML='<p>'+(rotate?'Notenblick prüft den neuen Schlüssel und verschlüsselt den aktuellen Bestand erneut.':'Notenblick verschlüsselt deine Noten, vorhandene Notenblick-Sicherungen und automatische Notenlisten. Das kann einen Moment dauern.')+'</p><p class="hint">Kopien außerhalb des Datenordners behalten ihren bisherigen Schutz.</p>';
+  root().insertAdjacentHTML('afterbegin','<p id="vaultSetupStep" class="hint">Schritt '+(step+1)+' von '+labels.length+'</p>');
+  A.$('#vaultSetupBack')?.addEventListener('click',()=>{if(A.dialogBusy||keyBusy)return;step--;draw();});
+  root().scrollTop=0;
+  if(focus)A.focusTarget(title,{announceIfFocused:true});
  }
- A.modal(labels[0],'',submit,'Weiter',{size:'small',helpContext:stepHelp,onClose:clean});draw();
+ dialog.dataset.vaultSetup='true';
+ title.setAttribute('aria-describedby','vaultSetupStep');
+ A.modal(labels[0],'<p id="vaultSetupStep" class="hint">Schritt 1 von 3</p>',submit,'Weiter',{size:'small',helpContext:stepHelp,onClose:clean});
+ draw({focus:false});
 }
 function authFields({backup=false}={}){
  return passField('vaultCurrent',backup?'Passwort der Sicherung':'Aktuelles Passwort')+'<p class="hint">Du kannst stattdessen den passenden Notfallschlüssel verwenden.</p>'+keyField('vaultCurrentKey')+button('vaultReadCurrent','Schlüsseldatei öffnen','text-button');
@@ -284,7 +315,7 @@ function mountReadKey(field,buttonId){
 }
 function clearSecretForm(){A.$('#dialogContent').replaceChildren();}
 function changePassword(){
- A.modal('Passwort ändern',authFields()+passField('vaultNew','Neues Passwort')+passField('vaultRepeat','Neues Passwort wiederholen')+reveal('vaultChangeShow')+'<p class="hint">Ältere Sicherungen können weiterhin das frühere Passwort oder den zugehörigen Notfallschlüssel benötigen.</p>',async()=>{
+ A.modal('Passwort ändern',authFields()+passField('vaultNew','Neues Passwort',passwordRule)+passField('vaultRepeat','Neues Passwort wiederholen')+reveal('vaultChangeShow')+'<p class="hint">Ältere Sicherungen können weiterhin das frühere Passwort oder den zugehörigen Notfallschlüssel benötigen.</p>',async()=>{
   const auth=authArgs(),password=newPassword('vaultNew','vaultRepeat');
   await flushForProtection();await call('vault-change',{currentPassword:auth.password,recovery:auth.recovery,password});
   await status();A.afterClose=()=>settingsChanged('Passwort geändert.');
@@ -301,7 +332,7 @@ function verifyKey(){
  mountReadKey('vaultVerifyKey','vaultVerifyRead');wireReveal(A.$('#dialogContent'),'vaultVerifyShow',['vaultVerifyKey']);
 }
 function disable(){
- A.modal('Passwortschutz ausschalten','<p>Notenblick speichert deine aktiven Daten anschließend unverschlüsselt. Vorhandene verschlüsselte Sicherungen behalten ihren Schutz.</p>'+authFields()+reveal('vaultDisableShow'),async()=>{
+ A.modal('Passwortschutz ausschalten','<p>Deine aktuellen Noten und Notenlisten sind danach ohne Passwort lesbar. Frühere geschützte Sicherungen bleiben verschlüsselt.</p>'+authFields()+reveal('vaultDisableShow'),async()=>{
   const auth=authArgs();await flushForProtection();
   try{
    await A.runOperation('Passwortschutz ausschalten',async progress=>{

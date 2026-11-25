@@ -20,7 +20,7 @@ Wähle auf der Startseite **„Jetzt einrichten“**. Der Assistent führt dich 
 2. **Fächer:** Ergänze die Fächer deiner Klassen.
 3. **Schülerlisten:** Trage Schüler ein oder füge eine Namensliste ein. Du kannst das auch später nachholen.
 4. **Grundeinstellungen:** Prüfe die Namensdarstellung und die Notengewichtung. Mit **„Gewichtung anpassen“** öffnest du denselben Editor wie in den Einstellungen. Ohne eigene Vorgaben verwenden neue Fächer **50 % Klassenarbeiten, 10 % Tests und 40 % Mündlich**.
-5. **Einrichtung überprüfen:** Kontrolliere deine Angaben und bestätige die Einrichtung mit dem Schalter im letzten Schritt.
+5. **Einrichtung überprüfen:** Kontrolliere deine Angaben. Wähle **„Einrichtung abschließen“**, wenn alles stimmt.
 
 Mit **„Zurück“** korrigierst du frühere Angaben. Wenn du die Einrichtung vorzeitig beendest, fragt Notenblick nach, bevor Eingaben verworfen werden.
 
@@ -142,10 +142,10 @@ Unter **„Notenübersicht“** heißt die Tabelle **„Durchschnitte und Zeugni
 Mit **„Leistung hinzufügen“** oder **Strg+N** öffnest du die Noteneingabe direkt. Wähle den Leistungsbereich, wenn Notenblick danach fragt. Im Register **Tests** ist der Bereich beispielsweise schon ausgewählt.
 
 1. Gib der neuen Leistung eine **Bezeichnung**, etwa „Vokabeltest 2“. Prüfe das **Datum**. Heute ist bereits eingetragen.
-2. Trage die Noten direkt in der Tabelle ein. Bei Bedarf kannst du auf **Punkte mit Notenschlüssel** umstellen.
-3. Wähle am Ende **„Fertig“**.
+2. Prüfe bei Bedarf die **Teilnahme** oder stelle unter **„Eingabeart ändern“** auf **Punkte mit Notenschlüssel** um. Trage deine Bewertungen direkt in der Tabelle ein.
+3. Wähle oben **„Fertig“**, um die Leistung zu speichern und das Ergebnis zu sehen. Mit **„Schließen“** kehrst du zur vorherigen Ansicht zurück und kannst später weiterarbeiten.
 
-**Ganze Klasse** und die einfache Gewichtung sind voreingestellt. Abweichungen stellst du unter **„Weitere Angaben“** ein. Für eine einzelne Bewertung gibt es weiterhin **„Einzelnote eintragen“**.
+Voreingestellt sind **Ganze Klasse** und die einfache Gewichtung. Gewichtung und GFS findest du unter **„Weitere Angaben“**. Für eine einzelne Bewertung gibt es **„Einzelnote eintragen“**.
 
 ### Einen Entwurf fortsetzen
 
@@ -165,9 +165,8 @@ Verwende das tatsächliche Datum der Leistung. Notenblick ordnet sie damit unter
 
 **Ganze Klasse** umfasst alle Schüler, die am Fach teilnehmen. Die Suche in der Noteneingabe ändert diese Auswahl nicht.
 
-1. Öffne bei einer neuen Leistung **„Weitere Angaben“** und dort **„Teilnehmer auswählen“**.
-2. Wähle **„Nur ausgewählte Schüler“** und markiere die gewünschten Namen.
-3. Prüfe die angezeigte Anzahl.
+1. Wähle bei einer neuen Leistung unter **Teilnahme** die Option **„Nur ausgewählte Schüler“**. Bei einer bestehenden Leistung findest du die Auswahl unter **„Leistung bearbeiten“**.
+2. Markiere die gewünschten Namen und prüfe die angezeigte Anzahl.
 
 **„Alle auswählen“** und **„Auswahl aufheben“** helfen bei längeren Listen. Mindestens ein Schüler muss teilnehmen. Schüler mit vorhandenen Bewertungen bleiben ausgewählt.
 
@@ -693,9 +692,9 @@ Startet Notenblick nicht, öffne **Notenblick-Notfallzugriff.exe** im Notenblick
 2. Öffne geschützte Daten mit Passwort oder Notfallschlüssel.
 3. Wähle Schuljahr, Klasse und Fach. Lies die Notenlisten oder kopiere den gewünschten Text.
 
-Mit **„Notenlisten als TXT speichern“** legst du lesbare Notenlisten in einem Zielordner ab. Mit **„Entschlüsselte Datenkopie erstellen“** speicherst du die Daten für eine spätere Wiederherstellung. Solche Ausgaben sind unverschlüsselt. Wähle einen geschützten Zielordner.
+Unter **„Kopie speichern“** wählst du **„Diese Notenliste speichern“** oder **„Alle Notenlisten speichern“**. Mit **„Datenkopie erstellen“** sicherst du den geöffneten Stand für eine spätere Wiederherstellung. Diese Ausgaben sind ohne Passwort lesbar. Wähle einen geschützten Zielordner.
 
-Wähle **„Geschützten Datenordner kopieren“** oder **„Geschützte Sicherung kopieren“**. Die Kopie bleibt verschlüsselt. Dafür brauchst du kein Passwort. Der Notfallzugriff lässt den ursprünglichen Bestand unverändert.
+Mit **„Geschützte Kopie erstellen“** kopierst du den ausgewählten Datenordner oder die ausgewählte Sicherung verschlüsselt. Diese Aktion ist bereits vor dem Entsperren verfügbar. Der ursprüngliche Bestand bleibt erhalten.
 
 Ältere Sicherungen enthalten manchmal keine fertigen Notenlisten. Einen lesbaren Datenstand kannst du trotzdem kopieren. Mit **F1** öffnest du die Hilfe im Notfallzugriff.
 
@@ -703,9 +702,9 @@ Wähle **„Geschützten Datenordner kopieren“** oder **„Geschützte Sicheru
 
 Der Passwortschutz ist freiwillig. Wähle **Einstellungen → Allgemein → Passwortschutz → Passwortschutz einrichten**.
 
-1. Wähle mindestens zwölf Zeichen, am besten mehrere Wörter, die du dir gut merken kannst.
-2. Wähle **„Schlüsseldatei speichern“** und lege sie getrennt vom Datenordner ab. Mit **„Gespeicherte Schlüsseldatei prüfen“** öffnest du sie zur Kontrolle erneut.
-3. Wähle **„Daten verschlüsseln“**. Notenblick prüft, ob sich der geschützte Bestand öffnen lässt.
+1. Verwende mindestens acht Zeichen, darunter einen Großbuchstaben, einen Kleinbuchstaben, eine Ziffer und ein Sonderzeichen.
+2. Wähle **„Schlüsseldatei speichern“** und lege sie getrennt vom Datenordner ab. Mit **„Schlüsseldatei prüfen“** öffnest du sie zur Kontrolle erneut.
+3. Wähle **„Daten verschlüsseln“**. Notenblick schützt deine Noten, vorhandene Notenblick-Sicherungen und automatische Notenlisten. Es prüft, ob sich der geschützte Bestand öffnen lässt.
 
 Du kannst den Notfallschlüssel zusätzlich kopieren oder drucken. Verwahre jede Kopie getrennt von deinen Noten. Früher außerhalb des Notenblick-Ordners gespeicherte Dateien behalten ihren bisherigen Schutz.
 
@@ -716,6 +715,8 @@ Gib beim Öffnen das **Passwort** ein oder wähle **„Mit Notfallschlüssel öf
 Wähle bei einer Pause **„Notenblick sperren“**. Notenblick sperrt sich auch beim Sperren deiner Windows-Sitzung. Nach dem Öffnen kannst du an deiner bisherigen Stelle weiterarbeiten.
 
 Unter **Einstellungen → Allgemein → Passwortschutz** kannst du das Passwort ändern, den Notfallschlüssel prüfen oder ersetzen und den Schutz ausschalten. Wenn jemand deinen Notfallschlüssel kennt, wähle **„Notfallschlüssel ersetzen“**. Dabei verschlüsselt Notenblick den aktuellen Bestand erneut. Ältere Sicherungen behalten ihre bisherigen Zugangsdaten.
+
+Mit **„Passwortschutz ausschalten“** und deinem Passwort oder Notfallschlüssel machst du deine aktuellen Noten und Notenlisten wieder ohne Passwort lesbar. Frühere geschützte Sicherungen kannst du mit ihren bisherigen Zugangsdaten im Notfallzugriff öffnen.
 
 Wenn dir Passwort und Notfallschlüssel fehlen, lassen sich geschützte Daten nicht öffnen.
 

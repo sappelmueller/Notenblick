@@ -61,9 +61,13 @@ function persist(d){
 }
 function updateState(d){
  const el=A.$('#newAssessmentStatus');
- if(el)el.textContent=A.data.assessments.some(a=>a.id===d.record.id)?'Leistung angelegt. Weitere Eingaben werden automatisch gespeichert.':d.touched?'Entwurf. Die Leistung zählt erst nach der Übernahme.':'';
+ const saved=A.data.assessments.some(a=>a.id===d.record.id);
+ if(el){
+  el.textContent=saved?'Leistung angelegt. Weitere Eingaben werden automatisch gespeichert.':'Entwurf. Du kannst später weiterarbeiten.';
+  el.parentElement.hidden=!saved&&!d.touched;
+ }
  const discard=A.$('[data-action=discard-assessment-draft]');
- if(discard)discard.hidden=A.data.assessments.some(a=>a.id===d.record.id)||!d.touched;
+ if(discard)discard.hidden=saved||!d.touched;
 }
 function contextRecord(d){
  const r=A.assessmentById(d.record.id),c=A.getCourse();
@@ -86,11 +90,15 @@ function fail(message,id,show){
 function readHead(d,{show=false}={}){
  const {r,c}=contextRecord(d),h=d.head,title=h.title.trim();
  if(!title||title.length>150)fail('Bitte gib eine Bezeichnung ein.','draft-title',show);
- const date=[h.year.padStart(4,'0'),h.month.padStart(2,'0'),h.day.padStart(2,'0')].join('-');
- if(!validDate(date))fail('Bitte prüfe Tag, Monat und Jahr.','draft-date-day',show);
+ const {value:date,part,message}=A.parseDateParts(h);
+ if(part)fail(message,'draft-date-'+part,show);
  let period;
  try{period=A.assessmentPeriod(c,date,A.data.assessments.find(x=>x.id===r.id));}
- catch(e){fail(e.message,'draft-date-day',show);}
+ catch(e){
+  const range=A.N.courseRange(A.data,c),boundary=range&&(date<range.start?range.start:range.end);
+  const part=boundary&&date.slice(0,4)!==boundary.slice(0,4)?'year':boundary&&date.slice(5,7)!==boundary.slice(5,7)?'month':'day';
+  fail(e.message,'draft-date-'+part,show);
+ }
  let weight;
  try{weight=A.performanceWeight(h.weight);}
  catch(e){fail(e.message,'draft-weight',show);}
@@ -161,7 +169,7 @@ A.openPerformanceDraft=function(kind,{id,trigger}={}){
  if(d.record.courseId!==c.id||d.record.kind!==kind)throw Error('Dieser Entwurf gehört zu einem anderen Fach.');
  const previous=A.currentPerformanceDraft();
  if(previous&&!previous.touched&&previous!==d)A.performanceDrafts.delete(previous.record.id);
- if(previous!==d)A.captureEntryOrigin(trigger);
+ if(previous!==d)A.captureEntryOrigin(trigger,{preserveView:true});
  A.entrySession={id:d.record.id,editing:true,settings:!!d.pointFields};
  w.entryMode='table';
  w.studentIndex=0;
@@ -187,15 +195,18 @@ A.resumePerformanceDraft=function(id,trigger){
 A.performanceDraftHead=function(d){
  const h=d.head,date=[h.year.padStart(4,'0'),h.month.padStart(2,'0'),h.day.padStart(2,'0')].join('-');
  return '<div id="newAssessmentFields" class="form-grid" data-draft-id="'+d.record.id+'">'+A.field('draft-title','Bezeichnung',h.title,'required maxlength="150"')+
- A.field('draft-date','Datum',date,'required','date')+'</div><p class="hint" id="newAssessmentStatus"></p>';
+  A.field('draft-date','Datum',date,'required','date')+'</div>';
 };
-A.performanceDraftOptions=function(d,a){
+A.performanceDraftParticipation=function(d,a){
  const h=d.head,protectedResults={...a.results};
  for(const [sid,row] of Object.entries(d.rows))if(Object.values(row).some(Boolean))protectedResults[sid]={};
+ return A.participantMarkup({...a,results:protectedResults,participantIds:h.scope==='selected'?h.participants:undefined},A.getCourse(),{prefix:'draft',inline:true});
+};
+A.performanceDraftOptions=function(d){
+ const h=d.head;
  return '<details id="newAssessmentMore" class="performance-draft-options"'+(d.more?' open':'')+'><summary>Weitere Angaben</summary><div class="form-grid">'+
  A.field('draft-weight','Gewichtung der Leistung',h.weight,'inputmode="decimal"','text','1 = einfach, 2 = doppelt. Bestimmt, wie stark diese Leistung zählt.')+
- '<label class="check full"><input type="checkbox" id="draft-gfs"'+(h.isGfs?' checked':'')+'>Als GFS kennzeichnen</label></div>'+
- A.participantMarkup({...a,results:protectedResults,participantIds:h.scope==='selected'?h.participants:undefined},A.getCourse(),{prefix:'draft',open:!!d.participantOpen})+'</details>';
+  '<label class="check full"><input type="checkbox" id="draft-gfs"'+(h.isGfs?' checked':'')+'>Als GFS kennzeichnen</label></div></details>';
 };
 function syncHead(d){
   d.head.title=A.$('#draft-title').value;
@@ -215,17 +226,19 @@ A.bindPerformanceDraft=function(d){
    else delete r.participantIds;
   }
   d.headPending=!applyDraft(d);
-  if(participants)A.renderEntry(r.kind,A.W().entryMode);
+  if(participants){A.renderEntry(r.kind,A.W().entryMode);A.updateEntrySummary(r.kind);}
   updateState(d);
  };
  for(const id of ['draft-title','draft-weight',...DAY_PARTS.map(p=>'draft-date-'+p)]){
   const el=A.$('#'+id);
   if(id.startsWith('draft-date-'))el.value=d.head[id.slice('draft-date-'.length)];
-  el.addEventListener('input',()=>{el.removeAttribute('aria-invalid');headChanged();});
+  el.addEventListener('input',()=>{
+   if(el.getAttribute('aria-describedby')==='error')el.removeAttribute('aria-describedby');
+   el.removeAttribute('aria-invalid');headChanged();
+  });
  }
  A.$('#draft-gfs').addEventListener('change',()=>headChanged());
  A.$('#newAssessmentMore').addEventListener('toggle',e=>d.more=e.target.open);
- A.$('#draft-participation').addEventListener('toggle',e=>d.participantOpen=e.target.open);
  refreshParticipantCount=A.bindParticipants({prefix:'draft',onChange:()=>headChanged({participants:true})});
  updateState(d);
 };
@@ -350,6 +363,7 @@ A.finishPerformanceDraft=async function(){
  if(panel)panel.inert=true;
  const button=A.$('[data-action=assessment-done]');
  if(button)button.disabled=true;
+ let finished=false;
  try{
   await A.save();
   if(A.store&&A.dirty)throw Error('Die Leistung konnte noch nicht vollständig gespeichert werden. Bitte versuche es erneut.');
@@ -358,7 +372,13 @@ A.finishPerformanceDraft=async function(){
   A.performanceDrafts.delete(d.record.id);
   A.remember();
   await A.flushAssessmentDrafts();
- }finally{A.entryFinishing=false;if(panel?.isConnected)panel.inert=false;if(button?.isConnected)button.disabled=false;}
+  A.error();
+  finished=true;
+ }finally{
+  A.entryFinishing=false;
+  if(panel?.isConnected)panel.inert=false;
+  if(button?.isConnected){button.disabled=false;if(!finished)button.focus();}
+ }
  return false;
 };
 })(globalThis.Notenblick);

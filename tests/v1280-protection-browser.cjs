@@ -11,7 +11,7 @@ const root = path.resolve(__dirname, '../dist/Programm');
 const screenshots = path.join(__dirname, 'visual/v1280-protection');
 const out = path.join(__dirname, 'v1280-protection-browser-results.json');
 const fixture = require('./v1260-fixture.cjs')(N, 4);
-const pass = 'Passwort für Beispieldaten';
+const pass = 'Äbc1!😊de';
 const key = 'AAAA-BBBB-CCCC-DDDD';
 const server = http.createServer((req, res) => {
   const file = path.resolve(root, '.' + new URL(req.url, 'http://localhost').pathname);
@@ -115,8 +115,14 @@ function desktopMock({fixture,pass,key,initialLocked}) {
     await activate(page);
     await scan(page,'ausgeschaltet','#passwordProtection');
     await page.locator('#vaultEnable').click();
+    assert.equal(await page.locator('#dialogTitle').getAttribute('aria-describedby'),'vaultSetupStep');
+    assert.equal(await page.locator('#vaultSetupStep').textContent(),'Schritt 1 von 3');
+    assert.equal(await page.locator('#vaultSetupPassword').getAttribute('aria-describedby'),'vaultSetupPassword-hint');
     await page.locator('#dialogSave').click();
     await page.waitForFunction(()=>document.activeElement.id==='vaultSetupPassword');
+    await page.locator('#vaultSetupPassword').fill('Äbc1!😊d');
+    await page.locator('#dialogSave').click();
+    assert.match(await page.locator('#dialogError').textContent(),/mindestens acht Zeichen/);
     await page.locator('#vaultSetupPassword').fill(pass);
     await page.locator('#vaultSetupRepeat').fill('absichtlicher Unterschied');
     await page.locator('#dialogSave').click();
@@ -131,12 +137,24 @@ function desktopMock({fixture,pass,key,initialLocked}) {
     await page.locator('#vaultKeySave').click();
     await page.locator('#vaultKeyRead').click();
     await page.waitForFunction(()=>document.querySelector('#vaultKeyStatus').textContent.includes('passt'));
+    await page.locator('#vaultSetupBack').click();
+    assert.equal(await page.locator('#vaultSetupPassword').inputValue(),pass);
+    await page.locator('#vaultSetupPassword').focus();
+    await page.keyboard.press('F1');
+    await page.waitForSelector('#contextHelp');
+    await page.keyboard.press('Escape');
+    assert.equal(await page.evaluate(()=>document.activeElement.id),'vaultSetupPassword');
+    assert.equal(await page.locator('#vaultSetupPassword').inputValue(),pass);
+    await page.locator('#dialogSave').click();
+    await page.waitForSelector('#vaultKeyRead');
+    assert.match(await page.locator('#vaultKeyStatus').textContent(),/passt/);
     for(const width of [1280,640,320]){
       await page.setViewportSize({width,height:700});
       await scan(page,'notfallschluessel-'+width,'#dialog');
     }
     await page.locator('#dialogSave').click();
     await page.waitForFunction(()=>document.querySelector('#dialogSave').textContent==='Daten verschlüsseln');
+    await scan(page,'daten-verschluesseln-320','#dialog');
     await page.locator('#dialogSave').click();
     await page.waitForSelector('#vaultLock');
     assert.match(await page.locator('#passwordProtectionState').textContent(),/eingeschaltet/);

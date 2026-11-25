@@ -103,12 +103,16 @@ namespace Notenblick.Native {
         }
     }
 
+    internal sealed class RescueSourceInUseException : IOException {
+        internal RescueSourceInUseException() : base("Der Datenordner ist gerade in Notenblick geöffnet. Schließe Notenblick oder wähle eine gespeicherte Sicherung.") {}
+    }
+
     internal sealed class RescueSource : IDisposable {
         private const string MainFile = "notenverwaltung.json";
         private const string Manifest = "Sicherungen/Notenlistenverzeichnis.json";
         private const string BlockerText = "Dieser Notenstand ist verschlüsselt. Bitte starte Notenblick oder Notfallzugriff für Notenblick.";
         private static readonly UTF8Encoding Utf8 = new UTF8Encoding(false, true);
-        private static readonly Regex SnapshotName = new Regex(@"^(Stand_\d{8,}_[a-zA-Z0-9_-]+|Vor_(Wiederherstellung|Einstellungen_1-4|Muendlich_Zuordnung|Leistungsbereichen)_[a-zA-Z0-9_-]+)\.json$", RegexOptions.CultureInvariant);
+        private static readonly Regex SnapshotName = new Regex(@"\.(?:json|zip|nbx|nbk|tmp)$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
         private readonly VaultStore vault;
         internal readonly string SelectedPath;
         internal readonly bool IsFolder;
@@ -140,7 +144,7 @@ namespace Notenblick.Native {
             RescuePaths.NoLinks(path);
             try { return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read); }
             catch (FileNotFoundException) { return null; }
-            catch (IOException) { throw new IOException("Der Datenordner ist gerade in Notenblick geöffnet. Schließe Notenblick oder wähle eine separat gespeicherte Sicherung."); }
+            catch (IOException) { throw new RescueSourceInUseException(); }
         }
 
         private void RecheckOwner() { using (WaitForClosed()) {} }
@@ -148,18 +152,34 @@ namespace Notenblick.Native {
         internal KeyValuePair<string, string>[] Earlier() {
             if (!IsFolder || vault.Locked || !Exists("Sicherungen", true)) return new KeyValuePair<string, string>[0];
             using (WaitForClosed()) {
-                return Entries("Sicherungen").Where(x => !x.IsDirectory && SnapshotName.IsMatch(x.Name))
+                return EarlierEntries("Sicherungen", 0)
                     .OrderByDescending(x => x.LastModifiedUtc).ThenByDescending(x => x.Name, StringComparer.Ordinal)
-                    .Take(10000).Select(x => new KeyValuePair<string, string>("Sicherungen/" + x.Name, EarlierLabel(x))).ToArray();
+                    .Take(10000).Select(x => new KeyValuePair<string, string>(x.Name, EarlierLabel(x))).ToArray();
+            }
+        }
+
+        private static bool EarlierFile(string path) {
+            return VaultStore.InBackupFolder(path) && SnapshotName.IsMatch(path) && !VaultStore.IsBackupIndex(path) &&
+                !Path.GetFileName(path).StartsWith("Ansicht_Vor_Wiederherstellung_", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private IEnumerable<VaultEntry> EarlierEntries(string parent, int depth) {
+            if (depth > 14) yield break;
+            foreach (var entry in Entries(parent)) {
+                var path = parent + "/" + entry.Name;
+                if (entry.IsDirectory) foreach (var item in EarlierEntries(path, depth + 1)) yield return item;
+                else if (EarlierFile(path)) yield return new VaultEntry { Name = path, LastModifiedUtc = entry.LastModifiedUtc };
             }
         }
 
         private static string EarlierLabel(VaultEntry entry) {
-            var name = entry.Name;
+            var name = Path.GetFileName(entry.Name);
             string reason = name.StartsWith("Vor_Wiederherstellung_", StringComparison.Ordinal) ? "vor Wiederherstellung" :
                 name.StartsWith("Vor_Leistungsbereichen_", StringComparison.Ordinal) ? "vor Änderung der Leistungsbereiche" :
                 name.StartsWith("Vor_Muendlich_Zuordnung_", StringComparison.Ordinal) ? "vor Zuordnung mündlicher Noten" :
-                name.StartsWith("Vor_Einstellungen_", StringComparison.Ordinal) ? "vor Änderung der Einstellungen" : "früherer Stand";
+                name.StartsWith("Vor_Einstellungen_", StringComparison.Ordinal) ? "vor Änderung der Einstellungen" :
+                name.StartsWith("Stand_", StringComparison.Ordinal) ? "früherer Stand" :
+                name.StartsWith("Beschaedigt_", StringComparison.Ordinal) || name.StartsWith("Ansicht_Beschaedigt_", StringComparison.Ordinal) ? "beschädigte Sicherung" : name;
             return entry.LastModifiedUtc.ToLocalTime().ToString("g", CultureInfo.CurrentCulture) + " – " + reason;
         }
 
@@ -187,9 +207,26 @@ namespace Notenblick.Native {
             using (WaitForClosed()) vault.Unlock(password, recovery);
         }
 
+        internal bool EarlierNeedsCredential(string file) {
+            if (file == null || !EarlierFile(file)) return false;
+            using (WaitForClosed()) {
+                if (!Protected) {
+                    var physical = RescuePaths.Under(SelectedPath, file);
+                    RescuePaths.NoLinks(physical);
+                    return VaultCrypto.HasMagic(physical);
+                }
+                var bytes = Read(file);
+                try { return VaultCrypto.IsProtected(bytes); }
+                finally { Array.Clear(bytes, 0, bytes.Length); }
+            }
+        }
+
         internal RescueSnapshot Open(string file, string password, string recovery) {
             if (!IsFolder) {
-                if (!Protected && String.Equals(Path.GetExtension(SelectedPath), ".zip", StringComparison.OrdinalIgnoreCase)) return OpenLegacyZip(SelectedPath);
+                if (!Protected && String.Equals(Path.GetExtension(SelectedPath), ".zip", StringComparison.OrdinalIgnoreCase)) {
+                    RescuePaths.NoLinks(SelectedPath);
+                    using (var input = new FileStream(SelectedPath, FileMode.Open, FileAccess.Read, FileShare.Read)) return OpenLegacyZip(input);
+                }
                 byte[] bytes = ReadFile(SelectedPath, VaultStore.MaxEnvelope);
                 if (VaultCrypto.IsProtected(bytes)) {
                     byte[] clear = VaultStore.OpenBackup(bytes, password, recovery);
@@ -197,7 +234,7 @@ namespace Notenblick.Native {
                 }
                 try { return Parse(bytes); } finally { Array.Clear(bytes, 0, bytes.Length); }
             }
-            if (file != null && (!file.StartsWith("Sicherungen/", StringComparison.Ordinal) || !SnapshotName.IsMatch(file.Substring("Sicherungen/".Length))))
+            if (file != null && !EarlierFile(file))
                 throw new InvalidDataException("Diese Sicherung ist hier nicht verfügbar.");
             Unlock(password, recovery);
             using (WaitForClosed()) {
@@ -205,7 +242,12 @@ namespace Notenblick.Native {
                 byte[] first = Read(path);
                 RescueSnapshot snapshot = null;
                 try {
-                    snapshot = Parse(first);
+                    if (file != null && VaultCrypto.IsProtected(first)) {
+                        byte[] clear = VaultStore.OpenBackup(first, password, recovery);
+                        try { snapshot = Parse(clear); } finally { Array.Clear(clear, 0, clear.Length); }
+                    } else if (file != null && file.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)) {
+                        using (var input = new MemoryStream(first, false)) snapshot = OpenLegacyZip(input);
+                    } else snapshot = Parse(first);
                     if (file == null) {
                         var contained = new HashSet<string>(snapshot.Lists, StringComparer.OrdinalIgnoreCase);
                         try {
@@ -296,10 +338,8 @@ namespace Notenblick.Native {
         internal static RescueSnapshot Parse(byte[] bytes) {
             var payload = ReadObject(bytes);
             bool envelope = payload["data"] != null;
-            if (envelope && (!IntegerOne(payload["version"]) || !(payload["lists"] is JArray))) throw new InvalidDataException("Diese Sicherung wird von dieser Version nicht unterstützt.");
-            var data = envelope ? payload["data"] as JObject : payload;
-            string[] required = { "years", "classes", "students", "courses", "assessments", "finals" };
-            if (data == null || !IntegerOne(data["version"]) || (string)data["format"] != "notenraum" || required.Any(name => !(data[name] is JArray)))
+            var data = VaultStore.SnapshotData(payload);
+            if (data == null)
                 throw new InvalidDataException("Wähle eine vollständige Notenblick-Sicherung.");
             string id = (string)data["commitId"];
             DateTimeOffset when;
@@ -324,11 +364,7 @@ namespace Notenblick.Native {
             } catch { snapshot.Dispose(); throw; }
         }
 
-        private static bool IntegerOne(JToken token) { return token != null && token.Type == JTokenType.Integer && token.ToString(Formatting.None) == "1"; }
-
-        private static RescueSnapshot OpenLegacyZip(string path) {
-            RescuePaths.NoLinks(path);
-            using (var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+        private static RescueSnapshot OpenLegacyZip(Stream file) {
             using (var zip = new ZipArchive(file, ZipArchiveMode.Read)) {
                 if (file.Length > VaultStore.MaxEnvelope || zip.Entries.Count > 100000) throw new InvalidDataException("Die Sicherung ist zu groß.");
                 var entries = new Dictionary<string, ZipArchiveEntry>(StringComparer.OrdinalIgnoreCase);

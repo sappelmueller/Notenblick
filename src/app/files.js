@@ -71,37 +71,64 @@ Notenblick.importFile = async function importFile(file) {
   Notenblick.confirmRestore(restored);
 };
 Notenblick.restorePoint = async function restorePoint() {
-  Notenblick.feedback('restore','');
-  if (!Notenblick.store) return;
+  const A=Notenblick;
+  A.feedback('restore','');
+  if (!A.store) return;
   let dir;
   try {
-    dir=await Notenblick.store.root.getDirectoryHandle('Sicherungen');
+    dir=await A.store.root.getDirectoryHandle('Sicherungen');
   } catch (e) {
     if(e.name==='NotFoundError')throw Error('Es gibt noch keine früheren Speicherstände.');
     throw Error('Die früheren Speicherstände konnten nicht geöffnet werden. Bitte prüfe den Zugriff auf deinen Ordner „Daten“.');
   }
-  const versions = [];
-  for await (const [name, h] of dir.entries()) if (h.kind === 'file' && /^(Stand_\d{8,}_[a-zA-Z0-9_-]+|Vor_Wiederherstellung_[a-zA-Z0-9_-]+|Vor_Einstellungen_1-4_[a-zA-Z0-9_-]+|Vor_Muendlich_Zuordnung_[a-zA-Z0-9_-]+|Vor_Leistungsbereichen_[a-zA-Z0-9_-]+)\.json$/.test(name)) {
-    let text;
-    try{text=await(await h.getFile()).text();}
-    catch{throw Error('Ein früherer Speicherstand konnte nicht gelesen werden. Bitte prüfe den Zugriff auf deinen Ordner „Daten“ und versuche es erneut.');}
-    try {
-      const d=Notenblick.N.validate(JSON.parse(text.replace(/^\ufeff/,'')));
-      versions.push({
-        name,handle:h,digest:await Notenblick.N.textDigest(text),
-        at:d.updatedAt,revision:d.revision,years:d.years.length,students:d.students.length,assessments:d.assessments.length
-      });
-    } catch {/* Invalid snapshots remain untouched; offer only valid data. */}
+  const versions=[],desktop=window.NRDesktop.available&&dir instanceof window.NRDesktop.Directory;
+  const normal=/^(Stand_\d{8,}_|Vor_(?:Wiederherstellung|Einstellungen_1-4|Muendlich_Zuordnung|Leistungsbereichen)_).*\.json$/i;
+  const read=async (h,includeEncrypted=false)=>{
+    try{
+      if(desktop)return await window.NRDesktop.call('vault-stored-backup',{path:h.path,includeEncrypted});
+      const text=await(await h.getFile()).text();
+      return {kind:'text',text,digest:await A.N.textDigest(text)};
+    }catch{throw Error('Ein früherer Speicherstand konnte nicht gelesen werden. Bitte prüfe den Zugriff auf deinen Ordner „Daten“ und versuche es erneut.');}
+  };
+  async function collect(folder,depth=0){
+    if(depth>14)return;
+    for await(const [name,h] of folder.entries()){
+      if(h.kind==='directory'&&desktop){await collect(h,depth+1);continue;}
+      const ownName=normal.test(name)||/^(?:Noten(?:blick|raum)-Sicherung-|Vor_(?:Migration|Ersetzen)_|Beschaedigt_|Ansicht_Beschaedigt_|\.notenblick-)/i.test(name);
+      if(h.kind!=='file'||!(desktop?/\.(?:json|nbx|nbk|zip|tmp)$/i.test(name):ownName)||/^(?:Aufbewahrung|Notenlistenverzeichnis|Ansicht_Vor_Wiederherstellung_.*)\.json$/i.test(name))continue;
+      const source=await read(h);
+      let data;
+      try{if(source.kind==='text')data=importedBackup(source.text);}catch{/* Beschädigte Dateien bleiben zur Prüfung erhalten. */}
+      const kind=data?'text':source.kind==='encrypted'?'encrypted':'damaged';
+      if(kind==='damaged'&&!(desktop&&(ownName||A.vault?.enabled)))continue;
+      const summary=data&&{updatedAt:data.updatedAt,years:{length:data.years.length},classes:{length:data.classes.length},students:{length:data.students.length},assessments:{length:data.assessments.length}};
+      versions.push({name,handle:h,kind,digest:source.digest,summary,revision:data?.revision||0,at:data?.updatedAt||h.meta?.lastModified||0});
+    }
   }
-  versions.sort((a,b)=>Date.parse(b.at)-Date.parse(a.at)||b.revision-a.revision);
+  await collect(dir);
+  versions.sort((a,b)=>(a.kind==='damaged')-(b.kind==='damaged')||new Date(b.at)-new Date(a.at)||b.revision-a.revision);
   if (!versions.length) throw Error('Es gibt noch keine lesbaren früheren Speicherstände.');
-  const label=v=>new Date(v.at).toLocaleString('de-DE')+(v.name.startsWith('Vor_Leistungsbereichen_')?' – vor Änderung der Leistungsbereiche':v.name.startsWith('Vor_Muendlich_Zuordnung_')?' – vor Zuordnung mündlicher Noten':v.name.startsWith('Vor_Einstellungen')?' – vor Übernahme der Einstellungen':v.name.startsWith('Vor_')?' – vor Wiederherstellung':'');
-  Notenblick.modal('Früheren Stand auswählen', `<div class="field"><label for="restorePoint">Gespeicherter Stand</label><select id="restorePoint" aria-describedby="restorePointHint">${versions.map((v,i)=>Notenblick.opt(i,label(v),'0')).join('')}</select><small id="restorePointHint">Die Auswahl allein ändert deine Daten nicht.</small></div><div id="restorePointDetails"></div>`,async()=>{
-    const entry=versions[Number(Notenblick.val('restorePoint'))];if(!entry)throw Error('Bitte einen gespeicherten Stand auswählen.');
-    const verify=async()=>{const text=await(await entry.handle.getFile()).text(),d=importedBackup(text);if(await Notenblick.N.textDigest(text)!==entry.digest)throw Error('Dieser Speicherstand wurde inzwischen verändert. Bitte wähle ihn erneut aus.');return d;};
-    const d=await verify();Notenblick.afterClose=()=>Notenblick.confirmRestore(d,verify,'Aktuellen Stand ersetzen');
+  const reason=name=>name.startsWith('Vor_Leistungsbereichen_')?'vor Änderung der Leistungsbereiche':name.startsWith('Vor_Muendlich_Zuordnung_')?'vor Zuordnung mündlicher Noten':name.startsWith('Vor_Einstellungen')?'vor Übernahme der Einstellungen':name.startsWith('Vor_Migration_')?'vor Übernahme älterer Daten':name.startsWith('Vor_Ersetzen_')||name.startsWith('Vor_Wiederherstellung_')?'vor Wiederherstellung':'';
+  const label=v=>v.kind==='damaged'?v.name+' – beschädigt':v.kind==='encrypted'?v.name+' – verschlüsselt':[new Date(v.at).toLocaleString('de-DE'),reason(v.name)||(!normal.test(v.name)?v.name:'')].filter(Boolean).join(' – ');
+  A.modal('Früheren Stand auswählen', `<div class="field"><label for="restorePoint">Gespeicherter Stand</label><select id="restorePoint" aria-describedby="restorePointHint">${versions.map((v,i)=>A.opt(i,label(v),'0')).join('')}</select><small id="restorePointHint">Die Auswahl allein ändert deine Daten nicht.</small></div><div id="restorePointDetails"></div>`,async()=>{
+    const entry=versions[Number(A.val('restorePoint'))];
+    if(!entry||entry.kind==='damaged')throw Error('Diese Sicherung ist beschädigt. Wähle einen anderen Stand.');
+    const verify=async()=>{
+      const source=await read(entry.handle,true);
+      if(source.digest!==entry.digest)throw Error('Dieser Speicherstand wurde inzwischen verändert. Bitte wähle ihn erneut aus.');
+      return source;
+    };
+    const source=await verify();
+    if(entry.kind==='encrypted')A.afterClose=()=>A.promptProtectedBackup(source.dataBase64,importedBackup);
+    else A.afterClose=()=>A.confirmRestore(importedBackup(source.text),async()=>importedBackup((await verify()).text),'Aktuellen Stand ersetzen');
   },'Weiter');
-  const preview=()=>{const v=versions[Number(Notenblick.val('restorePoint'))];Notenblick.$('#restorePointDetails').innerHTML='<h3>Ausgewählter Stand</h3>'+Notenblick.backupDetails({updatedAt:v.at,years:{length:v.years},students:{length:v.students},assessments:{length:v.assessments}})+(v.name.startsWith('Vor_')?'<p class="hint">'+Notenblick.esc(label(v).split(' – ')[1])+'.</p>':'');};
-  Notenblick.$('#restorePoint').addEventListener('change',preview);preview();
+  const preview=()=>{
+    const v=versions[Number(A.val('restorePoint'))];
+    const summary=v.summary?A.backupDetails(v.summary)+(reason(v.name)?'<p class="hint">'+A.esc(reason(v.name))+'.</p>':''):
+      v.kind==='encrypted'?'<p>Zum Öffnen brauchst du das Passwort oder den Notfallschlüssel dieser Sicherung.</p>':'<p>Diese Sicherung ist beschädigt. Wähle einen anderen Stand.</p>';
+    A.$('#restorePointDetails').innerHTML='<h3>Ausgewählter Stand</h3>'+summary;
+    A.$('#dialogSave').disabled=v.kind==='damaged';
+  };
+  A.$('#restorePoint').addEventListener('change',preview);preview();
 };
 })(globalThis.Notenblick = globalThis.Notenblick || {});

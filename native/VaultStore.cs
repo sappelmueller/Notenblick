@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Notenblick.Native {
@@ -33,7 +36,16 @@ namespace Notenblick.Native {
   const string PointerHeader = "NBSTORE1\n";
   static readonly Regex Generation = new Regex("^Geschuetzt-[a-f0-9]{32}$", RegexOptions.CultureInvariant);
   static readonly Regex Node = new Regex("^(?:f-[a-f0-9]{32}|d-[a-f0-9]{32}\\.bin)$", RegexOptions.CultureInvariant);
-  static readonly Regex BackupFile = new Regex(@"^(?:Stand_\d{8,}_[a-zA-Z0-9_-]+|(?:Vor_Wiederherstellung|Vor_Einstellungen_1-4|Vor_Muendlich_Zuordnung|Vor_Leistungsbereichen|Ansicht_Vor_Wiederherstellung|Ansicht_Beschaedigt|Beschaedigt)_[a-zA-Z0-9_-]+)\.json$|^Vor_(?:Migration|Ersetzen)_[a-zA-Z0-9_-]+\.zip$", RegexOptions.CultureInvariant);
+  const string GeneratedId = @"(?:[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}|n[0-9a-z]{10,})";
+  const string BackupDate = @"\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z";
+  static readonly Regex GeneratedBackup = new Regex(
+   @"^(?:Stand_\d{8,}_" + GeneratedId +
+   @"|(?:Vor_Wiederherstellung|Vor_Einstellungen_1-4|Vor_Muendlich_Zuordnung|Vor_Leistungsbereichen|Ansicht_Vor_Wiederherstellung|Ansicht_Beschaedigt)_" + BackupDate + "_" + GeneratedId +
+   @"|Beschaedigt_" + BackupDate + @"(?:_" + GeneratedId + ")?" +
+   @"|(?:Notenblick|Notenraum)-Sicherung-" + BackupDate + @")(?: \(\d+\))?\.(?:json|nbx|nbk)$" +
+   @"|^Vor_(?:Migration|Ersetzen)_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}_[a-f0-9]{32}\.zip$|^\.notenblick-[a-f0-9]{32}\.tmp$",
+   RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+  static readonly string[] SnapshotCollections = { "years", "classes", "students", "courses", "assessments", "finals" };
   readonly string dataRoot;
   readonly bool detached;
   readonly Action<string> boundary;
@@ -186,6 +198,7 @@ namespace Notenblick.Native {
   static string Location(string root, byte[] secret, string logical, bool directory) => Path.Combine(DirectoryNode(root, secret, ParentOf(logical)), (directory ? "d-" : "f-") + Id(secret, logical) + (directory ? ".bin" : ""));
   static string DirectoryNode(string root, byte[] secret, string logical) => Path.Combine(root, logical.Length == 0 ? "Dateien" : "d-" + Id(secret, logical));
   static string Purpose(string item, string logical) => item + ":" + Canonical(logical);
+  static int FileLimit(string logical) => InBackupFolder(logical) ? MaxEnvelope : MaxPayload;
 
   static void MakeDirectory(string root, byte[] secret, string logical) {
    if (logical.Length == 0) return;
@@ -207,7 +220,8 @@ namespace Notenblick.Native {
    var content = Path.Combine(node, "Inhalt.bin");
    if (Directory.Exists(node) && (!File.Exists(content) || !File.Exists(Path.Combine(node, "Name.bin")))) throw FormatError();
    if (!Directory.Exists(node)) throw new FileNotFoundException();
-   return VaultCrypto.OpenRecord(secret, Purpose("file", logical), ReadBounded(content, MaxPayload + VaultCrypto.RecordOverhead));
+   int limit = FileLimit(logical);
+   return VaultCrypto.OpenRecord(secret, Purpose("file", logical), ReadBounded(content, limit + VaultCrypto.RecordOverhead), maximum:limit);
   }
   static void WriteFile(string root, byte[] secret, string logical, byte[] data) {
    Validate(logical);
@@ -216,7 +230,7 @@ namespace Notenblick.Native {
    if (File.Exists(Location(root, secret, logical, true))) throw Collision(logical);
    if (Directory.Exists(node)) {
     CheckFileNode(node);
-    WriteAtomic(Path.Combine(node, "Inhalt.bin"), VaultCrypto.SealRecord(secret, Purpose("file", logical), data));
+    WriteAtomic(Path.Combine(node, "Inhalt.bin"), VaultCrypto.SealRecord(secret, Purpose("file", logical), data, FileLimit(logical)));
     return;
    }
    MakeDirectory(root, secret, ParentOf(logical));
@@ -226,7 +240,7 @@ namespace Notenblick.Native {
    try {
     string label = "name:" + Path.GetFileName(node);
     WriteAtomic(Path.Combine(stage, "Name.bin"), VaultCrypto.SealRecord(secret, label, VaultCrypto.Utf8.GetBytes(NameOf(logical))));
-    WriteAtomic(Path.Combine(stage, "Inhalt.bin"), VaultCrypto.SealRecord(secret, Purpose("file", logical), data));
+    WriteAtomic(Path.Combine(stage, "Inhalt.bin"), VaultCrypto.SealRecord(secret, Purpose("file", logical), data, FileLimit(logical)));
     Directory.Move(stage, node);
    } finally { TryRemoveTransient(stage); }
   }
@@ -263,7 +277,7 @@ namespace Notenblick.Native {
       var file = Path.Combine(child, "Inhalt.bin");
       CheckPath(file);
       var info = new FileInfo(file);
-      if (!info.Exists || info.Length < VaultCrypto.RecordOverhead || info.Length > MaxPayload + VaultCrypto.RecordOverhead) throw FormatError();
+     if (!info.Exists || info.Length < VaultCrypto.RecordOverhead || info.Length > FileLimit(logicalName) + VaultCrypto.RecordOverhead) throw FormatError();
       yield return new VaultEntry { Name = name, Size = info.Length - VaultCrypto.RecordOverhead, LastModifiedUtc = info.LastWriteTimeUtc };
      }
     } finally { VaultCrypto.Clear(label); }
@@ -276,7 +290,6 @@ namespace Notenblick.Native {
    VaultCrypto.VerifyRecovery(recovery, verification);
    var source = OwnedPlainFiles();
    if (!source.Contains(MainName, StringComparer.OrdinalIgnoreCase)) throw new InvalidOperationException("Speichere zuerst einen Notenstand.");
-   EnsureBackupFolderOwnsFiles(source);
    Migrate(password, recovery, source, true);
   }
   public void ChangePassword(string currentPassword, string currentRecovery, string password) {
@@ -293,9 +306,11 @@ namespace Notenblick.Native {
    RequireTransitionAccess(); RequireUnlocked(); VerifyAccess(currentPassword, null);
    if (Pending) throw FormatError();
    VaultCrypto.VerifyRecovery(recovery, verification);
+    if (!string.Equals(currentPassword, password, StringComparison.Ordinal)) VaultCrypto.ValidateNewPassword(password);
    Migrate(password, recovery, Walk(physicalRoot, key, "").ToArray(), false);
   }
   void Migrate(string password, string recovery, string[] logicalFiles, bool fromPlain) {
+   if (fromPlain) VaultCrypto.ValidateNewPassword(password);
    string id = Guid.NewGuid().ToString("N");
    string staging = Path.Combine(dataRoot, ".schutz-" + id);
    string next = Path.Combine(dataRoot, "Geschuetzt-" + id);
@@ -309,7 +324,7 @@ namespace Notenblick.Native {
     WriteAtomic(Path.Combine(staging, HeaderName), nextHeader);
     WriteAtomic(Path.Combine(staging, ProofName), VaultCrypto.SealRecord(secret, "proof", VaultCrypto.Utf8.GetBytes(Proof)));
     foreach (var logical in logicalFiles) {
-     var source = fromPlain ? ReadBounded(PlainPath(logical), MaxPayload) : Read(logical);
+      var source = fromPlain ? ReadBounded(PlainPath(logical), FileLimit(logical)) : Read(logical);
      byte[] reloaded = null;
      try {
       WriteFile(staging, secret, logical, source);
@@ -325,7 +340,10 @@ namespace Notenblick.Native {
      try { VerifyProof(staging, reopened); if (!VaultCrypto.Equal(reopened, secret)) throw FormatError(); }
      finally { VaultCrypto.Clear(reopened); }
     }
-    if (fromPlain) WriteJournal(staging, secret, EnableJournal, logicalFiles);
+     if (fromPlain) {
+      EnsureBackupFolderOwnsFiles(logicalFiles);
+      WriteJournal(staging, secret, EnableJournal, logicalFiles);
+     }
     else WriteJournal(staging, secret, RotateJournal, new[] { Path.GetFileName(old) });
     Directory.Move(staging, next);
     boundary?.Invoke(fromPlain ? "enable-staged" : "rotate-staged");
@@ -373,11 +391,11 @@ namespace Notenblick.Native {
      var path = PlainPath(logical);
      if (File.Exists(path)) {
       var source = Read(logical);
-      try { if (!HashesEqual(path, source)) throw Collision(logical); File.Delete(path); boundary?.Invoke("enable-delete"); }
+       try { if (!HashesEqual(path, source, FileLimit(logical))) throw Collision(logical); File.Delete(path); boundary?.Invoke("enable-delete"); }
       finally { VaultCrypto.Clear(source); }
      }
     }
-    RemoveEmptyListFolders(paths);
+     RemoveEmptySourceFolders(paths);
     var blocker = PlainPath(MainName);
     if (File.Exists(blocker)) throw Collision(MainName);
     if (!Directory.Exists(blocker)) Directory.CreateDirectory(blocker);
@@ -388,7 +406,10 @@ namespace Notenblick.Native {
     var legacyBackups = PlainPath(BackupFolder);
     if (Directory.Exists(legacyBackups) && !Directory.EnumerateFileSystemEntries(legacyBackups).Any()) Directory.Delete(legacyBackups);
     if (!Directory.Exists(legacyBackups) && !File.Exists(legacyBackups)) WriteAtomic(legacyBackups, VaultCrypto.Utf8.GetBytes(BlockerText));
-    if (!IsBackupBlocker(legacyBackups)) throw Collision(BackupFolder);
+     if (!IsBackupBlocker(legacyBackups)) {
+      var leftover = Directory.Exists(legacyBackups) ? Directory.EnumerateFileSystemEntries(legacyBackups).FirstOrDefault() : null;
+      throw BackupConflict(leftover == null ? BackupFolder : Child(BackupFolder, Path.GetFileName(leftover)));
+     }
     File.Delete(enable);
    }
    if (File.Exists(rotate)) {
@@ -425,9 +446,9 @@ namespace Notenblick.Native {
     Lock(); physicalRoot = null;
    }
   }
-  void RemoveEmptyListFolders(string[] files) {
+  void RemoveEmptySourceFolders(string[] files) {
    var dirs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-   foreach (var name in files.Where(n => n.StartsWith("Notenlisten/", StringComparison.OrdinalIgnoreCase)))
+   foreach (var name in files.Where(n => n.StartsWith("Notenlisten/", StringComparison.OrdinalIgnoreCase) || InBackupFolder(n)))
     for (var parent = ParentOf(name); parent.Length != 0; parent = ParentOf(parent)) dirs.Add(parent);
    foreach (var dir in dirs.OrderByDescending(x => x.Length)) {
     var path = PlainPath(dir);
@@ -449,17 +470,17 @@ namespace Notenblick.Native {
   // The 1.27 reader looks for a legacy installation next to this one and
   // would write an unencrypted migration archive before attempting its main
   // write. A regular file occupies that exact legacy directory after activation.
-  void EnsureBackupFolderOwnsFiles(string[] known) {
-   var folder = PlainPath(BackupFolder);
-   if (File.Exists(folder)) throw Collision(BackupFolder);
-   var files = new HashSet<string>(known, StringComparer.OrdinalIgnoreCase);
-   if (Directory.Exists(folder) && Directory.EnumerateFileSystemEntries(folder).Any(entry =>
-       !File.Exists(entry) || !files.Contains(Child(BackupFolder, Path.GetFileName(entry)))))
-    throw new IOException("Im Sicherungsordner liegen weitere Dateien. Verschiebe diese Dateien an einen sicheren Ort und richte den Passwortschutz erneut ein. Notenblick hat nichts verändert.");
-  }
-  static bool IsBackupIndex(string path) => path.Equals("Sicherungen/Notenlistenverzeichnis.json", StringComparison.OrdinalIgnoreCase) || path.Equals("Sicherungen/Aufbewahrung.json", StringComparison.OrdinalIgnoreCase);
-  static bool HashesEqual(string path, byte[] bytes) {
-   var existing = ReadBounded(path, MaxPayload);
+   void EnsureBackupFolderOwnsFiles(string[] known) {
+    var expected = new HashSet<string>(known.Where(InBackupFolder), StringComparer.OrdinalIgnoreCase);
+    foreach (var logical in PlainBackupFiles())
+     if (!expected.Remove(logical)) throw BackupConflict(logical);
+    if (expected.Count != 0) throw BackupConflict(expected.First());
+   }
+   static IOException BackupConflict(string path) => new IOException("Der Eintrag „" + path.Replace('/', '\\') + "“ passt nicht zur Umstellung. Bewahre ihn außerhalb des Ordners „Daten“ auf und versuche es erneut.");
+   internal static bool InBackupFolder(string path) => path.StartsWith(BackupFolder + "/", StringComparison.OrdinalIgnoreCase);
+  internal static bool IsBackupIndex(string path) => path.Equals("Sicherungen/Notenlistenverzeichnis.json", StringComparison.OrdinalIgnoreCase) || path.Equals("Sicherungen/Aufbewahrung.json", StringComparison.OrdinalIgnoreCase);
+  static bool HashesEqual(string path, byte[] bytes, int maximum = MaxPayload) {
+   var existing = ReadBounded(path, maximum);
    try { return VaultCrypto.Equal(VaultCrypto.Hash(existing), VaultCrypto.Hash(bytes)); }
    finally { VaultCrypto.Clear(existing); }
   }
@@ -484,24 +505,11 @@ namespace Notenblick.Native {
   }
   string[] OwnedPlainFiles() {
    var paths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-   foreach (var direct in new[] { MainName, "Ansicht.json", "Sicherungen/Notenlistenverzeichnis.json", "Sicherungen/Aufbewahrung.json" })
+    foreach (var direct in new[] { MainName, "Ansicht.json" })
     if (File.Exists(PlainPath(direct))) paths.Add(direct);
-   var backups = PlainPath("Sicherungen");
-   JObject retention = null;
-   var retentionFile = PlainPath("Sicherungen/Aufbewahrung.json");
-   if (File.Exists(retentionFile)) {
-    var bytes = ReadBounded(retentionFile, 32 * 1024 * 1024);
-    try { retention = JObject.Parse(VaultCrypto.Utf8.GetString(bytes).TrimStart('\ufeff')); }
-    catch (Newtonsoft.Json.JsonException) { /* Keep backups that cannot be verified. */ }
-    finally { VaultCrypto.Clear(bytes); }
-   }
-   if (Directory.Exists(backups)) foreach (var path in Directory.EnumerateFiles(backups)) {
-    var name = Path.GetFileName(path);
-    if (!BackupFile.IsMatch(name)) continue;
-    CheckPath(path);
-    if (name.StartsWith("Stand_", StringComparison.Ordinal) && !VerifiedRegularBackup(path, retention?[name] as JObject)) continue;
-    paths.Add("Sicherungen/" + name);
-   }
+    foreach (var logical in PlainBackupFiles())
+     if (!RecognizedBackup(logical)) throw BackupConflict(logical);
+     else if (!paths.Add(logical)) throw Collision(logical);
    var manifest = PlainPath("Sicherungen/Notenlistenverzeichnis.json");
    if (File.Exists(manifest)) {
     var bytes = ReadBounded(manifest, 32 * 1024 * 1024);
@@ -529,17 +537,79 @@ namespace Notenblick.Native {
    }
    return paths.OrderBy(x => x, StringComparer.Ordinal).ToArray();
   }
-  static bool VerifiedRegularBackup(string file, JObject recorded) {
-   if (recorded == null || !string.Equals((string)recorded["name"], Path.GetFileName(file), StringComparison.Ordinal)) return false;
-   var info = new FileInfo(file);
-   if (recorded["size"]?.Type != JTokenType.Integer || (long)recorded["size"] != info.Length || recorded["lastModified"]?.Type != JTokenType.Integer ||
-       (long)recorded["lastModified"] != new DateTimeOffset(info.LastWriteTimeUtc).ToUnixTimeMilliseconds()) return false;
-   var expected = (string)recorded["digest"];
-   if (expected == null || !Regex.IsMatch(expected, "^[a-f0-9]{64}$")) return false;
-   var bytes = ReadBounded(file, MaxPayload);
-   try { return Hex(VaultCrypto.Hash(bytes)) == expected; }
-   finally { VaultCrypto.Clear(bytes); }
+   IEnumerable<string> PlainBackupFiles(string logical = BackupFolder) {
+    var folder = PlainPath(logical);
+    if (File.Exists(folder)) throw BackupConflict(logical);
+    if (!Directory.Exists(folder)) return Array.Empty<string>();
+    return BackupChildren(logical, folder).ToArray();
+   }
+   IEnumerable<string> BackupChildren(string logical, string folder) {
+    bool found = false;
+    foreach (var entry in Directory.EnumerateFileSystemEntries(folder)) {
+     var child = Child(logical, Path.GetFileName(entry));
+     try { PlainPath(child); }
+     catch (Exception error) when (error is IOException || error is InvalidDataException) { throw BackupConflict(child); }
+     found = true;
+     if (Directory.Exists(entry)) foreach (var nested in BackupChildren(child, entry)) yield return nested;
+     else yield return child;
+    }
+    if (!found && logical != BackupFolder) throw BackupConflict(logical);
+   }
+   bool RecognizedBackup(string logical) {
+    if (IsBackupIndex(logical) || GeneratedBackup.IsMatch(NameOf(logical))) return true;
+    string path = PlainPath(logical), extension = Path.GetExtension(path).ToLowerInvariant();
+    if (!new[] { ".json", ".nbk", ".nbx", ".zip" }.Contains(extension)) return false;
+    using (var input = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+     if (input.Length > MaxEnvelope) return false;
+     if (extension == ".zip") {
+      try {
+       using (var zip = new ZipArchive(input, ZipArchiveMode.Read, true))
+       using (var data = BackupZipMain(zip).Open()) return SnapshotData(ReadBackupJson(data)) != null;
+      } catch (InvalidDataException) { return false; }
+     }
+     var prefix = new byte[8];
+     if (input.Read(prefix, 0, prefix.Length) == prefix.Length && VaultCrypto.IsProtected(prefix)) return true;
+     input.Position = 0;
+     return SnapshotData(ReadBackupJson(input)) != null;
+    }
+   }
+   internal static ZipArchiveEntry BackupZipMain(ZipArchive zip) {
+    if (zip.Entries.Count > 100000) throw new InvalidDataException("Die Sicherung enthält zu viele Dateien.");
+    var main = zip.GetEntry("Daten/" + MainName) ?? zip.GetEntry(MainName);
+    if (main == null || main.Length > MaxPayload) throw new InvalidDataException("Die Noten in der Sicherung fehlen oder sind zu groß.");
+    return main;
+   }
+  internal static JObject ReadStoredBackupJson(byte[] bytes, string name) {
+   using (var input = new MemoryStream(bytes, false)) {
+    if (!name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)) return ReadBackupJson(input);
+    try {
+     using (var zip = new ZipArchive(input, ZipArchiveMode.Read))
+     using (var data = BackupZipMain(zip).Open()) return ReadBackupJson(data);
+    } catch (InvalidDataException) { return null; }
+   }
   }
+   static JObject ReadBackupJson(Stream input) {
+    try {
+     using (var text = new StreamReader(input, VaultCrypto.Utf8, true, 1024, true))
+     using (var json = new JsonTextReader(text) { MaxDepth = 128, DateParseHandling = DateParseHandling.None }) {
+      if (!json.Read() || json.TokenType != JsonToken.StartObject) return null;
+      var data = JObject.Load(json, new JsonLoadSettings { DuplicatePropertyNameHandling = DuplicatePropertyNameHandling.Error });
+      return json.Read() ? null : data;
+     }
+    } catch (Exception error) when (error is JsonException || error is DecoderFallbackException) { return null; }
+   }
+   internal static JObject SnapshotData(JObject payload) {
+    var data = payload;
+    if (payload?["data"] != null) {
+     if (!IntegerOne(payload["version"]) || !(payload["lists"] is JArray)) return null;
+     data = payload["data"] as JObject;
+    }
+    return data?["format"]?.Type == JTokenType.String && (string)data["format"] == "notenraum" &&
+           IntegerOne(data["version"]) &&
+           data["commitId"]?.Type == JTokenType.String &&
+           SnapshotCollections.All(name => data[name] is JArray) ? data : null;
+  }
+  static bool IntegerOne(JToken token) => token?.Type == JTokenType.Integer && token.ToString(Formatting.None) == "1";
   public string[] Unprotected() {
    if (!Enabled || Locked || detached) return new string[0];
    return PlainLeftovers(dataRoot, "", 0).Take(100).ToArray();
@@ -628,7 +698,7 @@ namespace Notenblick.Native {
    var stage = Path.Combine(parent, ".nb-" + Guid.NewGuid().ToString("N") + ".tmp");
    try {
     using (var stream = new FileStream(stage, FileMode.CreateNew, FileAccess.Write, FileShare.None, 64 * 1024, FileOptions.WriteThrough)) { stream.Write(data, 0, data.Length); stream.Flush(true); }
-    var check = ReadBounded(stage, MaxEnvelope);
+    var check = ReadBounded(stage, MaxEnvelope + VaultCrypto.RecordOverhead);
     try { if (!VaultCrypto.Equal(VaultCrypto.Hash(check), VaultCrypto.Hash(data))) throw FormatError(); }
     finally { VaultCrypto.Clear(check); }
     CheckPath(path);

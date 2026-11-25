@@ -4,7 +4,7 @@ const crypto=require('node:crypto'),assert=require('node:assert/strict'),fs=requ
 const ctx=await require('./load.cjs').load({cache:new Map()}),{q:A,w}=ctx,$=s=>w.document.querySelector(s),N=w.NR,checks=[];
 try{
  const help=JSON.parse(fs.readFileSync(path.join(__dirname,'../src/data/HILFE-1.23.0.json'))),contexts=JSON.parse(fs.readFileSync(path.join(__dirname,'../src/data/F1-KONTEXTE.json'))).contexts;
- for(const [name,hash]of Object.entries({'HILFE-1.23.0.json':'b72c5b5386404d9e4535e709d8fd5130553cd2b67da366588172b9985d3aa977','F1-KONTEXTE.json':'2248941d98863327e5fd47f1be129d9b5323a758175e6f074a9443edf5a1b904'}))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'../src/data',name))).digest('hex'),hash);
+ for(const [name,hash]of Object.entries({'HILFE-1.23.0.json':'b8a1145964e615097f5973a6916c3c9773f4e137a11af9c873501877fff10ae7','F1-KONTEXTE.json':'2248941d98863327e5fd47f1be129d9b5323a758175e6f074a9443edf5a1b904'}))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'../src/data',name))).digest('hex'),hash);
  assert.equal(help.topics.length,9);assert.equal(help.topics.reduce((n,t)=>n+t.sections.length,0),81);assert.equal(contexts.length,49);
  A.activateGroup('main','help');assert.equal($('#help .help-intro').textContent,help.intro);assert.equal(w.document.querySelectorAll('#help [role=tab]').length,9);
  for(const t of help.topics){assert.equal($('#help-tab-'+t.id).textContent,t.title);for(const s of t.sections){const h=$('#'+s.id);assert.equal(h.textContent,s.heading);require('./help-content.cjs')(assert,h.parentElement,s);}}

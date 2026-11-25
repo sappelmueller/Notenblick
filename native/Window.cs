@@ -115,7 +115,10 @@ namespace Notenblick.Native {
         while(!reader.EndOfStream){var line=reader.ReadLine();if(line.StartsWith("Notfallschlüssel: ",StringComparison.Ordinal)){if(key!=null)throw new InvalidDataException("Diese Schlüsseldatei enthält mehrere Schlüssel.");key=line.Substring("Notfallschlüssel: ".Length);}}
        }
        if(String.IsNullOrEmpty(key)||key.Length>200)throw new InvalidDataException("Diese Datei enthält keinen Notenblick-Notfallschlüssel.");
-       if(!OutputLocked&&String.Equals(key,preparedRecovery,StringComparison.Ordinal)&&!Inside(dialog.FileName,storage.Root))confirmedRecovery=key;
+       if(!OutputLocked&&String.Equals(key,preparedRecovery,StringComparison.Ordinal)){
+        if(!Inside(dialog.FileName,storage.Root))confirmedRecovery=key;
+        else if(request["recovery"]!=null)throw new InvalidDataException("Wähle die Schlüsseldatei außerhalb des Datenordners.");
+       }
        result=key;
       }
       break;

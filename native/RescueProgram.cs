@@ -15,9 +15,14 @@ namespace Notenblick.Native {
                 return 0;
             } catch {
                 if (args.Length == 1 && args[0] == "--verify-readers") return 1;
-                MessageBox.Show("Der Notfallzugriff konnte nicht gestartet werden. Entpacke ihn erneut oder öffne eine Kopie auf einem anderen Rechner.", "Notfallzugriff für Notenblick", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowStartError();
                 return 1;
             }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void ShowStartError() {
+            MessageBox.Show("Der Notfallzugriff konnte nicht gestartet werden. Entpacke ihn erneut oder öffne eine Kopie auf einem anderen Rechner.", "Notfallzugriff für Notenblick", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private static Assembly ResolveLibrary(object sender, ResolveEventArgs request) {

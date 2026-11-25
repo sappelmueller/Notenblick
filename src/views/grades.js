@@ -68,13 +68,26 @@
     if(A.rendered[kind]===key)return;
     const activeDraft=editing?draft:null;
     const heading=activeDraft&&!saved?A.performanceDraftLabel(selected):(editing?'Noten eingeben – ':'')+selected.title;
-    const actions=(A.readonly()?'':A.b(editing?'assessment-done':'assessment-edit',editing?'Fertig':'Noten bearbeiten','','button primary'))+
-      (saved?A.b('assessment-export','Leistung exportieren',`data-id="${selected.id}"`):'')+
-      A.b('assessment-list','Schließen')+(activeDraft?A.b('discard-assessment-draft','Entwurf verwerfen',saved||!activeDraft.touched?'hidden':'','text-button'):'');
+    const primary=A.readonly()?'':A.b(editing?'assessment-done':'assessment-edit',editing?'Fertig':'Noten bearbeiten','','button primary');
+    const close=A.b('assessment-list','Schließen');
+    const exportAction=saved?A.b('assessment-export','Leistung exportieren',`data-id="${selected.id}"`,activeDraft?'text-button':'button'):'';
     const meta=A.esc(c.name)+' · Klasse '+A.esc(A.getClass().name)+(activeDraft?'':' · '+A.date(selected.date));
     const pointControls=A.pointSummaryMarkup(selected,editing)+(editing?`<div id="pointConfiguration"${A.entrySession.settings?'':' hidden'}>${A.pointSettingsMarkup(selected)}</div>`:'');
-    const input=`<ul class="tabs small-tabs entry-tabs" id="entryTabs-${kind}"><li><a href="#entry-${kind}-table" id="entry-tab-${kind}-table" data-key="table">Alle Schüler</a></li><li><a href="#entry-${kind}-single" id="entry-tab-${kind}-single" data-key="single">Einzeln</a></li></ul><p id="currentEntryPupil" class="hint" hidden></p><div id="entry-${kind}-table"></div><div id="entry-${kind}-single" hidden></div>`;
-    A.$('#'+kind).innerHTML=`<div class="entry-heading"><h3 id="assessmentWorkTitle" tabindex="-1">${A.esc(heading)}</h3>${activeDraft?A.performanceDraftHead(activeDraft,selected):''}<div class="button-row">${actions}</div><p class="assessment-meta">${meta}</p><p class="assessment-meta entry-result" id="entry-summary-${kind}">${A.entryProgressText(selected)}</p>${!activeDraft&&A.performanceFlags(selected)?'<p class="hint">'+A.performanceFlags(selected)+'</p>':''}</div>${pointControls}${activeDraft?A.performanceDraftOptions(activeDraft,selected):''}${editing?input:A.assessmentResultsMarkup(selected)}`;
+    const progress=`<p class="assessment-meta entry-result" id="entry-summary-${kind}">${A.entryProgressText(selected)}</p>`;
+    const input=`<ul class="tabs small-tabs entry-tabs" id="entryTabs-${kind}"><li><a href="#entry-${kind}-table" id="entry-tab-${kind}-table" data-key="table">Alle Schüler</a></li><li><a href="#entry-${kind}-single" id="entry-tab-${kind}-single" data-key="single">Einzeln</a></li></ul>${activeDraft?progress:''}<p id="currentEntryPupil" class="hint" hidden></p><div id="entry-${kind}-table"></div><div id="entry-${kind}-single" hidden></div>`;
+    const header=`<h3 id="assessmentWorkTitle" tabindex="-1">${A.esc(heading)}</h3>`;
+    const courseMeta=`<p class="assessment-meta">${meta}</p>`;
+    const flags=A.performanceFlags(selected);
+    let workspace;
+    if(activeDraft){
+      const discard=A.b('discard-assessment-draft','Entwurf verwerfen',saved||!activeDraft.touched?'hidden':'','text-button');
+      workspace=`<div class="entry-heading">${header}<div class="button-row">${primary+close}</div>${courseMeta}${A.performanceDraftHead(activeDraft)}
+        <div class="performance-draft-state" hidden><p class="hint" id="newAssessmentStatus"></p>${discard+exportAction}</div></div>
+        <div class="performance-draft-tools"><div class="performance-draft-input">${pointControls}</div>${A.performanceDraftParticipation(activeDraft,selected)}${A.performanceDraftOptions(activeDraft)}</div>${input}`;
+    }else{
+      workspace=`<div class="entry-heading">${header}<div class="button-row">${primary+exportAction+close}</div>${courseMeta+progress}${flags?'<p class="hint">'+flags+'</p>':''}</div>${pointControls}${editing?input:A.assessmentResultsMarkup(selected)}`;
+    }
+    A.$('#'+kind).innerHTML=workspace;
     if(editing){
       A.groups['entry-'+kind]=A.bind('entryTabs-'+kind,['table','single'],(type,update)=>{w.entryMode=type;A.renderEntry(kind,type);if(update)A.remember();});
       A.groups['entry-'+kind].activate(A.$('#entry-tab-'+kind+'-'+w.entryMode),false,false);

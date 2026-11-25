@@ -72,6 +72,13 @@ const plain=value=>JSON.parse(JSON.stringify(value));
   assert.equal(find('#draft-participant-'+students[1]).disabled,true);
   find('#draft-participantNone').click();
   assert.deepEqual(plain(B.data.assessments.at(-1).participantIds),plain(students.slice(0,2)));
+  const save=B.save,finish=find('[data-action=assessment-done]');
+  B.save=async()=>{throw Error('Synthetischer Schreibfehler');};
+  try{await assert.rejects(()=>B.action(finish),/Schreibfehler/);}
+  finally{B.save=save;}
+  assert.equal(B.currentPerformanceDraft().record.id,id);
+  assert.equal(x.document.activeElement,finish);
+  assert.equal(finish.disabled,false);
   await Promise.all([B.action(find('[data-action=assessment-done]')),B.action(find('[data-action=assessment-done]'))]);
   assert.equal(B.data.assessments.filter(a=>a.id===id).length,1);
   assert.equal(B.data.assessments.at(-1).weight,'2');

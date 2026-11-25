@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -10,6 +11,10 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Engines;
 
 namespace Notenblick.Native {
+ internal sealed class VaultAccessException : IOException {
+  internal VaultAccessException(string message) : base(message) {}
+ }
+
  public static class VaultCrypto {
   internal const int SecretBytes = 32;
   internal const int MaxPayload = 256 * 1024 * 1024;
@@ -106,7 +111,7 @@ namespace Notenblick.Native {
    if (index != key.Length || text != KeyText(key)) { Clear(key); throw BadRecovery(); }
    return key;
   }
-  static InvalidDataException BadRecovery() => new InvalidDataException("Der Notfallschlüssel ist unvollständig oder falsch eingegeben.");
+  static VaultAccessException BadRecovery() => new VaultAccessException("Der Notfallschlüssel ist unvollständig oder falsch eingegeben.");
   internal static void VerifyRecovery(string recovery, string verification) {
    byte[] a = null, b = null;
    try {
@@ -116,9 +121,23 @@ namespace Notenblick.Native {
   }
 
   internal static void ValidateNewPassword(string password) {
-   if (password == null || password.Length < 12 || string.IsNullOrWhiteSpace(password))
-    throw new ArgumentException("Wähle ein Passwort mit mindestens 12 Zeichen. Mehrere Wörter sind oft leichter zu merken.");
-   if (Utf8.GetByteCount(password) > 4096) throw new ArgumentException("Das Passwort ist zu lang.");
+   password = password ?? "";
+   int bytes;
+   try { bytes = Utf8.GetByteCount(password); }
+   catch (EncoderFallbackException) { throw new ArgumentException("Das Passwort enthält ein ungültiges Zeichen."); }
+   if (bytes > 4096) throw new ArgumentException("Das Passwort ist zu lang.");
+   int length = 0;
+   bool upper = false, lower = false, digit = false, special = false;
+   for (int i = 0; i < password.Length; i++, length++) {
+    var kind = CharUnicodeInfo.GetUnicodeCategory(password, i);
+    upper |= kind == UnicodeCategory.UppercaseLetter;
+    lower |= kind == UnicodeCategory.LowercaseLetter;
+    digit |= kind == UnicodeCategory.DecimalDigitNumber;
+    special |= kind >= UnicodeCategory.ConnectorPunctuation && kind <= UnicodeCategory.OtherSymbol;
+    if (char.IsSurrogatePair(password, i)) i++;
+   }
+   if (length < 8 || !upper || !lower || !digit || !special)
+    throw new ArgumentException("Verwende mindestens acht Zeichen, darunter einen Großbuchstaben, einen Kleinbuchstaben, eine Ziffer und ein Sonderzeichen.");
   }
   static byte[] PasswordKey(string password, byte[] salt) {
    if (string.IsNullOrEmpty(password) || password.Length > 4096 || Utf8.GetByteCount(password) > 4096) throw WrongAccess();
@@ -137,9 +156,9 @@ namespace Notenblick.Native {
    } catch { Clear(key); throw; }
    finally { Clear(input); }
   }
-  static InvalidDataException WrongAccess() => new InvalidDataException("Das Passwort oder der Notfallschlüssel passt nicht, oder die Datei ist beschädigt.");
+  static VaultAccessException WrongAccess() => new VaultAccessException("Das Passwort oder der Notfallschlüssel passt nicht, oder die Datei ist beschädigt.");
 
-  static byte[] Cipher(bool encrypt, byte[] key, byte[] nonce, byte[] aad, byte[] input, int offset, int length) {
+  static byte[] Cipher(bool encrypt, byte[] key, byte[] nonce, byte[] aad, byte[] input, int offset, int length, bool checkingCredential = false) {
    var cipher = new GcmBlockCipher(new AesEngine());
    cipher.Init(encrypt, new AeadParameters(new KeyParameter(key), 128, nonce, aad));
    var output = new byte[cipher.GetOutputSize(length)];
@@ -148,7 +167,11 @@ namespace Notenblick.Native {
     count += cipher.DoFinal(output, count);
     if (count != output.Length) throw new InvalidDataException("Die geschützte Datei ist unvollständig.");
     return output;
-   } catch (InvalidCipherTextException) { Clear(output); throw WrongAccess(); }
+   } catch (InvalidCipherTextException) {
+    Clear(output);
+    if (checkingCredential) throw WrongAccess();
+    throw new InvalidDataException("Die geschützte Datei ist beschädigt.");
+   }
    catch { Clear(output); throw; }
   }
   static byte[] WrapAad(byte[] header, bool recovery) => Concat(Slice(header, 0, 24), new[] { recovery ? (byte)2 : (byte)1 });
@@ -164,7 +187,6 @@ namespace Notenblick.Native {
    Buffer.BlockCopy(tag, 0, header, HeaderTag, tag.Length);
   }
   internal static byte[] CreateHeader(byte[] key, string password, string recovery) {
-   ValidateNewPassword(password);
    var header = new byte[HeaderBytes];
    Buffer.BlockCopy(HeaderMagic, 0, header, 0, HeaderMagic.Length);
    Buffer.BlockCopy(Random(16), 0, header, 8, 16);
@@ -196,14 +218,14 @@ namespace Notenblick.Native {
    try {
     wrapKey = recovery != null ? ParseRecovery(recovery) : PasswordKey(password, Slice(header, 24, SaltBytes));
     int at = recovery != null ? RecoveryWrap : PasswordWrap;
-    key = Cipher(false, wrapKey, Slice(header, at, NonceBytes), WrapAad(header, recovery != null), header, at + NonceBytes, SecretBytes + 16);
-    if (!VerifiesHeader(header, key)) throw WrongAccess();
+    key = Cipher(false, wrapKey, Slice(header, at, NonceBytes), WrapAad(header, recovery != null), header, at + NonceBytes, SecretBytes + 16, checkingCredential: true);
+    if (!VerifiesHeader(header, key)) throw new InvalidDataException("Die geschützte Datei ist beschädigt.");
     return key;
    } catch { Clear(key); throw; }
    finally { Clear(wrapKey); }
   }
-  internal static byte[] SealRecord(byte[] key, string purpose, byte[] data) {
-   if (data == null || data.Length > MaxPayload) throw new InvalidDataException("Diese Datei ist größer als 256 MB.");
+  internal static byte[] SealRecord(byte[] key, string purpose, byte[] data, int maximum = MaxPayload) {
+   if (data == null || data.Length > maximum) throw new InvalidDataException("Diese Datei ist größer als 256 MB.");
    var salt = Random(SecretBytes);
    var nonce = Random(NonceBytes);
    var prefix = Concat(RecordMagic, salt, nonce);
@@ -211,8 +233,8 @@ namespace Notenblick.Native {
    try { return Concat(prefix, Cipher(true, subkey, nonce, Concat(prefix, Utf8.GetBytes(purpose)), data, 0, data.Length)); }
    finally { Clear(subkey); }
   }
-  internal static byte[] OpenRecord(byte[] key, string purpose, byte[] source, int offset = 0) {
-   if (source.Length - offset < RecordOverhead || source.Length - offset > MaxPayload + RecordOverhead ||
+  internal static byte[] OpenRecord(byte[] key, string purpose, byte[] source, int offset = 0, int maximum = MaxPayload) {
+   if (source.Length - offset < RecordOverhead || source.Length - offset > maximum + RecordOverhead ||
        !Equal(Slice(source, offset, RecordMagic.Length), RecordMagic)) throw new InvalidDataException("Die geschützte Datei ist unvollständig oder beschädigt.");
    var salt = Slice(source, offset + RecordMagic.Length, SecretBytes);
    var nonce = Slice(source, offset + RecordMagic.Length + SecretBytes, NonceBytes);
