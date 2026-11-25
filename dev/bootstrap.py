@@ -77,6 +77,7 @@ def setup():
         for p in (ROOT/'.githooks').iterdir():
             p.chmod(0o755)
     subprocess.run([sys.executable,str(ROOT/'dev/openxml-check.py'),'setup'],cwd=ROOT,env=env,check=True)
+    subprocess.run([sys.executable,str(ROOT/'dev/crypto-vendor.py')],cwd=ROOT,env=env,check=True)
     print('Einrichtung vollständig. SDK, npm-Lockdatei und Chromium bereit.')
 
 if __name__ == '__main__':

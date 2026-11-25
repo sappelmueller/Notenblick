@@ -1,11 +1,18 @@
 /* Notenblick – app/files.js. Shared application API: Notenblick. */
 (function (Notenblick) {
 'use strict';
+function base64(bytes){const parts=[];for(let i=0;i<bytes.length;i+=24576)parts.push(btoa(String.fromCharCode(...bytes.subarray(i,i+24576))));return parts.join('');}
+function importedBackup(text){
+ const A=Notenblick,parsed=JSON.parse(text.replace(/^\ufeff/,''));
+ const value=parsed?.version===1&&parsed.data&&Array.isArray(parsed.lists)?parsed.data:parsed;
+ const {notfallListen,...data}=value;
+ return A.N.upgrade(data);
+}
 Notenblick.download = async function download(name, text, type = 'text/plain;charset=utf-8', stillRequested = () => true, success = null, progress = null) {
   if(!stillRequested())return false;
   if (window.NRDesktop.available) {
     const blob=text instanceof Blob;if(blob&&text.size>64*1024*1024)throw Error('Die Exportdatei ist zu groß. Bitte schränke die Auswahl ein.');
-    const bytes=typeof text==='string'?null:blob?new Uint8Array(await text.arrayBuffer()):new Uint8Array(text.buffer||text,text.byteOffset||0,text.byteLength);if(!stillRequested())return false;if(bytes&&bytes.length>64*1024*1024)throw Error('Die Exportdatei ist zu groß. Bitte schränke die Auswahl ein.');let dataBase64;if(bytes){const parts=[];for(let i=0;i<bytes.length;i+=24576)parts.push(btoa(String.fromCharCode(...bytes.subarray(i,i+24576))));dataBase64=parts.join('');}
+    const bytes=typeof text==='string'?null:blob?new Uint8Array(await text.arrayBuffer()):new Uint8Array(text.buffer||text,text.byteOffset||0,text.byteLength);if(!stillRequested())return false;if(bytes&&bytes.length>64*1024*1024)throw Error('Die Exportdatei ist zu groß. Bitte schränke die Auswahl ein.');const dataBase64=bytes?base64(bytes):null;
     return window.NRDesktop.call('download',{name,...(bytes?{dataBase64}:{text}),mime:type},progress).then(saved=>{if(saved!==false&&success)success();return saved;}).catch(e=>{if(e.name==='AbortError')return false;e.storageError=true;throw e;});
   }
   const url = URL.createObjectURL(new Blob([text], {
@@ -19,9 +26,18 @@ Notenblick.download = async function download(name, text, type = 'text/plain;cha
   if(success)success();return true;
 };
 Notenblick.backup = async function backup() {
-  Notenblick.feedback('create','');
-  if(Notenblick.fatalStart)throw Error('Bitte öffne zuerst einen lesbaren Notenstand oder stelle eine Sicherung wieder her.');
-  return Notenblick.download('Notenblick-Sicherung-' + new Date().toISOString().replace(/[:.]/g, '-') + '.json', JSON.stringify({...Notenblick.data,workspace:Notenblick.getWorkspace()},null,2), 'application/json',()=>true,()=>Notenblick.feedback('create','Sicherung erfolgreich erstellt.'));
+  const A=Notenblick;A.feedback('create','');
+  if(A.fatalStart)throw Error('Bitte öffne zuerst einen lesbaren Notenstand oder stelle eine Sicherung wieder her.');
+  if(A.flushAssessmentDrafts&&!await A.flushAssessmentDrafts())throw Error('Die letzte Eingabe konnte noch nicht vollständig gesichert werden. Bitte versuche es erneut.');
+  if(A.saving)await A.savingPromise;
+  const data={...A.N.clone(A.data),workspace:A.getWorkspace()};
+  const lists=A.N.backupTextLists(data),name='Notenblick-Sicherung-'+new Date().toISOString().replace(/[:.]/g,'-');
+  if(A.vault?.enabled){
+   const saved=await window.NRDesktop.call('vault-download-backup',{name:name+'.nbx',text:JSON.stringify({version:1,data,lists})});
+   if(saved)A.feedback('create','Geschützte Sicherung erstellt.');
+   return saved;
+  }
+  return A.download(name+'.json',JSON.stringify({...data,notfallListen:lists},null,2),'application/json',()=>true,()=>A.feedback('create','Sicherung erfolgreich erstellt.'));
 };
 Notenblick.backupDetails=function(d){const A=Notenblick;return '<dl class="storage-details">'+[['Datum und Uhrzeit',new Date(d.updatedAt).toLocaleString('de-DE')+' Uhr'],['Schuljahre',d.years.length],...(d.classes?[['Klassen',d.classes.length]]:[]),['Schüler',d.students.length],['Leistungen',d.assessments.length],...(d.legacyOther?.assessments.length?[['Frühere Leistungen',d.legacyOther.assessments.length]]:[])].map(([k,v])=>'<div><dt>'+A.esc(k)+'</dt><dd>'+A.esc(v)+'</dd></div>').join('')+'</dl>';};
 Notenblick.restoredContext=function(message,announce=true){const A=Notenblick;A.ui.main='backup';A.ui.backupView='restore';A.activateGroup('main','backup');A.activateGroup('backup','restore',true);A.remember();if(message){A.feedback('restore',message,announce);A.renderBackupPane('restore');}};
@@ -35,9 +51,20 @@ Notenblick.importFile = async function importFile(file) {
   if (!file) return;
   Notenblick.feedback('restore','');
   if (file.size > 256 * 1024 * 1024) throw Error('Diese Sicherung ist zu groß.');
+  const encrypted=/\.nbx$/i.test(file.name||'')||file.slice&&typeof file.slice(0,8).arrayBuffer==='function'&&new TextDecoder().decode(await file.slice(0,8).arrayBuffer())==='NBVAULT1';
+  if(encrypted){
+    if(!window.NRDesktop.available)throw Error('Öffne Notenblick.exe, um diese geschützte Sicherung zu lesen.');
+    const dataBase64=base64(new Uint8Array(await file.arrayBuffer()));
+    if(Notenblick.vault.enabled&&!Notenblick.vault.locked){
+      let text;
+      try{text=await window.NRDesktop.call('vault-open-backup',{dataBase64});}catch{}
+      if(text){Notenblick.confirmRestore(importedBackup(text));return;}
+    }
+    Notenblick.promptProtectedBackup(dataBase64,importedBackup);return;
+  }
   let restored;
   try {
-    restored = Notenblick.N.upgrade(JSON.parse((await file.text()).replace(/^\ufeff/, '')));
+    restored = importedBackup(await file.text());
   } catch {
     throw Error('Diese Sicherung konnte nicht geöffnet werden. Bitte wähle eine vollständige Sicherung von Notenblick oder Notenraum.');
   }
@@ -71,7 +98,7 @@ Notenblick.restorePoint = async function restorePoint() {
   const label=v=>new Date(v.at).toLocaleString('de-DE')+(v.name.startsWith('Vor_Leistungsbereichen_')?' – vor Änderung der Leistungsbereiche':v.name.startsWith('Vor_Muendlich_Zuordnung_')?' – vor Zuordnung mündlicher Noten':v.name.startsWith('Vor_Einstellungen')?' – vor Übernahme der Einstellungen':v.name.startsWith('Vor_')?' – vor Wiederherstellung':'');
   Notenblick.modal('Früheren Stand auswählen', `<div class="field"><label for="restorePoint">Gespeicherter Stand</label><select id="restorePoint" aria-describedby="restorePointHint">${versions.map((v,i)=>Notenblick.opt(i,label(v),'0')).join('')}</select><small id="restorePointHint">Die Auswahl allein ändert deine Daten nicht.</small></div><div id="restorePointDetails"></div>`,async()=>{
     const entry=versions[Number(Notenblick.val('restorePoint'))];if(!entry)throw Error('Bitte einen gespeicherten Stand auswählen.');
-    const verify=async()=>{const text=await(await entry.handle.getFile()).text(),d=Notenblick.N.validate(JSON.parse(text.replace(/^\ufeff/,'')));if(await Notenblick.N.textDigest(text)!==entry.digest)throw Error('Dieser Speicherstand wurde inzwischen verändert. Bitte wähle ihn erneut aus.');return d;};
+    const verify=async()=>{const text=await(await entry.handle.getFile()).text(),d=importedBackup(text);if(await Notenblick.N.textDigest(text)!==entry.digest)throw Error('Dieser Speicherstand wurde inzwischen verändert. Bitte wähle ihn erneut aus.');return d;};
     const d=await verify();Notenblick.afterClose=()=>Notenblick.confirmRestore(d,verify,'Aktuellen Stand ersetzen');
   },'Weiter');
   const preview=()=>{const v=versions[Number(Notenblick.val('restorePoint'))];Notenblick.$('#restorePointDetails').innerHTML='<h3>Ausgewählter Stand</h3>'+Notenblick.backupDetails({updatedAt:v.at,years:{length:v.years},students:{length:v.students},assessments:{length:v.assessments}})+(v.name.startsWith('Vor_')?'<p class="hint">'+Notenblick.esc(label(v).split(' – ')[1])+'.</p>':'');};

@@ -195,7 +195,7 @@ os._exit(23)
             def package(*args):
                 M.run('smoke',commands['package-smoke'],task='package-smoke')
                 out=root/'artifacts';out.mkdir(exist_ok=True)
-                for i in range(4):
+                for i in range(6):
                     p=out/str(i);p.write_text('synthetic package')
                     M.PACKAGE_EVIDENCE.append({'path':str(p),'bytes':p.stat().st_size,'sha256':E.file_hash(p)})
             def g(*args):return '' if args[0] in ['diff','ls-files'] else 'synthetic-head'

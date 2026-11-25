@@ -26,6 +26,10 @@ notenverwaltung.json
 *.p12
 *.key
 *.pem
+*.nbvault
+*.nbbackup
+*.nbkey
+*.nbx
 
 tests/exports/
 dev/openxml-validator/obj/

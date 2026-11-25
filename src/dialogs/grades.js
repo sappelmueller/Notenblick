@@ -2,71 +2,61 @@
 (function (Notenblick) {
 'use strict';
 // One named checkbox in the browse tree; the visual name never becomes a second text row.
-Notenblick.participantMarkup=function(a,c){
+Notenblick.participantMarkup=function(a,c,{prefix='a',open=false}={}){
  const A=Notenblick,protectedIds=new Set(Object.keys(a?.results||{})),ids=new Set([...A.N.activeStudents(A.data,c,true).map(s=>s.id),...(a?.participantIds||[]),...protectedIds]),list=A.N.sorted([...ids].map(id=>A.getStudent(id)).filter(Boolean),'last','asc');
- return `<details class="participation-options"><summary>Teilnehmer auswählen</summary><div class="field"><label for="a-scope">Wer nimmt teil?</label><select id="a-scope">${A.opt('class','Ganze Klasse',a?.participantIds?'selected':'class')}${A.opt('selected','Nur ausgewählte Schüler',a?.participantIds?'selected':'class')}</select></div><div id="a-participants"${a?.participantIds?'':' hidden'}><p id="participantHint">Wähle die Schüler aus, die an dieser Leistung teilnehmen.</p><div class="field"><label for="participantSearch">Schüler suchen</label><input id="participantSearch" type="search" autocomplete="off"></div><p id="participantCount"></p><div class="button-row"><button type="button" class="button small" id="participantAll">Alle auswählen</button><button type="button" class="button small" id="participantNone">Auswahl aufheben</button></div>${protectedIds.size?'<p class="hint" id="participantProtection">Schüler mit gespeicherten Einträgen bleiben ausgewählt. Ihre Auswahl ist gesperrt.</p>':''}<div class="participant-list" role="group" aria-label="Teilnehmende Schüler" aria-describedby="participantHint${protectedIds.size?' participantProtection':''}">${list.map(s=>`<label class="check" for="participant-${s.id}" data-participant-row="${s.id}"><input id="participant-${s.id}" type="checkbox" name="participant" aria-label="${A.esc(A.studentName(s))}" value="${s.id}"${a?.participantIds?.includes(s.id)||protectedIds.has(s.id)?' checked':''}${protectedIds.has(s.id)?' disabled aria-describedby="participantProtection"':''}><span aria-hidden="true">${A.esc(A.studentName(s))}</span></label>`).join('')}</div><p class="hint" id="participantNoMatches" hidden>Keine passenden Schüler.</p></div></details>`;
+ const id=name=>prefix==='a'&&name!=='participants'&&name.startsWith('participant')?name:prefix+'-'+name;
+ return `<details id="${id('participation')}" class="participation-options"${open?' open':''}><summary>Teilnehmer auswählen</summary><div class="field"><label for="${id('scope')}">Wer nimmt teil?</label><select id="${id('scope')}">${A.opt('class','Ganze Klasse',a?.participantIds?'selected':'class')}${A.opt('selected','Nur ausgewählte Schüler',a?.participantIds?'selected':'class')}</select></div><div id="${id('participants')}"${a?.participantIds?'':' hidden'}><p id="${id('participantHint')}">Wähle die Schüler aus, die an dieser Leistung teilnehmen.</p><div class="field"><label for="${id('participantSearch')}">Schüler suchen</label><input id="${id('participantSearch')}" type="search" autocomplete="off"></div><p id="${id('participantCount')}"></p><div class="button-row"><button type="button" class="button small" id="${id('participantAll')}">Alle auswählen</button><button type="button" class="button small" id="${id('participantNone')}">Auswahl aufheben</button></div><p class="hint" id="${id('participantProtection')}"${protectedIds.size?'':' hidden'}>Schüler mit Einträgen bleiben ausgewählt. Ihre Auswahl ist gesperrt.</p><div class="participant-list" role="group" aria-label="Teilnehmende Schüler" aria-describedby="${id('participantHint')}">${list.map(s=>`<label class="check" for="${id('participant-'+s.id)}" data-participant-row="${s.id}"><input id="${id('participant-'+s.id)}" type="checkbox" name="participant" aria-label="${A.esc(A.studentName(s))}" value="${s.id}"${a?.participantIds?.includes(s.id)||protectedIds.has(s.id)?' checked':''}${protectedIds.has(s.id)?' disabled aria-describedby="'+id('participantProtection')+'"':''}><span aria-hidden="true">${A.esc(A.studentName(s))}</span></label>`).join('')}</div><p class="hint" id="${id('participantNoMatches')}" hidden>Keine passenden Schüler.</p></div></details>`;
 };
-Notenblick.bindParticipants=function(){
- const A=Notenblick,inputs=[...A.$('#a-participants').querySelectorAll('[name=participant]')],update=()=>{A.$('#participantCount').textContent=inputs.filter(e=>e.checked).length+' von '+inputs.length+(inputs.length===1?' Schüler':' Schülern')+' ausgewählt';};
- A.$('#a-scope').addEventListener('change',()=>{A.$('#a-participants').hidden=A.val('a-scope')!=='selected';});
- A.$('#participantSearch').addEventListener('input',e=>{let visible=0;for(const input of inputs){const row=input.closest('[data-participant-row]');row.hidden=!A.matchesStudent(A.getStudent(input.value),e.target.value.toLocaleLowerCase('de'));if(!row.hidden)visible++;}A.$('#participantNoMatches').hidden=visible>0;});
- for(const input of inputs)input.addEventListener('change',update);
- for(const [id,checked]of [['participantAll',true],['participantNone',false]])A.$('#'+id).addEventListener('click',()=>{for(const input of inputs)if(!input.disabled)input.checked=checked;update();});update();
+Notenblick.bindParticipants=function({prefix='a',onChange=()=>{}}={}){
+ const A=Notenblick,id=name=>prefix==='a'&&name!=='participants'&&name.startsWith('participant')?name:prefix+'-'+name;
+ const by=name=>A.$('#'+id(name)),inputs=[...by('participants').querySelectorAll('[name=participant]')];
+ const update=()=>{by('participantCount').textContent=inputs.filter(e=>e.checked).length+' von '+inputs.length+(inputs.length===1?' Schüler':' Schülern')+' ausgewählt';};
+ const changed=()=>{update();onChange();};
+ by('scope').addEventListener('change',()=>{by('participants').hidden=by('scope').value!=='selected';changed();});
+ by('participantSearch').addEventListener('input',e=>{let visible=0;for(const input of inputs){const row=input.closest('[data-participant-row]');row.hidden=!A.matchesStudent(A.getStudent(input.value),e.target.value.toLocaleLowerCase('de'));if(!row.hidden)visible++;}by('participantNoMatches').hidden=visible>0;});
+ for(const input of inputs)input.addEventListener('change',changed);
+ for(const [name,checked]of [['participantAll',true],['participantNone',false]])by(name).addEventListener('click',()=>{for(const input of inputs)if(!input.disabled)input.checked=checked;changed();});
+ update();
+ return update;
 };
-Notenblick.readPerformanceWeight=function(id){const A=Notenblick,el=A.$('#'+id);try{const value=el.value.trim().replace(',','.'),q=A.N.Q.from(value);if(q.cmp(0)<=0n||q.cmp(100)>0n)throw Error('Die Gewichtung muss größer als 0 und höchstens 100 sein.');el.removeAttribute('aria-invalid');return value;}catch(e){el.setAttribute('aria-invalid','true');A.focusTarget(el);throw e;}};
-Notenblick.assessmentDialog = function assessmentDialog(a = null, kind = 'exam', fixed = false) {
-  Notenblick.ensureEdit();
-  const c = Notenblick.getCourse();
-  if(!a&&!Notenblick.kinds.includes(kind))throw Error('Dieser Leistungsbereich ist nicht mehr vorhanden. Wähle einen Bereich unter Leistung hinzufügen.');
-  Notenblick.modal(a ? 'Leistung bearbeiten – '+a.title : kind==='oral'&&Notenblick.kindLabel(kind,c)==='Mündlich'?'Mündliche Noten für mehrere Schüler':'Leistung anlegen – '+Notenblick.kindLabel(kind,c), `<div class="form-grid">${Notenblick.field('a-title', 'Bezeichnung', a?.title || '', 'required maxlength="150"')}${Notenblick.field('a-date', 'Datum', a?.date || Notenblick.today(), 'required', 'date')}${fixed&&!a?`<input type="hidden" id="a-kind" value="${kind}">`:`<div class="field"><label for="a-kind">Leistungsart</label><select id="a-kind">${Notenblick.kinds.map(k => Notenblick.opt(k, Notenblick.kindLabels[k], a?.kind || kind)).join('')}</select></div>`}${Notenblick.field('a-weight', 'Gewichtung der Leistung', a?.weight || '1', 'required inputmode="decimal"', 'text', '1 = einfach, 2 = doppelt. Bestimmt, wie stark diese Leistung zählt.')}<label class="check full"><input type="checkbox" id="a-gfs"${a?.isGfs ? ' checked' : ''}>Als GFS kennzeichnen</label></div>${Notenblick.participantMarkup(a,c)}${a ? `<p style="margin-top:20px">${Notenblick.b('delete-assessment', 'Löschen', `data-id="${a.id}"`, 'text-button danger')}</p>` : ''}`, () => {
-    const title = Notenblick.required('a-title', 'eine Bezeichnung'),
-      date = Notenblick.required('a-date', 'ein Datum'),
-      kind = Notenblick.val('a-kind'),
-      weight = Notenblick.readPerformanceWeight('a-weight');
-    const participantIds=Notenblick.val('a-scope')==='selected'?[...document.querySelectorAll('[name=participant]:checked')].map(x=>x.value):null;
-    if(participantIds&&(!participantIds.length||Object.keys(a?.results||{}).some(id=>!participantIds.includes(id)))){Notenblick.$('.participation-options').open=true;Notenblick.focusTarget('participantSearch');throw Error('Wähle mindestens einen Schüler. Gespeicherte Einträge bleiben beteiligt.');}
-    const isGfs = Notenblick.$('#a-gfs').checked, period=Notenblick.assessmentPeriod(c,date,a);
-    if(!a){Notenblick.captureEntryOrigin();Notenblick.W().entrySearch='';}
-    let newId = a?.id;
-    Notenblick.mutate(d => {
-      if (a) Object.assign(d.assessments.find(x => x.id === a.id), {
-        title,
-        date,
-        period,
-        kind,
-        weight,
-        isGfs
-      });else {
-        newId = Notenblick.N.id();
-        d.assessments.push({
-          id: newId,
-          courseId: c.id,
-          period,
-          title,
-          date,
-          kind,
-          weight,
-          isGfs,
-          results: {}
-        });
-      }
-      const saved=d.assessments.find(x=>x.id===newId);if(!a&&kind===Notenblick.N.oralArea(c))saved.oralEntry='class';if(a&&a.kind===Notenblick.N.oralArea(c)&&!a.oralEntry)saved.oralEntry='unclassified';if(participantIds)saved.participantIds=participantIds;else delete saved.participantIds;
-      if(kind==='oral')Notenblick.W().oralView='classes';
-      if(!a){Notenblick.entrySession={id:newId,editing:true};Notenblick.W().entryMode='table';}
-      Notenblick.W().assessmentWorkOpen=true;
-      Notenblick.W().selected[kind] = newId;
-      Notenblick.W().view = Notenblick.assessmentView(kind);
-      Notenblick.W().assessmentId = newId;
-      Notenblick.W().assessmentFilter = kind==='oral'?'oral':'all';
-    }, {
-      refresh: false
-    });
-    Notenblick.rendered = {};
-    Notenblick.renderNotes();
-    Notenblick.remember();
-    Notenblick.afterClose=()=>Notenblick.focusTarget('assessmentWorkTitle');
-  });
-  Notenblick.bindParticipants();
+Notenblick.performanceWeight=function(raw){
+ const value=raw.trim().replace(',','.'),q=Notenblick.N.Q.from(value);
+ if(q.cmp(0)<=0n||q.cmp(100)>0n)throw Error('Die Gewichtung muss größer als 0 und höchstens 100 sein.');
+ return value;
+};
+Notenblick.readPerformanceWeight=function(id){
+ const A=Notenblick,el=A.$('#'+id);
+ try{const value=A.performanceWeight(el.value);el.removeAttribute('aria-invalid');return value;}
+ catch(e){el.setAttribute('aria-invalid','true');A.focusTarget(el);throw e;}
+};
+Notenblick.assessmentDialog=function(a=null,kind='exam'){
+ const A=Notenblick;
+ if(!a)return A.openPerformanceDraft(kind);
+ const draft=A.performanceDrafts.get(a.id);
+ if(draft&&(draft.headPending||draft.pointFields||Object.keys(draft.rows).length)){A.resumePerformanceDraft(a.id,document.activeElement);return;}
+ if(draft)A.performanceDrafts.delete(a.id);
+ A.ensureEdit();
+ const c=A.getCourse();
+ A.modal('Leistung bearbeiten – '+a.title,`<div class="form-grid">${A.field('a-title','Bezeichnung',a.title,'required maxlength="150"')}${A.field('a-date','Datum',a.date,'required','date')}<div class="field"><label for="a-kind">Leistungsart</label><select id="a-kind">${A.kinds.map(k=>A.opt(k,A.kindLabels[k],a.kind)).join('')}</select></div>${A.field('a-weight','Gewichtung der Leistung',a.weight,'required inputmode="decimal"','text','1 = einfach, 2 = doppelt. Bestimmt, wie stark diese Leistung zählt.')}<label class="check full"><input type="checkbox" id="a-gfs"${a.isGfs?' checked':''}>Als GFS kennzeichnen</label></div>${A.participantMarkup(a,c)}<p style="margin-top:20px">${A.b('delete-assessment','Löschen',`data-id="${a.id}"`,'text-button danger')}</p>`,()=>{
+  const title=A.required('a-title','eine Bezeichnung'),date=A.required('a-date','ein Datum'),kind=A.val('a-kind'),weight=A.readPerformanceWeight('a-weight');
+  const participantIds=A.val('a-scope')==='selected'?[...A.$('#a-participants').querySelectorAll('[name=participant]:checked')].map(x=>x.value):null;
+  if(participantIds&&(!participantIds.length||Object.keys(a.results||{}).some(id=>!participantIds.includes(id)))){A.$('#a-participation').open=true;A.focusTarget('participantSearch');throw Error('Wähle mindestens einen Schüler. Gespeicherte Einträge bleiben beteiligt.');}
+  const isGfs=A.$('#a-gfs').checked,period=A.assessmentPeriod(c,date,a);
+  A.mutate(d=>{
+   const saved=d.assessments.find(x=>x.id===a.id);
+   Object.assign(saved,{title,date,period,kind,weight,isGfs});
+   if(a.kind===A.N.oralArea(c)&&!a.oralEntry)saved.oralEntry='unclassified';
+   if(participantIds)saved.participantIds=participantIds;else delete saved.participantIds;
+   const w=A.W();
+   if(kind==='oral')w.oralView='classes';
+   w.assessmentWorkOpen=true;w.selected[kind]=a.id;w.view=A.assessmentView(kind);w.assessmentId=a.id;w.assessmentFilter=kind==='oral'?'oral':'all';
+  },{refresh:false});
+  A.rendered={};
+  A.renderNotes();
+  A.remember();
+  A.afterClose=()=>A.focusTarget('assessmentWorkTitle');
+ });
+ A.bindParticipants();
 };
 Notenblick.quickOral=function(id,record=null,editing=false,options={}){
  const A=Notenblick;if(!record)A.ensureEdit();if(record&&(record.courseId!==A.ui.course||!A.data.assessments.some(a=>a.id===record.id)))throw Error('Diese Einzelnote ist nicht mehr vorhanden.');const readonly=!!record&&A.readonly();editing=!record||editing&&!readonly;if(record&&!A.N.isOralIndividual(record))throw Error('Bitte die vorhandene Leistung über die Klassenansicht bearbeiten.');const list=A.entryList();if(id&&!list.some(s=>s.id===id)){const s=A.getStudent(id);if(s)list.push(s);}if(!list.length)throw Error('Bitte füge zuerst Schüler hinzu.');

@@ -1,5 +1,7 @@
 # Technischer Einstieg
 
+**1.28.0 in Entwicklung.** Neue gemeinsame Leistungen verwenden die vorhandene Noteneingabe. Entwürfe bleiben bis zur regulären Übernahme von Berechnung und Berichten getrennt. Passwortschutz und Notfallzugriff teilen das verschlüsselte Dateiformat. Sie müssen alte Daten weiterhin lesen können. [Prüfumfang und Abnahme](PRUEFBERICHT-1.28.0.md)
+
 Offizieller Stand: **Notenblick 1.27.0**, veröffentlicht am 6. November 2026. Geprüfter Entwicklungscommit `345c293ff09f5695038beb06187bfd98ab501188`; 95 Pflichtgruppen und zwei bytegleiche Builds. Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung wurden von Sebastian Müller praktisch getestet und freigegeben. Programm und Windows-ZIP bleiben unverändert. [Audit und Veröffentlichung](PRUEFBERICHT-1.27.0.md).
 
 Qualitätsaudit: Der gemeinsame Gewichtungseditor verwendet eine einheitliche Sichtbarkeit bei der Verteilung und gezielten Fokus beim Übertragen und bei Namensfehlern. Wiederherstellung bietet auch `Vor_Leistungsbereichen_` an. Keine neuen Abhängigkeiten, Datenformate oder Berechnungswege.
@@ -26,14 +28,22 @@ Letzter Feinschliff: `weighting.js` verteilt automatisch in ganzzahligen Hundert
 | `dev` | Einrichtung, gesperrte Werkzeuge, Build, Prüfsteuerung und Verpackung |
 | `docs` | Arbeitsabläufe, Prüfgrenzen und datierte historische Nachweise |
 
+## Passwortschutz und Wiederherstellung
+
+`VaultCrypto.cs` kapselt das versionierte Format. Passwortableitung mit Argon2id (64 MiB, drei Durchläufe, vier Spuren) und authentifizierte Verschlüsselung mit AES-256-GCM kommen aus der fest gepinnten Bouncy-Castle-Bibliothek. Passwort und zufälliger Notfallschlüssel öffnen unabhängig voneinander denselben zufälligen Datenschlüssel. Dateiinhalte und logische Namen werden getrennt authentifiziert. Ausgelagerte Sicherungen enthalten die für ihren eigenen Stand nötigen Zugangsinformationen in geschützter Form und sind an kein Windows-Benutzerkonto gebunden.
+
+`Daten/Notenblick-Schutz.txt` verweist auf die aktive Generation `Geschuetzt-<Zufallswert>`. `NBKEY001` kennzeichnet die 192 Byte große Zugangshülle. `NBREC001` kennzeichnet geschützte Einzelinhalte. `NBVAULT1` kennzeichnet eine transportable `.nbx`-Sicherung mit eigener Zugangshülle. Die Notendaten innerhalb der Hülle verwenden weiterhin das bisherige Format.
+
+`VaultStore.cs` prüft einen neuen geschützten Datenstand auf Vollständigkeit und Lesbarkeit, bevor er den aktiven Stand atomar umschaltet. Ein geschütztes Journal erlaubt die Fortsetzung unterbrochener Schutzwechsel. Unbekannte Dateien und bereits außerhalb von Notenblick abgelegte Kopien fallen außerhalb des automatisch verwalteten Bestands. Der separate native Notfallzugriff liest die gemeinsamen Formate und schreibt Kopien ausschließlich in den ausgewählten Zielordner.
+
 ## Unverzichtbare Verträge
 
 - `arithmetic.js` und `evaluation.js` rechnen zentral und exakt. Fehlende Noten sind nie null. `finals.js` hält festgelegte Abschlussnoten unabhängig von späteren Durchschnitten.
 - `Storage.cs`, `Migration.cs`, `storage.js` und `session.js` sichern kompatible Daten, atomare Speicherung, Konfliktschutz und Wiederherstellung. `text-lists.js` erzeugt Notfalllisten; deren Hash-/Bereinigungsschutz erhalten.
-- `components.js`, `tabs.js`, `dialogs/window.js` und `shortcuts.js` teilen Fokus- und Tastaturregeln. F1 verwendet neun Hilfethemen, 77 Abschnitte und 49 Basiskontexte.
+- `components.js`, `tabs.js`, `dialogs/window.js` und `shortcuts.js` teilen Fokus- und Tastaturregeln. F1 verwendet neun Hilfethemen, 81 Abschnitte, die 49 bisherigen Basiskontexte und zusätzliche Verweise für Entwürfe und Passwortschutz.
 - `exports/report.js` und `collection.js` liefern gemeinsame Werte. Renderer berechnen keine eigenen Notendurchschnitte. Native ZIP-/Dateiprüfungen niemals umgehen.
 - Der Starter prüft alle vorgesehenen Programmdateien. IL-only AnyCPU und x86-/x64-/ARM64-Loader erhalten. Native ARM64-Ausführung benötigt Windows 11 24H2+, .NET Framework 4.8.1 und ARM64-WebView2. Native ARM64-Ausführung sowie Windows/NVDA/Braille wurden für 1.23.2 durch den Nutzer bestätigt. Für 1.25.0 sind Windows auf x86 und ARM sowie Aktualisierungsprüfung und Updater-Bedienung praktisch bestätigt; vollständige Updateinstallation und Rückfall sind davon getrennt.
-- Portable Ablage: EXE / Programm / Daten. Updates ersetzen nur EXE und vollständigen Programmordner.
+- Portable Ablage: Haupt-EXE, Notfall-EXE, `Programm` und `Daten`. Der Updater tauscht die Haupt-EXE und den vollständigen Programmordner aus. Der Starter stellt den geprüften Notfallzugriff separat neben sich bereit.
 
 ## Arbeitsablauf
 

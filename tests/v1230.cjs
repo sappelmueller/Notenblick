@@ -4,11 +4,11 @@ const crypto=require('node:crypto'),assert=require('node:assert/strict'),fs=requ
 const ctx=await require('./load.cjs').load({cache:new Map()}),{q:A,w}=ctx,$=s=>w.document.querySelector(s),N=w.NR,checks=[];
 try{
  const help=JSON.parse(fs.readFileSync(path.join(__dirname,'../src/data/HILFE-1.23.0.json'))),contexts=JSON.parse(fs.readFileSync(path.join(__dirname,'../src/data/F1-KONTEXTE.json'))).contexts;
- for(const [name,hash]of Object.entries({'HILFE-1.23.0.json':'852c42b6eee5c44f647a16ae69c6c7c02b16bd8faad43d372c21a8a98d976326','F1-KONTEXTE.json':'2248941d98863327e5fd47f1be129d9b5323a758175e6f074a9443edf5a1b904'}))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'../src/data',name))).digest('hex'),hash);
- assert.equal(help.topics.length,9);assert.equal(help.topics.reduce((n,t)=>n+t.sections.length,0),77);assert.equal(contexts.length,49);
+ for(const [name,hash]of Object.entries({'HILFE-1.23.0.json':'b72c5b5386404d9e4535e709d8fd5130553cd2b67da366588172b9985d3aa977','F1-KONTEXTE.json':'2248941d98863327e5fd47f1be129d9b5323a758175e6f074a9443edf5a1b904'}))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'../src/data',name))).digest('hex'),hash);
+ assert.equal(help.topics.length,9);assert.equal(help.topics.reduce((n,t)=>n+t.sections.length,0),81);assert.equal(contexts.length,49);
  A.activateGroup('main','help');assert.equal($('#help .help-intro').textContent,help.intro);assert.equal(w.document.querySelectorAll('#help [role=tab]').length,9);
  for(const t of help.topics){assert.equal($('#help-tab-'+t.id).textContent,t.title);for(const s of t.sections){const h=$('#'+s.id);assert.equal(h.textContent,s.heading);require('./help-content.cjs')(assert,h.parentElement,s);}}
- checks.push('JSON wortgetreu: Einleitung, 9 Tabs, 77 H3-Abschnitte und alle Absätze; keine alte Hilfe');
+ checks.push('JSON wortgetreu: Einleitung, 9 Tabs, 81 H3-Abschnitte und alle Absätze; keine alte Hilfe');
  const fixture=require('./v1210-fixture.cjs')(N),base=fixture.courses[0];fixture.courses.push({...N.clone(base),id:'synthetic-other',name:'Weiteres Fach'});fixture.classes.push({...N.clone(fixture.classes[0]),id:'synthetic-target-class',name:'7z'});
  w.contextFixture=fixture;w.eval('globalThis.prepareContext='+require('./v1230-contexts.cjs').toString());
  const key=(key,extras={})=>w.document.activeElement.dispatchEvent(new w.KeyboardEvent('keydown',{key,bubbles:true,cancelable:true,...extras}));
@@ -27,11 +27,20 @@ try{
  checks.push('Mündliche Einzelnote: genau eine ID/Label, vorhandenes Gewicht 1,5 erhalten, 2,25 korrekt gespeichert');
  await w.prepareContext(11);const raw=JSON.stringify(A.data);A.prefs.quickIds=null;const c=A.getCourse(),cl=A.getClass();for(let i=0;i<14;i++){A.data.classes.push({...N.clone(cl),id:'class-'+i,name:String(i+2)+'a'});A.data.courses.push({...N.clone(c),id:'course-'+i,classId:'class-'+i,name:'Fach '+i,studentIds:[]});}A.prefs.quickIds=A.courseChoices().map(c=>c.id).slice(0,16);
  for(const order of ['asc','desc']){assert.equal(A.setPreference('classOrder',order),true);const choices=A.shortcutChoices(A.ui.workingYear).chosen;A.activateGroup('main','home');const links=Array.from(w.document.querySelectorAll('#home [data-action=quick-course]'));assert.deepEqual(links.map(l=>l.dataset.id),Array.from(choices,c=>c.id));assert.equal(links.filter(l=>l.hasAttribute('aria-keyshortcuts')).length,9);for(let i=0;i<9;i++){A.activateGroup('main','home');key(String(i+1),{altKey:true});assert.equal(A.ui.course,choices[i].id);}}
- $('#allSelection').open=false;key('0',{altKey:true});assert.equal($('#allSelection').open,true);assert.equal(w.document.activeElement.id,'allSelectionSummary');
+ $('#allSelection').open=false;key('0',{altKey:true});assert.equal($('#allSelection').open,true);assert.equal(w.document.activeElement.id,'allSelectionSummary');key('Escape');assert.equal($('#allSelection').open,false);
  checks.push('Alt+1–9 folgt 16 konkreten Klasse-Fach-Paaren in beiden Klassenreihenfolgen; Alt+0 öffnet vollständige Auswahl');
  await w.prepareContext(11);A.prefs.notesLayout='compact';A.renderNotes();for(const n of [1,2,3]){key(String(n),{ctrlKey:true});assert.equal(w.document.activeElement.id,['overviewTitle','areaTitle','pupilTitle'][n-1]);}const before=A.W().view;key('9',{ctrlKey:true});assert.equal(A.W().view,before);A.openAssessment('points-0',true,true);key('2',{ctrlKey:true,shiftKey:true});assert.equal(A.W().entryMode,'single');key('1',{ctrlKey:true,shiftKey:true});assert.equal(A.W().entryMode,'table');key('Tab',{ctrlKey:true});assert.equal(A.W().view,'pupil');key('Tab',{ctrlKey:true,shiftKey:true});assert.equal(A.W().view,'assessments');
  const route={s:'home',n:'notes',v:'admin',i:'backup',e:'settings',h:'help'};for(const[k,v]of Object.entries(route)){key(k,{altKey:true});assert.equal(A.ui.main,v);assert.equal(w.document.activeElement.tagName,'H1');if(v==='notes')assert.equal(w.document.activeElement.id,'subjectTitle');}
- A.activateGroup('main','notes');key('n',{ctrlKey:true});const items=Array.from(w.document.querySelectorAll('[role=menu]:not([hidden]) [role=menuitem]'),e=>e.textContent);assert.ok(items.includes('Mündliche Noten für mehrere Schüler'));assert.ok(items.includes('Mündliche Einzelnote'));key('Escape');for(const[k,kind]of Object.entries({k:'exam',t:'test',m:'oral'})){key(k,{ctrlKey:true,shiftKey:true});assert.equal($('#a-kind').value,kind);A.closeModal();}
+ A.activateGroup('main','notes');key('n',{ctrlKey:true});const items=Array.from(w.document.querySelectorAll('[role=menu]:not([hidden]) [role=menuitem]'),e=>e.textContent);assert.ok(items.includes('Mündliche Noten für mehrere Schüler'));assert.ok(items.includes('Mündliche Einzelnote'));key('Escape');
+ for(const[k,kind]of Object.entries({k:'exam',t:'test',m:'oral'})){
+  key(k,{ctrlKey:true,shiftKey:true});
+  assert.equal(A.currentPerformanceDraft().record.kind,kind);
+  assert.equal(w.document.activeElement.id,'assessmentWorkTitle');
+  assert.ok($('#draft-title'));
+  assert.equal($('#dialog').open,false);
+  key('Escape');
+  assert.equal(A.currentPerformanceDraft(),null);
+ }
  key('g',{ctrlKey:true});assert.ok($('#weightEditor'));A.closeModal();key('e',{ctrlKey:true});assert.ok($('#exportFormat'));A.closeModal();const active=A.ui.main;key('s',{altKey:true,ctrlKey:true});assert.equal(A.ui.main,active);
 
  await w.prepareContext(11);

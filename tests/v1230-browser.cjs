@@ -20,8 +20,48 @@ checks.push('49 F1-Kontexte in Chromium mit echten Formularen: Dialogpriorität,
 await prepare(26);const points=page.locator('[data-entry=points]').first();await points.fill('99');const invalid=await points.elementHandle();await page.keyboard.press('F1');await page.keyboard.press('Escape');assert.equal(await invalid.evaluate(el=>document.activeElement===el&&el.value==='99'),true);await points.press('Enter');assert.equal(await points.getAttribute('aria-invalid'),'true');await page.keyboard.press('F1');await page.keyboard.press('Escape');assert.equal(await invalid.evaluate(el=>document.activeElement===el&&el.value==='99'),true);
 await prepare(19);await page.locator('#q-grade').fill('2,75');await page.locator('#q-note').fill('Synthetischer noch nicht gespeicherter Entwurf');const grade=await page.locator('#q-grade').elementHandle();await page.locator('#q-grade').focus();const raw=await page.evaluate(()=>JSON.stringify(Notenblick.data));await page.keyboard.press('F1');await page.keyboard.press('Control+s');await page.keyboard.press('Alt+n');await page.keyboard.press('Escape');assert.equal(await grade.evaluate(el=>el.isConnected&&el.value==='2,75'),true);assert.equal(await page.locator('#q-note').inputValue(),'Synthetischer noch nicht gespeicherter Entwurf');assert.equal(await page.evaluate(()=>JSON.stringify(Notenblick.data)),raw);await page.locator('#dialogSave').click();assert.equal(await page.evaluate(()=>Notenblick.data.assessments.find(a=>a.id==='synthetic-context-oral').results[Notenblick.getCourse().studentIds[0]].grade),'2.75');
 checks.push('Ungültige Punkte und ungespeicherte mündliche Eingaben bleiben bei F1/Zurück exakt erhalten; Strg+S/Alt+N verändern im Hilfekontext keine Daten');
-await prepare(11);await page.keyboard.press('Control+n');assert.deepEqual(await page.locator('[role=menu]:visible [role=menuitem]').allTextContents(),['Klassenarbeit','Test','Mündliche Noten für mehrere Schüler','Mündliche Einzelnote','Hausaufgabe','Heftbewertung']);await page.getByRole('menuitem',{name:'Mündliche Noten für mehrere Schüler',exact:true}).click();assert.equal(await page.locator('#dialogTitle').textContent(),'Mündliche Noten für mehrere Schüler');await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('#dialog').open);await page.keyboard.press('Control+n');await page.getByRole('menuitem',{name:'Mündliche Einzelnote',exact:true}).click();assert.equal(await page.locator('#dialogTitle').textContent(),'Mündliche Einzelnote');await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('#dialog').open);
-for(const [key,kind]of [['K','exam'],['T','test'],['M','oral']]){await page.keyboard.press('Control+Shift+'+key);assert.equal(await page.locator('#a-kind').inputValue(),kind);await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('#dialog').open);}
+await prepare(11);
+await page.keyboard.press('Control+n');
+assert.deepEqual(await page.locator('[role=menu]:visible [role=menuitem]').allTextContents(),['Klassenarbeit','Test','Mündliche Noten für mehrere Schüler','Mündliche Einzelnote','Hausaufgabe','Heftbewertung']);
+await page.getByRole('menuitem',{name:'Mündliche Noten für mehrere Schüler',exact:true}).click();
+assert.equal(await page.locator('#assessmentWorkTitle').textContent(),'Neue mündliche Bewertung');
+assert.equal(await focus(),'assessmentWorkTitle');
+assert.equal(await page.locator('#dialog').evaluate(e=>e.open),false);
+await page.keyboard.press('Escape');
+await page.locator('#newAssessmentFields').waitFor({state:'hidden'});
+await page.keyboard.press('Control+n');
+await page.getByRole('menuitem',{name:'Mündliche Einzelnote',exact:true}).click();
+assert.equal(await page.locator('#dialogTitle').textContent(),'Mündliche Einzelnote');
+await page.keyboard.press('Escape');
+await page.waitForFunction(()=>!document.querySelector('#dialog').open);
+for(const [key,kind]of [['K','exam'],['T','test'],['M','oral']]){
+ await page.keyboard.press('Control+Shift+'+key);
+ assert.equal(await page.evaluate(()=>Notenblick.currentPerformanceDraft().record.kind),kind);
+ assert.equal(await focus(),'assessmentWorkTitle');
+ assert.equal(await page.locator('#entry-tab-'+kind+'-table').getAttribute('aria-selected'),'true');
+ await page.keyboard.press('Escape');
+ await page.locator('#newAssessmentFields').waitFor({state:'hidden'});
+}
+await prepare(21);
+await page.getByRole('button',{name:'Leistung hinzufügen',exact:true}).click();
+await page.locator('#draft-title').fill('Synthetischer Testentwurf');
+await page.locator('#newAssessmentMore > summary').click();
+await page.locator('#draft-participation > summary').click();
+for(const [id,section]of [
+ ['draft-title','noten-eine-leistung-anlegen'],
+ ['draft-date-day','noten-ein-datum-eingeben'],
+ ['draft-weight','noten-gewichtung-einer-einzelnen-leistung-und-gfs'],
+ ['draft-scope','noten-teilnehmer-auswahlen']
+]){
+ const field=await page.locator('#'+id).elementHandle();
+ await field.focus();
+ await page.keyboard.press('F1');
+ assert.equal(await focus(),section);
+ await page.keyboard.press('Escape');
+ assert.equal(await field.evaluate(el=>el===document.activeElement&&el.isConnected),true);
+ assert.equal(await page.locator('#draft-title').inputValue(),'Synthetischer Testentwurf');
+}
+checks.push('F1 in neuer Leistung: Bezeichnung, Datum, Gewichtung und Teilnahme öffnen die passende Hilfe. Escape erhält Fokus und Eingaben.');
 await prepare(15);await page.keyboard.press('Control+Shift+2');assert.equal(await page.locator('#entry-tab-exam-single').getAttribute('aria-selected'),'true');await page.keyboard.press('Control+Shift+1');assert.equal(await page.locator('#entry-tab-exam-table').getAttribute('aria-selected'),'true');await page.keyboard.press('Control+9');await page.waitForFunction(()=>document.querySelector('#announcement').textContent==='Keine Registerkarte vorhanden.');assert.equal(await page.locator('#entry-tab-exam-table').getAttribute('aria-selected'),'true');
 checks.push('Tatsächliche Chromium-Tastaturereignisse: Strg+N mit sechs eindeutigen Aktionen, K/T/M, Strg+Umschalt+1/2 und kein Strg+9-Spezialfall');
 await prepare(11);await page.evaluate(()=>{const A=Notenblick,c=A.getCourse(),cl=A.getClass();for(let i=0;i<14;i++){A.data.classes.push({...NR.clone(cl),id:'synthetic-class-'+i,name:String(i+2)+'a'});A.data.courses.push({...NR.clone(c),id:'synthetic-course-'+i,classId:'synthetic-class-'+i,name:'Fach '+i,studentIds:[]});}A.prefs.quickIds=A.courseChoices().map(c=>c.id).slice(0,16);});

@@ -141,13 +141,17 @@ def verify_vendor():
     actual={p.relative_to(ROOT).as_posix() for folder in ['webview2','newtonsoft.json','microsoft.netframework.referenceassemblies.net48'] for p in (ROOT/'dev'/folder).rglob('*') if p.is_file()}
     assert set(expected)==actual,'Bibliotheksbestand unvollständig oder fremd'
     for name,sha in {**expected,**export['files']}.items():assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==sha,'Bibliotheksprüfsumme: '+name
+    crypto=json.loads((ROOT/'dev/crypto-lock.json').read_text())['files']
+    for name,sha in crypto.items():
+        path=ROOT/'.tools/bouncycastle'/name
+        assert path.is_file() and E.file_hash(path)==sha,'Kryptografiebibliothek fehlt oder ist beschädigt. Bitte dev/manage.py setup ausführen.'
 
 
 def hashes():return {p.relative_to(ROOT/'dist').as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'dist').rglob('*') if p.is_file()}
 
 
 def build_key():
-    names=['src','native','dev/build.py','dev/compile.py','dev/toolchain.py','dev/evidence.py','dev/load-order.json','dev/vendor-lock.json','dev/export-assets-lock.json','dev/sdk-lock.json','global.json','LICENSE','LICENSE-EXCEPTION','COPYRIGHT','THIRD-PARTY-NOTICES.md']
+    names=['src','native','dev/build.py','dev/compile.py','dev/toolchain.py','dev/evidence.py','dev/load-order.json','dev/vendor-lock.json','dev/export-assets-lock.json','dev/sdk-lock.json','dev/crypto-lock.json','dev/crypto-vendor.py','dev/BouncyCastle-LICENSE.md','dev/rescue-upgrade-hashes.json','global.json','LICENSE','LICENSE-EXCEPTION','COPYRIGHT','THIRD-PARTY-NOTICES.md']
     inputs=E.inventory(ROOT,names)
     inputs['version']=json.loads((ROOT/'package.json').read_text())['version']
     return E.digest([inputs,E.tools(ROOT,'build',ENV)])
@@ -190,6 +194,7 @@ def specification(name):
       'large':('Großer Datenbestand',['node','--max-old-space-size=4096','tests/large.cjs'],900),
       'loader':('Produktiven Assembly-Lader prüfen',[sys.executable,'tests/loader.py'],300),
       'update':('Aktualisierungsregressionen',[sys.executable,'tests/update.py'],300),
+      'v1280-rescue-storage':('Notfallzugriff mit echten Sicherungen',[sys.executable,'tests/v1280-rescue-storage.py'],300),
       'package-smoke':('Entpackte Auslieferung starten',['node','tests/package-smoke.cjs'],300)}
     if name in fixed:return fixed[name]
     if name in FILES:return name,[sys.executable,'tests/'+name+'.py'],{'export-files':300,'office-schema':300,'v1120-files':900}.get(name,360)
@@ -210,8 +215,10 @@ def package(output=None):
     extra={'NOTENBLICK_OUTPUT':str(output)} if output else None
     py('ZIP-Archive vollständig erstellen','dev/package.py',extra_env=extra)
     version=json.loads((ROOT/'package.json').read_text())['version'];out=output or ROOT/'artifacts'
-    paths=[out/('Notenblick_'+version+suffix) for suffix in ['.zip','_Quellcode.zip','_Pruefsummen.json','_Aktualisierung.json']]
+    paths=[out/('Notenblick_'+version+suffix) for suffix in ['_Windows.zip','_Quellcode.zip','_Pruefsummen.json','_Aktualisierung.json','.zip','_Notfallzugriff.zip']]
     archive=paths[0]
+    if version=='1.28.0' and not json.loads(paths[3].read_text())['approved']:
+        run('Tatsächliches Updatearchiv mit 1.27.0 prüfen',[sys.executable,'tests/update1280-package.py',str(out)])
     with tempfile.TemporaryDirectory(prefix='notenblick-package-') as tmp:
         with zipfile.ZipFile(archive) as z:
             assert z.testzip() is None;z.extractall(tmp)
@@ -264,7 +271,7 @@ def _evidence_current(data):
     d=data.get('determinism',{});key=build_key();entry=E.read(Path(d.get('receipt','')))
     if d.get('key')!=key or entry.get('two_clean_builds') is not True or not E.valid(entry,key,ROOT) or entry.get('runtime_outputs')!=data.get('runtime_outputs'):return False
     packages=data.get('packages',[])
-    if len(packages)!=4:return False
+    if len(packages)!=6:return False
     for item in packages:
         p=Path(item.get('path',''))
         if not p.resolve().is_relative_to(ROOT.resolve()) or not p.is_file() or p.stat().st_size!=item.get('bytes') or E.file_hash(p)!=item.get('sha256'):return False

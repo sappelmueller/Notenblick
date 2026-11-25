@@ -6,6 +6,8 @@ Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du verwaltest
 
 Aktuelle Version: **1.27.0**, veröffentlicht am **6. November 2026**. Der Qualitätsaudit verbessert Schutzsicherungen, Notengewichtung, Fokusführung und die Darstellung in kleinen Fenstern. Das vertraute Design und die bisherigen Abläufe bleiben erhalten.
 
+**In Entwicklung: 1.28.0.** Neue Leistungen führen direkt zur Noteneingabe. Entwürfe lassen sich fortsetzen. Optional kannst du deinen Datenbestand mit Passwort verschlüsseln. Der mitgelieferte **Notfallzugriff für Notenblick** öffnet Notenlisten und Sicherungen unabhängig vom Hauptprogramm. Die Testversion ist für die praktische Abnahme bestimmt. [Prüfumfang für 1.28.0](docs/PRUEFBERICHT-1.28.0.md)
+
 ## Das kann Notenblick
 
 - **Organisieren:** Schuljahre, Klassen, Fächer und Schüler verwalten; Schülerlisten übernehmen und mit dem Einrichtungsassistenten starten.
@@ -27,7 +29,7 @@ Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digi
 
 Notenblick ist für Tastatur, NVDA und Braille entwickelt. **F1** erklärt den aktuellen Arbeitsschritt; Eingabe und Umschalt+Eingabe führen durch die schnelle Noteneingabe. Der Herausgeber hat 1.27.0 unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und freigegeben.
 
-[Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe](docs/HILFE-1.26.0-QUELLE.md) · [Prüfstand](docs/PRUEFBERICHT-1.27.0.md)
+[Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe zu 1.27.0](https://github.com/sappelmueller/Notenblick/blob/v1.27.0/docs/HILFE-1.26.0-QUELLE.md) · [Hilfe zur Entwicklungsversion](docs/HILFE-QUELLE.md) · [Prüfstand](docs/PRUEFBERICHT-1.27.0.md)
 
 ## Daten und Aktualisierungen
 

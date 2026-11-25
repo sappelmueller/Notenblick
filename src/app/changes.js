@@ -25,7 +25,7 @@ Notenblick.mark = function mark() {
   } else Notenblick.status(Notenblick.mode === 'demo' ? 'Beispieldaten' : 'Im Browser aufbewahrt');
 };
 Notenblick.workspacePromise=Promise.resolve();
-Notenblick.getWorkspace=()=>({...((Notenblick.data.workspace?.setupCommitId||Notenblick.workspace?.setupCommitId)?{setupCommitId:Notenblick.data.workspace?.setupCommitId||Notenblick.workspace?.setupCommitId}:{}),main:Notenblick.ui.main,lastNotesCourse:Notenblick.ui.lastNotesCourse,workingYear:Notenblick.ui.workingYear,historicalYear:Notenblick.ui.historicalYear,year:Notenblick.ui.year,class:Notenblick.ui.class,course:Notenblick.ui.course,weightClass:Notenblick.ui.weightClass,weightCourse:Notenblick.ui.weightCourse,adminYear:Notenblick.ui.adminYear,adminClass:Notenblick.ui.adminClass,adminView:Notenblick.ui.adminView,adminSearch:Notenblick.ui.adminSearch,showExitedAdmin:Notenblick.ui.showExitedAdmin,showArchived:Notenblick.ui.showArchived,nameOrder:Notenblick.ui.nameOrder,selections:Notenblick.N.clone(Notenblick.ui.selections||{}),scrolls:Notenblick.N.clone(Notenblick.scrolls),settings:Notenblick.N.clone(Notenblick.prefs),helpView:Notenblick.ui.helpView,settingsView:Notenblick.ui.settingsView,backupView:Notenblick.ui.backupView,workspaces:Notenblick.N.clone(Notenblick.ui.workspaces)});
+Notenblick.getWorkspace=()=>({...((Notenblick.data.workspace?.setupCommitId||Notenblick.workspace?.setupCommitId)?{setupCommitId:Notenblick.data.workspace?.setupCommitId||Notenblick.workspace?.setupCommitId}:{}),main:Notenblick.ui.main,lastNotesCourse:Notenblick.ui.lastNotesCourse,workingYear:Notenblick.ui.workingYear,historicalYear:Notenblick.ui.historicalYear,year:Notenblick.ui.year,class:Notenblick.ui.class,course:Notenblick.ui.course,weightClass:Notenblick.ui.weightClass,weightCourse:Notenblick.ui.weightCourse,adminYear:Notenblick.ui.adminYear,adminClass:Notenblick.ui.adminClass,adminView:Notenblick.ui.adminView,adminSearch:Notenblick.ui.adminSearch,showExitedAdmin:Notenblick.ui.showExitedAdmin,showArchived:Notenblick.ui.showArchived,nameOrder:Notenblick.ui.nameOrder,selections:Notenblick.N.clone(Notenblick.ui.selections||{}),scrolls:Notenblick.N.clone(Notenblick.scrolls),settings:Notenblick.N.clone(Notenblick.prefs),helpView:Notenblick.ui.helpView,settingsView:Notenblick.ui.settingsView,backupView:Notenblick.ui.backupView,workspaces:Notenblick.N.clone(Notenblick.ui.workspaces),assessmentDrafts:Notenblick.serializePerformanceDrafts?.()});
 Notenblick.remember=function(){
  if(Notenblick.starting||Notenblick.fatalStart)return;
  const workspace=Notenblick.getWorkspace(),store=Notenblick.store;Notenblick.workspace=workspace;
@@ -34,6 +34,7 @@ Notenblick.remember=function(){
 Notenblick.restoreWorkspace = function restoreWorkspace(source=Notenblick.workspace||{}) {
   const a=source;Notenblick.entrySession=null;Notenblick.openedNotesCourse=null;Notenblick.restorePreferences(source);
   Notenblick.workspace=source;
+  Notenblick.restorePerformanceDrafts?.(source.assessmentDrafts);
   Notenblick.ui.workingYear=typeof a.workingYear==='string'?a.workingYear:a.year||'';
   Notenblick.ui.historicalYear=typeof a.historicalYear==='string'?a.historicalYear:'';
   Notenblick.ui.lastNotesCourse=typeof a.lastNotesCourse==='string'?a.lastNotesCourse:a.course||'';

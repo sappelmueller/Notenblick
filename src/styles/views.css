@@ -580,3 +580,32 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 /* Keep the existing stacked export actions clear of their preceding fields. */
 #backupExportFields,#backup .backup-block>.field{margin-bottom:18px}
 #overviewZeroHint{margin:0;padding:12px 21px;border-bottom:1px solid var(--line)}
+
+/* Compact, accessible password controls and an opaque lock screen. */
+.vault-settings{max-width:780px;padding:20px;margin-block:24px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.vault-settings h3{margin-block:0 10px}
+.vault-settings .button-row,.vault-key-actions,.vault-gate-actions{flex-wrap:wrap}
+.vault-settings button,.vault-key-actions button,.vault-gate-actions button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.vault-remaining{margin-block-start:16px;overflow-wrap:anywhere}
+#vaultGate{width:min(480px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;overflow:auto}
+#vaultGate::backdrop{background:#f5f7f4;opacity:1}
+#vaultGate form{padding:clamp(14px,4vw,28px);display:grid;gap:14px}
+#vaultGate h2,#vaultGate p{margin:0}
+#vaultGate .check{margin-block:8px 0}
+#vaultGate .text-button{justify-self:start}
+html[data-vault-locked] body>:not(#vaultGate){visibility:hidden}
+@media(forced-colors:active){#vaultGate::backdrop{background:Canvas} .vault-settings{border-color:CanvasText}}
+
+/* New assessments reuse the existing work area and form controls. */
+.entry-workspace .entry-heading:has(> #newAssessmentFields) { justify-content: flex-start; container-type: inline-size; }
+#newAssessmentFields { margin-block: 4px; align-items: start; grid-template-columns: repeat(2,minmax(0,1fr)); }
+#newAssessmentFields .date-field { display: block; margin: 0; }
+@container (max-width:34rem) { #newAssessmentFields { grid-template-columns: minmax(0,1fr); } }
+#newAssessmentStatus:empty { display: none; }
+.performance-draft-options { margin-block: 12px; }
+.performance-draft-options > .form-grid { margin-block: 10px; }
+.performance-draft-options > .participation-options { margin-inline: 12px; }
+.performance-drafts { margin-block: 10px; }
+#vaultGateHelp{padding:clamp(14px,4vw,28px)}
+#vaultGateHelp > * + *{margin-block-start:10px}
+#vaultGate form[hidden],#vaultGateHelp[hidden]{display:none}

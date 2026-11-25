@@ -2,13 +2,19 @@
 module.exports=async function prepare(index){
  const A=globalThis.Notenblick,$=s=>document.querySelector(s);
  if(A.contextHelp)A.closeContextHelp();if($('#dialog').open)A.closeModal({submitted:true});
- A.pending.clear();for(const el of document.querySelectorAll('[data-entry][aria-invalid]'))el.removeAttribute('aria-invalid');if($('#pointConfiguration'))$('#pointConfiguration').hidden=true;A.settingsWeights?.saved();A.error();A.entrySession=null;A.setupDraft=null;A.dialogReturn=null;A.dialogBeforeClose=null;A.firstRun=false;
+ A.pending.clear();for(const el of document.querySelectorAll('[data-entry][aria-invalid]'))el.removeAttribute('aria-invalid');if($('#pointConfiguration'))$('#pointConfiguration').hidden=true;A.settingsWeights?.saved();A.error();A.entrySession=null;A.setupDraft=null;A.resetPerformanceDrafts();A.dialogReturn=null;A.dialogBeforeClose=null;A.firstRun=false;
  A.mode='demo';A.data=NR.clone(globalThis.contextFixture);for(const c of A.data.courses)c.areas=NR.areas(c);A.ui.workspaces={};A.rendered={};A.prefs.notesLayout='kinds';A.prefs.visibleKinds=[...A.kinds];A.prefs.courseOpenView='last';A.prefs.selectionMode='quick';
  A.normalizeContext();A.courseNotes(A.data.courses[0].id);A.W().pupil=A.getCourse().studentIds[0];A.ui.adminYear=A.ui.year;A.ui.adminClass=A.ui.class;
+ $('#allSelection').open=false;
  const select=s=>{const e=$(s);if(!e)throw Error('Context '+index+' missing '+s);if(/^H[1-6]$/.test(e.tagName))e.tabIndex=-1;e.focus();return e;};
  const admin=key=>{A.activateGroup('main','admin');A.activateGroup('class',key);};
  const settings=key=>{A.activateGroup('main','settings');A.activateGroup('settings',key);};
  const backup=key=>{A.activateGroup('main','backup');A.activateGroup('backup',key);};
+ const editAssessment=()=>{
+  const assessment={...A.data.assessments.find(a=>a.id==='direct'),id:'synthetic-context-assessment',results:{}};
+  A.data.assessments.push(assessment);
+  A.assessmentDialog(assessment);
+ };
  const oral=()=>{const c=A.getCourse(),sid=c.studentIds[0],record={id:'synthetic-context-oral',courseId:c.id,period:'1',kind:'oral',oralEntry:'individual',participantIds:[sid],date:'2026-10-31',title:'Synthetische Einzelnote',weight:'1.5',results:{[sid]:{grade:'2',status:'graded',note:'Synthetische Bemerkung'}}};A.data.assessments.push(record);A.quickOral(sid,record,true);};
  switch(index){
  case 0:A.data=NR.blank();A.firstRun=true;A.mode='working';A.setup();return select('#dialogTitle');
@@ -23,9 +29,9 @@ module.exports=async function prepare(index){
  case 9:admin('students');A.transferDialog(A.data.students[0].id);return select('#targetClass');
  case 10:admin('students');await A.action({dataset:{action:'exit-student',id:A.data.students[0].id}});return select('#dialogTitle');
  case 11:return select('#overviewTitle');
- case 12:A.assessmentDialog();return select('#a-title');
- case 13:A.assessmentDialog();$('.participation-options').open=true;$('#a-scope').value='selected';$('#a-participants').hidden=false;return select('#participantSearch');
- case 14:A.assessmentDialog();return select('#a-weight');
+ case 12:editAssessment();return select('#a-title');
+ case 13:editAssessment();$('.participation-options').open=true;$('#a-scope').value='selected';$('#a-participants').hidden=false;return select('#participantSearch');
+ case 14:editAssessment();return select('#a-weight');
  case 15:A.openAssessment('direct',true,true);return select('#entry-tab-exam-table');
  case 16:A.openAssessment('direct',true,true);A.groups['entry-exam'].activate($('#entry-tab-exam-single'));return select('#entryPupil-exam');
  case 17:A.openAssessment('direct',true);return select('#assessmentWorkTitle');

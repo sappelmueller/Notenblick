@@ -38,7 +38,7 @@
     return Notenblick.menu('add-performance','',items,'Leistung hinzufügen','button primary').replace('data-menu-toggle','aria-keyshortcuts="Control+n" data-menu-toggle').replace('data-menu-toggle','data-menu-toggle'+(Notenblick.readonly()?' disabled':''));
   };
   Notenblick.renderOverview = function renderOverview() {
-    const A=Notenblick,c=A.getCourse(),w=A.W(),hidden=A.prefs.notesLayout==='kinds'?A.selectAssessments(A.data,c.id).filter(a=>!A.visibleKinds().includes(a.kind)):[],selected=w.assessmentWorkOpen&&hidden.find(a=>a.id===w.assessmentId&&!A.N.isOralIndividual(a)),key=A.seq+':'+c.id+':'+A.prefs.notesLayout+':'+A.visibleKinds().join(',')+':'+(selected?.id||'');
+    const A=Notenblick,c=A.getCourse(),w=A.W(),hidden=A.prefs.notesLayout==='kinds'?A.selectAssessments(A.data,c.id).filter(a=>!A.visibleKinds().includes(a.kind)):[],draft=A.performanceDrafts.get(w.assessmentId),hiddenDraft=draft?.record.courseId===c.id&&!A.visibleKinds().includes(draft.record.kind)?A.assessmentById(draft.record.id):null,selected=w.assessmentWorkOpen&&(hidden.find(a=>a.id===w.assessmentId&&!A.N.isOralIndividual(a))||hiddenDraft),key=A.seq+':'+c.id+':'+A.prefs.notesLayout+':'+A.visibleKinds().join(',')+':'+(selected?.id||'');
     if(A.rendered.overview!==key){
       A.setContent('overview', A.viewHeader('Notenübersicht','overviewTitle',A.addPerformanceMenu()+A.finalMenu(),'overview')+A.sortTools('overview',true)+`<div class="table-panel"><div class="table-header"><h3 id="overviewDataTitle">Durchschnitte und Zeugnisnoten</h3><p class="subtle">${A.N.activeStudents(A.data,c).length} Schüler</p></div><div class="table-wrap" id="overviewTable">${A.overviewTable()}</div></div>`+(hidden.length?`<details id="hiddenPerformances"${selected?' open':''}><summary>Ausgeblendete Leistungsarten</summary><p class="hint">Hier kannst du vorhandene Leistungen öffnen. Die Registerkarten bleiben ausgeblendet.</p><div class="table-wrap"><table aria-label="Ausgeblendete Leistungsarten"><thead><tr><th scope="col">Bezeichnung</th><th scope="col">Datum</th><th scope="col">Leistungsart</th><th scope="col">Erfasst</th><th scope="col">Aktion</th></tr></thead><tbody>${A.assessmentRows(hidden,selected)}</tbody></table></div></details>`:''));
       A.rendered.overview=key;
@@ -60,15 +60,26 @@
   };
   Notenblick.renderKind = function renderKind(kind) {
     if (!Notenblick.getCourse()) return;
-    const A=Notenblick,c=A.getCourse(),w=A.W(),selected=A.data.assessments.find(a=>a.id===w.selected[kind]&&a.courseId===c.id);
-    if(!selected)return;
-    if(A.entrySession?.id!==selected.id)A.entrySession={id:selected.id,editing:false};
+    const A=Notenblick,c=A.getCourse(),w=A.W(),selected=A.assessmentById(w.selected[kind]);
+    if(!selected||selected.courseId!==c.id)return;
+    const draft=A.performanceDrafts.get(selected.id),saved=A.data.assessments.some(a=>a.id===selected.id);
+    if(A.entrySession?.id!==selected.id)A.entrySession={id:selected.id,editing:!!draft,settings:!!draft?.pointFields};
     const editing=A.entrySession.editing&&!A.readonly(),key=kind+':'+c.id+':'+A.seq+':'+selected.id+':'+editing;
     if(A.rendered[kind]===key)return;
-    A.$('#'+kind).innerHTML=`<div class="entry-heading"><h3 id="assessmentWorkTitle" tabindex="-1">${editing?'Noten eingeben – ':''}${A.esc(selected.title)}</h3><div class="button-row">${A.readonly()?'':A.b(editing?'assessment-done':'assessment-edit',editing?'Fertig':'Noten bearbeiten','','button primary')}${A.b('assessment-export','Leistung exportieren',`data-id="${selected.id}"`)}${A.b('assessment-list','Schließen','','button')}</div><p class="assessment-meta">${A.esc(c.name)} · Klasse ${A.esc(A.getClass().name)} · ${A.date(selected.date)}</p><p class="assessment-meta entry-result" id="entry-summary-${kind}">${A.entryProgressText(selected)}</p>${A.performanceFlags(selected)?'<p class="hint">'+A.performanceFlags(selected)+'</p>':''}</div>${A.pointSummaryMarkup(selected,editing)}${editing?`<div id="pointConfiguration"${A.entrySession.settings?'':' hidden'}>${A.pointSettingsMarkup(selected)}</div><ul class="tabs small-tabs entry-tabs" id="entryTabs-${kind}"><li><a href="#entry-${kind}-table" id="entry-tab-${kind}-table" data-key="table">Alle Schüler</a></li><li><a href="#entry-${kind}-single" id="entry-tab-${kind}-single" data-key="single">Einzeln</a></li></ul><p id="currentEntryPupil" class="hint" hidden></p><div id="entry-${kind}-table"></div><div id="entry-${kind}-single" hidden></div>`:A.assessmentResultsMarkup(selected)}`;
+    const activeDraft=editing?draft:null;
+    const heading=activeDraft&&!saved?A.performanceDraftLabel(selected):(editing?'Noten eingeben – ':'')+selected.title;
+    const actions=(A.readonly()?'':A.b(editing?'assessment-done':'assessment-edit',editing?'Fertig':'Noten bearbeiten','','button primary'))+
+      (saved?A.b('assessment-export','Leistung exportieren',`data-id="${selected.id}"`):'')+
+      A.b('assessment-list','Schließen')+(activeDraft?A.b('discard-assessment-draft','Entwurf verwerfen',saved||!activeDraft.touched?'hidden':'','text-button'):'');
+    const meta=A.esc(c.name)+' · Klasse '+A.esc(A.getClass().name)+(activeDraft?'':' · '+A.date(selected.date));
+    const pointControls=A.pointSummaryMarkup(selected,editing)+(editing?`<div id="pointConfiguration"${A.entrySession.settings?'':' hidden'}>${A.pointSettingsMarkup(selected)}</div>`:'');
+    const input=`<ul class="tabs small-tabs entry-tabs" id="entryTabs-${kind}"><li><a href="#entry-${kind}-table" id="entry-tab-${kind}-table" data-key="table">Alle Schüler</a></li><li><a href="#entry-${kind}-single" id="entry-tab-${kind}-single" data-key="single">Einzeln</a></li></ul><p id="currentEntryPupil" class="hint" hidden></p><div id="entry-${kind}-table"></div><div id="entry-${kind}-single" hidden></div>`;
+    A.$('#'+kind).innerHTML=`<div class="entry-heading"><h3 id="assessmentWorkTitle" tabindex="-1">${A.esc(heading)}</h3>${activeDraft?A.performanceDraftHead(activeDraft,selected):''}<div class="button-row">${actions}</div><p class="assessment-meta">${meta}</p><p class="assessment-meta entry-result" id="entry-summary-${kind}">${A.entryProgressText(selected)}</p>${!activeDraft&&A.performanceFlags(selected)?'<p class="hint">'+A.performanceFlags(selected)+'</p>':''}</div>${pointControls}${activeDraft?A.performanceDraftOptions(activeDraft,selected):''}${editing?input:A.assessmentResultsMarkup(selected)}`;
     if(editing){
       A.groups['entry-'+kind]=A.bind('entryTabs-'+kind,['table','single'],(type,update)=>{w.entryMode=type;A.renderEntry(kind,type);if(update)A.remember();});
-      A.groups['entry-'+kind].activate(A.$('#entry-tab-'+kind+'-'+w.entryMode),false,false);A.bindPointSettings(selected);
+      A.groups['entry-'+kind].activate(A.$('#entry-tab-'+kind+'-'+w.entryMode),false,false);
+      A.bindPointSettings(selected);
+      if(activeDraft)A.bindPerformanceDraft(activeDraft);
     }
     A.updateEntrySummary(kind);A.rendered[kind]=key;
   };
@@ -85,10 +96,9 @@
     const cl=Notenblick.data.classes.find(x=>x.id===c?.classId),y=Notenblick.data.years.find(x=>x.id===cl?.yearId);return !!(y?.archived||cl?.archived||c?.archived);
   };
   Notenblick.renderEntry = function renderEntry(kind, type) {
-    const a = Notenblick.data.assessments.find(a => a.id === Notenblick.W().selected[kind]),
-      list = Notenblick.pointEntryList(a),
-      w = Notenblick.W();
-    if (!a) return;
+    const a = Notenblick.assessmentById(Notenblick.W().selected[kind]),w=Notenblick.W();
+    if(!a)return;
+    const list=Notenblick.pointEntryList(a);
     Notenblick.clearAnnouncement();
     const current=Notenblick.$('#currentEntryPupil');if(current)current.hidden=type==='single'||!current.textContent;
     const target = Notenblick.$('#entry-' + kind + '-' + type);
@@ -107,11 +117,12 @@
       disabled = (Notenblick.readonly() ? ' disabled' : '')+'',
       label = table ? 'class="sr-only"' : '';
     const points=Notenblick.N.isPoints(a);
-    const pointField=`<label ${label} for="p-${prefix}">Punkte</label><input class="grade-field" id="p-${prefix}" data-entry="points" ${attrs} inputmode="decimal" value="${Notenblick.esc(r.points?.replace('.',',')??'')}" autocomplete="off"${disabled}>`;
-    return [...(points?[pointField,`<span ${table?'class="sr-only"':'class="field-label"'}>${table?'Note':'Berechnete Note'}</span><div id="pointNote-${prefix}">${Notenblick.pointNoteMarkup(a,r,s.id,type)}</div>`]:[`<label ${label} for="g-${prefix}">Note</label><input class="grade-field" id="g-${prefix}" data-entry="grade" ${attrs} inputmode="decimal" value="${Notenblick.esc(r.grade?.replace('.', ',') || '')}" autocomplete="off"${disabled}>`]), `<label ${label} for="s-${prefix}">Status</label><select class="status-field" id="s-${prefix}" data-entry="status" ${attrs}${disabled}>${Object.entries(Notenblick.N.STATUS).map(([k, l]) => Notenblick.opt(k, l, r.status)).join('')}</select>`, `<label ${label} for="n-${prefix}">Bemerkung</label><textarea class="note-field" id="n-${prefix}" data-entry="note" ${attrs} maxlength="2000" rows="${table?1:3}"${disabled}>${Notenblick.esc(r.note)}</textarea>`].map(x => table ? '<td>' + x + '</td>' : '<div class="field">' + x + '</div>').join('');
+    const A=Notenblick,value=(field,fallback)=>A.performanceInputValue(a,s.id,field,fallback),raw=field=>A.performanceRawAttrs(a,s.id,field);
+    const pointField=`<label ${label} for="p-${prefix}">Punkte</label><input class="grade-field" id="p-${prefix}" data-entry="points" ${attrs}${raw('points')} inputmode="decimal" value="${Notenblick.esc(value('points',r.points?.replace('.',',')??''))}" autocomplete="off"${disabled}>`;
+    return [...(points?[pointField,`<span ${table?'class="sr-only"':'class="field-label"'}>${table?'Note':'Berechnete Note'}</span><div id="pointNote-${prefix}">${Notenblick.pointNoteMarkup(a,r,s.id,type)}</div>`]:[`<label ${label} for="g-${prefix}">Note</label><input class="grade-field" id="g-${prefix}" data-entry="grade" ${attrs}${raw('grade')} inputmode="decimal" value="${Notenblick.esc(value('grade',r.grade?.replace('.', ',') || ''))}" autocomplete="off"${disabled}>`]), `<label ${label} for="s-${prefix}">Status</label><select class="status-field" id="s-${prefix}" data-entry="status" ${attrs}${raw('status')}${disabled}>${Object.entries(Notenblick.N.STATUS).map(([k, l]) => Notenblick.opt(k, l, value('status',r.status))).join('')}</select>`, `<label ${label} for="n-${prefix}">Bemerkung</label><textarea class="note-field" id="n-${prefix}" data-entry="note" ${attrs}${raw('note')} maxlength="2000" rows="${table?1:3}"${disabled}>${Notenblick.esc(value('note',r.note))}</textarea>`].map(x => table ? '<td>' + x + '</td>' : '<div class="field">' + x + '</div>').join('');
   };
   Notenblick.updateEntrySummary = function updateEntrySummary(kind) {
-    const a = Notenblick.data.assessments.find(a => a.id === Notenblick.W().selected[kind]),
+    const a = Notenblick.assessmentById(Notenblick.W().selected[kind]),
       el = Notenblick.$('#entry-summary-' + kind);
     if (!a || !el) return;
     el.textContent=Notenblick.entryProgressText(a);

@@ -1,11 +1,10 @@
 {
   "name": "notenblick",
-  "version": "1.27.0",
+  "version": "1.28.0",
   "releaseNotes": [
-    "Leistungsbereiche lassen sich mit zuverlässigem Tastaturfokus bearbeiten und übertragen.",
-    "Ungültige Eingaben führen gezielter zum betroffenen Feld.",
-    "Fachzugriffe und Exportaktionen sind übersichtlicher angeordnet.",
-    "Verständlichere Hinweise helfen bei Problemen mit dem Speicherort."
+    "Neue Leistungen anlegen und gleich Noten eingeben.",
+    "Noten und Sicherungen auf Wunsch mit einem Passwort schützen.",
+    "Mit dem Notfallzugriff Noten lesen und Daten kopieren."
   ],
   "private": true,
   "description": "Lokaler Windows-Notenrechner; Node-Abhängigkeiten ausschließlich für Entwicklungstests",

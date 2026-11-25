@@ -30,5 +30,5 @@ checks.append(f'Vier Berichte mit nur einem angezeigten Schüler und zwölf tats
 r=subprocess.run([sys.executable,'dev/openxml-check.py',*[str(OUT/(n+ext)) for n in names for ext in ['.docx','.xlsx']]],cwd=ROOT,capture_output=True,text=True,timeout=180);assert r.returncode==0,r.stdout+r.stderr;assert len(json.loads(r.stdout)['results'])==8
 validator=os.environ.get('NOTENBLICK_VERAPDF') or str(ROOT/'.tools/verapdf/verapdf')
 r=subprocess.run([validator,'--flavour','ua1','--format','json',*[str(OUT/(n+'.pdf')) for n in names]],capture_output=True,text=True,timeout=180);assert r.returncode==0,r.stderr;jobs=json.loads(r.stdout)['report']['jobs'];assert len(jobs)==4 and all(j['validationResult'][0]['compliant'] for j in jobs)
-checks.append('Acht Office-Pakete vollständig mit Open XML SDK und vier native PDF/UA-1-Dateien mit veraPDF 1.30.3 geprüft')
+checks.append('Acht Office-Pakete vollständig mit Open XML SDK und vier native PDF/UA-1-Dateien mit veraPDF geprüft')
 (ROOT/'tests/v1170-files-results.json').write_text(json.dumps({'checks':checks,'pages':pages,'windows':False,'nvda':False,'officeLive':False},ensure_ascii=False,indent=2));print('1.17 Dateien:',len(checks),'Prüfgruppen;',pages,'Seiten')

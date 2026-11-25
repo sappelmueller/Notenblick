@@ -1,4 +1,4 @@
-# Notenblick 1.26 – Hilfe
+# Notenblick 1.28 – Hilfe
 
 ## Vollständiger Hilfetext (sichtbar in Notenblick)
 
@@ -46,7 +46,7 @@ Unter **Einstellungen → Darstellung → Beim Öffnen eines Fachs** entscheides
 
 ### Programmstart und Aktualisierung
 
-Entpacke Notenblick vollständig und starte **Notenblick.exe**. Im entpackten Ordner liegen außerdem **Programm** und **Daten**. Im Ordner **Daten** liegen deine Noten und Sicherungen.
+Entpacke Notenblick vollständig und starte **Notenblick.exe**. Daneben liegen der Ordner **Programm** und **Notenblick-Notfallzugriff.exe**. Notenblick legt den Ordner **Daten** beim ersten Start an. Dort liegen deine Noten und Sicherungen.
 
 Unter **Einstellungen → Allgemein** kannst du festlegen, ob beim Start die Startseite oder die letzte Ansicht erscheint.
 
@@ -59,7 +59,7 @@ Unter **Einstellungen → Allgemein** kannst du festlegen, ob beim Start die Sta
 
 Die freiwillige Suche **„Beim Start nach Aktualisierungen suchen“** prüft bei jedem Programmstart einmal im Hintergrund. Deine Schülernoten werden dabei nicht übertragen.
 
-**Manuelle Aktualisierung:** Beende Notenblick. Ersetze **nur Notenblick.exe und den vollständigen Ordner Programm**. **Daten** bleibt unverändert. Für einen Computerwechsel kopierst du dagegen den ganzen Notenblick-Ordner.
+**Manuelle Aktualisierung:** Beende Notenblick. Übernimm **Notenblick.exe**, **Notenblick-Notfallzugriff.exe** und den vollständigen Ordner **Programm** aus dem neuen Windows-Paket. Behalte deinen Ordner **Daten**. Für einen Computerwechsel kopierst du den ganzen Notenblick-Ordner, während das Programm geschlossen ist.
 
 ## Verwaltung
 
@@ -139,17 +139,21 @@ Unter **„Notenübersicht“** heißt die Tabelle **„Durchschnitte und Zeugni
 
 ### Eine Leistung anlegen
 
-Eine **Leistung** ist zum Beispiel „Klassenarbeit 2“, „Vokabeltest“ oder „Präsentation zum Mittelalter“. Der **Leistungsbereich** bestimmt, zu welcher Gruppe sie zählt.
+Mit **„Leistung hinzufügen“** oder **Strg+N** öffnest du die Noteneingabe direkt. Wähle den Leistungsbereich, wenn Notenblick danach fragt. Im Register **Tests** ist der Bereich beispielsweise schon ausgewählt.
 
-**So legst du eine Leistung an:**
+1. Gib der neuen Leistung eine **Bezeichnung**, etwa „Vokabeltest 2“. Prüfe das **Datum**. Heute ist bereits eingetragen.
+2. Trage die Noten direkt in der Tabelle ein. Bei Bedarf kannst du auf **Punkte mit Notenschlüssel** umstellen.
+3. Wähle am Ende **„Fertig“**.
 
-1. Öffne das Fach und wähle **„Leistung hinzufügen“** oder **Strg+N**.
-2. Wähle den passenden Leistungsbereich. In neuen Fächern sind **Klassenarbeiten**, **Tests** und **Mündlich** vorhanden. Selbst angelegte Bereiche stehen ebenfalls zur Auswahl.
-3. Gib eine **Bezeichnung** und das **Datum** ein.
-4. Prüfe bei Bedarf **„Gewichtung der Leistung“** und die **Teilnehmer**.
-5. Wähle **„Speichern“**. Anschließend kannst du die Noten eintragen.
+**Ganze Klasse** und die einfache Gewichtung sind voreingestellt. Abweichungen stellst du unter **„Weitere Angaben“** ein. Für eine einzelne Bewertung gibt es weiterhin **„Einzelnote eintragen“**.
 
-Befindest du dich bereits in der Registerkarte **Präsentationen**, gehört eine dort neu angelegte Leistung automatisch zu diesem Bereich. Für einen einzigen Schüler kannst du direkt **„Einzelnote eintragen“** wählen.
+### Einen Entwurf fortsetzen
+
+Wenn du bereits etwas eingibst und Bezeichnung oder Datum noch fehlen, merkt sich Notenblick deine Eingaben als Entwurf. Der Entwurf erscheint noch nicht in Durchschnitten, Notenlisten oder Berichten.
+
+Sobald Bezeichnung, Datum und eine gültige Bewertung vorliegen, übernimmt Notenblick die Leistung. Weitere Noten werden wie gewohnt automatisch gespeichert. Möchtest du eine Leistung bewusst ohne Noten anlegen, fülle Bezeichnung und Datum aus und wähle **„Fertig“**.
+
+Über **„Entwurf fortsetzen“** kannst du auf der Startseite oder im Leistungsbereich weiterarbeiten. Du kannst den Entwurf auch bewusst verwerfen. Öffnest du die Eingabe und trägst nichts ein, wird keine Leistung angelegt.
 
 ### Ein Datum eingeben
 
@@ -159,18 +163,21 @@ Verwende das tatsächliche Datum der Leistung. Notenblick ordnet sie damit unter
 
 ### Teilnehmer auswählen
 
-Normalerweise ist **„Ganze Klasse“** ausgewählt. Wenn nur bestimmte Schüler teilnehmen:
+**Ganze Klasse** umfasst alle Schüler, die am Fach teilnehmen. Die Suche in der Noteneingabe ändert diese Auswahl nicht.
 
-1. Öffne **„Teilnehmer auswählen“**.
-2. Wähle **„Nur ausgewählte Schüler“**.
-3. Markiere die gewünschten Namen. Mit **„Schüler suchen“** findest du sie schneller.
-4. Kontrolliere die angezeigte Anzahl und übernimm die Auswahl.
+1. Öffne bei einer neuen Leistung **„Weitere Angaben“** und dort **„Teilnehmer auswählen“**.
+2. Wähle **„Nur ausgewählte Schüler“** und markiere die gewünschten Namen.
+3. Prüfe die angezeigte Anzahl.
 
-**„Alle auswählen“** und **„Auswahl aufheben“** helfen bei längeren Listen. Mindestens ein Schüler muss teilnehmen. Bereits gespeicherte Bewertungen dürfen nicht durch eine nachträgliche Änderung der Teilnahme verloren gehen.
+**„Alle auswählen“** und **„Auswahl aufheben“** helfen bei längeren Listen. Mindestens ein Schüler muss teilnehmen. Schüler mit vorhandenen Bewertungen bleiben ausgewählt.
+
+Mit **„Alle Schüler“** und **„Einzeln“** wechselst du die Eingabeansicht. Die Teilnahme bleibt dabei dieselbe.
 
 ### Gewichtung einer einzelnen Leistung und GFS
 
 **„Gewichtung der Leistung“** bestimmt, wie stark eine konkrete Arbeit oder ein konkreter Test **innerhalb seines Bereichs** zählt.
+
+Bei einer neuen Leistung findest du diese Angaben unter **„Weitere Angaben“**. Voreingestellt ist **1**.
 
 - **1:** einfach.
 - **2:** doppelt.
@@ -182,6 +189,8 @@ Wie stark **der gesamte Bereich** zur Fachnote zählt, stellst du unter **„Not
 Mit **„Als GFS kennzeichnen“** markierst du eine GFS. Die Kennzeichnung ändert die Gewichtung nicht selbst. Beachte dafür die Regeln deiner Schule.
 
 ### Noten für alle Schüler eingeben
+
+Bei einer neuen Leistung ist die Eingabetabelle bereits geöffnet. Möchtest du später Noten ergänzen, öffne die vorhandene Leistung so:
 
 1. Öffne die Leistung über ihre **Bezeichnung**.
 2. Wähle **„Noten bearbeiten“**.
@@ -209,7 +218,7 @@ Du hast zwei Möglichkeiten:
 - **Gemeinsame Bewertung:** Du legst eine mündliche Leistung für mehrere Schüler an, zum Beispiel eine Unterrichtsrunde.
 - **Einzelnote:** Du bewertest gezielt einen Schüler, zum Beispiel für einen Unterrichtsbeitrag.
 
-**Gemeinsame Bewertung anlegen:** Öffne **Mündlich**, wähle **„Leistung hinzufügen“** beziehungsweise die entsprechende Aktion für mehrere Schüler, gib Bezeichnung und Datum ein und trage anschließend die Noten ein. Schnell geht es auch mit **Strg+Umschalt+M**.
+**Gemeinsame Bewertung anlegen:** Öffne **Mündlich** und wähle **„Leistung hinzufügen“**. Gib Bezeichnung und Datum ein und trage die Bewertungen direkt in der Tabelle ein. Schnell geht es auch mit **Strg+Umschalt+M**.
 
 **Einzelnote anlegen:** Wähle **„Einzelnote eintragen“**, den Schüler, die Note und das Datum. Ergänze bei Bedarf eine Bezeichnung oder Bemerkung. Mit **„Speichern und nächste“** kannst du direkt weitere Einzelnoten erfassen.
 
@@ -606,6 +615,8 @@ Mit einem Export kannst du Noten **lesen, drucken oder weitergeben**. Für eine 
 
 Öffne dafür **Sicherung → Sicherung erstellen**. Bewahre Berichte und Sicherungen geschützt auf, denn sie enthalten Schülerdaten.
 
+Auch bei eingeschaltetem Passwortschutz werden bewusst exportierte Berichte als unverschlüsselte Dateien gespeichert. Wähle dafür einen geschützten Speicherort.
+
 ## Sicherung
 
 ### Automatisch speichern
@@ -624,7 +635,7 @@ Mit **„Datenordner öffnen“** erreichst du deine Dateien. **„Erneut speich
 
 ### Automatische Notenlisten
 
-Im Ordner **Daten → Notenlisten** legt Notenblick zusätzlich **lesbare TXT-Dateien** an. Du kannst darin deine Noten auch dann nachschlagen, wenn das Programm einmal nicht startet.
+Notenblick erstellt automatisch gut lesbare Notenlisten. Ohne Passwortschutz findest du sie als TXT-Dateien im Ordner **Daten → Notenlisten**. Mit Passwortschutz öffnest du sie im **Notfallzugriff für Notenblick**.
 
 Die Dateien sind nach Schuljahr, Klasse und Fach geordnet. Du findest dort unter anderem:
 
@@ -635,7 +646,7 @@ Die Dateien sind nach Schuljahr, Klasse und Fach geordnet. Du findest dort unter
 
 Die Texte zeigen die vorhandenen Leistungsbereiche mit ihren tatsächlichen Namen. **Leere Bereiche mit 0 %** werden weggelassen. Bei Punktebewertungen stehen die **maximale Punktzahl und der Notenschlüssel** einmal vor den Ergebnissen; bei den Schülern stehen nur die nötigen Angaben wie Punkte, Note und gegebenenfalls Status oder Bemerkung.
 
-Unter **Sicherung → Speicherstatus → Automatische Notenlisten prüfen** lässt du die Listen bei Bedarf neu erstellen. **Die TXT-Dateien dienen zum Nachlesen, nicht zur vollständigen Wiederherstellung.** Dafür brauchst du eine Sicherung.
+Unter **Sicherung → Speicherstatus → Automatische Notenlisten prüfen** lässt du die Listen bei Bedarf aktualisieren. Für eine vollständige Wiederherstellung brauchst du eine Sicherung.
 
 ### Vollständige Sicherung erstellen
 
@@ -643,7 +654,7 @@ Unter **Sicherung → Speicherstatus → Automatische Notenlisten prüfen** läs
 2. Wähle **„Vollständige Sicherung erstellen“**.
 3. Speichere die Sicherungsdatei an einem geschützten Ort.
 
-Die Sicherung enthält die Daten, die du für eine Wiederherstellung benötigst: Schuljahre, Klassen, Schüler, Fächer, Leistungen, Noten und Einstellungen.
+Eine vollständige Sicherung enthält alles, was du zur Wiederherstellung brauchst. Bei aktivem Passwortschutz speichert Notenblick Sicherungen verschlüsselt. Den Notfallschlüssel bewahrst du getrennt auf.
 
 Lege regelmäßig zusätzlich eine Kopie **außerhalb des Notenblick-Ordners** ab, zum Beispiel auf einem dafür vorgesehenen geschützten Datenträger.
 
@@ -653,8 +664,8 @@ Lege regelmäßig zusätzlich eine Kopie **außerhalb des Notenblick-Ordners** a
 
 1. Öffne **Sicherung → Wiederherstellen**.
 2. Wähle **„Sicherungsdatei auswählen“**.
-3. Prüfe das **Datum** und die Angaben zur ausgewählten Sicherung.
-4. Bestätige die Wiederherstellung nur, wenn du diesen Stand wirklich verwenden möchtest.
+3. Entsperre eine geschützte Sicherung mit ihrem Passwort oder Notfallschlüssel. Prüfe Datum und Angaben zur ausgewählten Sicherung.
+4. Bestätige die Wiederherstellung, wenn du diesen Stand verwenden möchtest.
 
 Notenblick erstellt vorher eine zusätzliche Sicherung deines aktuellen Bestands. Wenn du unsicher bist, brich den Vorgang ab.
 
@@ -672,11 +683,41 @@ Notenblick zeigt vorher an, wie viele ältere Sicherungen entfernt werden sollen
 
 ### Wenn etwas nicht stimmt
 
-Wenn du deine Noten nicht mehr öffnen kannst, **lösche oder ersetze nicht vorschnell den Ordner Daten**.
+Behalte den Ordner **Daten**, wenn du deine Noten nicht öffnen kannst. Unter **Sicherung → Wiederherstellen** kannst du eine Sicherung oder einen früheren Stand auswählen.
 
-Prüfe unter **Sicherung → Wiederherstellen**, ob ein früherer Speicherstand oder eine Sicherungsdatei zur Verfügung steht. Falls Notenblick nicht startet, kannst du deine Noten oft noch in **Daten → Notenlisten** nachlesen.
+Startet Notenblick nicht, öffne **Notenblick-Notfallzugriff.exe** im Notenblick-Ordner. Dort kannst du Notenlisten lesen und Datenkopien erstellen. Bewahre eine Sicherung und eine Kopie des Notfallprogramms auch getrennt vom Notenblick-Ordner auf.
 
-**Bei einer Aktualisierung gilt immer:** Nur **Notenblick.exe** und den vollständigen Ordner **Programm** austauschen. **Daten** behalten. Ein PDF-, Word- oder TXT-Bericht ersetzt keine vollständige Sicherung.
+### Notfallzugriff für Notenblick
+
+1. Starte **Notenblick-Notfallzugriff.exe**. Wähle bei Bedarf einen anderen Datenordner oder eine Sicherungsdatei.
+2. Öffne geschützte Daten mit Passwort oder Notfallschlüssel.
+3. Wähle Schuljahr, Klasse und Fach. Lies die Notenlisten oder kopiere den gewünschten Text.
+
+Mit **„Notenlisten als TXT speichern“** legst du lesbare Notenlisten in einem Zielordner ab. Mit **„Entschlüsselte Datenkopie erstellen“** speicherst du die Daten für eine spätere Wiederherstellung. Solche Ausgaben sind unverschlüsselt. Wähle einen geschützten Zielordner.
+
+Wähle **„Geschützten Datenordner kopieren“** oder **„Geschützte Sicherung kopieren“**. Die Kopie bleibt verschlüsselt. Dafür brauchst du kein Passwort. Der Notfallzugriff lässt den ursprünglichen Bestand unverändert.
+
+Ältere Sicherungen enthalten manchmal keine fertigen Notenlisten. Einen lesbaren Datenstand kannst du trotzdem kopieren. Mit **F1** öffnest du die Hilfe im Notfallzugriff.
+
+### Passwortschutz einrichten
+
+Der Passwortschutz ist freiwillig. Wähle **Einstellungen → Allgemein → Passwortschutz → Passwortschutz einrichten**.
+
+1. Wähle mindestens zwölf Zeichen, am besten mehrere Wörter, die du dir gut merken kannst.
+2. Wähle **„Schlüsseldatei speichern“** und lege sie getrennt vom Datenordner ab. Mit **„Gespeicherte Schlüsseldatei prüfen“** öffnest du sie zur Kontrolle erneut.
+3. Wähle **„Daten verschlüsseln“**. Notenblick prüft, ob sich der geschützte Bestand öffnen lässt.
+
+Du kannst den Notfallschlüssel zusätzlich kopieren oder drucken. Verwahre jede Kopie getrennt von deinen Noten. Früher außerhalb des Notenblick-Ordners gespeicherte Dateien behalten ihren bisherigen Schutz.
+
+### Geschützte Daten öffnen und sperren
+
+Gib beim Öffnen das **Passwort** ein oder wähle **„Mit Notfallschlüssel öffnen“**. Bewahre den Notfallschlüssel getrennt auf. Wer den Schlüssel hat, kann den zugehörigen Bestand auch ohne Passwort öffnen.
+
+Wähle bei einer Pause **„Notenblick sperren“**. Notenblick sperrt sich auch beim Sperren deiner Windows-Sitzung. Nach dem Öffnen kannst du an deiner bisherigen Stelle weiterarbeiten.
+
+Unter **Einstellungen → Allgemein → Passwortschutz** kannst du das Passwort ändern, den Notfallschlüssel prüfen oder ersetzen und den Schutz ausschalten. Wenn jemand deinen Notfallschlüssel kennt, wähle **„Notfallschlüssel ersetzen“**. Dabei verschlüsselt Notenblick den aktuellen Bestand erneut. Ältere Sicherungen behalten ihre bisherigen Zugangsdaten.
+
+Wenn dir Passwort und Notfallschlüssel fehlen, lassen sich geschützte Daten nicht öffnen.
 
 ## Einstellungen
 
@@ -687,6 +728,8 @@ Unter **Einstellungen → Allgemein** legst du bei **„Beim Programmstart“** 
 Mit **„Aktualisierung prüfen“** kannst du freiwillig nach einer freigegebenen Version suchen. **„Beim Start nach Aktualisierungen suchen“** schaltet die automatische Prüfung ein oder aus. Dabei werden keine Schülernoten hochgeladen.
 
 Eine angebotene Aktualisierung erscheint auch auf der Startseite. Mit **„Später aktualisieren“** verschiebst du sie. **„Hinweis zu Version … nicht mehr anzeigen“** blendet nur den Hinweis zu dieser Version aus. Wenn die Prüfung fehlschlägt, kannst du über **„Fehlerdetails kopieren“** die Fehlermeldung für eine Nachfrage bereitstellen; du kannst normal weiterarbeiten.
+
+Unter **„Passwortschutz“** kannst du deine Daten auf Wunsch verschlüsseln oder einen vorhandenen Schutz verwalten.
 
 ### Klassenreihenfolge
 

@@ -2,10 +2,16 @@
 (function (Notenblick) {
 'use strict';
 Notenblick.canLeave = function canLeave({pointSettings=false}={}) {
- if(!pointSettings&&Notenblick.pointSettingsDirty?.()){Notenblick.error('Bitte übernimm die geänderten Notenschlüsseleinstellungen oder wähle Abbrechen.');Notenblick.$('#pointApply')?.focus();return false;}
+  if(Notenblick.entryFinishing)return false;
+  const draft=Notenblick.currentPerformanceDraft?.();
+ if(!draft&&!pointSettings&&Notenblick.pointSettingsDirty?.()){Notenblick.error('Bitte übernimm die geänderten Notenschlüsseleinstellungen oder wähle Abbrechen.');Notenblick.$('#pointApply')?.focus();return false;}
   if(Notenblick.checkSettingsDraft&&!Notenblick.checkSettingsDraft())return false;
   for(const id of [...Notenblick.pending]){const el=document.getElementById(id);if(el?.dataset.entry)Notenblick.entryChange(el);}
-  const el = document.querySelector('[data-entry][aria-invalid=true]');
+  if(draft){
+    for(const id of Notenblick.pending)if(document.getElementById(id)?.dataset.assessment===draft.record.id)Notenblick.pending.delete(id);
+    return true;
+  }
+  const el = [...document.querySelectorAll('[data-entry][aria-invalid=true]')].find(input=>!input.closest('[hidden]'));
   if (el) {
     Notenblick.error('Bitte korrigiere zuerst die markierte Eingabe.');
     el.focus();

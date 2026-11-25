@@ -74,6 +74,12 @@ A.helpContext=function(el=document.activeElement){
  }
  if(A.ui.main==='help')return 48;
  const action=el?.closest?.('[data-action]')?.dataset.action,menu=el?.closest?.('[data-menu-key]')?.dataset.menuKey;
+ if(within('#passwordProtection,#vaultGate'))return 'sicherung-passwortschutz-verwenden';
+ if(['resume-assessment-draft','discard-assessment-draft'].includes(action)||within('#newAssessmentStatus'))return 'noten-entwurf-fortsetzen';
+ if(within('#newAssessmentFields [data-date-part]'))return 'noten-ein-datum-eingeben';
+ if(within('#newAssessmentFields')||within('#assessmentWorkTitle')&&A.currentPerformanceDraft?.())return 12;
+ if(within('#newAssessmentMore .participation-options'))return 13;
+ if(within('#newAssessmentMore'))return 14;
  if(action?.startsWith('update-')||within('#updateAuto,#updateHide'))return 43;
  if(menu==='add-performance'||['new-assessment','quick-oral'].includes(action))return 12;
  if(menu==='finals'||['final-dialog','finals-class'].includes(action))return 30;

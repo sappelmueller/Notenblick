@@ -7,7 +7,7 @@ from toolchain import compiler, DOTNET
 root=Path(__file__).resolve().parents[1]
 dotnet=Path(DOTNET)
 refs=root/'dev/microsoft.netframework.referenceassemblies.net48/build/.NETFramework/v4.8'
-names=['Newtonsoft.Json','Microsoft.Web.WebView2.Core','Microsoft.Web.WebView2.WinForms','Notenblick.Speicherung','Notenblick.Fenster']
+names=['Newtonsoft.Json','BouncyCastle.Cryptography','Microsoft.Web.WebView2.Core','Microsoft.Web.WebView2.WinForms','Notenblick.Speicherung','Notenblick.Fenster']
 checks=[]
 def pe(file):
     data=file.read_bytes();assert data[:2]==b'MZ',str(file)
@@ -24,7 +24,7 @@ def pe(file):
     flags=struct.unpack_from('<I',data,offset(clr)+16)[0] if clr else None
     return data,machine,flags,directories,offset
 
-for file in [root/'dist/Notenblick.exe',root/'dist/Programm/Windows/Notenblick.Aktualisierung.exe',*(root/'dist/Programm/Windows').glob('*.dll')]:
+for file in [root/'dist/Notenblick.exe',root/'dist/Notenblick-Notfallzugriff.exe',root/'dist/Programm/Windows/Notenblick.Aktualisierung.exe',*(root/'dist/Programm/Windows').glob('*.dll')]:
     _,machine,flags,_,_=pe(file)
     assert machine==0x14c and flags is not None and flags&1 and not flags&(2|0x20000),str(file)
     checks.append(file.name+': IL-only AnyCPU; neither 32BITREQUIRED nor 32BITPREFERRED')

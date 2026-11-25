@@ -10,7 +10,9 @@ Nenne betroffene Version, Auswirkung und ein erfundenes Beispiel. Zugangsdaten n
 
 ## Daten schützen
 
-Notenblick speichert lokal und bietet keine verschlüsselte Datenablage. Schutz des Windows-Kontos, Datenträgerverschlüsselung und sichere externe Sicherungen liegen bei der Lehrkraft. Fehlerberichte und Screenshots dürfen keine echten Schülerdaten enthalten.
+Notenblick speichert lokal. In der offiziellen Version 1.27.0 schützt du den Datenordner über Windows und geschützte Sicherungen. Die Entwicklungsversion 1.28.0 ergänzt einen freiwilligen Passwortschutz für abgelegte Noten, Notenlisten und Sicherungen. Bewahre den Notfallschlüssel getrennt von diesen Daten auf und prüfe regelmäßig eine Sicherung.
+
+Dateiverschlüsselung schützt gespeicherte Inhalte. Beim Arbeiten sind geöffnete Noten im Programm lesbar. Bereits vorhandene externe Kopien und bewusst unverschlüsselte Exporte brauchen einen eigenen geschützten Speicherort. Fehlerberichte und Screenshots dürfen keine echten Schülerdaten enthalten.
 
 Downloads nur aus offiziellen Releases beziehen und SHA-256-Prüfsummen vergleichen. Das Programm prüft seine vorgesehenen Dateien beim Start. Diese Integritätsprüfung ersetzt keine digitale Herausgebersignatur; eine Codesignierung ist bisher nicht vorhanden.
 

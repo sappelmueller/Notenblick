@@ -39,14 +39,16 @@
       case 'year-notes':Notenblick.ui.historicalYear=id===Notenblick.ui.workingYear?'':id;Notenblick.ui.year=id;Notenblick.ui.class='';Notenblick.ui.course='';Notenblick.normalizeContext();Notenblick.rendered={};Notenblick.openCourseWorkspace({view:'overview'});Notenblick.activateGroup('main','notes',false,true);Notenblick.focusTarget('overviewTitle');break;
       case 'current-year':Notenblick.ui.historicalYear='';Notenblick.ui.year=Notenblick.ui.workingYear;Notenblick.ui.class='';Notenblick.ui.course='';Notenblick.normalizeContext();Notenblick.rendered={};Notenblick.openCourseWorkspace({view:'overview'});Notenblick.renderNotes();Notenblick.remember();Notenblick.focusTarget('overviewTitle');break;
       case 'assessment-list': Notenblick.returnToAssessmentList(); break;
+      case 'resume-assessment-draft': Notenblick.resumePerformanceDraft(id,el); break;
+      case 'discard-assessment-draft': Notenblick.discardAssessmentDraft(); break;
       case 'next-empty': {
-        const w=Notenblick.W(),record=Notenblick.data.assessments.find(x=>x.id===w.selected[kind]),list=Notenblick.pointEntryList(record);
+        const w=Notenblick.W(),record=Notenblick.assessmentById(w.selected[kind]),list=Notenblick.pointEntryList(record);
         if(!record||!list.length)break;let next=-1;
         for(let step=1;step<=list.length;step++){const at=(w.studentIndex+step)%list.length;if(!Notenblick.N.hasEntry(record.results[list[at].id])){next=at;break;}}
         if(next>=0){w.studentIndex=next;Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.focusTarget('singleName-'+kind);}break;
       }
       case 'assessment-edit': Notenblick.editAssessment(); break;
-      case 'assessment-done': Notenblick.finishAssessment(); break;
+      case 'assessment-done': if(!await Notenblick.finishPerformanceDraft())Notenblick.finishAssessment(); break;
       case 'point-settings': Notenblick.editPointSettings(); break;
       case 'open-assessment': Notenblick.openAssessment(id,true); break;
       case 'area-individual': Notenblick.areaIndividual(el.dataset.kind); break;
@@ -156,7 +158,7 @@
           break;
         }
       case 'new-assessment':
-        Notenblick.assessmentDialog(null, kind,el.dataset.fixed==='true');
+        Notenblick.openPerformanceDraft(kind,{trigger:el});
         break;
       case 'edit-assessment':
         Notenblick.assessmentDialog(Notenblick.data.assessments.find(a => a.id === id));
@@ -165,7 +167,7 @@
       case 'next':
         {
           const w = Notenblick.W();
-          w.studentIndex = Math.max(0, Math.min(Notenblick.pointEntryList(Notenblick.data.assessments.find(x=>x.id===w.selected[kind])).length - 1, w.studentIndex + (a === 'next' ? 1 : -1)));
+          w.studentIndex = Math.max(0, Math.min(Notenblick.pointEntryList(Notenblick.assessmentById(w.selected[kind])).length - 1, w.studentIndex + (a === 'next' ? 1 : -1)));
           Notenblick.renderEntry(kind, 'single');
           Notenblick.remember();
           Notenblick.focusTarget('singleName-' + kind);
@@ -187,7 +189,9 @@
             Notenblick.mutate(d => {
               d.assessments = d.assessments.filter(x => x.id !== id);
               Notenblick.W().selected[item.kind] = 'all';
-            });
+            },{refresh:false});
+            Notenblick.performanceDrafts.delete(id);
+            Notenblick.refreshCurrent();
             Notenblick.remember();
           }, 'Entfernen',{helpContext:'noten-eine-leistung-nachtraglich-andern-oder-loschen'});
           break;
@@ -245,9 +249,9 @@
         }
       case 'oral-record-export':{const aid=id;if(Notenblick.readonly()||Notenblick.$('#oralEditFields')?.hidden)Notenblick.closeModal({submitted:true});else await Notenblick.submitModal('export');if(!Notenblick.$('#dialog').open){const record=Notenblick.data.assessments.find(x=>x.id===aid);Notenblick.output('oral',Notenblick.singleAssessmentContext(record));}break;}
       case 'assessment-export':{const record=Notenblick.data.assessments.find(x=>x.id===id);Notenblick.output(record.kind,Notenblick.singleAssessmentContext(record));break;}
-      case 'point-key':Notenblick.showPointKey(Notenblick.data.assessments.find(x=>x.id===id));break;
+      case 'point-key':Notenblick.showPointKey(Notenblick.assessmentById(id));break;
       case 'point-key-pdf':{const r=Notenblick.pointKeyReport(Notenblick.data.assessments.find(x=>x.id===id));await Notenblick.exportFile({}, {}, 'pdf',r);break;}
-      case 'point-manual':Notenblick.manualPointGrade(Notenblick.data.assessments.find(x=>x.id===id),el.dataset.student);break;
+      case 'point-manual':Notenblick.manualPointGrade(Notenblick.assessmentById(id),el.dataset.student);break;
       case 'output':
         Notenblick.output(kind);
         break;

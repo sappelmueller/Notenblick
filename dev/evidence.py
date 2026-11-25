@@ -88,6 +88,7 @@ def tools(root=ROOT,scope='all',values=None):
         if values.get('NOTENBLICK_CHROMIUM'):paths.append(Path(values['NOTENBLICK_CHROMIUM']).parent)
     if scope in ['all','native','build','export']:
         paths.append(Path(values.get('NOTENBLICK_DOTNET') or root/'.tools/dotnet'/('dotnet.exe' if os.name=='nt' else 'dotnet')).parent)
+        paths.append(root/'.tools/bouncycastle/lib')
     if scope in ['all','export']:
         for module in ['docx','openpyxl','pypdf','lxml','PIL']:
             spec=importlib.util.find_spec(module)

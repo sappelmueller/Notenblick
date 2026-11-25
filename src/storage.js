@@ -40,15 +40,20 @@
   const json = text => JSON.parse(text.replace(/^\ufeff/, ''));
   class FolderStore {
     constructor(root, {
-      textPrefix = 'Notenlisten'
+      textPrefix = 'Notenlisten',
+      protected: protectedStorage = false
     } = {}) {
       this.root = root;
       this.textPrefix = textPrefix;
       this.base = null;
       this.path = 'notenverwaltung.json';
       this.saving = false;
+      this.protected = protectedStorage;
     }
-    async protect(label,input,workspace) {if(this.cleaning)throw Error('Bitte warte, bis die Sicherungen bereinigt sind.');this.protectWrites=(this.protectWrites||0)+1;try{const full={...N.clone(N.validate(input)),workspace:N.clone(workspace||{})},path='Sicherungen/'+String(label).replace(/[^a-zA-Z0-9_-]/g,'_')+'_'+new Date().toISOString().replace(/[:.]/g,'-')+'_'+N.id()+'.json';await writeAt(this.root,path,JSON.stringify(full));const restored=json(await readAt(this.root,path));N.validate(restored);if(JSON.stringify(restored)!==JSON.stringify(full))throw Error('Die Sicherung konnte nicht geprüft werden. Es wurden keine Daten übernommen.');return path;}finally{this.protectWrites--;}}
+    snapshot(d, workspace) {
+      return {...d,workspace,...(this.protected?{notfallListen:N.backupTextLists(d)}:{})};
+    }
+    async protect(label,input,workspace) {if(this.cleaning)throw Error('Bitte warte, bis die Sicherungen bereinigt sind.');this.protectWrites=(this.protectWrites||0)+1;try{const full=this.snapshot(N.clone(N.validate(input)),N.clone(workspace||{})),path='Sicherungen/'+String(label).replace(/[^a-zA-Z0-9_-]/g,'_')+'_'+new Date().toISOString().replace(/[:.]/g,'-')+'_'+N.id()+'.json';await writeAt(this.root,path,JSON.stringify(full));const restored=json(await readAt(this.root,path));N.validate(restored);if(JSON.stringify(restored)!==JSON.stringify(full))throw Error('Die Sicherung konnte nicht geprüft werden. Es wurden keine Daten übernommen.');return path;}finally{this.protectWrites--;}}
     async saveWorkspace(value) {if(this.cleaning)throw Error('Bitte warte, bis die Sicherungen bereinigt sind.');this.workspaceWrites=(this.workspaceWrites||0)+1;try{if(this.viewBefore140){const d=await this.raw();if(d)await writeAt(this.root,'Sicherungen/Vor_Einstellungen_1-4_'+new Date().toISOString().replace(/[:.]/g,'-')+'_'+N.id()+'.json',JSON.stringify({...d,workspace:this.viewBefore140}));this.viewBefore140=null;}await writeAt(this.root,'Ansicht.json',JSON.stringify(value));}finally{this.workspaceWrites--;}}
     async loadWorkspace() {
       let text;try{text=await readAt(this.root,'Ansicht.json');}catch(e){if(missing(e))return null;throw e;}
@@ -191,7 +196,7 @@
         next.commitId = N.id();
         next.updatedAt = new Date().toISOString();
         if(initialSetup){if(current)throw Error('Es sind inzwischen Daten vorhanden. Die Einrichtung hat nichts überschrieben.');next.workspace={...N.clone(workspace||{}),setupCommitId:next.commitId};}
-        const full=(d,previous=false)=>({...d,workspace:(previous?previousWorkspace:null)||workspace||d.workspace||{}});
+        const full=(d,previous=false)=>this.snapshot(d,(previous?previousWorkspace:null)||workspace||d.workspace||{});
         const snap = d => `Sicherungen/Stand_${String(d.revision).padStart(8, '0')}_${d.commitId}.json`;
         const snapshotMeta=new Map([[snap(next).split('/').at(-1),{at:next.updatedAt,revision:next.revision}]]);
         if(current)snapshotMeta.set(snap(current).split('/').at(-1),{at:current.updatedAt,revision:current.revision});

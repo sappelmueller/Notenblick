@@ -3,12 +3,14 @@
   'use strict';
 
   const channel = g.chrome?.webview,
-    pending = new Map();
+    pending = new Map(), listeners = new Map();
   let sequence = 0;
   const session = globalThis.crypto?.randomUUID?.() || Date.now().toString(36)+Math.random().toString(36).slice(2);
   if (channel) channel.addEventListener('message', event => {
     const msg = event.data;
-    if (!msg || !pending.has(msg.id)) return;
+    if (!msg) return;
+    if(typeof msg.event==='string'){listeners.get(msg.event)?.();return;}
+    if(!pending.has(msg.id))return;
     const task = pending.get(msg.id);
     if(typeof msg.progress==='string'){task.progress?.(msg.progress);return;}
     pending.delete(msg.id);
@@ -26,7 +28,7 @@
     const id = session + '-' + (++sequence);
     return new Promise((resolve, reject) => {
       // Native save/print UI may remain open for more than two minutes.
-      const timer = op==='download'||op==='print-preview'||op==='update-prepare'?null:setTimeout(() => {
+      const timer = op==='download'||op==='print-preview'||op==='update-prepare'||op.startsWith('vault-')?null:setTimeout(() => {
         pending.delete(id);
         reject(Error('Das Speichern dauert länger als erwartet. Deine Eingaben bleiben geöffnet.'));
       }, op.startsWith('migration') ? 300000 : 120000);
@@ -115,6 +117,7 @@
   g.NRDesktop = {
     available: !!channel,
     call,
+    on: (event,listener)=>listeners.set(event,listener),
     Directory
   };
 })(globalThis);

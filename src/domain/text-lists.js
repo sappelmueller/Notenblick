@@ -79,4 +79,5 @@ N.textListPlan=function*(d){const names=N.textNames,years=names(d.years,y=>y.lab
  }
 };
 N.exportsTXT=d=>Object.fromEntries(Array.from(N.textListEntries(d),e=>[e.path,e.text]));
+N.backupTextLists=d=>Array.from(N.textListEntries(d),({path,text})=>({path:'Notenlisten/'+path,text}));
 })(globalThis.NR=globalThis.NR||{});

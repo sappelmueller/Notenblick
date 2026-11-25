@@ -2,6 +2,8 @@
 
 Notenblick wird für blinde und sehende Lehrkräfte entwickelt. Tastatur, NVDA und Braille gehören zum Bedienkonzept.
 
+**In Entwicklung für 1.28.0:** Neue Leistungen öffnen die Noteneingabe direkt mit Fokus auf ihrer Überschrift. Der Notfallzugriff verwendet native Windows-Bedienelemente und eine markierbare Textansicht. Entsperren, Fehlerkorrektur, F1-Rückkehr, Kopieren und Skalierung sind Teil der noch ausstehenden praktischen Windows-Abnahme. [Prüfumfang für 1.28.0](docs/PRUEFBERICHT-1.28.0.md)
+
 **Version 1.27.0:** Gezielter Fokus beim Übertragen von Leistungen, bei fehlerhaften Bereichsnamen und fehlenden Einzelnoten. Bestehende Registerkarten, Kurzbefehle und F1-Rückkehr bleiben erhalten. Sebastian Müller hat die unveränderte Ausgabe unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und freigegeben. [Aktueller Prüfstand](docs/PRUEFBERICHT-1.27.0.md).
 
 ## So ist die Bedienung aufgebaut
