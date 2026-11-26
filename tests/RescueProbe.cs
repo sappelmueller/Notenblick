@@ -93,6 +93,28 @@ internal static class RescueProbe {
         using (var zip = ZipFile(invalidArchive, ZipArchiveMode.Create)) { Add(zip, "notenverwaltung.json", Legacy); Add(zip, "../irgendwo.txt", "Test"); }
         using (var source = new RescueSource(invalidArchive)) Reject(() => source.Open(null, null, null), "Reject unsafe ZIP path");
 
+        var retiredId = "00112233445566778899aabbccddeeff";
+        var old = Path.Combine(work, "Alter-Datenordner");
+        var archiveData = Path.Combine(work, "Aktuelles-Datenarchiv");
+        Write(old, "notenverwaltung.json", Bytes(Legacy));
+        var oldKey = VaultCrypto.GenerateRecovery();
+        using (var vault = new VaultStore(old)) vault.Enable(Password, oldKey, oldKey);
+        var retired = Path.Combine(archiveData, "Geschuetzt-" + retiredId);
+        Directory.CreateDirectory(archiveData);
+        Directory.Move(Directory.GetDirectories(old, "Geschuetzt-*").Single(), retired);
+        Write(retired, "Frueherer-Stand.txt", Bytes("Früherer geschützter Notenstand. Zum Öffnen diesen Ordner im Notfallzugriff auswählen."));
+        Write(archiveData, "notenverwaltung.json", Bytes(Legacy));
+        using (var plain = new VaultStore(archiveData)) plain.FinishPlainCleanup();
+        Check(!Directory.Exists(retired), "Remove retired test-build generation after archiving");
+        var retained = Path.Combine(archiveData, "Sicherungen", "Notenblick-Archiv-" + retiredId + ".zip");
+        var retainedHash = Hex(File.ReadAllBytes(retained));
+        using (var source = new RescueSource(retained)) {
+            Check(source.Protected, "Retired archive remains protected");
+            Reject(() => source.Open(null, "Ungültig", null), "Old archive rejects wrong password");
+            using (var opened = source.Open(null, null, oldKey)) Check(opened.CommitId == "258", "Old archive keeps its own recovery credential");
+        }
+        Check(Hex(File.ReadAllBytes(retained)) == retainedHash, "Notfallzugriff leaves retired archive unchanged");
+
         var manifest = new JObject {
             ["state"] = "complete", ["commitId"] = "258", ["files"] = new JArray(ListPath.Substring("Notenlisten/".Length)),
             ["hashes"] = new JObject { [ListPath.Substring("Notenlisten/".Length)] = Hex(Bytes(ListText.Substring(1))) }

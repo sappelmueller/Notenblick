@@ -37,7 +37,7 @@ namespace Notenblick.Native {
   object VaultAction(string op,JObject request) {
    string password=(string)request["password"], recovery=(string)request["recovery"], verification=(string)request["verification"];
    switch(op) {
-    case "vault-status": return VaultStatus();
+    case "vault-status": vault.FinishPlainCleanup(); return VaultStatus();
     case "vault-key": return VaultCrypto.GenerateRecovery();
     case "vault-enable": return FinishVaultAction(()=>vault.Enable(password,recovery,verification));
     case "vault-unlock": return FinishVaultAction(()=>{ vault.Unlock(password,recovery); if(vault.Pending) vault.CompletePending(); });
@@ -58,7 +58,10 @@ namespace Notenblick.Native {
      string encoded=(string)request["dataBase64"];
      if(encoded==null || encoded.Length>4L*((VaultStore.MaxEnvelope+2L)/3)) throw new IOException("Die Sicherung ist zu groß oder leer.");
      byte[] plain=vault.ImportBackup(Convert.FromBase64String(encoded),password,recovery);
-     try { return VaultCrypto.Utf8.GetString(plain); }
+     try {
+      var snapshot = VaultStore.ReadPortableZipSnapshot(plain);
+      return snapshot == null ? VaultCrypto.Utf8.GetString(plain).TrimStart('\ufeff') : snapshot.ToString(Formatting.None);
+     }
      finally { VaultCrypto.Clear(plain); }
     }
     default: throw new ArgumentException("Diese Funktion wird nicht unterstützt.");
@@ -116,6 +119,7 @@ namespace Notenblick.Native {
   }
   public object Dispatch(JObject request){string op=(string)request["op"],relative=(string)request["path"]??"";string path;
    if(op!=null&&op.StartsWith("vault-",StringComparison.Ordinal)) return VaultAction(op,request);
+   if(vault.Pending&&!vault.Enabled&&op!="storage-info") throw new InvalidOperationException("Die Änderung des Passwortschutzes ist noch nicht abgeschlossen. Bitte öffne Notenblick erneut.");
    if(vault.Enabled&&op!="storage-info") return ProtectedAction(op,relative,request);
    switch(op){
     case "storage-info":return Root;
@@ -132,6 +136,11 @@ namespace Notenblick.Native {
     default:throw new ArgumentException("Diese Dateifunktion wird nicht unterstützt.");
    }
   }
-  public JObject Handle(JObject request){var response=new JObject{{"id",request["id"]},{"ok",false}};try{var result=Dispatch(request);response["result"]=result==null?JValue.CreateNull():JToken.FromObject(result);response["ok"]=true;}catch(Exception e){response["name"]=e is FileNotFoundException||e is DirectoryNotFoundException?"NotFoundError":e is UnauthorizedAccessException?"NotAllowedError":"Error";response["error"]=e is FileNotFoundException||e is DirectoryNotFoundException?"Die Datei wurde nicht gefunden.":e.Message;}return response;}
+  public JObject Handle(JObject request){var response=new JObject{{"id",request["id"]},{"ok",false}};try{var result=Dispatch(request);response["result"]=result==null?JValue.CreateNull():JToken.FromObject(result);response["ok"]=true;}catch(Exception e){
+   bool unlocking=(string)request["op"]=="vault-unlock";
+   response["name"]=unlocking&&e is VaultAccessException?"VaultAccessException":unlocking&&e is InvalidDataException?"InvalidDataException":
+    e is FileNotFoundException||e is DirectoryNotFoundException?"NotFoundError":e is UnauthorizedAccessException?"NotAllowedError":"Error";
+   response["error"]=e is FileNotFoundException||e is DirectoryNotFoundException?"Die Datei wurde nicht gefunden.":e.Message;
+  }return response;}
  }
 }

@@ -13,6 +13,8 @@ namespace Notenblick.Native {
         private readonly Font emphasisFont, headingFont;
         private readonly Panel surface = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = SystemColors.Control };
         private readonly TableLayoutPanel shell = Column();
+        private readonly TableLayoutPanel sourcePanel = Column();
+        private readonly TableLayoutPanel readingPanel = Column();
         private readonly TableLayoutPanel locationPanel = Column();
         private readonly Label locationLabel = NewLabel();
         private readonly TextBox location = new TextBox {
@@ -46,6 +48,8 @@ namespace Notenblick.Native {
         private readonly TableLayoutPanel filters = Column();
         private readonly TableLayoutPanel pointPanel = Column();
         private readonly TableLayoutPanel copyPanel = Column();
+        private readonly CheckBox moreCopies = new CheckBox { Text = "Weitere Kopien", Appearance = Appearance.Button, AutoSize = true };
+        private readonly FlowLayoutPanel extraCopies;
         private readonly Label secretLabel = NewLabel();
         private readonly Control[] filterFields;
         private RescueSource source;
@@ -96,33 +100,34 @@ namespace Notenblick.Native {
             var heading = NewLabel("Notfallzugriff für Notenblick");
             heading.Font = headingFont;
             shell.Controls.Add(heading);
-            shell.Controls.Add(NewLabel("Deine Originale bleiben erhalten."));
-            shell.Controls.Add(Buttons(chooseDirectory, chooseFile));
+            sourcePanel.Controls.Add(NewLabel("Öffne deinen Datenordner oder eine Sicherung, um deine Noten zu lesen."));
+            sourcePanel.Controls.Add(Buttons(chooseDirectory, chooseFile));
             locationPanel.Controls.Add(locationLabel);
             locationPanel.Controls.Add(location);
-            shell.Controls.Add(locationPanel);
-            shell.Controls.Add(status);
+            sourcePanel.Controls.Add(locationPanel);
+            sourcePanel.Controls.Add(status);
             var secretRow = Column();
             secretRow.Controls.Add(secretLabel);
             secretRow.Controls.Add(secret);
             credentialPanel.Controls.Add(secretRow);
             credentialPanel.Controls.Add(showSecret);
             credentialPanel.Controls.Add(Buttons(open, changeCredential, pickKey));
-            shell.Controls.Add(credentialPanel);
+            sourcePanel.Controls.Add(credentialPanel);
+            shell.Controls.Add(Area("Daten öffnen", sourcePanel));
             pointPanel.Controls.Add(WithLabel("Gespeicherter S&tand", restorePoint));
-            shell.Controls.Add(pointPanel);
-            shell.Controls.Add(listPanel);
+            readingPanel.Controls.Add(pointPanel);
+            readingPanel.Controls.Add(listPanel);
+            shell.Controls.Add(Area("Noten lesen", readingPanel));
             filterFields = new[] { WithLabel("Schul&jahr", year), WithLabel("&Klasse", schoolClass), WithLabel("&Fach", course) };
             foreach (var field in filterFields) filters.Controls.Add(field);
             listPanel.Controls.Add(filters);
             listPanel.Controls.Add(WithLabel("&Notenliste", list));
             listPanel.Controls.Add(preview);
-            var copyHeading = NewLabel("Kopie speichern");
-            copyHeading.Font = emphasisFont;
-            copyHeading.Margin = new Padding(1, 9, 1, 3);
-            copyPanel.Controls.Add(copyHeading);
-            copyPanel.Controls.Add(Buttons(saveList, saveLists, saveData, rawCopy));
-            shell.Controls.Add(copyPanel);
+            copyPanel.Controls.Add(Buttons(saveList, moreCopies));
+            extraCopies = (FlowLayoutPanel)Buttons(saveLists, saveData, rawCopy);
+            copyPanel.Controls.Add(extraCopies);
+            shell.Controls.Add(Area("Kopie speichern", copyPanel));
+            moreCopies.CheckedChanged += (s, e) => RefreshActions();
             shell.Controls.Add(Buttons(lockAccess, NewButton("S&chließen", (s, e) => Close())));
             ClientSizeChanged += (s, e) => FitContent();
 
@@ -183,10 +188,11 @@ namespace Notenblick.Native {
             int usable = Math.Max(1, surface.ClientSize.Width - shell.Padding.Horizontal - SystemInformation.VerticalScrollBarWidth);
             if (usable != contentWidth) {
                 contentWidth = usable;
-                foreach (var row in shell.Controls.OfType<FlowLayoutPanel>().Concat(credentialPanel.Controls.OfType<FlowLayoutPanel>()).Concat(copyPanel.Controls.OfType<FlowLayoutPanel>()))
-                    row.MaximumSize = new Size(usable, 0);
-                foreach (var label in shell.Controls.OfType<Label>().Concat(locationPanel.Controls.OfType<Label>()))
-                    label.MaximumSize = new Size(usable, 0);
+                int groupWidth = Math.Max(1, usable - LogicalToDeviceUnits(18));
+                foreach (var row in shell.Controls.OfType<FlowLayoutPanel>().Concat(sourcePanel.Controls.OfType<FlowLayoutPanel>()).Concat(credentialPanel.Controls.OfType<FlowLayoutPanel>()).Concat(copyPanel.Controls.OfType<FlowLayoutPanel>()))
+                    row.MaximumSize = new Size(groupWidth, 0);
+                foreach (var label in shell.Controls.OfType<Label>().Concat(sourcePanel.Controls.OfType<Label>()).Concat(locationPanel.Controls.OfType<Label>()))
+                    label.MaximumSize = new Size(groupWidth, 0);
 
                 int columns = usable >= LogicalToDeviceUnits(550) ? filterFields.Length : 1;
                 filters.SuspendLayout();
@@ -205,6 +211,13 @@ namespace Notenblick.Native {
             }
         }
 
+        private static GroupBox Area(string label, TableLayoutPanel content) {
+            var group = new GroupBox { Text = label, Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Margin = new Padding(0, 4, 0, 6), Padding = new Padding(8, 4, 8, 6), TabStop = false };
+            group.Controls.Add(content);
+            return group;
+        }
+
         private string HelpText() {
             if (busy) return "Warte, bis der laufende Vorgang abgeschlossen ist.";
             if (source == null) return "Wähle den Notenblick-Datenordner oder eine gespeicherte Sicherung.";
@@ -212,7 +225,7 @@ namespace Notenblick.Native {
                 ? "Gib den Notfallschlüssel ein oder wähle die gespeicherte Schlüsseldatei. Eine geschützte Kopie kannst du auch vor dem Öffnen erstellen."
                 : "Gib dein Passwort ein oder wähle „Mit Notfallschlüssel öffnen“. Eine geschützte Kopie kannst du auch vor dem Öffnen erstellen.";
             if (snapshot == null) return pointPanel.Visible ? "Wähle einen früheren Stand oder öffne eine andere Sicherung." : "Wähle einen anderen Datenordner oder eine Sicherung.";
-            if (!listPanel.Visible) return "Zu diesem Stand gibt es keine Notenlisten. Mit „Datenkopie erstellen“ kannst du die Noten sichern.";
+            if (!listPanel.Visible) return "Zu diesem Stand gibt es keine Notenlisten. Unter „Weitere Kopien“ kannst du eine Datenkopie erstellen.";
             if (copyPanel.ContainsFocus) return "Speichere die ausgewählte Notenliste, alle Listen dieses Stands oder eine Datenkopie in einem Ordner deiner Wahl. Deine Originale bleiben erhalten.";
             return "Wähle eine Notenliste. Mit Tab erreichst du den Inhalt der Liste und anschließend die Schaltflächen zum Speichern.";
         }
@@ -292,16 +305,22 @@ namespace Notenblick.Native {
             credentialPanel.Visible = NeedsCredential;
             restorePoint.Enabled = !busy;
             pointPanel.Visible = restorePoint.Items.Count > 1;
-            listPanel.Visible = snapshot != null && snapshot.Lists.Any();
+            bool hasLists = snapshot != null && snapshot.Lists.Any();
+            listPanel.Visible = hasLists;
+            readingPanel.Parent.Visible = restorePoint.Items.Count > 1 || hasLists;
             bool protectedSource = source != null && source.Protected;
             rawCopy.Visible = protectedSource;
             rawCopy.Enabled = !busy;
             saveData.Visible = snapshot != null;
             saveData.Enabled = !busy;
-            saveList.Visible = saveLists.Visible = listPanel.Visible;
+            saveList.Visible = saveLists.Visible = hasLists;
             saveList.Enabled = !busy && Value(list) != null;
             saveLists.Enabled = !busy;
-            copyPanel.Visible = protectedSource || snapshot != null;
+            bool hasCopies = protectedSource || snapshot != null;
+            moreCopies.Visible = hasCopies;
+            if (!hasCopies) moreCopies.Checked = false;
+            extraCopies.Visible = moreCopies.Checked;
+            copyPanel.Parent.Visible = hasCopies;
             lockAccess.Visible = protectedSource && source.IsUnlocked;
             lockAccess.Enabled = !busy;
             FitContent();

@@ -30,6 +30,16 @@ Vollständiges Windows-ZIP `Notenblick_1.28.0_Windows.zip` mit 10.412.141 Bytes 
 - Ersteinrichtung, Passwortassistent und neue Leistung bei unterschiedlichen Fenstergrößen visuell und per Tastatur prüfen. Bei der Leistungseingabe beginnt die Tabfolge unter der Überschrift mit „Fertig“ und „Schließen“. Bei Datumsfehlern führt der Fokus zum passenden Feld.
 - Notfallzugriff bei geschlossenem und geöffnetem Notenblick prüfen. Einen früheren Stand auswählen, die Vorschau lesen, Kopien erstellen und die unveränderte Quelle kontrollieren. Den eigenständigen Start auf Windows prüfen.
 
+## Testbuild 3
+
+Der Sperrschalter steht bei aktivem Schutz auf der Startseite. Die Passwortfenster unterscheiden Öffnen und Entsperren. Der Notfallzugriff gliedert Öffnen, Lesen und Speichern. Beim Ausschalten prüft Notenblick den wieder lesbaren Datenstand und bewahrt frühere Sicherungen mit ihrem Schutz im Ordner `Sicherungen` auf. Anschließend entfernt es seine verschlüsselten Arbeitsordner und Schutzdateien. Unterbrochene Umstellungen lassen sich fortsetzen.
+
+- **Bestanden.** 16 gezielte Speicherszenarien und 54 Datei-, Sicherungs- und Schutzprüfungen des Notfallzugriffs. Geprüft wurden auch zwei Schutzwechsel, Abbrüche an den Übergängen, eine kollidierende Datei und ein archivierter Stand aus einem früheren Testbuild mit seinem ursprünglichen Notfallschlüssel.
+- **Bestanden.** Vollständigkeit und Entpacken der portablen ZIP sowie Windows-x64-Proben `--verify-update` und `--verify-readers` aus der entpackten Ausgabe. Das Paket enthält die Loader für x64 und ARM64.
+- **Offen.** Der reguläre Integrationslauf stoppte in der Vorprüfung an fehlendem Playwright. Das festgelegte SDK 8.0.426 konnte nicht geladen werden. Die Testausgabe wurde mit dem lokal verfügbaren Roslyn und den festgelegten, geprüften Bibliotheken gebaut. Laufende Oberflächenprüfung, Skalierung, UIA, NVDA, Braille, natives ARM64 und der Vergleich mit dem alten Speicherhost aus 1.27 bleiben für diesen Build offen.
+
+Die vollständige Testausgabe `Notenblick_1.28.0_Windows_Testbuild_3.zip` hat 10.437.738 Bytes und SHA-256 `120d474243072b551c5954bd3ffaa6be667a5a5f0c76523b9dc298d6ffd8ed3d`. Der Aktualisierungsdeskriptor bleibt bei `approved: false`.
+
 ## Praktische Abnahme auf Windows
 
 Teste auf **Windows x64 und ARM64** mit NVDA und Braille. Entpacke das vollständige Paket in einen neuen Ordner. Verwende in sämtlichen Schritten einen Übungsbestand mit erfundenen Namen.

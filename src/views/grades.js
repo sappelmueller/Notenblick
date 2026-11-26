@@ -83,7 +83,7 @@
       const discard=A.b('discard-assessment-draft','Entwurf verwerfen',saved||!activeDraft.touched?'hidden':'','text-button');
       workspace=`<div class="entry-heading">${header}<div class="button-row">${primary+close}</div>${courseMeta}${A.performanceDraftHead(activeDraft)}
         <div class="performance-draft-state" hidden><p class="hint" id="newAssessmentStatus"></p>${discard+exportAction}</div></div>
-        <div class="performance-draft-tools"><div class="performance-draft-input">${pointControls}</div>${A.performanceDraftParticipation(activeDraft,selected)}${A.performanceDraftOptions(activeDraft)}</div>${input}`;
+        <div class="performance-draft-tools">${A.performanceDraftParticipation(activeDraft,selected)}<div class="performance-draft-input">${pointControls}</div>${A.performanceDraftOptions(activeDraft)}</div>${input}`;
     }else{
       workspace=`<div class="entry-heading">${header}<div class="button-row">${primary+exportAction+close}</div>${courseMeta+progress}${flags?'<p class="hint">'+flags+'</p>':''}</div>${pointControls}${editing?input:A.assessmentResultsMarkup(selected)}`;
     }

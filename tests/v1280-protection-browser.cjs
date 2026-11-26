@@ -43,7 +43,7 @@ function desktopMock({fixture,pass,key,initialLocked}) {
     }
     if (op==='vault-lock') {locked=true;return true;}
     if (op==='vault-unlock') {
-      if(request.password!==pass&&request.recovery!==key)fail('Passwort oder Notfallschlüssel stimmen nicht.');
+      if(request.password!==pass&&request.recovery!==key)fail('Passwort oder Notfallschlüssel stimmen nicht.','VaultAccessException');
       locked=false;return true;
     }
     if (op==='vault-request-close') {if(request.preserve)fail('Entsperre deine Noten zuerst.');closed=true;return true;}
@@ -112,6 +112,7 @@ function desktopMock({fixture,pass,key,initialLocked}) {
     const activate=async page=> page.locator('#tab-settings').click();
     const {context,page}=await open(false);
     await page.waitForSelector('html[data-ready=true]');
+    assert.equal(await page.locator('#vaultLock').count(),0);
     await activate(page);
     await scan(page,'ausgeschaltet','#passwordProtection');
     await page.locator('#vaultEnable').click();
@@ -153,12 +154,14 @@ function desktopMock({fixture,pass,key,initialLocked}) {
       await scan(page,'notfallschluessel-'+width,'#dialog');
     }
     await page.locator('#dialogSave').click();
-    await page.waitForFunction(()=>document.querySelector('#dialogSave').textContent==='Daten verschlüsseln');
+    await page.waitForFunction(()=>document.querySelector('#dialogSave').textContent==='Passwortschutz einschalten');
     await scan(page,'daten-verschluesseln-320','#dialog');
     await page.locator('#dialogSave').click();
-    await page.waitForSelector('#vaultLock');
-    assert.match(await page.locator('#passwordProtectionState').textContent(),/eingeschaltet/);
+    await page.waitForSelector('#dialog',{state:'hidden'});
+    assert.match(await page.locator('#passwordProtectionState').textContent(),/eingeschaltet/i);
     await scan(page,'eingeschaltet','#passwordProtection');
+    assert.equal(await page.locator('#passwordProtection #vaultLock').count(),0);
+    await page.locator('#tab-home').click();
     await page.locator('#vaultLock').click();
     await page.waitForFunction(()=>Notenblick.vault.locked&&!Notenblick.vaultLocking);
     await scan(page,'sperre-320','#vaultGate');
@@ -166,12 +169,18 @@ function desktopMock({fixture,pass,key,initialLocked}) {
     const ax=await cdp.send('Accessibility.getFullAXTree');
     assert.equal(ax.nodes.some(node=>!node.ignored&&node.name?.value==='Hauptnavigation'),false);
     await page.keyboard.press('Alt+n');
-    assert.equal(await page.evaluate(()=>Notenblick.ui.main),'settings');
+    assert.equal(await page.evaluate(()=>Notenblick.ui.main),'home');
+    assert.equal(await page.locator('#vaultGateOpen').textContent(),'Entsperren');
+    await page.locator('#vaultGateShow').check();
     await page.locator('#vaultGatePassword').fill('falsches Testpasswort');
     await page.locator('#vaultGateOpen').click();
     await page.waitForSelector('#vaultGateError');
+    assert.match(await page.locator('#vaultGateError').textContent(),/Das Passwort stimmt nicht/);
     assert.equal(await page.locator('#vaultGatePassword').inputValue(),'');
+    assert.equal(await page.locator('#vaultGatePassword').getAttribute('type'),'password');
+    assert.equal(await page.locator('#vaultGatePassword').getAttribute('aria-errormessage'),'vaultGateError');
     await page.locator('#vaultGatePassword').fill(pass);
+    assert.equal(await page.locator('#vaultGateError').isVisible(),false);
     await page.keyboard.press('F1');
     await page.waitForSelector('#vaultGateHelp');
     await page.keyboard.press('Escape');
@@ -193,14 +202,20 @@ function desktopMock({fixture,pass,key,initialLocked}) {
     assert.equal(payload.contents.data.id,fixture.id);
     assert.ok(payload.contents.lists.every(file=>file.path.startsWith('Notenlisten/')&&file.text.includes('\r\n')));
     assert.ok(payload.contents.lists.length);
+    await activate(page);
     await page.locator('#vaultDisable').click();
-    await page.locator('#vaultCurrent').fill(pass);
+    assert.equal(await page.locator('#vaultCurrentKey').isVisible(),false);
+    await page.locator('#vaultAuthChoice').click();
+    assert.equal(await page.locator('#vaultCurrent').isVisible(),false);
+    await page.locator('#vaultCurrentKey').fill(key);
     await page.locator('#dialogSave').click();
     await page.waitForSelector('#vaultEnable');
-    assert.match(await page.locator('#passwordProtectionState').textContent(),/ausgeschaltet/);
+    assert.match(await page.locator('#passwordProtectionState').textContent(),/ausgeschaltet/i);
+    assert.equal(await page.locator('#vaultLock').count(),0);
     await context.close();
     const locked=await open(true);
     await locked.page.waitForSelector('#vaultGate');
+    assert.equal(await locked.page.locator('#vaultGateOpen').textContent(),'Öffnen');
     assert.equal(await locked.page.evaluate(()=>vaultCheck.calls.includes('read')),false);
     await locked.page.locator('#vaultGateChoice').click();
     await locked.page.locator('#vaultGateRead').click();

@@ -692,9 +692,9 @@ Startet Notenblick nicht, öffne **Notenblick-Notfallzugriff.exe** im Notenblick
 2. Öffne geschützte Daten mit Passwort oder Notfallschlüssel.
 3. Wähle Schuljahr, Klasse und Fach. Lies die Notenlisten oder kopiere den gewünschten Text.
 
-Unter **„Kopie speichern“** wählst du **„Diese Notenliste speichern“** oder **„Alle Notenlisten speichern“**. Mit **„Datenkopie erstellen“** sicherst du den geöffneten Stand für eine spätere Wiederherstellung. Diese Ausgaben sind ohne Passwort lesbar. Wähle einen geschützten Zielordner.
+Unter **„Kopie speichern“** erreichst du direkt **„Diese Notenliste speichern“**. Unter **„Weitere Kopien“** findest du **„Alle Notenlisten speichern“** und **„Datenkopie erstellen“**. Diese Ausgaben sind ohne Passwort lesbar. Wähle einen geschützten Zielordner.
 
-Mit **„Geschützte Kopie erstellen“** kopierst du den ausgewählten Datenordner oder die ausgewählte Sicherung verschlüsselt. Diese Aktion ist bereits vor dem Entsperren verfügbar. Der ursprüngliche Bestand bleibt erhalten.
+Unter **„Weitere Kopien“** kannst du mit **„Geschützte Kopie erstellen“** auch eine verschlüsselte Kopie des gewählten Datenordners oder der Sicherung speichern. Diese Aktion ist bereits vor dem Entsperren verfügbar. Der ursprüngliche Bestand bleibt erhalten.
 
 Ältere Sicherungen enthalten manchmal keine fertigen Notenlisten. Einen lesbaren Datenstand kannst du trotzdem kopieren. Mit **F1** öffnest du die Hilfe im Notfallzugriff.
 
@@ -704,7 +704,7 @@ Der Passwortschutz ist freiwillig. Wähle **Einstellungen → Allgemein → Pass
 
 1. Verwende mindestens acht Zeichen, darunter einen Großbuchstaben, einen Kleinbuchstaben, eine Ziffer und ein Sonderzeichen.
 2. Wähle **„Schlüsseldatei speichern“** und lege sie getrennt vom Datenordner ab. Mit **„Schlüsseldatei prüfen“** öffnest du sie zur Kontrolle erneut.
-3. Wähle **„Daten verschlüsseln“**. Notenblick schützt deine Noten, vorhandene Notenblick-Sicherungen und automatische Notenlisten. Es prüft, ob sich der geschützte Bestand öffnen lässt.
+3. Wähle **„Passwortschutz einschalten“**. Notenblick schützt deine Noten, vorhandene Notenblick-Sicherungen und automatische Notenlisten. Es prüft, ob sich der geschützte Bestand öffnen lässt.
 
 Du kannst den Notfallschlüssel zusätzlich kopieren oder drucken. Verwahre jede Kopie getrennt von deinen Noten. Früher außerhalb des Notenblick-Ordners gespeicherte Dateien behalten ihren bisherigen Schutz.
 
@@ -712,11 +712,11 @@ Du kannst den Notfallschlüssel zusätzlich kopieren oder drucken. Verwahre jede
 
 Gib beim Öffnen das **Passwort** ein oder wähle **„Mit Notfallschlüssel öffnen“**. Bewahre den Notfallschlüssel getrennt auf. Wer den Schlüssel hat, kann den zugehörigen Bestand auch ohne Passwort öffnen.
 
-Wähle bei einer Pause **„Notenblick sperren“**. Notenblick sperrt sich auch beim Sperren deiner Windows-Sitzung. Nach dem Öffnen kannst du an deiner bisherigen Stelle weiterarbeiten.
+Wähle auf der **Startseite** **„Notenblick sperren“**, wenn du eine Pause machst. Notenblick sperrt sich auch beim Sperren deiner Windows-Sitzung. Nach dem Öffnen kannst du an deiner bisherigen Stelle weiterarbeiten.
 
 Unter **Einstellungen → Allgemein → Passwortschutz** kannst du das Passwort ändern, den Notfallschlüssel prüfen oder ersetzen und den Schutz ausschalten. Wenn jemand deinen Notfallschlüssel kennt, wähle **„Notfallschlüssel ersetzen“**. Dabei verschlüsselt Notenblick den aktuellen Bestand erneut. Ältere Sicherungen behalten ihre bisherigen Zugangsdaten.
 
-Mit **„Passwortschutz ausschalten“** und deinem Passwort oder Notfallschlüssel machst du deine aktuellen Noten und Notenlisten wieder ohne Passwort lesbar. Frühere geschützte Sicherungen kannst du mit ihren bisherigen Zugangsdaten im Notfallzugriff öffnen.
+Mit **„Passwortschutz ausschalten“** und deinem Passwort oder Notfallschlüssel machst du deine aktuellen Noten und Notenlisten wieder ohne Passwort lesbar. Frühere Sicherungen findest du unter **Daten → Sicherungen**. Geschützte Sicherungen öffnest du mit dem jeweils passenden Passwort oder Notfallschlüssel. Archive aus früheren Testversionen öffnest du direkt im Notfallzugriff.
 
 Wenn dir Passwort und Notfallschlüssel fehlen, lassen sich geschützte Daten nicht öffnen.
 

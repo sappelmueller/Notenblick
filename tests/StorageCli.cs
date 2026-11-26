@@ -21,7 +21,7 @@ public static class StorageCli{
    return new JObject{{"id",request["id"]},{"ok",true},{"result",Convert.ToBase64String(header)}};
   } finally { VaultCrypto.Clear(secret); }
  }
- public static void Main(string[] args){using var store=new Storage(args[0],args.Length>1?(Action<string>)(stage=>{if(stage==args[1])Environment.Exit(77);}):null);string line;while((line=Console.ReadLine())!=null){JObject request=null;try{
+ public static void Main(string[] args){Console.InputEncoding=Console.OutputEncoding=new System.Text.UTF8Encoding(false);using var store=new Storage(args[0],args.Length>1?(Action<string>)(stage=>{if(stage==args[1])Environment.Exit(77);}):null);string line;while((line=Console.ReadLine())!=null){JObject request=null;try{
   request=JObject.Parse(line);
   switch((string)request["op"]){
    case "test-vault-vectors": Emit(VaultVectors(request)); break;

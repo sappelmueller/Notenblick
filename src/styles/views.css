@@ -685,6 +685,14 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 /* Compact, accessible password controls and an opaque lock screen. */
 .vault-settings{max-width:780px;padding:20px;margin-block:24px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
 .vault-settings h3{margin-block:0 10px}
+.vault-settings-group{margin-block-start:var(--space-4);padding-block-start:var(--space-3);border-top:1px solid var(--line)}
+.vault-settings-group h4{margin:0 0 var(--space-2)}
+.vault-auth{margin-block:var(--space-3) var(--space-4)}
+.vault-auth .check{margin-block:var(--space-2)}
+.vault-auth #vaultAuthChoice{margin-block-start:var(--space-2)}
+#home .page-heading{flex-wrap:wrap;gap:var(--space-3);align-items:center}
+#home .page-heading #homeVaultAction{flex:0 0 auto;max-width:100%}
+@media(max-width:520px){#home .page-heading #homeVaultAction{flex-basis:100%}}
 .vault-settings .button-row,.vault-key-actions,.vault-gate-actions{flex-wrap:wrap}
 .vault-settings button,.vault-key-actions button,.vault-gate-actions button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
 .vault-remaining{margin-block-start:16px;overflow-wrap:anywhere}
@@ -706,8 +714,15 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 #vaultGate::backdrop{background:#f5f7f4;opacity:1}
 #vaultGate form{padding:clamp(14px,4vw,28px);display:grid;gap:14px}
 #vaultGate h2,#vaultGate p{margin:0}
+#vaultGateHint{max-width:36ch}
+#vaultGate .field{margin:0}
+#vaultGateError:not([hidden]){border-inline-start:3px solid currentColor;padding-inline-start:var(--space-2)}
 #vaultGate .check{margin-block:8px 0}
 #vaultGate .text-button{justify-self:start}
+@media(max-width:480px){
+ #vaultGate .vault-gate-actions{flex-direction:column;align-items:stretch}
+ #vaultGate .vault-gate-actions button{text-align:center}
+}
 html[data-vault-locked] body>:not(#vaultGate){visibility:hidden}
 @media(forced-colors:active){#vaultGate::backdrop{background:Canvas} .vault-settings{border-color:CanvasText}}
 

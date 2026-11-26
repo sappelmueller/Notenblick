@@ -157,8 +157,11 @@ test('Passwort ändern, Notfallschlüssel ersetzen und Bestand entschlüsseln', 
   assert.equal(status.enabled, false);
   assert.equal(await fs.readFile(path.join(data, primary), 'utf8'), sample);
   assert.equal(await fs.readFile(path.join(data, privatePath), 'utf8'), '\ufeff' + listText);
-  assert.ok((await fs.readdir(data)).some(name => /^Geschuetzt-/.test(name)));
+  assert.deepEqual((await fs.readdir(data)).sort(), ['Ansicht.json', 'Notenlisten', 'Sicherungen', primary].sort());
   assert.ok(!await exists(path.join(data, prior)));
+  const former = await a.ok('vault-stored-backup', { path: prior + '.nbx', includeEncrypted: true });
+  assert.equal(former.kind, 'encrypted');
+  assert.equal(await a.ok('vault-open-backup', { dataBase64: former.dataBase64, recovery: newRecovery }), sample);
 });
 
 test('Uneindeutige Sicherungsdatei belassen, manipulierten Schutzverweis erkennen', async t => {
@@ -272,7 +275,6 @@ test('Echte Sicherungen bei fehlenden oder älteren Angaben verschlüsseln und n
   }
   assert.equal(JSON.parse(await a.ok('vault-open-backup', { dataBase64: originalEncrypted, recovery: historicalKey })).data.commitId, current.commitId);
   await a.fails('vault-open-backup', { dataBase64: originalEncrypted, recovery });
-  const generation = (await fs.readdir(data)).find(name => /^Geschuetzt-/.test(name));
   await a.ok('vault-lock');
   await a.ok('vault-unlock', { password });
   store.protected = true;
@@ -295,20 +297,20 @@ test('Echte Sicherungen bei fehlenden oder älteren Angaben verschlüsseln und n
   const saved = (await plainStore.save(changed, {workspace})).data;
   assert.equal(saved.students[0].alias, changed.students[0].alias);
 
-  const detached = path.join(base, 'Historisches-Archiv');
-  await fs.mkdir(detached);
-  await fs.cp(disk(generation), path.join(detached, 'Daten'), { recursive: true });
-  const archived = host(detached);
-  t.after(() => archived.close());
-  await archived.fails('vault-unlock', { recovery: historicalKey });
-  await archived.ok('vault-unlock', { recovery });
-  assert.equal(JSON.parse((await archived.ok('vault-stored-backup', { path: manual })).text).commitId, JSON.parse(expected.get(manual)).commitId);
-  const oldCopy = await archived.ok('vault-stored-backup', { path: protectedBackup, includeEncrypted: true });
+  assert.deepEqual((await fs.readdir(data)).sort(), ['Ansicht.json', 'Notenlisten', 'Sicherungen', primary].sort());
+  const manualCopy = await restart.ok('vault-stored-backup', { path: manual + '.nbx', includeEncrypted: true });
+  assert.equal(JSON.parse(await restart.ok('vault-open-backup', { dataBase64: manualCopy.dataBase64, recovery })).commitId, JSON.parse(expected.get(manual)).commitId);
+  const migrationCopy = await restart.ok('vault-stored-backup', { path: 'Sicherungen/' + migration + '.nbx', includeEncrypted: true });
+  assert.equal(JSON.parse(await restart.ok('vault-open-backup', { dataBase64: migrationCopy.dataBase64, recovery })).commitId, JSON.parse(expected.get(manual)).commitId);
+  const oldCopy = await restart.ok('vault-stored-backup', { path: protectedBackup, includeEncrypted: true });
   assert.equal(oldCopy.dataBase64, originalEncrypted);
-  assert.equal(JSON.parse(await archived.ok('vault-open-backup', { dataBase64: oldCopy.dataBase64, password: nextPassword })).data.commitId, JSON.parse(expected.get(manual)).commitId);
+  assert.equal(JSON.parse(await restart.ok('vault-open-backup', { dataBase64: oldCopy.dataBase64, password: nextPassword })).data.commitId, JSON.parse(expected.get(manual)).commitId);
   const newKey = await restart.ok('vault-key');
   await restart.ok('vault-enable', { password: finalPassword, recovery: newKey, verification: newKey });
   assert.equal(JSON.parse(await read(restart)).students[0].alias, changed.students[0].alias);
+  await restart.ok('vault-disable', { recovery: newKey });
+  assert.deepEqual((await fs.readdir(data)).sort(), ['Ansicht.json', 'Notenlisten', 'Sicherungen', primary].sort());
+  assert.equal((await restart.ok('vault-stored-backup', { path: manual + '.nbx', includeEncrypted: true })).dataBase64, manualCopy.dataBase64);
 });
 
 // Reference outputs were also calculated with the independent OpenSSL
@@ -344,7 +346,7 @@ for (const boundary of ['enable-staged', 'enable-published', 'enable-delete']) {
   });
 }
 
-for (const boundary of ['rotate-published', 'disable-journal', 'disable-write', 'disable-retired']) {
+for (const boundary of ['rotate-published', 'disable-journal', 'disable-write', 'disable-backup', 'disable-retired', 'disable-cleaned']) {
   test(`Schlüsselwechsel oder Abschalten nach Prozessabbruch fortsetzen (${boundary})`, async t => {
     const { base, data, instance: a } = await fixture(t, boundary);
     const recovery = await a.ok('vault-key');
@@ -356,12 +358,14 @@ for (const boundary of ['rotate-published', 'disable-journal', 'disable-write', 
     await assert.rejects(mutate, /Native host stopped \(77\)/);
     const reopened = host(base);
     t.after(() => reopened.close());
-    assert.equal((await reopened.ok('vault-status')).pending, true);
+    const switched = boundary === 'disable-retired' || boundary === 'disable-cleaned';
+    const before = await reopened.ok('vault-status');
+    assert.equal(before.pending, !switched);
     if (rotate) await reopened.fails('vault-unlock', { recovery });
-    const after = await reopened.ok('vault-unlock', { recovery: rotate ? newRecovery : recovery });
+    const after = switched ? before : await reopened.ok('vault-unlock', { recovery: rotate ? newRecovery : recovery });
     assert.equal(after.pending, false);
     assert.equal(after.enabled, rotate);
-    assert.equal(await exists(path.join(data, previous)), !rotate);
+    assert.equal(await exists(path.join(data, previous)), false);
     assert.equal(await read(reopened), sample);
     assert.equal(await read(reopened, privatePath), listText);
   });
@@ -409,6 +413,24 @@ test('Unveränderte Speicherung aus 1.27 kann geschützten Bestand nicht ersetze
   t.after(() => reopened.close());
   await reopened.ok('vault-unlock', { recovery });
   assert.equal(await read(reopened), sample);
+});
+
+test('Namenskonflikt beim Ausschalten bewahrt beide Stände und lässt sich fortsetzen', async t => {
+  const { base, data, instance } = await fixture(t, 'disable-journal');
+  const recovery = await instance.ok('vault-key');
+  await instance.ok('vault-enable', { password, recovery, verification: recovery });
+  await assert.rejects(instance.ok('vault-disable', { recovery }), /Native host stopped \(77\)/);
+  const foreign = path.join(data, primary, 'Eigene Datei.txt');
+  await fs.writeFile(foreign, 'Unveränderter synthetischer Inhalt');
+  const restart = host(base);
+  t.after(() => restart.close());
+  assert.equal((await restart.ok('vault-status')).pending, true);
+  assert.match(await restart.fails('vault-unlock', { recovery }), /notenverwaltung\.json/);
+  assert.equal(await fs.readFile(foreign,'utf8'), 'Unveränderter synthetischer Inhalt');
+  await fs.rename(foreign, path.join(base, 'Eigene Datei.txt'));
+  assert.equal((await restart.ok('vault-unlock', { recovery })).enabled, false);
+  assert.equal(await read(restart), sample);
+  assert.deepEqual((await fs.readdir(data)).sort(), ['Ansicht.json', 'Notenlisten', 'Sicherungen', primary].sort());
 });
 
 test('Acht Unicode-Zeichen für neue Passwörter und weiter nutzbarer alter Zugang', async t => {

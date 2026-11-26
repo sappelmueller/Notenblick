@@ -127,7 +127,7 @@ namespace Notenblick.Native {
             if (IsFolder) { vault = new VaultStore(SelectedPath); Protected = vault.Enabled; }
             else {
                 if (!File.Exists(SelectedPath)) throw new FileNotFoundException("Die gewählte Sicherung wurde nicht gefunden.");
-                Protected = VaultCrypto.HasMagic(SelectedPath);
+                Protected = VaultCrypto.HasMagic(SelectedPath) || VaultStore.IsHistoryArchiveName(SelectedPath);
             }
         }
 
@@ -209,6 +209,7 @@ namespace Notenblick.Native {
 
         internal bool EarlierNeedsCredential(string file) {
             if (file == null || !EarlierFile(file)) return false;
+            if (VaultStore.IsHistoryArchiveName(file)) return true;
             using (WaitForClosed()) {
                 if (!Protected) {
                     var physical = RescuePaths.Under(SelectedPath, file);
@@ -223,6 +224,11 @@ namespace Notenblick.Native {
 
         internal RescueSnapshot Open(string file, string password, string recovery) {
             if (!IsFolder) {
+                if (VaultStore.IsHistoryArchiveName(SelectedPath)) {
+                    var archived = OpenHistoryArchive(SelectedPath, password, recovery);
+                    standaloneUnlocked = true;
+                    return archived;
+                }
                 if (!Protected && String.Equals(Path.GetExtension(SelectedPath), ".zip", StringComparison.OrdinalIgnoreCase)) {
                     RescuePaths.NoLinks(SelectedPath);
                     using (var input = new FileStream(SelectedPath, FileMode.Open, FileAccess.Read, FileShare.Read)) return OpenLegacyZip(input);
@@ -230,7 +236,7 @@ namespace Notenblick.Native {
                 byte[] bytes = ReadFile(SelectedPath, VaultStore.MaxEnvelope);
                 if (VaultCrypto.IsProtected(bytes)) {
                     byte[] clear = VaultStore.OpenBackup(bytes, password, recovery);
-                    try { var result = Parse(clear); standaloneUnlocked = true; return result; } finally { Array.Clear(clear, 0, clear.Length); }
+                    try { var result = ParsePortableBackup(clear); standaloneUnlocked = true; return result; } finally { Array.Clear(clear, 0, clear.Length); }
                 }
                 try { return Parse(bytes); } finally { Array.Clear(bytes, 0, bytes.Length); }
             }
@@ -242,9 +248,11 @@ namespace Notenblick.Native {
                 byte[] first = Read(path);
                 RescueSnapshot snapshot = null;
                 try {
-                    if (file != null && VaultCrypto.IsProtected(first)) {
+                    if (file != null && VaultStore.IsHistoryArchiveName(file)) {
+                        snapshot = ReadHistoryArchive(first, password, recovery);
+                    } else if (file != null && VaultCrypto.IsProtected(first)) {
                         byte[] clear = VaultStore.OpenBackup(first, password, recovery);
-                        try { snapshot = Parse(clear); } finally { Array.Clear(clear, 0, clear.Length); }
+                        try { snapshot = ParsePortableBackup(clear); } finally { Array.Clear(clear, 0, clear.Length); }
                     } else if (file != null && file.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)) {
                         using (var input = new MemoryStream(first, false)) snapshot = OpenLegacyZip(input);
                     } else snapshot = Parse(first);
@@ -269,6 +277,32 @@ namespace Notenblick.Native {
                     return snapshot;
                 } catch { if (snapshot != null) snapshot.Dispose(); throw; }
                 finally { Array.Clear(first, 0, first.Length); }
+            }
+        }
+        private static RescueSnapshot ParsePortableBackup(byte[] bytes) {
+            if (!VaultStore.IsZip(bytes)) return Parse(bytes);
+            using (var stream = new MemoryStream(bytes, false)) return OpenLegacyZip(stream);
+        }
+
+        private static RescueSnapshot ReadHistoryArchive(byte[] bytes, string password, string recovery) {
+            string temporary = Path.Combine(Path.GetTempPath(), "Notenblick-Archiv-" + Guid.NewGuid().ToString("N") + ".zip");
+            try {
+                VaultStore.CheckPath(temporary);
+                using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+                    stream.Write(bytes, 0, bytes.Length);
+                return OpenHistoryArchive(temporary, password, recovery);
+            } finally { File.Delete(temporary); }
+        }
+
+        private static RescueSnapshot OpenHistoryArchive(string archive, string password, string recovery) {
+            string temporary = Path.Combine(Path.GetTempPath(), "Notenblick-Archiv-" + Guid.NewGuid().ToString("N"));
+            VaultStore.CheckPath(temporary);
+            try {
+                VaultStore.ExtractHistoryArchive(archive, temporary);
+                using (var opened = new RescueSource(temporary)) return opened.Open(null, password, recovery);
+            } finally {
+                VaultStore.CheckPath(temporary);
+                if (Directory.Exists(temporary)) Directory.Delete(temporary, true);
             }
         }
 
@@ -424,6 +458,10 @@ namespace Notenblick.Native {
         internal void SaveProtected(string target) {
             if (!Protected) throw new InvalidOperationException("Diese Daten sind nicht verschlüsselt.");
             if (!IsFolder) {
+                if (VaultStore.IsHistoryArchiveName(SelectedPath)) {
+                    SaveDirectory(target, stage => CopyFile(SelectedPath, RescuePaths.Under(stage, Path.GetFileName(SelectedPath)), "PK"));
+                    return;
+                }
                 byte[] bytes = ReadFile(SelectedPath, VaultStore.MaxEnvelope);
                 if (!VaultCrypto.IsProtected(bytes)) throw new InvalidDataException("Diese Sicherung ist nicht mehr verschlüsselt. Wähle sie erneut aus.");
                 SaveDirectory(target, stage => WriteVerified(RescuePaths.Under(stage, Path.GetFileName(SelectedPath)), bytes));
