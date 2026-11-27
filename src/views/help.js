@@ -77,7 +77,7 @@ A.helpContext=function(el=document.activeElement){
  if(within('#passwordProtection,#vaultGate,#vaultLock'))return 'sicherung-passwortschutz-verwenden';
  if(['resume-assessment-draft','discard-assessment-draft'].includes(action)||within('#newAssessmentStatus'))return 'noten-entwurf-fortsetzen';
  if(within('#newAssessmentFields [data-date-part]'))return 'noten-ein-datum-eingeben';
- if(within('#newAssessmentFields')||(['assessment-done','assessment-list'].includes(action)||within('#assessmentWorkTitle'))&&A.currentPerformanceDraft?.())return 12;
+ if(within('#newAssessmentFields')||(['assessment-done','assessment-list','assessment-finish-close'].includes(action)||within('#assessmentWorkTitle'))&&A.currentPerformanceDraft?.())return 12;
  if(within('#draft-participation'))return 13;
  if(within('#newAssessmentMore'))return 14;
  if(action?.startsWith('update-')||within('#updateAuto,#updateHide'))return 43;
@@ -85,8 +85,8 @@ A.helpContext=function(el=document.activeElement){
  if(menu==='finals'||['final-dialog','finals-class'].includes(action))return 30;
  if(['weights','settings-course-weights'].includes(action)||within('.weight-action'))return 27;
  if(['output','assessment-export','oral-record-export','selected-export'].includes(action))return 31;
- if(['assessment-edit','assessment-done','assessment-list','open-assessment'].includes(action))return 17;
- if(action==='delete-assessment')return 'noten-eine-leistung-nachtraglich-andern-oder-loschen';
+ if(menu?.startsWith('assessment-menu-')||['assessment-edit','assessment-done','assessment-list','assessment-finish-close','open-assessment','open-assessment-edit'].includes(action))return 17;
+ if(['edit-assessment','move-assessment','delete-assessment'].includes(action))return 'noten-eine-leistung-nachtraglich-andern-oder-loschen';
  if(action==='all-notes')return 'export-alle-noten-exportieren';
  if(['exit-student','unexit-student'].includes(action))return 10;
  if(action==='choose-shortcuts')return 46;

@@ -1,5 +1,11 @@
 # Änderungen
 
+## 1.29.0 – Testversion
+
+- Mit **„Speichern und schließen“** unter der Noteneingabe kannst du die Eingabe abschließen und direkt zur vorherigen Ansicht zurückkehren.
+- Beim Anlegen einer Leistung und beim Nachtragen von Noten findest du die Leistungsangaben und Einstellungen zur Eingabe an derselben Stelle.
+- Über den Leistungsnamen öffnest du ein Menü zum Ansehen und Bearbeiten der Noten. Dort kannst du auch die Angaben ändern, die Leistung in einen anderen Bereich desselben Fachs verschieben oder sie nach einer Rückfrage löschen.
+
 ## 1.28.0 – 27. November 2026
 
 - Neue Leistungen führen direkt zur Eingabetabelle. Bezeichnung, Datum und Noten lassen sich dort in einem Durchgang erfassen. Eingaben mit offenen Pflichtangaben bleiben als Entwurf erhalten.

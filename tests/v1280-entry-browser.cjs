@@ -28,6 +28,7 @@ const server=http.createServer((req,res)=>{
   }),[]);
   const count=()=>page.evaluate(()=>Notenblick.data.assessments.length);
   const init=await count();
+  const saveAndClose=page.getByRole('button',{name:'Speichern und schließen',exact:true});
   await page.locator('#tab-overview').click();
   const menu=page.locator('#overview [data-menu-key=add-performance]');
   await menu.press('Space');
@@ -82,7 +83,10 @@ const server=http.createServer((req,res)=>{
      const end=await year.boundingBox();
      assert.ok(title.width>date.width*2,'Die Bezeichnung erhält den größeren Platzanteil');
      assert.ok(Math.abs(title.y-end.y)<=1,'Die Eingabekanten sind bündig');
-    }else assert.ok(date.y>=title.y+title.height,'Die Datumsgruppe steht unter der Bezeichnung');
+    }else{
+     assert.ok(date.y>=title.y+title.height,'Die Datumsgruppe steht unter der Bezeichnung');
+     if(width===500&&zoom===1)assert.ok(date.y-title.y-title.height<=18,'Bezeichnung und Datum bleiben in einem kompakten Block');
+    }
    const bounds=await page.evaluate(()=>[document.documentElement.scrollWidth,innerWidth]);
    assert.ok(bounds[0]<=bounds[1]+1,'Keine horizontale Seitenüberbreite bei '+width+'px / '+zoom);
    const layout=await page.evaluate(()=>{
@@ -96,13 +100,19 @@ const server=http.createServer((req,res)=>{
      fieldsEnd:rect('#newAssessmentFields').bottom,
      toolsStart:rect('.performance-draft-tools').top,
      toolsEnd:rect('.performance-draft-tools').bottom,
-     tabsStart:rect('.entry-tabs').top
+     tabsStart:rect('.entry-tabs').top,
+     tableEnd:rect('.entry-table').bottom,
+     footerStart:rect('.entry-footer').top,
+     footerOutsideTable:!work.querySelector('.entry-footer').closest('.table-wrap'),
+     footerPosition:getComputedStyle(work.querySelector('.entry-footer')).position
     };
    });
    assert.ok(layout.actionsStart>=layout.headingEnd&&layout.fieldsStart>=layout.actionsEnd,
     'Aktionen bleiben zwischen Überschrift und Eingabefeldern');
    assert.ok(layout.toolsStart>layout.fieldsEnd&&layout.tabsStart>layout.toolsEnd,
     'Eingabefelder, Optionen und Noteneingabe bleiben optisch getrennt');
+   assert.ok(layout.footerStart>layout.tableEnd&&layout.footerOutsideTable);
+   assert.equal(layout.footerPosition,'static');
    await page.locator('#assessmentWorkTitle').focus();
    await page.locator('#assessmentWorkTitle').evaluate(el=>el.scrollIntoView({block:'start'}));
    await page.screenshot({path:path.join(out,'direkt-'+width+'-'+zoom+'.png')});
@@ -159,7 +169,35 @@ const server=http.createServer((req,res)=>{
   await page.locator('#draft-title').waitFor({state:'detached'});
    assert.equal(await page.evaluate(()=>document.activeElement.dataset.action),'assessment-edit');
   assert.equal(await count(),init+2);
-   await page.getByRole('button',{name:'Schließen',exact:true}).click();
+   const assessmentId=await page.evaluate(()=>Notenblick.W().assessmentId);
+   const heading=page.locator('#assessmentWorkTitle');
+   assert.match(await page.locator('.assessment-details').textContent(),/25\.11\.2026.*Ganze Klasse/);
+   await page.getByRole('button',{name:'Angaben ändern',exact:true}).click();
+   assert.equal(await page.locator('#a-title').inputValue(),'Punkteprüfung');
+   await page.keyboard.press('Escape');
+   await page.getByRole('button',{name:'Noten bearbeiten',exact:true}).click();
+   assert.equal(await focus(),'assessmentWorkTitle');
+   await p.fill('41');
+   await saveAndClose.click();
+   assert.equal(await focus(),'p-test-table-'+sid);
+   assert.equal(await p.getAttribute('aria-invalid'),'true');
+   await p.fill('29');
+   await page.evaluate(()=>{
+    const A=Notenblick;
+    A.originalFooterSave=A.save;
+    A.save=()=>new Promise((resolve,reject)=>{A.failFooterSave=reject;});
+   });
+   await saveAndClose.click();
+   await page.waitForFunction(()=>Notenblick.entryFinishing);
+   assert.equal(await heading.count(),1);
+   await page.evaluate(()=>Notenblick.failFooterSave(Error('Synthetischer Speicherfehler')));
+   await page.waitForFunction(()=>!Notenblick.entryFinishing);
+   assert.equal(await saveAndClose.evaluate(el=>el===document.activeElement),true);
+   assert.equal(await heading.count(),1);
+   await page.evaluate(()=>{Notenblick.save=Notenblick.originalFooterSave;});
+   await saveAndClose.press('Enter');
+   await heading.waitFor({state:'detached'});
+   assert.equal(await page.evaluate(({assessmentId,sid})=>Notenblick.data.assessments.find(a=>a.id===assessmentId).results[sid].points,{assessmentId,sid}),'29');
 
    await page.evaluate(()=>{
     const A=Notenblick,c=A.getCourse();
@@ -183,9 +221,9 @@ const server=http.createServer((req,res)=>{
    const single=page.locator('#g-exam-single-'+sid);
    await single.fill('2,75');
    await single.press('Enter');
-   await page.getByRole('button',{name:'Fertig',exact:true}).click();
+   assert.ok(await saveAndClose.evaluate(el=>el.closest('.entry-footer').previousElementSibling.id==='entry-exam-single'));
+   await saveAndClose.press('Enter');
    await page.locator('#draft-title').waitFor({state:'detached'});
-   await page.getByRole('button',{name:'Schließen',exact:true}).click();
    assert.equal(await page.locator('#matrix-search').inputValue(),'Anna');
    assert.equal(await matrixAdd.evaluate(el=>el===document.activeElement),true);
 
@@ -195,17 +233,17 @@ const server=http.createServer((req,res)=>{
    await matrixAdd.click();
    await page.locator('#draft-title').fill('Klassenarbeit aus der Leistungsliste');
    await month.fill('13');
-   await page.getByRole('button',{name:'Fertig',exact:true}).click();
+   await saveAndClose.click();
    assert.equal(await page.locator('#error').isVisible(),true);
+   assert.equal(await focus(),'draft-date-month');
    await month.fill('11');
-   await page.getByRole('button',{name:'Fertig',exact:true}).click();
+   await saveAndClose.click();
    await page.locator('#draft-title').waitFor({state:'detached'});
    assert.equal(await page.locator('#error').isVisible(),false);
-   await page.getByRole('button',{name:'Schließen',exact:true}).click();
    assert.equal(await page.locator('#assessmentSearch').inputValue(),'Bewertung');
    assert.equal(await matrixAdd.evaluate(el=>el===document.activeElement),true);
    assert.equal(await count(),init+4);
   assert.deepEqual(errors,[]);
-   console.log('1.28 Browser Leistungserfassung: Tastatur und F1, schnelle Punkte/Noten, drei Einstiegspunkte, 36 Schüler, 3 Axe-Scans und 6 Darstellungen.');
+   console.log('Browser Leistungserfassung: Tastatur und F1, Punkte und Noten, Abschluss aus Tabelle und Einzelansicht, Speicherrückfall, 3 Axe-Scans und 6 Darstellungen.');
  }finally{await browser?.close();server.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

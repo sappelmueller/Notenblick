@@ -1,4 +1,4 @@
-# Notenblick 1.28 – Hilfe
+# Notenblick 1.29 – Hilfe
 
 ## Vollständiger Hilfetext (sichtbar in Notenblick)
 
@@ -143,7 +143,7 @@ Mit **„Leistung hinzufügen“** oder **Strg+N** öffnest du die Noteneingabe 
 
 1. Gib der neuen Leistung eine **Bezeichnung**, etwa „Vokabeltest 2“. Prüfe das **Datum**. Heute ist bereits eingetragen.
 2. Prüfe bei Bedarf die **Teilnahme** oder stelle unter **„Eingabeart ändern“** auf **Punkte mit Notenschlüssel** um. Trage deine Bewertungen direkt in der Tabelle ein.
-3. Wähle oben **„Fertig“**, um die Leistung zu speichern und das Ergebnis zu sehen. Mit **„Schließen“** kehrst du zur vorherigen Ansicht zurück und kannst später weiterarbeiten.
+3. Wähle unten **„Speichern und schließen“**, um die Eingabe abzuschließen und zurückzukehren. Mit **„Fertig“** oben siehst du anschließend das Ergebnis. Mit **„Schließen“** kannst du die Ansicht verlassen und später weiterarbeiten.
 
 Voreingestellt sind **Ganze Klasse** und die einfache Gewichtung. Gewichtung und GFS findest du unter **„Weitere Angaben“**. Für eine einzelne Bewertung gibt es **„Einzelnote eintragen“**.
 
@@ -151,7 +151,7 @@ Voreingestellt sind **Ganze Klasse** und die einfache Gewichtung. Gewichtung und
 
 Wenn du bereits etwas eingibst und Bezeichnung oder Datum noch fehlen, merkt sich Notenblick deine Eingaben als Entwurf. Der Entwurf erscheint noch nicht in Durchschnitten, Notenlisten oder Berichten.
 
-Sobald Bezeichnung, Datum und eine gültige Bewertung vorliegen, übernimmt Notenblick die Leistung. Weitere Noten werden wie gewohnt automatisch gespeichert. Möchtest du eine Leistung bewusst ohne Noten anlegen, fülle Bezeichnung und Datum aus und wähle **„Fertig“**.
+Sobald Bezeichnung, Datum und eine gültige Bewertung vorliegen, übernimmt Notenblick die Leistung. Weitere Noten werden wie gewohnt automatisch gespeichert. Möchtest du eine Leistung bewusst ohne Noten anlegen, fülle Bezeichnung und Datum aus und wähle **„Fertig“** oder **„Speichern und schließen“**.
 
 Über **„Entwurf fortsetzen“** kannst du auf der Startseite oder im Leistungsbereich weiterarbeiten. Du kannst den Entwurf auch bewusst verwerfen. Öffnest du die Eingabe und trägst nichts ein, wird keine Leistung angelegt.
 
@@ -257,21 +257,20 @@ Unter **„Bemerkung“** kannst du zum Beispiel einen Nachschreibtermin oder ei
 
 ### Leistungen ansehen, bearbeiten und schließen
 
-Öffne eine Leistung über ihre Bezeichnung. Du siehst zuerst die gespeicherten Ergebnisse.
+Wähle in der Notentabelle oder Leistungsliste den Namen der Leistung. Mit **„Noten anzeigen“** liest du die gespeicherten Ergebnisse. Mit **„Noten bearbeiten“** öffnest du direkt die Eingabe. Im Menü wählst du mit den Pfeiltasten und bestätigst mit Eingabe. Mit Escape kommst du zum Leistungsnamen zurück.
 
-- **Noten bearbeiten:** Öffnet die Eingabe.
 - **Fertig:** Beendet die Bearbeitung und zeigt wieder die Ergebnisse.
-- **Schließen:** Führt zur vorherigen Leistungsliste oder Notentabelle zurück.
-
-Bei einer neu angelegten Leistung öffnet Notenblick direkt die Eingabe. Ungültige oder noch nicht abgeschlossene Eingaben werden beim Wechsel geschützt.
+- **Schließen:** Führt zur vorherigen Ansicht zurück. Einen angefangenen Entwurf kannst du später fortsetzen.
+- **Speichern und schließen:** Steht unter der Eingabe. Prüft die Einträge, wartet auf das Speichern und führt zur vorherigen Ansicht zurück. Bei einer ungültigen Eingabe springt der Fokus zum Feld.
 
 ### Eine Leistung nachträglich ändern oder löschen
 
-Öffne bei der betreffenden Leistung **„Bearbeiten“**, wenn du ihre **Bezeichnung**, das **Datum**, die **Teilnehmer** oder die **Gewichtung der Leistung** ändern möchtest. Vorhandene Noten bleiben dabei erhalten.
+Mit **„Angaben ändern“** änderst du zum Beispiel Bezeichnung, Datum, Teilnahme oder die Gewichtung der Leistung. Zum Nachtragen oder Ändern einer einzelnen Note wählst du **„Noten bearbeiten“**.
 
-**„Löschen“** entfernt die Leistung einschließlich ihrer Bewertungen. Kontrolliere deshalb die Rückfrage sorgfältig.
+Über **„Leistung verschieben …“** wählst du einen anderen Leistungsbereich desselben Fachs. Vorhandene Einträge ziehen mit um und zählen künftig im gewählten Bereich. Dadurch können sich Durchschnitte und Notenvorschläge ändern. Festgelegte Abschlussnoten bleiben erhalten.
 
-Wenn nur eine einzelne Note falsch ist, musst du nicht die ganze Leistung löschen: Öffne **„Noten bearbeiten“** und korrigiere den Eintrag.
+**„Leistung löschen …“** öffnet eine Rückfrage. Bestätigst du sie, werden die Leistung und ihre Einträge aus dem aktuellen Stand gelöscht. Unter **„Sicherung → Wiederherstellen → Letzte Änderung rückgängig“** kannst du die zuletzt ausgeführte Änderung in der laufenden Sitzung zurücknehmen.
+
 
 ### Notentabelle und Leistungsliste
 

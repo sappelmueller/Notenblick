@@ -1,10 +1,10 @@
 {
   "name": "notenblick",
-  "version": "1.28.0",
+  "version": "1.29.0",
   "releaseNotes": [
-    "Leistungen anlegen, sofort Noten eingeben und Entwürfe später fortsetzen.",
-    "Noten und Sicherungen auf Wunsch mit einem Passwort schützen und Notenblick auf der Startseite sperren.",
-    "Noten im Notfallzugriff lesen und kopieren, auch wenn Notenblick nicht startet."
+    "Direkt unter der Noteneingabe speichern und zur Übersicht zurückkehren.",
+    "Leistungsangaben beim Anlegen und Nachtragen von Noten an derselben Stelle finden.",
+    "Noten direkt über den Leistungsnamen anzeigen oder ändern. Leistungen lassen sich dort auch verschieben oder löschen."
   ],
   "private": true,
   "description": "Lokaler Windows-Notenrechner; Node-Abhängigkeiten ausschließlich für Entwicklungstests",

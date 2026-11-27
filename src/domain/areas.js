@@ -27,6 +27,11 @@ N.validateAreas=function(c){
  return true;
 };
 N.areaConfig=c=>({areas:N.clone(N.areas(c)),writtenIds:[...N.groupIds(c)],writtenName:c.writtenName||'Schriftlich',calculationMode:N.courseMode(c),weights:N.clone(c.weights),precision:c.precision,rounding:c.rounding});
+N.assignAssessmentArea=function(a,c,id){
+ if(a.kind===id)return;
+ if(a.kind===N.oralArea(c)&&!a.oralEntry)a.oralEntry='unclassified';
+ a.kind=id;
+};
 N.applyAreaConfig=function(d,cid,config,transfers={}){
  const c=d.courses.find(c=>c.id===cid);if(!c)throw Error('Das Fach ist nicht mehr vorhanden.');
  N.validateAreas(config);N.weightsValid(config.weights,{mode:N.courseMode(config),course:config});
@@ -34,7 +39,7 @@ N.applyAreaConfig=function(d,cid,config,transfers={}){
  const ids=new Set(N.areaIds(config));
  const records=d.assessments.filter(a=>a.courseId===cid),assignments=records.map(a=>[a,Object.hasOwn(transfers,a.kind)?transfers[a.kind]:a.kind]);
  for(const [,id]of assignments)if(!ids.has(id))throw Error('Bitte zuerst alle Leistungen einem vorhandenen Bereich zuordnen.');
- for(const [a,id]of assignments)if(id!==a.kind){if(a.kind===N.oralArea(c)&&!a.oralEntry)a.oralEntry='unclassified';a.kind=id;}
+ for(const [a,id]of assignments)N.assignAssessmentArea(a,c,id);
  const archive=d.legacyOther?.courses?.find(x=>x.courseId===cid);if(archive&&!archive.written)archive.written=N.clone(c.weights.written);
  Object.assign(c,N.clone(config));return c;
 };
