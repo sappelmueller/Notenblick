@@ -435,7 +435,10 @@ async function oldNativeHost(base) {
   const directory = path.join(base, 'old-host');
   await fs.mkdir(directory);
   const sdk = JSON.parse(await fs.readFile(path.join(repo, 'global.json'), 'utf8')).sdk.version;
-  const sdkRoot = execFileSync(dotnet, ['--list-sdks'], { encoding: 'utf8' }).split('\n').map(line => line.match(/^([^ ]+) \[(.+)]$/)).find(item => item?.[1] === sdk)[2];
+  const installedSdk = execFileSync(dotnet, ['--list-sdks'], { encoding: 'utf8' }).split(/\r?\n/)
+    .map(line => line.match(/^([^ ]+) \[(.+)]$/)).find(item => item?.[1] === sdk);
+  assert.ok(installedSdk, `Für den Vergleich fehlt das .NET SDK ${sdk}.`);
+  const sdkRoot = installedSdk[2];
   const refs = path.join(repo,'dev','microsoft.netframework.referenceassemblies.net48', 'build', '.NETFramework', 'v4.8');
   const json = path.join(repo, 'dev', 'newtonsoft.json', 'lib');
   const files = ['native/Storage.cs', 'native/Migration.cs', 'native/ExportFiles.cs', 'native/OfficePackage.cs', 'tests/StorageCli.cs'];
