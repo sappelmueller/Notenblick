@@ -16,6 +16,13 @@ Bedienungsüberarbeitung vom 6. November: `weight-editor.js` trennt die gemeinsa
 
 Letzter Feinschliff: `weighting.js` verteilt automatisch in ganzzahligen Hundertsteln mit deterministischer Restverteilung. `weightText` erhält bewusst gespeicherte vierstellige Werte. Moduswechsel benötigen keine eigene Rundungsbestätigung; `weights.js` prüft weiterhin exakte Auswirkungen auf Schülerdurchschnitte und schützt die Übernahme. F1 verwendet für den aktuellen Einrichtungsschritt einen Ausschnitt desselben Hilfetextes; Gewichtungsfelder führen auf den vorhandenen Berechnungsabschnitt. Keine neuen Datenformate oder Exportvorlagen.
 
+## Windows-Voraussetzungen
+
+- **Windows x86 und x64:** .NET Framework 4.8 oder neuer und Microsoft Edge WebView2 Runtime.
+- **Natives Windows auf ARM64:** Windows 11 ab 24H2, .NET Framework 4.8.1 und die ARM64-Ausgabe der Microsoft Edge WebView2 Runtime.
+
+Für beide Rechnerarten gibt es dasselbe Windows-ZIP. Die nötigen Programmbibliotheken liegen bei. Node.js, Python und Office werden zum Benutzen von Notenblick nicht benötigt. Die Programmdateien besitzen derzeit keine digitale Signatur. Windows kann deshalb beim Start einen Sicherheitshinweis anzeigen.
+
 ## Aufbau
 
 | Ordner | Aufgabe |

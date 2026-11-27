@@ -1,46 +1,44 @@
 # Notenblick
 
-Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du verwaltest Klassen und Fächer, erfasst Noten oder Punkte und erstellst Berichte für den Schulalltag. Alle Schülerdaten bleiben auf deinem Rechner.
+Mit Notenblick verwaltest du Klassen, Fächer und Noten unter Windows. Du kannst offline arbeiten. Deine Schülerdaten bleiben auf deinem Rechner.
 
-[**Notenblick 1.28.0 für Windows herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.28.0/Notenblick_1.28.0_Windows.zip) · [Was ist neu?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.28.0)
+**[Notenblick 1.28.0 für Windows herunterladen (ZIP)](https://github.com/sappelmueller/Notenblick/releases/download/v1.28.0/Notenblick_1.28.0_Windows.zip)**
 
-In **1.28.0** kannst du eine Leistung anlegen und gleich die Noten dazu eingeben. Auf Wunsch schützt ein Passwort deine Noten und Sicherungen. Der mitgelieferte **Notfallzugriff** hilft dir, wenn du Notenblick nicht starten kannst.
-
-## Das kann Notenblick
-
-- **Organisieren:** Schuljahre, Klassen, Fächer und Schüler verwalten; Schülerlisten übernehmen und mit dem Einrichtungsassistenten starten.
-- **Bewerten:** Eigene Leistungsbereiche und Gewichtungen, mündliche Klassenrunden, Einzelnoten und GFS. Noten direkt eingeben oder Punkte mit verschiedenen Notenschlüsseln umrechnen.
-- **Ergebnisse festhalten:** Durchschnitte nachvollziehen, Halbjahresinformationen und Zeugnisnoten festlegen. Manuell festgelegte Abschlussnoten bleiben unabhängig vom Durchschnitt gespeichert.
-- **Sichern und ausgeben:** Automatische Speicherung, Sicherungen und lesbare TXT-Notfalllisten. Berichte als PDF, Word, Excel, CSV und TXT, dazu Druckvorschau und Gesamtexport.
+[Was ist neu in Notenblick 1.28.0?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.28.0)
 
 ## Herunterladen und starten
 
-1. Das Windows-ZIP vollständig in einen beschreibbaren Ordner entpacken.
-2. **Notenblick.exe** starten. Der vollständige Ordner **Programm** muss daneben liegen; **Daten** entsteht beim ersten Start.
-3. Dem Einrichtungsassistenten folgen oder eine eigene Sicherung wiederherstellen.
+1. Entpacke das ZIP vollständig in einen Ordner, in dem du Dateien speichern kannst.
+2. Starte **Notenblick.exe**. Lass den Ordner **Programm** daneben liegen. Notenblick legt den Ordner **Daten** beim ersten Start an.
+3. Folge der Einrichtung oder stelle eine vorhandene Sicherung wieder her.
 
-Notenblick läuft direkt aus dem entpackten Ordner. Windows kann beim Start einen Sicherheitshinweis anzeigen, da die EXE noch keine digitale Signatur hat. Quellcode und Prüfsummen findest du beim [Release](https://github.com/sappelmueller/Notenblick/releases/tag/v1.28.0).
+Notenblick läuft direkt aus dem entpackten Ordner. Windows fragt beim ersten Start möglicherweise nach, ob du Notenblick öffnen möchtest. [Was brauche ich für Notenblick?](docs/PROJEKTUEBERSICHT.md#windows-voraussetzungen)
 
-**Voraussetzungen:** Windows x86/x64 mit .NET Framework 4.8 oder neuer und Microsoft Edge WebView2 Runtime. Für native ARM64-Ausführung: Windows 11 ab 24H2, .NET Framework 4.8.1 und ARM64-WebView2. Dieselbe EXE unterstützt beide Prozessorfamilien; die erforderlichen Programm-Bibliotheken liegen bei. Node.js, Python und Office brauchst du für die Anwendung nicht.
+## Das kann Notenblick
+
+- Übernimm Schülerlisten und verwalte deine Klassen, Fächer und Schuljahre.
+- Gib Noten oder Punkte direkt beim Anlegen einer Leistung ein. Lege eigene Leistungsbereiche und Gewichtungen fest.
+- Sieh dir Durchschnitte an und lege Noten für Halbjahresinformationen und Zeugnisse fest.
+- Drucke Notenlisten und Berichte oder speichere sie als PDF, Word, Excel, CSV oder TXT.
 
 ## Tastatur und Hilfe
 
-Notenblick ist für Tastatur, NVDA und Braille entwickelt. **F1** erklärt den aktuellen Arbeitsschritt. Mit Eingabe und Umschalt+Eingabe wechselst du bei der schnellen Noteneingabe zwischen Schülern.
+Notenblick ist für die Bedienung mit Tastatur, NVDA und Braille entwickelt. Drücke **F1**, wenn du beim aktuellen Schritt Hilfe brauchst. Bei der Noteneingabe wechselst du mit **Eingabe** zum nächsten Schüler und mit **Umschalt+Eingabe** zurück.
 
-[Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe](docs/HILFE-QUELLE.md) · [Prüfstand](docs/PRUEFBERICHT-1.28.0.md)
+[Anleitung zu Notenblick](docs/HILFE-QUELLE.md) · [Tastatur und Barrierefreiheit im Detail](BARRIEREFREIHEIT.md)
 
 ## Daten und Aktualisierungen
 
-Schülerdaten bleiben ausschließlich im Ordner **Daten** und werden nicht an externe Dienste übertragen. Sichere diesen Ordner regelmäßig zusätzlich auf einem anderen Datenträger. TXT-Notfalllisten helfen beim Nachlesen; zur vollständigen Wiederherstellung dient eine Sicherung.
+Sichere den Ordner **Daten** regelmäßig auf einem zweiten Datenträger. Auf Wunsch schützt ein Passwort deine Noten und Sicherungen. Wenn Notenblick einmal nicht startet, kannst du deine Noten mit dem mitgelieferten **Notfallzugriff** lesen und kopieren.
 
-Unter **Einstellungen → Allgemein → Aktualisierungen** kannst du nach freigegebenen Versionen suchen. Die Prüfung beim Start ist freiwillig und zunächst ausgeschaltet. Download und Installation beginnen erst nach deiner Zustimmung.
+Unter **Einstellungen → Allgemein → Aktualisierungen** kannst du nach einer neuen Version suchen. Notenblick lädt und installiert ein Update erst, wenn du zustimmst. Die Suche beim Programmstart kannst du bei Bedarf einschalten.
 
-Beim Update werden ausschließlich **Notenblick.exe** und der vollständige Ordner **Programm** ersetzt. **Daten bleibt unangetastet.** Auch beim manuellen Aktualisieren: Notenblick schließen, Daten sichern und nur EXE und Programmordner ersetzen.
+Beim Aktualisieren bleiben deine Daten erhalten. Wenn du von Hand aktualisierst, schließe Notenblick und sichere zuerst den Ordner **Daten**. Ersetze dann nur **Notenblick.exe** und den vollständigen Ordner **Programm**.
 
 ## Lizenz und Kontakt
 
-Copyright © 2026 Sebastian Müller. Eigene Quellen: **GNU GPL Version 3** mit [Bibliotheksausnahme](LICENSE-EXCEPTION) ([Lizenztext](LICENSE), `GPL-3.0-only WITH GPL-3.0-linking-exception`). Für Drittanbieter gelten ihre [eigenen Lizenzen](THIRD-PARTY-NOTICES.md). Windows, .NET Framework und WebView2 Runtime stellt Microsoft separat bereit.
-
-Fehler und Vorschläge bitte über [GitHub Issues](https://github.com/sappelmueller/Notenblick/issues) melden – mit erfundenen Beispielen und ohne echte Schülerdaten oder Zugangsdaten. Sicherheitslücken: [SECURITY.md](SECURITY.md).
+[Fehler oder Vorschläge melden](https://github.com/sappelmueller/Notenblick/issues). Verwende dafür erfundene Beispiele. Lass echte Schülerdaten und Zugangsdaten weg. [Sicherheitslücken melden](SECURITY.md)
 
 [Änderungen](AENDERUNGEN.md) · [Prüfberichte](PRUEFBERICHT.md) · [Mitmachen](CONTRIBUTING.md) · [Entwicklung](ENTWICKLUNG.md)
+
+Copyright © 2026 Sebastian Müller. [GNU GPLv3](LICENSE) mit [Bibliotheksausnahme](LICENSE-EXCEPTION). [Lizenzen der mitgelieferten Bibliotheken](THIRD-PARTY-NOTICES.md)
