@@ -371,6 +371,65 @@ for (const boundary of ['rotate-published', 'disable-journal', 'disable-write', 
   });
 }
 
+test('Ein abgebrochener Schlüsselwechsel vor dem Umschalten hinterlässt keinen verschlüsselten Ordner', async t => {
+  const { base, data, instance: a } = await fixture(t, 'rotate-staged');
+  const recovery = await a.ok('vault-key');
+  await a.ok('vault-enable', { password, recovery, verification: recovery });
+  const active = (await fs.readdir(data)).find(name => /^Geschuetzt-/.test(name));
+  const nextRecovery = await a.ok('vault-key');
+  await assert.rejects(a.ok('vault-rotate', { currentPassword: password, password: nextPassword, recovery: nextRecovery, verification: nextRecovery }), /Native host stopped \(77\)/);
+  assert.equal((await fs.readdir(data)).filter(name => /^Geschuetzt-/.test(name)).length, 2);
+  const reopened = host(base);
+  t.after(() => reopened.close());
+  assert.equal((await reopened.ok('vault-status')).pending, true);
+  await reopened.fails('vault-unlock', { recovery: nextRecovery });
+  assert.equal((await reopened.ok('vault-unlock', { recovery })).pending, false);
+  assert.deepEqual((await fs.readdir(data)).filter(name => /^Geschuetzt-/.test(name)), [active]);
+  await reopened.ok('vault-disable', { recovery });
+  assert.equal(await read(reopened), sample);
+  assert.deepEqual((await fs.readdir(data)).sort(), ['Ansicht.json', 'Notenlisten', 'Sicherungen', primary].sort());
+});
+
+test('Beim Ausschalten werden alte Schutzordner und Programmreste bereinigt, fremde Dateien bleiben erhalten', async t => {
+  const { base, data, instance: a } = await fixture(t, 'rotate-staged');
+  const recovery = await a.ok('vault-key');
+  await a.ok('vault-enable', { password, recovery, verification: recovery });
+  const active = (await fs.readdir(data)).find(name => /^Geschuetzt-/.test(name));
+  const nextRecovery = await a.ok('vault-key');
+  await assert.rejects(a.ok('vault-rotate', { currentPassword: password, password: nextPassword, recovery: nextRecovery, verification: nextRecovery }), /Native host stopped \(77\)/);
+  const abandoned = (await fs.readdir(data)).find(name => /^Geschuetzt-/.test(name) && name !== active);
+  // An earlier test version did not record the intent in the active generation.
+  await fs.unlink(path.join(data, active, 'Schluesselwechsel-Vorbereiten.bin'));
+  const stage = path.join(data, '.schutz-' + 'a'.repeat(32), 'Dateien', '.neu-' + 'b'.repeat(32));
+  const interruptedDelete = path.join(data, active, 'Dateien', '.weg-' + 'c'.repeat(32));
+  for (const folder of [stage, interruptedDelete]) {
+    await fs.mkdir(folder, { recursive: true });
+    await fs.writeFile(path.join(folder, 'Name.bin'), 'Testrest');
+    await fs.writeFile(path.join(folder, '.nb-' + 'd'.repeat(32) + '.tmp'), 'Testrest');
+  }
+  await fs.copyFile(path.join(data, abandoned, 'Zugang.bin'), path.join(path.dirname(path.dirname(stage)), 'Zugang.bin'));
+  await fs.writeFile(path.join(data, '.nb-' + 'e'.repeat(32) + '.tmp'), 'NBSTORE1\n' + abandoned);
+  const foreign = '.nb-' + 'f'.repeat(32) + '.tmp';
+  await fs.writeFile(path.join(data, foreign), 'Eigene Datei');
+  const foreignDir = '.schutz-' + '0'.repeat(32);
+  await fs.mkdir(path.join(data, foreignDir, 'Dateien'), { recursive: true });
+  await fs.writeFile(path.join(data, foreignDir, 'Dateien', 'Eigene.txt'), 'Eigener Ordner');
+  const reopened = host(base);
+  t.after(() => reopened.close());
+  await reopened.ok('vault-unlock', { recovery });
+  await reopened.ok('vault-disable', { recovery });
+  assert.equal(await read(reopened), sample);
+  assert.equal(await fs.readFile(path.join(data, foreign), 'utf8'), 'Eigene Datei');
+  assert.equal(await fs.readFile(path.join(data, foreignDir, 'Dateien', 'Eigene.txt'), 'utf8'), 'Eigener Ordner');
+  assert.ok(await exists(path.join(data, 'Sicherungen', 'Notenblick-Archiv-' + abandoned.slice('Geschuetzt-'.length) + '.zip')));
+  assert.deepEqual((await fs.readdir(data)).sort(), [foreign, foreignDir, 'Ansicht.json', 'Notenlisten', 'Sicherungen', primary].sort());
+  await reopened.close();
+  const again = host(base);
+  t.after(() => again.close());
+  assert.equal((await again.ok('vault-status')).enabled, false);
+  assert.equal(await read(again), sample);
+});
+
 async function oldNativeHost(base) {
   const repo = path.resolve(__dirname, '..');
   const directory = path.join(base, 'old-host');

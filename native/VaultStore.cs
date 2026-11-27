@@ -29,6 +29,10 @@ namespace Notenblick.Native {
   const string EnableJournal = "Bereinigen.bin";
   const string DisableJournal = "Entschluesseln.bin";
   const string RotateJournal = "Drehen.bin";
+  const string PrepareRotation = "Schluesselwechsel-Vorbereiten.bin";
+  const string PointerStage = "Aktiver-Stand.tmp";
+  const string MainBlockerStage = "Notenordner-Hinweis.tmp";
+  const string BackupBlockerStage = "Sicherungsordner-Hinweis.tmp";
   const string BackupFolder = "Sicherungen";
   const string BlockerText = "Dieser Notenstand ist verschlüsselt. Bitte starte Notenblick oder Notfallzugriff für Notenblick.";
   const string RetiredMarker = "Frueherer-Stand.txt";
@@ -44,6 +48,8 @@ namespace Notenblick.Native {
   static readonly Regex Generation = new Regex("^Geschuetzt-[a-f0-9]{32}$", RegexOptions.CultureInvariant);
   static readonly Regex OpaqueDirectory = new Regex("^d-[a-f0-9]{32}$", RegexOptions.CultureInvariant);
   static readonly Regex ProtectionStage = new Regex("^\\.schutz-[a-f0-9]{32}$", RegexOptions.CultureInvariant);
+  static readonly Regex RecordStage = new Regex("^\\.(?:neu|weg)-[a-f0-9]{32}$", RegexOptions.CultureInvariant);
+  static readonly Regex AtomicStage = new Regex("^\\.nb-[a-f0-9]{32}\\.tmp$", RegexOptions.CultureInvariant);
   static readonly Regex Node = new Regex("^(?:f-[a-f0-9]{32}|d-[a-f0-9]{32}\\.bin)$", RegexOptions.CultureInvariant);
   const string GeneratedId = @"(?:[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}|n[0-9a-z]{10,})";
   const string BackupDate = @"\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z";
@@ -88,12 +94,14 @@ namespace Notenblick.Native {
     if (!Directory.Exists(physicalRoot)) throw FormatError();
    } else if (Directory.Exists(this.dataRoot)) {
     var generations = Directory.EnumerateDirectories(this.dataRoot, "Geschuetzt-*").Where(path => Generation.IsMatch(Path.GetFileName(path))).ToArray();
-    var candidates = generations.Where(path => !File.Exists(Path.Combine(path, RetiredMarker))).Take(2).ToArray();
+    var hasPlain = File.Exists(Path.Combine(this.dataRoot, MainName));
+    var candidates = generations.Where(path => !File.Exists(Path.Combine(path, RetiredMarker)) &&
+     (!hasPlain || !IsUnpublishedRotation(path))).Take(2).ToArray();
     if (candidates.Length == 1 && File.Exists(Path.Combine(candidates[0], EnableJournal))) {
      CheckPath(candidates[0]);
      physicalRoot = candidates[0]; pointerMissing = true;
     } else if (candidates.Length != 0 || Directory.Exists(Path.Combine(this.dataRoot, MainName)) ||
-               (generations.Length != 0 && !File.Exists(Path.Combine(this.dataRoot, MainName)))) {
+               (generations.Length != 0 && !hasPlain)) {
      throw new InvalidDataException("Ein geschützter Datenstand ist vorhanden. Bitte öffne den geschützten Ordner über den Notfallzugriff.");
     }
    }
@@ -102,7 +110,7 @@ namespace Notenblick.Native {
   public string PhysicalRoot => physicalRoot;
   public bool Enabled => physicalRoot != null;
   public bool Locked => Enabled && key == null;
-  public bool Pending => cleanup != null || Enabled && !detached && new[] { EnableJournal, DisableJournal, RotateJournal }.Any(name => File.Exists(Path.Combine(physicalRoot, name)));
+  public bool Pending => cleanup != null || Enabled && !detached && new[] { EnableJournal, DisableJournal, RotateJournal, PrepareRotation }.Any(name => File.Exists(Path.Combine(physicalRoot, name)));
   public string[] ProtectedPaths {
    get {
     if (!Enabled) return new string[0];
@@ -264,7 +272,7 @@ namespace Notenblick.Native {
    foreach (var entry in Directory.EnumerateFileSystemEntries(node)) {
     CheckPath(entry);
     if (!File.Exists(entry) || (Path.GetFileName(entry) != "Name.bin" && Path.GetFileName(entry) != "Inhalt.bin" &&
-        !Regex.IsMatch(Path.GetFileName(entry), "^\\.nb-[a-f0-9]{32}\\.tmp$"))) throw FormatError();
+         !AtomicStage.IsMatch(Path.GetFileName(entry)))) throw FormatError();
    }
   }
   static IEnumerable<VaultEntry> Enumerate(string root, byte[] secret, string logical) {
@@ -333,8 +341,10 @@ namespace Notenblick.Native {
    CheckPath(staging); CheckPath(next);
    var secret = VaultCrypto.Random(VaultCrypto.SecretBytes);
    var old = physicalRoot;
+   var preparation = fromPlain ? null : Path.Combine(old, PrepareRotation);
    bool committed = false;
    try {
+    if (!fromPlain) WriteJournal(old, key, PrepareRotation, new[] { id });
     var nextHeader = VaultCrypto.CreateHeader(secret, password, recovery);
     Directory.CreateDirectory(Path.Combine(staging, "Dateien"));
     WriteAtomic(Path.Combine(staging, HeaderName), nextHeader);
@@ -363,15 +373,31 @@ namespace Notenblick.Native {
     else WriteJournal(staging, secret, RotateJournal, new[] { Path.GetFileName(old) });
     Directory.Move(staging, next);
     boundary?.Invoke(fromPlain ? "enable-staged" : "rotate-staged");
-    WriteAtomic(Path.Combine(dataRoot, MarkerName), VaultCrypto.Utf8.GetBytes(PointerHeader + Path.GetFileName(next)));
+    PublishPointer(next);
     committed = true;
     boundary?.Invoke(fromPlain ? "enable-published" : "rotate-published");
     Lock(); physicalRoot = next; key = secret; header = nextHeader; secret = null;
     CompletePending();
    } finally {
     VaultCrypto.Clear(secret);
-    if (!committed) { TryRemoveTransient(staging); TryRemoveTransient(next); }
+    if (!committed) {
+     TryRemoveTransient(staging); TryRemoveTransient(next);
+     if (preparation != null && !Directory.Exists(staging) && !Directory.Exists(next)) File.Delete(preparation);
+    }
    }
+  }
+  void PublishPointer(string generation) {
+   var marker = Path.Combine(dataRoot, MarkerName);
+   var stage = Path.Combine(generation, PointerStage);
+   PublishText(stage, marker, PointerHeader + Path.GetFileName(generation), replace: true);
+  }
+  static void PublishText(string stage, string target, string value, bool replace = false) {
+   var bytes = VaultCrypto.Utf8.GetBytes(value);
+   CheckPath(target);
+   if (!File.Exists(stage)) WriteAtomic(stage, bytes);
+   else if (!HashesEqual(stage, bytes, 160)) throw Collision(Path.GetFileName(target));
+   if (replace && File.Exists(target)) File.Replace(stage, target, null);
+   else File.Move(stage, target);
   }
   public void Disable(string password, string recovery) {
    RequireTransitionAccess(); RequireUnlocked(); VerifyAccess(password, recovery);
@@ -396,13 +422,23 @@ namespace Notenblick.Native {
    var enable = Path.Combine(physicalRoot, EnableJournal);
    var disable = Path.Combine(physicalRoot, DisableJournal);
    var rotate = Path.Combine(physicalRoot, RotateJournal);
-   if (new[] { enable, disable, rotate }.Count(File.Exists) > 1) throw FormatError();
+   var preparation = Path.Combine(physicalRoot, PrepareRotation);
+   if (new[] { enable, disable, rotate, preparation }.Count(File.Exists) > 1) throw FormatError();
+   if (File.Exists(preparation)) {
+    var prepared = ReadJournal(physicalRoot, key, PrepareRotation);
+    if (prepared.Length != 1 || !Generation.IsMatch("Geschuetzt-" + prepared[0])) throw FormatError();
+    var next = Path.Combine(dataRoot, "Geschuetzt-" + prepared[0]);
+    var staging = Path.Combine(dataRoot, ".schutz-" + prepared[0]);
+    if (String.Equals(next, physicalRoot, StringComparison.OrdinalIgnoreCase)) throw FormatError();
+    foreach (var path in new[] { staging, next }) if (Directory.Exists(path)) RemoveOwnedGeneration(path);
+    File.Delete(preparation);
+   }
    if (File.Exists(enable)) {
     var paths = ReadJournal(physicalRoot, key, EnableJournal);
     if (pointerMissing) {
      // A loss of power between publishing the verified generation and writing
      // its pointer can be resumed after the wrapped key has been authenticated.
-     WriteAtomic(Path.Combine(dataRoot, MarkerName), VaultCrypto.Utf8.GetBytes(PointerHeader + Path.GetFileName(physicalRoot)));
+     PublishPointer(physicalRoot);
      pointerMissing = false;
     }
     foreach (var logical in paths) {
@@ -417,13 +453,15 @@ namespace Notenblick.Native {
     var blocker = PlainPath(MainName);
     if (File.Exists(blocker)) throw Collision(MainName);
     if (!Directory.Exists(blocker)) Directory.CreateDirectory(blocker);
+     RemoveLegacyAtomicFiles(blocker);
     if (!IsBlocker(blocker)) {
      if (Directory.EnumerateFileSystemEntries(blocker).Any()) throw Collision(MainName);
-     WriteAtomic(Path.Combine(blocker, "Geschuetzt.txt"), VaultCrypto.Utf8.GetBytes(BlockerText));
+      PublishText(Path.Combine(physicalRoot, MainBlockerStage), Path.Combine(blocker, "Geschuetzt.txt"), BlockerText);
     }
     var legacyBackups = PlainPath(BackupFolder);
     if (Directory.Exists(legacyBackups) && !Directory.EnumerateFileSystemEntries(legacyBackups).Any()) Directory.Delete(legacyBackups);
-    if (!Directory.Exists(legacyBackups) && !File.Exists(legacyBackups)) WriteAtomic(legacyBackups, VaultCrypto.Utf8.GetBytes(BlockerText));
+     if (!Directory.Exists(legacyBackups) && !File.Exists(legacyBackups))
+      PublishText(Path.Combine(physicalRoot, BackupBlockerStage), legacyBackups, BlockerText);
      if (!IsBackupBlocker(legacyBackups)) {
       var leftover = Directory.Exists(legacyBackups) ? Directory.EnumerateFileSystemEntries(legacyBackups).FirstOrDefault() : null;
       throw BackupConflict(leftover == null ? BackupFolder : Child(BackupFolder, Path.GetFileName(leftover)));
@@ -509,15 +547,36 @@ namespace Notenblick.Native {
    File.Delete(Path.Combine(dataRoot, MarkerName));
    cleanup = plainHash = null;
   }
+  static bool IsUnpublishedRotation(string path) =>
+   HasMagic(Path.Combine(path, HeaderName), "NBKEY001") &&
+   HasMagic(Path.Combine(path, ProofName), "NBREC001") &&
+   HasMagic(Path.Combine(path, RotateJournal), "NBREC001") &&
+   !File.Exists(Path.Combine(path, EnableJournal)) && !File.Exists(Path.Combine(path, DisableJournal));
+  static bool HasMagic(string path, string magic) {
+   if (!File.Exists(path)) return false;
+   CheckPath(path);
+   using (var input = File.OpenRead(path)) {
+    foreach (var c in magic) if (input.ReadByte() != c) return false;
+    return true;
+   }
+  }
+  static bool IsUnfinishedStage(string path) {
+   CheckPath(path);
+   if (HasMagic(Path.Combine(path, HeaderName), "NBKEY001") || HasMagic(Path.Combine(path, ProofName), "NBREC001")) return true;
+   var entries = Directory.EnumerateFileSystemEntries(path).ToArray();
+   var records = Path.Combine(path, "Dateien");
+   CheckPath(records);
+   // Creating the empty records directory precedes writing any protected data.
+   if (entries.Length == 1 && Directory.Exists(records) && !Directory.EnumerateFileSystemEntries(records).Any()) return true;
+   return Directory.Exists(records) && entries.Any(entry =>
+    AtomicStage.IsMatch(Path.GetFileName(entry)) && HasMagic(entry, "NBKEY001"));
+  }
   void ArchiveRetiredGenerations() {
    if (!Directory.Exists(dataRoot)) return;
    foreach (var path in Directory.EnumerateDirectories(dataRoot).Where(p => p != physicalRoot).ToArray()) {
     var name = Path.GetFileName(path);
     if (ProtectionStage.IsMatch(name)) {
-     if (File.Exists(Path.Combine(path, HeaderName)) && File.Exists(Path.Combine(path, ProofName))) {
-      CheckOwnedGeneration(path);
-      RemoveOwnedGeneration(path);
-     }
+      if (IsUnfinishedStage(path)) RemoveOwnedGeneration(path);
      continue;
     }
     if (!Generation.IsMatch(name)) continue;
@@ -525,11 +584,23 @@ namespace Notenblick.Native {
     var archive = PlainPath(BackupFolder + "/" + ArchivePrefix + name.Substring("Geschuetzt-".Length) + ".zip");
     if (File.Exists(retired)) {
      if (VaultCrypto.Utf8.GetString(ReadBounded(retired, 512)) != RetiredText) throw Collision(name + "/" + RetiredMarker);
-    } else if (!File.Exists(archive)) continue;
+     } else if (!File.Exists(archive) && !IsUnpublishedRotation(path)) throw Collision(name);
     CheckOwnedGeneration(path);
     SaveHistoryArchive(path, archive);
     RemoveOwnedGeneration(path);
    }
+    RemoveLegacyAtomicFiles(dataRoot, includePointer: true);
+   }
+   static void RemoveLegacyAtomicFiles(string folder, bool includePointer = false) {
+    var blocker = VaultCrypto.Utf8.GetBytes(BlockerText);
+    foreach (var path in Directory.EnumerateFiles(folder, ".nb-*.tmp").Where(path => AtomicStage.IsMatch(Path.GetFileName(path)))) {
+     CheckPath(path);
+     if (new FileInfo(path).Length > 160) continue;
+     var bytes = ReadBounded(path, 160);
+     var value = Encoding.ASCII.GetString(bytes);
+     if ((includePointer && value.StartsWith(PointerHeader, StringComparison.Ordinal) && Generation.IsMatch(value.Substring(PointerHeader.Length))) ||
+         VaultCrypto.Equal(bytes, blocker)) File.Delete(path);
+    }
   }
   static IEnumerable<string> ArchiveFiles(string root) => Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories)
    .Select(path => path.Substring(root.Length + 1).Replace(Path.DirectorySeparatorChar, '/'))
@@ -796,7 +867,7 @@ namespace Notenblick.Native {
       try {
        using (var zip = new ZipArchive(input, ZipArchiveMode.Read, true)) {
         if (IsHistoryArchiveName(logical)) { CheckHistoryArchive(zip); return true; }
-        using (var data = BackupZipMain(zip).Open()) return SnapshotData(ReadBackupJson(data)) != null;
+        return SnapshotData(ReadBackupZipJson(BackupZipMain(zip))) != null;
        }
       } catch (InvalidDataException) { return false; }
      }
@@ -816,23 +887,25 @@ namespace Notenblick.Native {
    using (var input = new MemoryStream(bytes, false))
    using (var zip = new ZipArchive(input, ZipArchiveMode.Read)) {
     var main = BackupZipMain(zip);
-    JObject payload;
-    using (var stream = main.Open()) payload = ReadBackupJson(stream);
+    var payload = ReadBackupZipJson(main);
     var data = SnapshotData(payload);
     if (data == null) throw FormatError();
     var prefix = main.FullName.StartsWith("Daten/", StringComparison.Ordinal) ? "Daten/" : "";
     var lists = payload["lists"] as JArray ?? data["notfallListen"] as JArray ?? new JArray();
     var names = new HashSet<string>(lists.Select(item => (string)item["path"]), StringComparer.OrdinalIgnoreCase);
-    long size = 0;
+    long size = main.Length;
     foreach (var item in zip.Entries) {
      if (!item.FullName.StartsWith(prefix + "Notenlisten/", StringComparison.Ordinal) ||
          !item.FullName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase)) continue;
      var path = Validate(item.FullName.Substring(prefix.Length));
      if (!names.Add(path)) continue;
      size += item.Length;
-     if (size > MaxPayload || item.Length > bytes.Length) throw FormatError();
-     using (var reader = new StreamReader(item.Open(), VaultCrypto.Utf8))
-      lists.Add(new JObject { ["path"] = path, ["text"] = reader.ReadToEnd() });
+     if (size > MaxPayload) throw FormatError();
+     var listBytes = ReadBackupZipEntry(item);
+     try {
+      using (var reader = new StreamReader(new MemoryStream(listBytes, false), VaultCrypto.Utf8))
+       lists.Add(new JObject { ["path"] = path, ["text"] = reader.ReadToEnd() });
+     } finally { VaultCrypto.Clear(listBytes); }
     }
     var snapshot = (JObject)data.DeepClone();
     snapshot["notfallListen"] = lists.DeepClone();
@@ -843,10 +916,17 @@ namespace Notenblick.Native {
    using (var input = new MemoryStream(bytes, false)) {
     if (!name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)) return ReadBackupJson(input);
     try {
-     using (var zip = new ZipArchive(input, ZipArchiveMode.Read))
-     using (var data = BackupZipMain(zip).Open()) return ReadBackupJson(data);
+     using (var zip = new ZipArchive(input, ZipArchiveMode.Read)) return ReadBackupZipJson(BackupZipMain(zip));
     } catch (InvalidDataException) { return null; }
    }
+  }
+  static JObject ReadBackupZipJson(ZipArchiveEntry item) {
+   var bytes = ReadBackupZipEntry(item);
+   try { using (var input = new MemoryStream(bytes, false)) return ReadBackupJson(input); }
+   finally { VaultCrypto.Clear(bytes); }
+  }
+  static byte[] ReadBackupZipEntry(ZipArchiveEntry item) {
+   using (var input = item.Open()) return ReadExactly(input, item.Length, MaxPayload);
   }
    static JObject ReadBackupJson(Stream input) {
     try {
@@ -921,13 +1001,17 @@ namespace Notenblick.Native {
      foreach (var child in Directory.EnumerateFileSystemEntries(entry)) {
       var childName = Path.GetFileName(child);
       CheckPath(child);
-      if (!Node.IsMatch(childName) || Directory.Exists(child) != childName.StartsWith("f-", StringComparison.Ordinal))
+      if (Directory.Exists(child)) {
+       if (!(Node.IsMatch(childName) && childName.StartsWith("f-", StringComparison.Ordinal)) && !RecordStage.IsMatch(childName))
+        throw Collision(Path.GetFileName(old) + "/" + name + "/" + childName);
+       CheckFileNode(child);
+      } else if (!(Node.IsMatch(childName) && childName.StartsWith("d-", StringComparison.Ordinal)) && !AtomicStage.IsMatch(childName))
        throw Collision(Path.GetFileName(old) + "/" + name + "/" + childName);
-      if (Directory.Exists(child)) CheckFileNode(child);
      }
     } else if (name != HeaderName && name != ProofName && name != RetiredMarker && name != EnableJournal && name != RotateJournal && name != DisableJournal &&
-               name != PlainStage && name != ArchiveStage && name != ArchiveClaim &&
-               !Regex.IsMatch(name, "^\\.nb-[a-f0-9]{32}\\.tmp$")) throw Collision(Path.GetFileName(old) + "/" + name);
+               name != PlainStage && name != ArchiveStage && name != ArchiveClaim && name != PrepareRotation && name != PointerStage &&
+               name != MainBlockerStage && name != BackupBlockerStage &&
+               !AtomicStage.IsMatch(name)) throw Collision(Path.GetFileName(old) + "/" + name);
    }
   }
   static void TryRemoveTransient(string path) {
@@ -955,18 +1039,22 @@ namespace Notenblick.Native {
   }
   internal static byte[] ReadBounded(string path, int maximum) {
    CheckPath(path);
-   using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-    if (stream.Length > maximum) throw new IOException("Die Datei ist zu groß.");
-    var data = new byte[(int)stream.Length];
+   using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+    return ReadExactly(stream, stream.Length, maximum);
+  }
+  static byte[] ReadExactly(Stream stream, long length, int maximum) {
+    if (length < 0 || length > maximum) throw new IOException("Die Datei ist zu groß.");
+    var data = new byte[(int)length];
     int offset = 0;
-    while (offset < data.Length) {
-     int n = stream.Read(data, offset, data.Length - offset);
-     if (n == 0) throw FormatError();
-     offset += n;
-    }
-    if (stream.ReadByte() != -1) throw FormatError();
-    return data;
-   }
+    try {
+     while (offset < data.Length) {
+      int n = stream.Read(data, offset, data.Length - offset);
+      if (n == 0) throw FormatError();
+      offset += n;
+     }
+     if (stream.ReadByte() != -1) throw FormatError();
+     return data;
+    } catch { VaultCrypto.Clear(data); throw; }
   }
   internal static void WriteAtomic(string path, byte[] data) {
    CheckPath(path);

@@ -51,8 +51,12 @@ function desktopMock({fixture,pass,key,initialLocked}) {
       if(locked||!enabled)fail('Entsperre Notenblick zuerst.');
       window.backupReceived={name:request.name,contents:JSON.parse(request.text)};return true;
     }
-    if (op==='vault-verify') {if(request.recovery!==key)fail('Der Notfallschlüssel passt nicht.');return true;}
-    if (op==='vault-disable') {if(request.password!==pass&&request.recovery!==key)fail('Zugang prüfen.');enabled=false;return true;}
+    if (op==='vault-check-password' || op==='vault-change') {
+      if((request.currentPassword||request.password)!==pass&&request.recovery!==key)fail('Zugang prüfen.','VaultAccessException');
+      return true;
+    }
+    if (op==='vault-verify') {if(request.recovery!==key)fail('Zugang prüfen.','VaultAccessException');return true;}
+    if (op==='vault-disable') {if(request.password!==pass&&request.recovery!==key)fail('Zugang prüfen.','VaultAccessException');enabled=false;return true;}
     if (op==='migration-sources') return [];
     if (op==='storage-info') return 'Daten';
     if (op==='update-state') return {enabled:false};
@@ -161,10 +165,47 @@ function desktopMock({fixture,pass,key,initialLocked}) {
     assert.match(await page.locator('#passwordProtectionState').textContent(),/eingeschaltet/i);
     await scan(page,'eingeschaltet','#passwordProtection');
     assert.equal(await page.locator('#passwordProtection #vaultLock').count(),0);
+    const cancel=page.locator('#dialog .dialog-actions [data-action=close]');
+    await page.locator('#vaultChange').click();
+    await scan(page,'passwort-aendern-320','#dialog');
+    await page.locator('#vaultCurrent').fill('falsches Testpasswort');
+    await page.locator('#vaultNew').fill(pass+'1');
+    await page.locator('#vaultRepeat').fill(pass+'1');
+    await page.locator('#dialogSave').click();
+    await page.waitForFunction(()=>document.activeElement.id==='vaultCurrent');
+    assert.match(await page.locator('#dialogError').textContent(),/Das Passwort stimmt nicht/);
+    await page.locator('#vaultCurrent').fill(pass);
+    assert.equal(await page.locator('#dialogError').isVisible(),false);
+    await cancel.click();
+    await page.locator('#vaultVerify').click();
+    await scan(page,'notfallschluessel-pruefen-320','#dialog');
+    await page.locator('#vaultVerifyKey').fill('falscher Schlüssel');
+    await page.locator('#dialogSave').click();
+    await page.waitForFunction(()=>document.activeElement.id==='vaultVerifyKey');
+    assert.match(await page.locator('#dialogError').textContent(),/Der Notfallschlüssel passt nicht/);
+    await page.locator('#vaultVerifyKey').fill(key);
+    await page.locator('#dialogSave').click();
+    await page.waitForSelector('#dialog',{state:'hidden'});
+    await page.locator('#vaultReplace').click();
+    assert.equal(await page.locator('#dialogTitle').textContent(),'Passwort bestätigen');
+    await scan(page,'notfallschluessel-ersetzen-320','#dialog');
+    await page.locator('#vaultSetupPassword').fill(pass);
+    await page.locator('#dialogSave').click();
+    await page.waitForSelector('#vaultKeySave');
+    await cancel.click();
     await page.locator('#tab-home').click();
+    await page.locator('#vaultLock').focus();
+    await page.keyboard.press('F1');
+    assert.equal(await page.evaluate(()=>Notenblick.contextHelp?.index),'sicherung-passwortschutz-verwenden');
+    await page.keyboard.press('Escape');
+    assert.equal(await page.evaluate(()=>document.activeElement.id),'vaultLock');
+    await scan(page,'start-bei-aktivem-schutz-320','#home');
     await page.locator('#vaultLock').click();
     await page.waitForFunction(()=>Notenblick.vault.locked&&!Notenblick.vaultLocking);
     await scan(page,'sperre-320','#vaultGate');
+    await page.emulateMedia({forcedColors:'active'});
+    await scan(page,'sperre-hochkontrast-320','#vaultGate');
+    await page.emulateMedia({forcedColors:'none'});
     const cdp=await context.newCDPSession(page);
     const ax=await cdp.send('Accessibility.getFullAXTree');
     assert.equal(ax.nodes.some(node=>!node.ignored&&node.name?.value==='Hauptnavigation'),false);
@@ -204,9 +245,14 @@ function desktopMock({fixture,pass,key,initialLocked}) {
     assert.ok(payload.contents.lists.length);
     await activate(page);
     await page.locator('#vaultDisable').click();
+    await scan(page,'passwortschutz-ausschalten-320','#dialog');
     assert.equal(await page.locator('#vaultCurrentKey').isVisible(),false);
     await page.locator('#vaultAuthChoice').click();
     assert.equal(await page.locator('#vaultCurrent').isVisible(),false);
+    await page.locator('#vaultCurrentKey').fill('falscher Schlüssel');
+    await page.locator('#dialogSave').click();
+    await page.waitForFunction(()=>document.activeElement.id==='vaultCurrentKey');
+    assert.match(await page.locator('#dialogError').textContent(),/Der Notfallschlüssel passt nicht/);
     await page.locator('#vaultCurrentKey').fill(key);
     await page.locator('#dialogSave').click();
     await page.waitForSelector('#vaultEnable');

@@ -683,15 +683,21 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 #overviewZeroHint{margin:0;padding:12px 21px;border-bottom:1px solid var(--line)}
 
 /* Compact, accessible password controls and an opaque lock screen. */
-.vault-settings{max-width:780px;padding:20px;margin-block:24px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
-.vault-settings h3{margin-block:0 10px}
+.vault-settings{max-width:780px;padding:clamp(12px,3vw,20px);margin-block:24px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.vault-settings-heading{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-2) var(--space-4)}
+.vault-settings-heading h3,.vault-settings-heading p{margin:0}
+#passwordProtectionState{font-weight:650;color:var(--muted)}
 .vault-settings-group{margin-block-start:var(--space-4);padding-block-start:var(--space-3);border-top:1px solid var(--line)}
 .vault-settings-group h4{margin:0 0 var(--space-2)}
 .vault-auth{margin-block:var(--space-3) var(--space-4)}
+.vault-password-fields{display:grid;gap:var(--space-3);justify-items:start}
+.vault-password-fields>.field{width:100%}
+.vault-new-password{padding-block-start:var(--space-4);border-top:1px solid var(--line)}
 .vault-auth .check{margin-block:var(--space-2)}
 .vault-auth #vaultAuthChoice{margin-block-start:var(--space-2)}
 #home .page-heading{flex-wrap:wrap;gap:var(--space-3);align-items:center}
 #home .page-heading #homeVaultAction{flex:0 0 auto;max-width:100%}
+#vaultLock{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
 @media(max-width:520px){#home .page-heading #homeVaultAction{flex-basis:100%}}
 .vault-settings .button-row,.vault-key-actions,.vault-gate-actions{flex-wrap:wrap}
 .vault-settings button,.vault-key-actions button,.vault-gate-actions button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
@@ -716,6 +722,7 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 #vaultGate h2,#vaultGate p{margin:0}
 #vaultGateHint{max-width:36ch}
 #vaultGate .field{margin:0}
+#vaultGateWork:empty{position:absolute;inline-size:1px;block-size:1px;overflow:hidden}
 #vaultGateError:not([hidden]){border-inline-start:3px solid currentColor;padding-inline-start:var(--space-2)}
 #vaultGate .check{margin-block:8px 0}
 #vaultGate .text-button{justify-self:start}
@@ -728,14 +735,14 @@ html[data-vault-locked] body>:not(#vaultGate){visibility:hidden}
 
 /* New assessments reuse the existing work area and form controls. */
 .entry-workspace:has(#newAssessmentFields) { container-type: inline-size; }
-.entry-workspace .entry-heading:has(> #newAssessmentFields) { gap: 10px; margin-bottom: 12px; }
+.entry-workspace .entry-heading:has(> #newAssessmentFields) { gap: 10px; margin-bottom: 0; }
 .entry-heading:has(> #newAssessmentFields) > h3 { scroll-margin-top: 8px; }
 #newAssessmentFields { align-items: end; grid-template-columns: minmax(0,1fr) minmax(0,17rem); }
 #newAssessmentFields .date-field { display: block; margin: 0; }
 #newAssessmentFields .date-parts { grid-template-columns: repeat(auto-fit,minmax(min(100%,4.25rem),1fr)); }
 #newAssessmentFields .date-parts input { display: block; }
 .performance-draft-state { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
-.performance-draft-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.performance-draft-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); margin-block-start: var(--space-3); padding-block-start: var(--space-3); border-block-start: 1px solid var(--line); }
 .performance-draft-tools > * { min-width: 0; }
 .performance-draft-input:has(#pointConfiguration:not([hidden])),
 #draft-participation:has(#draft-participants:not([hidden])),

@@ -10,6 +10,7 @@ using Microsoft.Win32;
 namespace Notenblick.Native {
     internal sealed class RescueWindow : Form {
         private readonly StatusLabel status = new StatusLabel();
+        private readonly StatusLabel copyStatus = new StatusLabel();
         private readonly Font emphasisFont, headingFont;
         private readonly Panel surface = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = SystemColors.Control };
         private readonly TableLayoutPanel shell = Column();
@@ -18,8 +19,7 @@ namespace Notenblick.Native {
         private readonly TableLayoutPanel locationPanel = Column();
         private readonly Label locationLabel = NewLabel();
         private readonly TextBox location = new TextBox {
-            Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Vertical,
-            Dock = DockStyle.Top, Height = 44, BackColor = SystemColors.Window
+            ReadOnly = true, Dock = DockStyle.Top, BackColor = SystemColors.Window
         };
         private readonly ComboBox restorePoint = Choice("Gespeicherter Stand");
         private readonly ComboBox year = Choice("Schuljahr");
@@ -49,7 +49,8 @@ namespace Notenblick.Native {
         private readonly TableLayoutPanel pointPanel = Column();
         private readonly TableLayoutPanel copyPanel = Column();
         private readonly CheckBox moreCopies = new CheckBox { Text = "Weitere Kopien", Appearance = Appearance.Button, AutoSize = true };
-        private readonly FlowLayoutPanel extraCopies;
+        private readonly FlowLayoutPanel copyActions, extraCopies;
+        private readonly Label readingHint = NewLabel("Wähle eine Notenliste. Du kannst den Text lesen, markieren und kopieren.");
         private readonly Label secretLabel = NewLabel();
         private readonly Control[] filterFields;
         private RescueSource source;
@@ -65,6 +66,7 @@ namespace Notenblick.Native {
                 AutoSize = true;
                 Margin = new Padding(1, 3, 1, 6);
                 UseMnemonic = false;
+                Visible = false;
                 LiveSetting = System.Windows.Forms.Automation.AutomationLiveSetting.Polite;
             }
             internal void Announce() { AccessibilityObject.RaiseLiveRegionChanged(); }
@@ -100,7 +102,7 @@ namespace Notenblick.Native {
             var heading = NewLabel("Notfallzugriff für Notenblick");
             heading.Font = headingFont;
             shell.Controls.Add(heading);
-            sourcePanel.Controls.Add(NewLabel("Öffne deinen Datenordner oder eine Sicherung, um deine Noten zu lesen."));
+            sourcePanel.Controls.Add(NewLabel("Wähle den Ordner „Daten“ von Notenblick oder öffne eine Sicherung."));
             sourcePanel.Controls.Add(Buttons(chooseDirectory, chooseFile));
             locationPanel.Controls.Add(locationLabel);
             locationPanel.Controls.Add(location);
@@ -120,12 +122,20 @@ namespace Notenblick.Native {
             shell.Controls.Add(Area("Noten lesen", readingPanel));
             filterFields = new[] { WithLabel("Schul&jahr", year), WithLabel("&Klasse", schoolClass), WithLabel("&Fach", course) };
             foreach (var field in filterFields) filters.Controls.Add(field);
+            listPanel.Controls.Add(readingHint);
             listPanel.Controls.Add(filters);
             listPanel.Controls.Add(WithLabel("&Notenliste", list));
             listPanel.Controls.Add(preview);
-            copyPanel.Controls.Add(Buttons(saveList, moreCopies));
-            extraCopies = (FlowLayoutPanel)Buttons(saveLists, saveData, rawCopy);
+            saveList.TabIndex = 0;
+            saveLists.TabIndex = 0;
+            saveData.TabIndex = 1;
+            moreCopies.TabIndex = 2;
+            rawCopy.TabIndex = 2;
+            copyActions = Buttons(saveList, moreCopies);
+            extraCopies = Buttons(saveLists, saveData, rawCopy);
+            copyPanel.Controls.Add(copyActions);
             copyPanel.Controls.Add(extraCopies);
+            copyPanel.Controls.Add(copyStatus);
             shell.Controls.Add(Area("Kopie speichern", copyPanel));
             moreCopies.CheckedChanged += (s, e) => RefreshActions();
             shell.Controls.Add(Buttons(lockAccess, NewButton("S&chließen", (s, e) => Close())));
@@ -156,7 +166,10 @@ namespace Notenblick.Native {
                             secret.Text = ReadKeyText(content);
                         }
                         await OpenSelected();
-                    } catch { SetStatus("Die Schlüsseldatei konnte nicht gelesen werden. Wähle die gesicherte Textdatei oder füge den Schlüssel ein.", true); secret.Focus(); }
+                    } catch (Exception error) when (ReadFailure(error)) {
+                        SetStatus("Die Schlüsseldatei lässt sich nicht lesen. Wähle die Datei, die du beim Einrichten gespeichert hast, oder gib den Schlüssel ein.", true);
+                        secret.Focus();
+                    }
                 }
             };
             showSecret.CheckedChanged += (s, e) => secret.UseSystemPasswordChar = !showSecret.Checked;
@@ -176,12 +189,20 @@ namespace Notenblick.Native {
             FormClosed += (s, e) => { SystemEvents.SessionSwitch -= SessionSwitch; ClearSnapshot(); source?.Dispose(); emphasisFont.Dispose(); headingFont.Dispose(); };
             SystemEvents.SessionSwitch += SessionSwitch;
             Shown += async (s, e) => {
+                FitWindowToScreen();
                 var root = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Daten");
                 if (Directory.Exists(root)) await SelectSource(root, chooseDirectory);
-                else { SetStatus("Wähle den Notenblick-Datenordner oder eine Sicherung."); chooseDirectory.Focus(); }
+                else chooseDirectory.Focus();
             };
             ConfigureCredential();
             RefreshActions();
+        }
+
+        private void FitWindowToScreen() {
+            var area = Screen.FromControl(this).WorkingArea;
+            MinimumSize = new Size(Math.Min(MinimumSize.Width, area.Width), Math.Min(MinimumSize.Height, area.Height));
+            Size = new Size(Math.Min(Width, area.Width), Math.Min(Height, area.Height));
+            Location = new Point(area.X + (area.Width - Width) / 2, area.Y + (area.Height - Height) / 2);
         }
 
         private void FitContent() {
@@ -191,7 +212,8 @@ namespace Notenblick.Native {
                 int groupWidth = Math.Max(1, usable - LogicalToDeviceUnits(18));
                 foreach (var row in shell.Controls.OfType<FlowLayoutPanel>().Concat(sourcePanel.Controls.OfType<FlowLayoutPanel>()).Concat(credentialPanel.Controls.OfType<FlowLayoutPanel>()).Concat(copyPanel.Controls.OfType<FlowLayoutPanel>()))
                     row.MaximumSize = new Size(groupWidth, 0);
-                foreach (var label in shell.Controls.OfType<Label>().Concat(sourcePanel.Controls.OfType<Label>()).Concat(locationPanel.Controls.OfType<Label>()))
+                foreach (var label in shell.Controls.OfType<Label>().Concat(sourcePanel.Controls.OfType<Label>())
+                    .Concat(locationPanel.Controls.OfType<Label>()).Concat(listPanel.Controls.OfType<Label>()).Concat(copyPanel.Controls.OfType<Label>()))
                     label.MaximumSize = new Size(groupWidth, 0);
 
                 int columns = usable >= LogicalToDeviceUnits(550) ? filterFields.Length : 1;
@@ -220,14 +242,14 @@ namespace Notenblick.Native {
 
         private string HelpText() {
             if (busy) return "Warte, bis der laufende Vorgang abgeschlossen ist.";
-            if (source == null) return "Wähle den Notenblick-Datenordner oder eine gespeicherte Sicherung.";
+            if (source == null) return "Wähle den Ordner „Daten“ von Notenblick oder öffne eine Sicherung.";
             if (NeedsCredential) return recoveryMode
-                ? "Gib den Notfallschlüssel ein oder wähle die gespeicherte Schlüsseldatei. Eine geschützte Kopie kannst du auch vor dem Öffnen erstellen."
-                : "Gib dein Passwort ein oder wähle „Mit Notfallschlüssel öffnen“. Eine geschützte Kopie kannst du auch vor dem Öffnen erstellen.";
+                ? "Gib den Notfallschlüssel ein oder wähle die gespeicherte Schlüsseldatei."
+                : "Gib dein Passwort ein. Falls du es nicht mehr weißt, wähle „Mit Notfallschlüssel öffnen“.";
             if (snapshot == null) return pointPanel.Visible ? "Wähle einen früheren Stand oder öffne eine andere Sicherung." : "Wähle einen anderen Datenordner oder eine Sicherung.";
-            if (!listPanel.Visible) return "Zu diesem Stand gibt es keine Notenlisten. Unter „Weitere Kopien“ kannst du eine Datenkopie erstellen.";
-            if (copyPanel.ContainsFocus) return "Speichere die ausgewählte Notenliste, alle Listen dieses Stands oder eine Datenkopie in einem Ordner deiner Wahl. Deine Originale bleiben erhalten.";
-            return "Wähle eine Notenliste. Mit Tab erreichst du den Inhalt der Liste und anschließend die Schaltflächen zum Speichern.";
+            if (!listPanel.Visible) return "Zu diesem Stand gibt es keine Notenlisten. Mit „Datenkopie erstellen“ speicherst du die Noten für Notenblick.";
+            if (copyPanel.ContainsFocus) return "Speichere die ausgewählte Liste mit „Diese Notenliste speichern“. Unter „Weitere Kopien“ findest du die übrigen Möglichkeiten.";
+            return "Wähle eine Notenliste. Mit Tab gelangst du zum Text der Liste und danach zu den Möglichkeiten zum Speichern.";
         }
 
         internal static string ReadKeyText(string content) {
@@ -273,7 +295,7 @@ namespace Notenblick.Native {
             parent.Controls.Add(box);
             return parent;
         }
-        private static Control Buttons(params Control[] buttons) {
+        private static FlowLayoutPanel Buttons(params Control[] buttons) {
             var row = new FlowLayoutPanel { Dock = DockStyle.Top, AutoSize = true, WrapContents = true, Margin = new Padding(0, 3, 0, 6) };
             row.Controls.AddRange(buttons);
             return row;
@@ -313,32 +335,40 @@ namespace Notenblick.Native {
             rawCopy.Enabled = !busy;
             saveData.Visible = snapshot != null;
             saveData.Enabled = !busy;
+            var dataCopyRow = hasLists ? extraCopies : copyActions;
+            if (saveData.Parent != dataCopyRow) {
+                dataCopyRow.Controls.Add(saveData);
+                dataCopyRow.Controls.SetChildIndex(saveData, 1);
+            }
             saveList.Visible = saveLists.Visible = hasLists;
             saveList.Enabled = !busy && Value(list) != null;
             saveLists.Enabled = !busy;
-            bool hasCopies = protectedSource || snapshot != null;
-            moreCopies.Visible = hasCopies;
-            if (!hasCopies) moreCopies.Checked = false;
-            extraCopies.Visible = moreCopies.Checked;
-            copyPanel.Parent.Visible = hasCopies;
+            bool hasExtraCopies = protectedSource || hasLists;
+            moreCopies.Visible = hasExtraCopies;
+            if (!hasExtraCopies) moreCopies.Checked = false;
+            extraCopies.Visible = hasExtraCopies && moreCopies.Checked;
+            copyPanel.Parent.Visible = protectedSource || snapshot != null;
             lockAccess.Visible = protectedSource && source.IsUnlocked;
             lockAccess.Enabled = !busy;
             FitContent();
         }
 
-        private void SetStatus(string value, bool error = false) {
+        private void SetStatus(string value, bool error = false, bool copying = false) {
+            var notice = copying ? copyStatus : status;
             var accessible = error ? "Fehler. " + value : value;
-            if (status.Text == value && status.AccessibleName == accessible) return;
-            status.Text = value;
-            status.ForeColor = SystemColors.ControlText;
-            status.Font = error ? emphasisFont : Font;
-            status.AccessibleName = accessible;
+            if (notice.Text == value && notice.AccessibleName == accessible) return;
+            notice.Text = value;
+            notice.ForeColor = SystemColors.ControlText;
+            notice.Font = error ? emphasisFont : Font;
+            notice.AccessibleName = accessible;
+            notice.Visible = value.Length > 0;
             FitContent();
-            status.Announce();
+            if (value.Length > 0) notice.Announce();
         }
 
         private void ClearSnapshot() {
             preview.Clear();
+            SetStatus("", copying: true);
             var current = snapshot;
             snapshot = null;
             snapshotWasProtected = false;
@@ -441,7 +471,7 @@ namespace Notenblick.Native {
                             FillLists(0);
                             string opened = "Stand vom " + snapshot.Updated.ToLocalTime().ToString("g", CultureInfo.CurrentCulture) + " geöffnet.";
                             if (snapshot.AdditionalDataUnavailable) opened += " Einige zusätzliche Dateien sind nicht lesbar. Du kannst die lesbaren Daten kopieren.";
-                            if (!snapshot.Lists.Any()) opened += " Es gibt keine fertigen Notenlisten. Du kannst eine Datenkopie erstellen.";
+                            if (!snapshot.Lists.Any()) opened += " Zu diesen Noten gibt es keine Listen. Mit „Datenkopie erstellen“ speicherst du die Noten für Notenblick.";
                             if (!earlierLoaded) opened += " Frühere Stände sind gerade nicht verfügbar.";
                             SetStatus(opened);
                         }
@@ -454,7 +484,13 @@ namespace Notenblick.Native {
                         pendingBackup = null;
                         if (!NeedsCredential && !(error is RescueSourceInUseException)) await TryFillRestorePoints(selection);
                     }
-                    if (!lockRequested) SetStatus(Message(error, "Dieser Notenstand konnte nicht gelesen werden."), true);
+                    if (!lockRequested) {
+                        string message = focusCredential
+                            ? (recovery ? "Mit diesem Notfallschlüssel lassen sich die Noten nicht öffnen. Prüfe den Schlüssel oder wähle die passende Schlüsseldatei." :
+                                "Mit diesem Passwort lassen sich die Noten nicht öffnen. Versuch es noch einmal oder verwende den Notfallschlüssel.")
+                            : Message(error, "Die Noten lassen sich gerade nicht öffnen. Wähle einen anderen Ordner oder eine Sicherung.");
+                        SetStatus(message, true);
+                    }
                 }
             } finally {
                 credential = null;
@@ -515,8 +551,11 @@ namespace Notenblick.Native {
 
         private void ShowList() {
             string path = Value(list);
-            try { preview.Text = snapshot == null || path == null ? "" : RescueSource.Text(snapshot.Files[path]); }
-            catch (System.Text.DecoderFallbackException) { preview.Text = "Diese Notenliste ist nicht als Text lesbar."; }
+            try {
+                preview.Text = snapshot == null ? "" : path == null
+                    ? "Zu dieser Auswahl gibt es keine Notenliste. Wähle ein anderes Schuljahr, eine andere Klasse oder ein anderes Fach."
+                    : RescueSource.Text(snapshot.Files[path]);
+            } catch (System.Text.DecoderFallbackException) { preview.Text = "Diese Notenliste lässt sich nicht lesen. Wähle eine andere Liste."; }
             preview.Select(0, 0);
             saveList.Enabled = !busy && path != null;
         }
@@ -528,12 +567,12 @@ namespace Notenblick.Native {
             var opened = snapshot;
             string selectedList = Value(list);
             if (kind == CopyKind.List && selectedList == null) {
-                SetStatus("Wähle zuerst eine Notenliste.", true);
+                SetStatus("Wähle zuerst eine Notenliste.", true, copying: true);
                 list.Focus();
                 return;
             }
             string[] selected = kind == CopyKind.List ? new[] { selectedList } : kind == CopyKind.Lists ? opened.Lists.ToArray() : null;
-            if (!protectedCopy && snapshotWasProtected && MessageBox.Show(this, "Diese Kopie ist ohne Passwort lesbar. Wähle einen sicheren Speicherort.", Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK) {
+            if (!protectedCopy && snapshotWasProtected && MessageBox.Show(this, "Die Kopie lässt sich ohne Passwort öffnen. Speichere sie an einem Ort, auf den nur du Zugriff hast.", "Kopie ohne Passwort speichern", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != DialogResult.OK) {
                 opener.Focus();
                 return;
             }
@@ -546,13 +585,13 @@ namespace Notenblick.Native {
             }
             if (source != original || snapshot != opened) return;
             busy = true;
-            SetStatus("Die Kopie wird erstellt …");
+            SetStatus("Die Kopie wird gespeichert …", copying: true);
             RefreshActions();
             try {
                 await Task.Run(() => { if (protectedCopy) original.SaveProtected(target); else original.SaveSnapshot(opened, target, selected); });
-                if (!lockRequested) SetStatus("Kopie erstellt. Neuer Ordner: " + target);
+                if (!lockRequested) SetStatus("Die Kopie liegt hier: " + target, copying: true);
             } catch (Exception error) when (ReadFailure(error)) {
-                if (!lockRequested) SetStatus(Message(error, "Die Kopie konnte nicht fertiggestellt werden. Wähle einen anderen Zielordner."), true);
+                if (!lockRequested) SetStatus(Message(error, "Die Kopie konnte nicht gespeichert werden. Wähle einen anderen Ordner."), true, copying: true);
             }
             finally {
                 busy = false;
@@ -565,7 +604,7 @@ namespace Notenblick.Native {
             error is UnauthorizedAccessException || error is Newtonsoft.Json.JsonException || error is System.Text.DecoderFallbackException;
 
         private static string Message(Exception error, string fallback) {
-            if (error is RescueSourceInUseException || error is VaultAccessException) return error.Message;
+            if (error is RescueSourceInUseException) return "Schließe Notenblick, um den Datenordner hier zu öffnen. Du kannst auch eine Sicherung auswählen.";
             if (error is UnauthorizedAccessException) return "Auf den Ordner kann nicht zugegriffen werden. Prüfe den Speicherort oder wähle einen anderen Ordner.";
             if (error is FileNotFoundException || error is DirectoryNotFoundException) return "Dieser Stand fehlt. Wähle einen früheren Stand oder eine Sicherung.";
             string text = error.Message;

@@ -2,9 +2,9 @@
   "name": "notenblick",
   "version": "1.28.0",
   "releaseNotes": [
-    "Neue Leistungen anlegen und gleich Noten eingeben.",
-    "Noten und Sicherungen auf Wunsch mit einem Passwort schützen.",
-    "Mit dem Notfallzugriff Noten lesen und Daten kopieren."
+    "Leistungen anlegen, sofort Noten eingeben und Entwürfe später fortsetzen.",
+    "Noten und Sicherungen auf Wunsch mit einem Passwort schützen und Notenblick auf der Startseite sperren.",
+    "Noten im Notfallzugriff lesen und kopieren, auch wenn Notenblick nicht startet."
   ],
   "private": true,
   "description": "Lokaler Windows-Notenrechner; Node-Abhängigkeiten ausschließlich für Entwicklungstests",

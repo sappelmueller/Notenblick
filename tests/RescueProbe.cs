@@ -89,31 +89,48 @@ internal static class RescueProbe {
         }
         using (var source = new RescueSource(archive))
         using (var snapshot = source.Open(null, null, null)) Check(snapshot.Lists.Single() == ListPath, "Migration archive with adjacent valid text list");
+        string compressed = Path.Combine(work, "Komprimierte-Migration.zip");
+        string longList = String.Concat(Enumerable.Repeat("Eine synthetische Zeile der Notenliste.\n", 4000));
+        using (var zip = ZipFile(compressed, ZipArchiveMode.Create)) {
+            Add(zip, "Daten/notenverwaltung.json", Legacy);
+            Add(zip, "Daten/" + ListPath, longList);
+        }
+        Check(new FileInfo(compressed).Length < longList.Length, "Test list is longer than its compressed migration archive");
+        Check((string)VaultStore.ReadPortableZipSnapshot(File.ReadAllBytes(compressed))["notfallListen"][0]["text"] == longList,
+            "Migrated backup keeps a text list longer than the compressed archive");
         string invalidArchive = Path.Combine(work, "unlesbar.zip");
         using (var zip = ZipFile(invalidArchive, ZipArchiveMode.Create)) { Add(zip, "notenverwaltung.json", Legacy); Add(zip, "../irgendwo.txt", "Test"); }
         using (var source = new RescueSource(invalidArchive)) Reject(() => source.Open(null, null, null), "Reject unsafe ZIP path");
 
-        var retiredId = "00112233445566778899aabbccddeeff";
-        var old = Path.Combine(work, "Alter-Datenordner");
-        var archiveData = Path.Combine(work, "Aktuelles-Datenarchiv");
-        Write(old, "notenverwaltung.json", Bytes(Legacy));
-        var oldKey = VaultCrypto.GenerateRecovery();
-        using (var vault = new VaultStore(old)) vault.Enable(Password, oldKey, oldKey);
-        var retired = Path.Combine(archiveData, "Geschuetzt-" + retiredId);
-        Directory.CreateDirectory(archiveData);
-        Directory.Move(Directory.GetDirectories(old, "Geschuetzt-*").Single(), retired);
-        Write(retired, "Frueherer-Stand.txt", Bytes("Früherer geschützter Notenstand. Zum Öffnen diesen Ordner im Notfallzugriff auswählen."));
-        Write(archiveData, "notenverwaltung.json", Bytes(Legacy));
-        using (var plain = new VaultStore(archiveData)) plain.FinishPlainCleanup();
-        Check(!Directory.Exists(retired), "Remove retired test-build generation after archiving");
-        var retained = Path.Combine(archiveData, "Sicherungen", "Notenblick-Archiv-" + retiredId + ".zip");
-        var retainedHash = Hex(File.ReadAllBytes(retained));
-        using (var source = new RescueSource(retained)) {
-            Check(source.Protected, "Retired archive remains protected");
-            Reject(() => source.Open(null, "Ungültig", null), "Old archive rejects wrong password");
-            using (var opened = source.Open(null, null, oldKey)) Check(opened.CommitId == "258", "Old archive keeps its own recovery credential");
+        foreach (bool interruptedRotation in new[] { false, true }) {
+            var retiredId = "00112233445566778899aabbccddeeff";
+            var old = Path.Combine(work, interruptedRotation ? "Wechsel-abgebrochen" : "Alter-Datenordner");
+            var archiveData = Path.Combine(work, interruptedRotation ? "Archiv-nach-Abbruch" : "Aktuelles-Datenarchiv");
+            Write(old, "notenverwaltung.json", Bytes(Legacy));
+            var oldKey = VaultCrypto.GenerateRecovery();
+            using (var vault = new VaultStore(old)) vault.Enable(Password, oldKey, oldKey);
+            var retired = Path.Combine(archiveData, "Geschuetzt-" + retiredId);
+            Directory.CreateDirectory(archiveData);
+            Directory.Move(Directory.GetDirectories(old, "Geschuetzt-*").Single(), retired);
+            if (interruptedRotation) {
+                var secret = VaultCrypto.UnlockHeader(Read(retired, "Zugang.bin"), null, oldKey);
+                try { Write(retired, "Drehen.bin", VaultCrypto.SealRecord(secret, "Drehen.bin", Bytes("[\"Geschuetzt-ffeeddccbbaa99887766554433221100\"]"))); }
+                finally { VaultCrypto.Clear(secret); }
+            } else {
+                Write(retired, "Frueherer-Stand.txt", Bytes("Früherer geschützter Notenstand. Zum Öffnen diesen Ordner im Notfallzugriff auswählen."));
+            }
+            Write(archiveData, "notenverwaltung.json", Bytes(Legacy));
+            using (var plain = new VaultStore(archiveData)) plain.FinishPlainCleanup();
+            Check(!Directory.Exists(retired), "Remove previous test-build generation after archiving");
+            var retained = Path.Combine(archiveData, "Sicherungen", "Notenblick-Archiv-" + retiredId + ".zip");
+            var retainedHash = Hex(File.ReadAllBytes(retained));
+            using (var source = new RescueSource(retained)) {
+                Check(source.Protected, "Archived generation remains protected");
+                Reject(() => source.Open(null, "Ungültig", null), "Old archive rejects wrong password");
+                using (var opened = source.Open(null, null, oldKey)) Check(opened.CommitId == "258", "Old archive keeps its own recovery credential");
+            }
+            Check(Hex(File.ReadAllBytes(retained)) == retainedHash, "Notfallzugriff leaves previous archive unchanged");
         }
-        Check(Hex(File.ReadAllBytes(retained)) == retainedHash, "Notfallzugriff leaves retired archive unchanged");
 
         var manifest = new JObject {
             ["state"] = "complete", ["commitId"] = "258", ["files"] = new JArray(ListPath.Substring("Notenlisten/".Length)),

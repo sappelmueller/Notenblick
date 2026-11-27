@@ -74,7 +74,7 @@ A.helpContext=function(el=document.activeElement){
  }
  if(A.ui.main==='help')return 48;
  const action=el?.closest?.('[data-action]')?.dataset.action,menu=el?.closest?.('[data-menu-key]')?.dataset.menuKey;
- if(within('#passwordProtection,#vaultGate'))return 'sicherung-passwortschutz-verwenden';
+ if(within('#passwordProtection,#vaultGate,#vaultLock'))return 'sicherung-passwortschutz-verwenden';
  if(['resume-assessment-draft','discard-assessment-draft'].includes(action)||within('#newAssessmentStatus'))return 'noten-entwurf-fortsetzen';
  if(within('#newAssessmentFields [data-date-part]'))return 'noten-ein-datum-eingeben';
  if(within('#newAssessmentFields')||(['assessment-done','assessment-list'].includes(action)||within('#assessmentWorkTitle'))&&A.currentPerformanceDraft?.())return 12;

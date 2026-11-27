@@ -137,8 +137,8 @@ namespace Notenblick.Native {
    }
   }
   public JObject Handle(JObject request){var response=new JObject{{"id",request["id"]},{"ok",false}};try{var result=Dispatch(request);response["result"]=result==null?JValue.CreateNull():JToken.FromObject(result);response["ok"]=true;}catch(Exception e){
-   bool unlocking=(string)request["op"]=="vault-unlock";
-   response["name"]=unlocking&&e is VaultAccessException?"VaultAccessException":unlocking&&e is InvalidDataException?"InvalidDataException":
+   var operation=(string)request["op"];
+   response["name"]=operation?.StartsWith("vault-",StringComparison.Ordinal)==true&&e is VaultAccessException?"VaultAccessException":operation=="vault-unlock"&&e is InvalidDataException?"InvalidDataException":
     e is FileNotFoundException||e is DirectoryNotFoundException?"NotFoundError":e is UnauthorizedAccessException?"NotAllowedError":"Error";
    response["error"]=e is FileNotFoundException||e is DirectoryNotFoundException?"Die Datei wurde nicht gefunden.":e.Message;
   }return response;}

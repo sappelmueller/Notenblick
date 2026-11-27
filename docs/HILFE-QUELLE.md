@@ -696,7 +696,7 @@ Unter **„Kopie speichern“** erreichst du direkt **„Diese Notenliste speich
 
 Unter **„Weitere Kopien“** kannst du mit **„Geschützte Kopie erstellen“** auch eine verschlüsselte Kopie des gewählten Datenordners oder der Sicherung speichern. Diese Aktion ist bereits vor dem Entsperren verfügbar. Der ursprüngliche Bestand bleibt erhalten.
 
-Ältere Sicherungen enthalten manchmal keine fertigen Notenlisten. Einen lesbaren Datenstand kannst du trotzdem kopieren. Mit **F1** öffnest du die Hilfe im Notfallzugriff.
+Ältere Sicherungen enthalten manchmal keine Notenlisten. Wähle dann **„Datenkopie erstellen“**, um die Noten für Notenblick zu speichern. Mit **F1** öffnest du die Hilfe im Notfallzugriff.
 
 ### Passwortschutz einrichten
 
@@ -710,13 +710,13 @@ Du kannst den Notfallschlüssel zusätzlich kopieren oder drucken. Verwahre jede
 
 ### Geschützte Daten öffnen und sperren
 
-Gib beim Öffnen das **Passwort** ein oder wähle **„Mit Notfallschlüssel öffnen“**. Bewahre den Notfallschlüssel getrennt auf. Wer den Schlüssel hat, kann den zugehörigen Bestand auch ohne Passwort öffnen.
+Gib beim Öffnen dein **Passwort** ein oder wähle **„Mit Notfallschlüssel öffnen“**. Nach dem Sperren heißt die Schaltfläche **„Mit Notfallschlüssel entsperren“**. Bewahre den Schlüssel getrennt von deinen Noten auf. Wer ihn hat, kann die passenden Noten ohne Passwort öffnen.
 
 Wähle auf der **Startseite** **„Notenblick sperren“**, wenn du eine Pause machst. Notenblick sperrt sich auch beim Sperren deiner Windows-Sitzung. Nach dem Öffnen kannst du an deiner bisherigen Stelle weiterarbeiten.
 
-Unter **Einstellungen → Allgemein → Passwortschutz** kannst du das Passwort ändern, den Notfallschlüssel prüfen oder ersetzen und den Schutz ausschalten. Wenn jemand deinen Notfallschlüssel kennt, wähle **„Notfallschlüssel ersetzen“**. Dabei verschlüsselt Notenblick den aktuellen Bestand erneut. Ältere Sicherungen behalten ihre bisherigen Zugangsdaten.
+Unter **Einstellungen → Allgemein → Passwortschutz** kannst du das Passwort ändern, den Notfallschlüssel prüfen oder ersetzen und den Schutz ausschalten. Wenn jemand deinen Notfallschlüssel kennt, wähle **„Notfallschlüssel ersetzen“**. Danach brauchst du für deine aktuellen Noten den neuen Schlüssel. Für ältere Sicherungen kann noch der bisherige Schlüssel nötig sein.
 
-Mit **„Passwortschutz ausschalten“** und deinem Passwort oder Notfallschlüssel machst du deine aktuellen Noten und Notenlisten wieder ohne Passwort lesbar. Frühere Sicherungen findest du unter **Daten → Sicherungen**. Geschützte Sicherungen öffnest du mit dem jeweils passenden Passwort oder Notfallschlüssel. Archive aus früheren Testversionen öffnest du direkt im Notfallzugriff.
+Mit **„Passwortschutz ausschalten“** und deinem Passwort oder Notfallschlüssel machst du deine aktuellen Noten und Notenlisten wieder ohne Passwort lesbar. Frühere Sicherungen findest du unter **Daten → Sicherungen**. Geschützte Sicherungen öffnest du mit dem jeweils passenden Passwort oder Notfallschlüssel.
 
 Wenn dir Passwort und Notfallschlüssel fehlen, lassen sich geschützte Daten nicht öffnen.
 

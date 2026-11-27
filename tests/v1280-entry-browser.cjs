@@ -85,6 +85,24 @@ const server=http.createServer((req,res)=>{
     }else assert.ok(date.y>=title.y+title.height,'Die Datumsgruppe steht unter der Bezeichnung');
    const bounds=await page.evaluate(()=>[document.documentElement.scrollWidth,innerWidth]);
    assert.ok(bounds[0]<=bounds[1]+1,'Keine horizontale Seitenüberbreite bei '+width+'px / '+zoom);
+   const layout=await page.evaluate(()=>{
+    const work=document.querySelector('#assessmentWorkTitle').closest('.entry-workspace');
+    const rect=selector=>work.querySelector(selector).getBoundingClientRect();
+    return {
+     headingEnd:rect('#assessmentWorkTitle').bottom,
+     actionsStart:rect('.entry-heading .button-row').top,
+     actionsEnd:rect('.entry-heading .button-row').bottom,
+     fieldsStart:rect('#newAssessmentFields').top,
+     fieldsEnd:rect('#newAssessmentFields').bottom,
+     toolsStart:rect('.performance-draft-tools').top,
+     toolsEnd:rect('.performance-draft-tools').bottom,
+     tabsStart:rect('.entry-tabs').top
+    };
+   });
+   assert.ok(layout.actionsStart>=layout.headingEnd&&layout.fieldsStart>=layout.actionsEnd,
+    'Aktionen bleiben zwischen Überschrift und Eingabefeldern');
+   assert.ok(layout.toolsStart>layout.fieldsEnd&&layout.tabsStart>layout.toolsEnd,
+    'Eingabefelder, Optionen und Noteneingabe bleiben optisch getrennt');
    await page.locator('#assessmentWorkTitle').focus();
    await page.locator('#assessmentWorkTitle').evaluate(el=>el.scrollIntoView({block:'start'}));
    await page.screenshot({path:path.join(out,'direkt-'+width+'-'+zoom+'.png')});

@@ -40,6 +40,17 @@ Der Sperrschalter steht bei aktivem Schutz auf der Startseite. Die Passwortfenst
 
 Die vollständige Testausgabe `Notenblick_1.28.0_Windows_Testbuild_3.zip` hat 10.437.738 Bytes und SHA-256 `120d474243072b551c5954bd3ffaa6be667a5a5f0c76523b9dc298d6ffd8ed3d`. Der Aktualisierungsdeskriptor bleibt bei `approved: false`.
 
+## Abschluss für 1.28.0
+
+- **Passwortschutz.** Einstellungen, Einrichtung, Sperrfenster und Fehlertexte führen mit kurzen Hinweisen durch den nächsten Schritt. Hilfe zum Sperren ist auf der Startseite über F1 erreichbar.
+- **Datenablage.** Unterbrochene Schlüsselwechsel werden beim Wiederöffnen abgeschlossen oder sicher zurückgenommen. Nach dem Ausschalten werden Reste des Schutzes entfernt. Frühere Sicherungen bleiben mit ihren jeweiligen Zugangsdaten nutzbar.
+- **Notfallzugriff.** Hinweise stehen bei den zugehörigen Aktionen. Fehlen Notenlisten, ist „Datenkopie erstellen“ direkt erreichbar.
+- **Leistung hinzufügen.** Die Anordnung führt von „Fertig“ und „Schließen“ über die Angaben zur Leistung bis zur Eingabe. Die Felder und Aktionen brechen bei wenig Platz um.
+
+Die Prüfung im festgelegten Chromium umfasste 15 Ansichten zum Passwortschutz mit axe und sechs Darstellungen der Leistungseingabe, darunter schmale Fenster und Browserzoom. Die Leistungserfassung wurde zusätzlich in beiden Notenlayouts mit Entwürfen, Teilnehmerauswahl, Punkten, Fehlerfokus und Abschluss geprüft. Browserzoom und Browser-Bedienung ergänzen die praktische Windows-Prüfung.
+
+Der Notfallzugriff bestand 61 gezielte Datei-, Sicherungs- und Schutzprüfungen. Darunter waren komprimierte Notenlisten und Archive aus früheren, unterbrochenen Schutzwechseln. Praktische Prüfungen der nativen Oberfläche, mit NVDA und Braille sowie auf ARM64 sind davon getrennt.
+
 ## Praktische Abnahme auf Windows
 
 Teste auf **Windows x64 und ARM64** mit NVDA und Braille. Entpacke das vollständige Paket in einen neuen Ordner. Verwende in sämtlichen Schritten einen Übungsbestand mit erfundenen Namen.
