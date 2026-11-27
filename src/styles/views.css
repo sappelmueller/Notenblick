@@ -356,6 +356,10 @@ section{min-width:0}
 .action-menu [role=menu]{position:fixed;z-index:12;inset:auto;min-width:0;max-width:100%;overflow:auto;overscroll-behavior:contain;margin:0;padding:6px;list-style:none;background:var(--surface);border:1px solid var(--control-border);border-radius:8px;box-shadow:0 8px 24px #20372d22}
 .menu-item{display:block;width:100%;border:0;background:transparent;color:var(--ink);text-align:left;padding:10px 12px;font-size:.88rem;border-radius:4px;white-space:normal}
 .menu-item:hover,.menu-item:focus{background:var(--soft)}
+.action-menu [role=separator]{border-top:1px solid var(--line);margin:4px 6px}
+.assessment-menu-toggle{display:inline-flex;align-items:center;gap:7px;max-width:100%;overflow-wrap:anywhere}
+.assessment-menu-toggle .menu-indicator{width:7px;height:7px;flex:none;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg)}
+.assessment-menu-toggle[aria-expanded=true] .menu-indicator{transform:translateY(2px) rotate(225deg)}
 .inline-list{display:flex;gap:5px 12px;flex-wrap:wrap;list-style:none;padding:0;margin:0}
 .weight-list{min-width:150px;max-width:240px;padding:0;margin:0;list-style:none;font-size:.82rem}
 .weight-list li{display:flex;justify-content:space-between;gap:14px;padding:2px 0}
@@ -365,7 +369,7 @@ section{min-width:0}
 #dialogContent>.field{margin-bottom:16px}
 #dialogNext{white-space:normal}
 @media(max-width:740px){.error{flex-wrap:wrap}.actions{gap:8px}.weight-list{min-width:140px}.error .text-button{flex-shrink:1}}
-@media(forced-colors:active){.action-menu [role=menu]{border:2px solid CanvasText}.menu-item:focus{outline:2px solid Highlight}}
+@media(forced-colors:active){.action-menu [role=menu]{border:2px solid CanvasText}.action-menu [role=separator]{border-color:CanvasText}.menu-item:focus{outline:2px solid Highlight}}
 
 main>.mode-notice,main>.error{margin:0 0 20px}
 /* Shared 1.4 presentation controls. */
@@ -622,6 +626,9 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 .entry-workspace .entry-heading h3{margin:0;font-size:1.45rem;line-height:1.35}
 .entry-workspace .entry-heading>.button-row{width:100%;flex:none;align-self:auto;justify-content:flex-start}
 .entry-workspace .entry-heading .assessment-meta,.entry-workspace .entry-heading .hint{margin:0}
+.assessment-details{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px}
+.entry-footer{margin-block-start:var(--space-4);padding-block-start:var(--space-3);border-block-start:1px solid var(--line)}
+.entry-footer button{max-width:100%;white-space:normal;overflow-wrap:anywhere}
 .entry-result{font-weight:600}.entry-results tfoot th,.entry-results tfoot td,.entry-table tfoot th,.entry-table tfoot td{background:var(--soft);font-weight:600;border-top:2px solid var(--line)}
 .participation-options>summary{font-weight:650;cursor:pointer;padding:10px 0}.participation-options>.field{margin:12px 0}
 #a-participants{min-width:0}#a-participants>.field{margin:14px 0}#a-participants>.button-row{margin:12px 0}
@@ -754,8 +761,9 @@ html[data-vault-locked] body>:not(#vaultGate){visibility:hidden}
 .performance-draft-options > summary { padding-block: 8px; }
 .performance-draft-options > .form-grid { margin-block: 8px; }
 .performance-draft-tools + .entry-tabs { margin-top: 12px; }
-.performance-draft-tools ~ .entry-result { margin-block: 6px 8px; }
+.entry-tabs + .entry-result { margin-block: 6px 8px; }
 @container (max-width:34rem) {
+  .entry-workspace .entry-heading:has(> #newAssessmentFields) { flex-wrap: nowrap; }
   #newAssessmentFields { grid-template-columns: minmax(0,1fr); gap: 12px; }
   #newAssessmentFields .date-field { max-width: 17rem; }
 }

@@ -6,6 +6,7 @@
     const a = el.dataset.action,
       id = el.dataset.id,
       kind = el.dataset.kind;
+    const assessmentTrigger=el.closest?.('.action-menu')?.querySelector('[data-assessment-menu]')||el;
     if (a==='help-close'){Notenblick.closeContextHelp();return;}
     if (!['close','help','help-close'].includes(a) && !Notenblick.canLeave()) return;
     if(a.startsWith('setup-')&&Notenblick.setupDraft)return Notenblick.setupAction(el);
@@ -48,9 +49,11 @@
         if(next>=0){w.studentIndex=next;Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.focusTarget('singleName-'+kind);}break;
       }
       case 'assessment-edit': Notenblick.editAssessment(); break;
-      case 'assessment-done': if(!await Notenblick.finishPerformanceDraft())Notenblick.finishAssessment(); break;
+      case 'assessment-done': if(!await Notenblick.finishPerformanceDraft(el))Notenblick.finishAssessment(); break;
+      case 'assessment-finish-close': await Notenblick.finishAndCloseAssessment(el); break;
       case 'point-settings': Notenblick.editPointSettings(); break;
-      case 'open-assessment': Notenblick.openAssessment(id,true); break;
+      case 'open-assessment':
+      case 'open-assessment-edit': Notenblick.openAssessment(id,true,a==='open-assessment-edit',assessmentTrigger); break;
       case 'area-individual': Notenblick.areaIndividual(el.dataset.kind); break;
       case 'oral-picker': Notenblick.oralPicker(); break;
       case 'final-dialog': Notenblick.finalDialog(id,el.dataset.period||'annual'); break;
@@ -161,7 +164,17 @@
         Notenblick.openPerformanceDraft(kind,{trigger:el});
         break;
       case 'edit-assessment':
-        Notenblick.assessmentDialog(Notenblick.data.assessments.find(a => a.id === id));
+        {
+          const assessment=Notenblick.data.assessments.find(item=>item.id===id);
+          if(!assessment)throw Error('Diese Leistung ist nicht mehr vorhanden.');
+          if(Notenblick.N.isOralIndividual(assessment)){
+            Notenblick.W().oralFocusId=id;
+            Notenblick.quickOral(assessment.participantIds[0],assessment,true);
+          }else Notenblick.assessmentDialog(assessment);
+          break;
+        }
+      case 'move-assessment':
+        Notenblick.openAssessmentMove(id,assessmentTrigger);
         break;
       case 'prev':
       case 'next':
@@ -181,21 +194,8 @@
         Notenblick.quickOral(id);
         break;
       case 'delete-assessment':
-        {
-          const item = Notenblick.data.assessments.find(x => x.id === id);if(!item)throw Error('Diese Leistung ist nicht mehr vorhanden.');Notenblick.ensureEdit(Notenblick.data.courses.find(c=>c.id===item.courseId));
-          if(Notenblick.$('#dialog').open)Notenblick.closeModal();
-          Notenblick.confirm(Notenblick.N.isOralIndividual(item)?'Einzelnote löschen':'Leistung entfernen', (Notenblick.N.isOralIndividual(item)?Notenblick.studentName(Notenblick.getStudent(item.participantIds[0]))+', '+Notenblick.date(item.date)+': ':'')+'„' + item.title + '“ und die zugehörigen Noten werden entfernt. Du kannst die Änderung unter „Sicherung“ rückgängig machen.', () => {
-            Notenblick.ensureEdit(Notenblick.data.courses.find(c=>c.id===item.courseId));
-            Notenblick.mutate(d => {
-              d.assessments = d.assessments.filter(x => x.id !== id);
-              Notenblick.W().selected[item.kind] = 'all';
-            },{refresh:false});
-            Notenblick.performanceDrafts.delete(id);
-            Notenblick.refreshCurrent();
-            Notenblick.remember();
-          }, 'Entfernen',{helpContext:'noten-eine-leistung-nachtraglich-andern-oder-loschen'});
-          break;
-        }
+        Notenblick.openAssessmentDelete(id,assessmentTrigger);
+        break;
       case 'copy-weights':Notenblick.openWeightCopy();break;
       case 'save':{
         const A=Notenblick,needed=A.dirty||A.workspaceFailed;A.feedback('status','');A.remember();await A.workspacePromise;await A.save();

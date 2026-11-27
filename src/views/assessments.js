@@ -1,22 +1,130 @@
 /* One performance manager supplies list, matrix and entry in both note layouts. */
 (function(A){'use strict';
+ const matrixPageSize=8;
+ function matrixAssessments(courseId,kind){
+  return A.N.assessments(A.data,courseId).filter(a=>a.kind===kind&&(kind!=='oral'||!A.N.isOralIndividual(a)))
+   .sort((a,b)=>a.date.localeCompare(b.date)||a.title.localeCompare(b.title,'de')||a.id.localeCompare(b.id));
+ }
+ function matrixAssessmentPage(courseId,kind,id){
+  const list=matrixAssessments(courseId,kind),index=list.findIndex(a=>a.id===id);
+  return index<0?0:Math.floor((list.length-1-index)/matrixPageSize);
+ }
+ function assessmentMenuIn(container,id){
+  return [...container.querySelectorAll('[data-assessment-menu]')].find(toggle=>toggle.dataset.assessmentMenu===id);
+ }
 A.performanceLabel=a=>A.kindLabel(a.kind,A.data.courses.find(c=>c.id===a.courseId));
 A.performanceFlags=a=>[a.isGfs?'GFS':'',A.N.Q.from(a.weight).cmp(1)!==0n?'Gewichtung '+A.esc(a.weight):''].filter(Boolean).join(' · ');
 A.progressText=function(a){const p=A.assessmentStats(a);return p.captured+' von '+p.total+' erfasst'+(p.average===null?'':' · Durchschnitt '+A.showAverage(p.average,A.getCourse()))+(p.status?' · '+p.graded+' '+(p.graded===1?'Note':'Noten')+' · '+p.status+' '+(p.status===1?'Statusangabe':'Statusangaben'):'')+(A.readonly()?' · Abgeschlossen':'');};
 A.entryProgressText=function(a){const p=A.assessmentStats(a);return p.graded+' von '+p.total+' bewertet'+(p.average===null?'':' · Klassendurchschnitt '+A.showAverage(p.average,A.getCourse()));};
 A.progressCell=function(a){const p=A.assessmentStats(a);return p.captured+' von '+p.total+(p.status?`<span class="secondary"><span class="sr-only">, </span>${p.graded} ${p.graded===1?'Note':'Noten'} · ${p.status} Status</span>`:'');};
 A.assessmentList=function(fixedKind=''){const w=A.W(),filter=fixedKind||w.assessmentFilter;return A.selectAssessments(A.data,A.ui.course,filter,filter==='oral'?w.oralListSearch:w.assessmentSearch);};
-A.assessmentRows=function(list,selected,fixed=false){return list.map(a=>`<tr${selected?.id===a.id?' class="selected-row"':''}><th scope="row">${A.b('open-assessment',A.esc(a.title),`id="assessment-open-${a.id}" data-id="${a.id}"${selected?.id===a.id?' aria-current="true"':''}`,'person')}${A.N.isOralIndividual(a)?`<span class="secondary"><span class="sr-only">, </span>${A.rowName(A.getStudent(a.participantIds[0]))} · Einzelnote</span>`:''}${A.performanceFlags(a)?`<span class="secondary"><span class="sr-only">, </span>${A.performanceFlags(a)}</span>`:''}</th><td>${A.date(a.date)}</td>${fixed?'':`<td>${A.esc(A.kindLabels[a.kind])}</td>`}<td class="progress-cell" data-progress="${a.id}">${A.progressCell(a)}</td><td>${A.b(A.N.isOralIndividual(a)?'edit-oral':'edit-assessment','Bearbeiten',`data-id="${a.id}"${A.N.isOralIndividual(a)?' data-edit="true"':''}${A.readonly()?' disabled':''}`,'text-button')}</td></tr>`).join('')||`<tr><td colspan="${fixed?4:5}" class="empty-cell">${A.N.assessments(A.data,A.ui.course).some(a=>(!fixed||a.kind===(A.kinds.includes(A.W().view)?A.W().view:A.W().assessmentFilter))&&(a.kind!=='oral'||!A.N.isOralIndividual(a)))?'Keine passenden Leistungen.':A.emptyAreaText}</td></tr>`;};
+ A.assessmentMenu=function(assessment,selected,prefix){
+  const {id,title}=assessment;
+  const items=[{id,action:'open-assessment',label:'Noten anzeigen'}];
+  if(!A.readonly()){
+   items.push({id,action:'open-assessment-edit',label:'Noten bearbeiten'},{id,action:'edit-assessment',label:'Angaben ändern'});
+   if(A.assessmentMoveOptions(assessment).length)items.push({id,action:'move-assessment',label:'Leistung verschieben …'});
+   items.push({separator:true},{id,action:'delete-assessment',label:'Leistung löschen …',danger:true});
+  }
+  return A.menu('assessment-menu-'+id,'',items,title,'person assessment-menu-toggle',{
+   id:prefix+'-open-'+id,attrs:`data-assessment-menu="${A.esc(id)}" data-id="${A.esc(id)}"${selected?' aria-current="true"':''}`,indicator:true
+  });
+ };
+ A.assessmentRows=function(list,selected,fixed=false){return list.map(a=>`<tr${selected?.id===a.id?' class="selected-row"':''}><th scope="row">${A.assessmentMenu(a,selected?.id===a.id,'assessment')}${A.N.isOralIndividual(a)?`<span class="secondary"><span class="sr-only">, </span>${A.rowName(A.getStudent(a.participantIds[0]))} · Einzelnote</span>`:''}${A.performanceFlags(a)?`<span class="secondary"><span class="sr-only">, </span>${A.performanceFlags(a)}</span>`:''}</th><td>${A.date(a.date)}</td>${fixed?'':`<td>${A.esc(A.kindLabels[a.kind])}</td>`}<td class="progress-cell" data-progress="${a.id}">${A.progressCell(a)}</td></tr>`).join('')||`<tr><td colspan="${fixed?3:4}" class="empty-cell">${A.N.assessments(A.data,A.ui.course).some(a=>(!fixed||a.kind===(A.kinds.includes(A.W().view)?A.W().view:A.W().assessmentFilter))&&(a.kind!=='oral'||!A.N.isOralIndividual(a)))?'Keine passenden Leistungen.':A.emptyAreaText}</td></tr>`;};
 A.refreshAssessmentList=function(){const panel=A.$('#assessmentListBody');if(!panel)return;const kind=panel.dataset.kind,list=A.assessmentList(kind).filter(a=>(kind||A.W().assessmentFilter)!=='oral'||!A.N.isOralIndividual(a)),selected=A.data.assessments.find(x=>x.id===A.W().assessmentId);panel.innerHTML=A.assessmentRows(list,selected,(kind||A.W().assessmentFilter)!=='all');A.$('#assessmentListCount').textContent=list.length+' '+(list.length===1?'Leistung':'Leistungen');};
+ A.assessmentMenuFallback=function(id,trigger){
+  const table=trigger?.closest?.('table');
+  const panelId=table?.closest('[role=tabpanel]')?.id;
+  if(!panelId)return ()=>{};
+  const selector=trigger.matches('[data-assessment-menu]')?'[data-assessment-menu]':'[data-action=edit-oral]';
+  const ids=[...table.querySelectorAll(selector)].map(button=>button.dataset.id);
+  const index=ids.indexOf(id),neighbors=[...ids.slice(index+1),...ids.slice(0,index).reverse()];
+  const headingId=table.getAttribute('aria-labelledby');
+  const detailsId=table.closest('details')?.id;
+  return ()=>{
+   const panel=document.getElementById(panelId),details=detailsId?document.getElementById(detailsId):null;
+   if(!panel)return;
+   if(details)details.open=true;
+   const available=[...(details||panel).querySelectorAll(selector)];
+   const target=neighbors.map(neighbor=>available.find(button=>button.dataset.id===neighbor)).find(Boolean)
+    ||(headingId&&document.getElementById(headingId))||details?.querySelector('summary')||panel.querySelector('h2');
+   return A.focusTarget(target,{preventScroll:true});
+  };
+ };
+ A.openAssessmentInMovedArea=function(id,kind){
+  const a=A.data.assessments.find(record=>record.id===id&&record.courseId===A.ui.course&&record.kind===kind);
+  if(!a)return;
+  const w=A.W();
+  w.view=A.assessmentView(kind);
+  w.assessmentWorkOpen=false;
+  w.assessmentId=id;
+  w.selected[kind]=id;
+  w.assessmentFilter=kind;
+  if(kind==='oral'&&A.N.isOralIndividual(a)){
+   w.oralView='individual';
+   w.oralFocusId=id;
+   if(!A.oralRowsData().some(row=>row.a.id===id)){
+    w.oralStudent='all';
+    w.oralSearch='';
+   }
+   w.oralPage=Math.max(0,Math.floor(A.oralRowsData().findIndex(row=>row.a.id===id)/50));
+  }else{
+   if(kind==='oral')w.oralView='classes';
+   if(!A.assessmentList(kind).some(record=>record.id===id)){
+    if(kind==='oral')w.oralListSearch='';else w.assessmentSearch='';
+   }
+   w.matrixPages[kind]=matrixAssessmentPage(a.courseId,kind,id);
+  }
+  A.entrySession=null;
+  A.clearAssessmentWorkspace();
+  A.activateGroup('notes',w.view);
+  A.remember();
+  const panel=document.getElementById(A.notePanel(w.view)),hidden=panel?.querySelector('#hiddenPerformances');
+  if(!panel)return;
+  if(hidden)hidden.open=true;
+  const target=assessmentMenuIn(panel,id)||document.getElementById('oral-edit-'+id)
+   ||panel.querySelector('#matrixTitle, #assessmentListTitle, #oralNotesTitle, h2');
+  if(A.focusTarget(target,{preventScroll:true}))target.scrollIntoView?.({block:'nearest',inline:'nearest'});
+ };
 A.entryOrigins=new Map();
-A.captureEntryOrigin=function(trigger,{preserveView=false}={}){
+ A.captureEntryOrigin=function(trigger=document.activeElement,{preserveView=false}={}){
  const w=A.W(),toggle=trigger?.closest('.action-menu')?.querySelector('[data-menu-toggle]'),target=A.origin(toggle||trigger);
  A.entryOrigins.set(A.ui.course,{target,preserveView,oralView:w.oralView,view:w.view,layout:A.prefs.notesLayout,filter:w.assessmentFilter,search:w.assessmentSearch,pages:{...w.matrixPages},windowX:window.scrollX,windowY:window.scrollY,wraps:[...document.querySelectorAll('.table-wrap')].filter(el=>el.id&&!el.closest('[hidden]')).map(el=>({id:el.id,x:el.scrollLeft,y:el.scrollTop}))});};
-A.openAssessment=function(id,focus=false,editing=false){if(!A.canLeave())return false;const a=A.data.assessments.find(x=>x.id===id&&x.courseId===A.ui.course);if(!a)return;if(A.N.isOralIndividual(a)){A.W().oralFocusId=a.id;A.quickOral(a.participantIds[0],a,editing);return true;}if(a.kind==='oral')A.W().oralView='classes';const w=A.W();A.captureEntryOrigin();A.entrySession={id,editing:editing&&!A.readonly()};w.entryMode='table';w.entrySearch='';A.clearAssessmentWorkspace();w.assessmentWorkOpen=true;w.assessmentId=id;w.selected[a.kind]=id;if(w.assessmentFilter!=='all')w.assessmentFilter=a.kind;w.view=A.assessmentView(a.kind);A.activateGroup('notes',w.view);A.remember();if(focus){A.focusTarget('assessmentWorkTitle');A.$('#assessmentWorkTitle')?.scrollIntoView?.({block:'start'});}};
+ A.openAssessment=function(id,focus=false,editing=false,trigger){
+  if(!A.canLeave())return false;
+  const a=A.data.assessments.find(record=>record.id===id&&record.courseId===A.ui.course);
+  if(!a)return false;
+  const w=A.W(),canEdit=editing&&!A.readonly(),preserveView=trigger?.matches?.('[data-assessment-menu]');
+  if(A.N.isOralIndividual(a)){
+   w.oralFocusId=id;
+   A.quickOral(a.participantIds[0],a,canEdit);
+   return true;
+  }
+  if(canEdit&&A.performanceDrafts.has(id)){
+   if(preserveView&&A.currentPerformanceDraft()?.record.id===id)A.captureEntryOrigin(trigger,{preserveView:true});
+   A.resumePerformanceDraft(id,trigger);
+   return true;
+  }
+  A.captureEntryOrigin(trigger?.isConnected?trigger:null,{preserveView});
+  if(a.kind==='oral')w.oralView='classes';
+  A.entrySession={id,editing:canEdit};
+  w.entryMode='table';
+  w.entrySearch='';
+  A.clearAssessmentWorkspace();
+  w.assessmentWorkOpen=true;
+  w.assessmentId=id;
+  w.selected[a.kind]=id;
+  if(w.assessmentFilter!=='all')w.assessmentFilter=a.kind;
+  w.view=A.assessmentView(a.kind);
+  A.activateGroup('notes',w.view);
+  A.remember();
+  if(focus){A.focusTarget('assessmentWorkTitle');A.$('#assessmentWorkTitle')?.scrollIntoView?.({block:'start'});}
+  return true;
+ };
 A.returnToAssessmentList=function(){
  if(!A.canLeave())return;const draft=A.performanceDrafts.get(A.W().assessmentId);A.closeAssessmentDraft();if(draft)A.error();A.entrySession=null;A.clearAssessmentWorkspace();const w=A.W(),id=w.assessmentId,origin=A.entryOrigins.get(A.ui.course),a=A.data.assessments.find(x=>x.id===id&&x.courseId===A.ui.course);w.assessmentWorkOpen=false;
  if(origin){w.oralView=origin.oralView;w.assessmentFilter=origin.filter;w.assessmentSearch=origin.search;w.matrixPages={...origin.pages};if(origin.layout===A.prefs.notesLayout)w.view=A.mapNotesView(origin.view);}
- if(a&&!draft&&!origin?.preserveView){if(A.kinds.includes(w.view)&&w.view!==a.kind)w.view=A.assessmentView(a.kind);const filter=A.kinds.includes(w.view)?w.view:w.assessmentFilter;if(filter!=='all'&&filter!==a.kind)w.assessmentFilter=a.kind;if(a.kind!=='oral'&&!a.title.toLocaleLowerCase('de').includes(w.assessmentSearch.toLocaleLowerCase('de')))w.assessmentSearch='';if((a.kind==='oral'?w.oralAreaView:A.prefs.areaView)==='matrix'&&(filter!=='all')){const list=A.N.assessments(A.data,A.ui.course).filter(x=>x.kind===a.kind&&(a.kind!=='oral'||!A.N.isOralIndividual(x))).sort((x,y)=>x.date.localeCompare(y.date)||x.title.localeCompare(y.title,'de')||x.id.localeCompare(y.id));const at=list.findIndex(x=>x.id===id);if(at>=0)w.matrixPages[a.kind]=Math.floor((list.length-1-at)/8);}}
+ if(a&&!draft&&!origin?.preserveView){if(A.kinds.includes(w.view)&&w.view!==a.kind)w.view=A.assessmentView(a.kind);const filter=A.kinds.includes(w.view)?w.view:w.assessmentFilter;if(filter!=='all'&&filter!==a.kind)w.assessmentFilter=a.kind;if(a.kind!=='oral'&&!a.title.toLocaleLowerCase('de').includes(w.assessmentSearch.toLocaleLowerCase('de')))w.assessmentSearch='';if((a.kind==='oral'?w.oralAreaView:A.prefs.areaView)==='matrix'&&(filter!=='all')){w.matrixPages[a.kind]=matrixAssessmentPage(a.courseId,a.kind,id);}}
  if(origin)for(const pos of origin.wraps)A.scrolls[A.ui.course+':'+pos.id]={x:pos.x,y:pos.y};
  A.activateGroup('notes',w.view);
  const key=origin?.target,trigger=key&&(
@@ -36,8 +144,8 @@ A.areaTools=function(kind,fixedKind,matrix){const w=A.W(),oral=kind==='oral',tit
  return A.viewHeader(title,'areaTitle',primary+(kind!=='all'?A.b(oral?'oral-picker':'area-individual','Einzelnote eintragen',`data-kind="${kind}"${A.readonly()?' disabled':''}`):''),kind==='all'?'assessments':kind)+(oral?`<div class="oral-view-controls">${filter}${A.oralControls()}</div>`:'')+`<div class="notes-controls">${oral?'':filter}${search}${options}</div>`;
 };
 A.matrixTable=function(kind){
- const c=A.getCourse(),w=A.W(),N=A.N,list=N.assessments(A.data,c.id).filter(a=>a.kind===kind&&(kind!=='oral'||!A.N.isOralIndividual(a))).sort((a,b)=>a.date.localeCompare(b.date)||a.title.localeCompare(b.title,'de')||a.id.localeCompare(b.id)),size=8,max=Math.max(0,Math.ceil(list.length/size)-1),page=w.matrixPages[kind]=Math.min(max,w.matrixPages[kind]||0),end=list.length-page*size,start=Math.max(0,end-size),cols=list.slice(start,end),pupils=A.studentList(kind);
- return `<div class="matrix-paging"><p class="hint">${list.length?'Leistungen '+(start+1)+' bis '+end+' von '+list.length:kind==='oral'&&N.assessments(A.data,c.id).some(a=>a.kind===kind)?'Noch keine gemeinsamen Bewertungen vorhanden.':A.emptyAreaText}</p><div class="button-row"${list.length<=size?' hidden':''}>${A.b('matrix-page','Ältere Leistungen',`data-kind="${kind}" data-step="1"${page>=max?' disabled':''}`)}${A.b('matrix-page','Neuere Leistungen',`data-kind="${kind}" data-step="-1"${page===0?' disabled':''}`)}</div></div><div class="table-wrap matrix-wrap" id="matrixScroll-${kind}"><table class="grade-matrix" aria-labelledby="matrixTitle"><thead><tr><th scope="col">Schüler</th>${cols.map(a=>`<th scope="col"${w.assessmentId===a.id?' class="selected-column"':''}>${A.b('open-assessment',A.esc(a.title),`id="matrix-open-${a.id}" data-id="${a.id}"${w.assessmentId===a.id?' aria-current="true"':''}`,'person')}<span class="secondary"><span class="sr-only">, </span><time datetime="${a.date}">${A.date(a.date)}</time>${A.performanceFlags(a)?' · '+A.performanceFlags(a):''}</span></th>`).join('')}<th scope="col">${kind==='oral'?'Mündlicher Durchschnitt':'Durchschnitt'}</th></tr></thead><tbody>${pupils.map(s=>`<tr><th scope="row">${A.b('student',A.rowName(s),`data-id="${s.id}"`,'person')}${s.archived||(c.inactiveStudentIds||[]).includes(s.id)?'<span class="secondary"><span class="sr-only">, </span>'+A.N.participationLabel(s,c)+'</span>':''}</th>${cols.map(a=>`<td>${a.participantIds&&!a.participantIds.includes(s.id)?'<span class="subtle">Nimmt nicht teil</span>':A.resultValue(a.results[s.id])}${a.results[s.id]?.note?'<span class="secondary"><span class="sr-only">, </span>Bemerkung</span>':''}</td>`).join('')}<td>${A.display(A.calculation(c,s.id).categories[kind],c)}</td></tr>`).join('')||`<tr><td colspan="${cols.length+2}" class="empty-cell">Keine passenden Schüler.</td></tr>`}</tbody><tfoot><tr><th scope="row">Klassendurchschnitt</th>${cols.map(a=>`<td>${A.showAverage(A.assessmentStats(a).average,c)}</td>`).join('')}<td>${A.showAverage(A.classAverages(c).categories[kind],c)}</td></tr></tfoot></table></div>`;
+ const c=A.getCourse(),w=A.W(),N=A.N,list=matrixAssessments(c.id,kind),size=matrixPageSize,max=Math.max(0,Math.ceil(list.length/size)-1),page=w.matrixPages[kind]=Math.min(max,w.matrixPages[kind]||0),end=list.length-page*size,start=Math.max(0,end-size),cols=list.slice(start,end),pupils=A.studentList(kind);
+ return `<div class="matrix-paging"><p class="hint">${list.length?'Leistungen '+(start+1)+' bis '+end+' von '+list.length:kind==='oral'&&N.assessments(A.data,c.id).some(a=>a.kind===kind)?'Noch keine gemeinsamen Bewertungen vorhanden.':A.emptyAreaText}</p><div class="button-row"${list.length<=size?' hidden':''}>${A.b('matrix-page','Ältere Leistungen',`data-kind="${kind}" data-step="1"${page>=max?' disabled':''}`)}${A.b('matrix-page','Neuere Leistungen',`data-kind="${kind}" data-step="-1"${page===0?' disabled':''}`)}</div></div><div class="table-wrap matrix-wrap" id="matrixScroll-${kind}"><table class="grade-matrix" aria-labelledby="matrixTitle"><thead><tr><th scope="col">Schüler</th>${cols.map(a=>`<th scope="col"${w.assessmentId===a.id?' class="selected-column"':''}>${A.assessmentMenu(a,w.assessmentId===a.id,'matrix')}<span class="secondary"><span class="sr-only">, </span><time datetime="${a.date}">${A.date(a.date)}</time>${A.performanceFlags(a)?' · '+A.performanceFlags(a):''}</span></th>`).join('')}<th scope="col">${kind==='oral'?'Mündlicher Durchschnitt':'Durchschnitt'}</th></tr></thead><tbody>${pupils.map(s=>`<tr><th scope="row">${A.b('student',A.rowName(s),`data-id="${s.id}"`,'person')}${s.archived||(c.inactiveStudentIds||[]).includes(s.id)?'<span class="secondary"><span class="sr-only">, </span>'+A.N.participationLabel(s,c)+'</span>':''}</th>${cols.map(a=>`<td>${a.participantIds&&!a.participantIds.includes(s.id)?'<span class="subtle">Nimmt nicht teil</span>':A.resultValue(a.results[s.id])}${a.results[s.id]?.note?'<span class="secondary"><span class="sr-only">, </span>Bemerkung</span>':''}</td>`).join('')}<td>${A.display(A.calculation(c,s.id).categories[kind],c)}</td></tr>`).join('')||`<tr><td colspan="${cols.length+2}" class="empty-cell">Keine passenden Schüler.</td></tr>`}</tbody><tfoot><tr><th scope="row">Klassendurchschnitt</th>${cols.map(a=>`<td>${A.showAverage(A.assessmentStats(a).average,c)}</td>`).join('')}<td>${A.showAverage(A.classAverages(c).categories[kind],c)}</td></tr></tfoot></table></div>`;
 };
 A.renderAssessments=function(fixedKind=''){
  const w=A.W(),c=A.getCourse();if(!c)return;A.$('#hiddenAssessmentWorkspace')?.remove();const target=fixedKind?'notes-'+fixedKind:'assessments',filter=fixedKind||w.assessmentFilter,matrix=filter!=='all'&&(filter==='oral'?w.oralAreaView:A.prefs.areaView)==='matrix';
@@ -52,7 +160,7 @@ A.renderAssessments=function(fixedKind=''){
   A.setContent(target,A.areaTools(filter,fixedKind,true)+drafts+`<div class="table-panel"><div class="table-header"><h3 id="matrixTitle" tabindex="-1">Notentabelle</h3></div><div id="matrixTable" data-kind="${filter}">${A.matrixTable(filter)}</div></div>`+workspace,fixedKind?A.kindLabels[fixedKind]:'Leistungen');
  }else{
   const list=A.assessmentList(fixedKind).filter(a=>filter!=='oral'||!A.N.isOralIndividual(a));
-  A.setContent(target,A.areaTools(filter,fixedKind,false)+drafts+`<div class="table-panel"><div class="table-header"><h3 id="assessmentListTitle" tabindex="-1">Leistungsliste</h3><span class="subtle" id="assessmentListCount">${list.length} ${list.length===1?'Leistung':'Leistungen'}</span></div><div class="table-wrap" id="assessmentListTable"><table id="assessmentsDataTable" aria-labelledby="assessmentListTitle"><thead><tr><th scope="col">Bezeichnung</th><th scope="col">Datum</th>${filter==='all'?'<th scope="col">Leistungsart</th>':''}<th scope="col">Erfasst</th><th scope="col">Aktion</th></tr></thead><tbody id="assessmentListBody" data-kind="${fixedKind}">${A.assessmentRows(list,selected,filter!=='all')}</tbody></table></div></div>`+workspace,fixedKind?A.kindLabels[fixedKind]:'Leistungen');
+  A.setContent(target,A.areaTools(filter,fixedKind,false)+drafts+`<div class="table-panel"><div class="table-header"><h3 id="assessmentListTitle" tabindex="-1">Leistungsliste</h3><span class="subtle" id="assessmentListCount">${list.length} ${list.length===1?'Leistung':'Leistungen'}</span></div><div class="table-wrap" id="assessmentListTable"><table id="assessmentsDataTable" aria-labelledby="assessmentListTitle"><thead><tr><th scope="col">Bezeichnung</th><th scope="col">Datum</th>${filter==='all'?'<th scope="col">Leistungsart</th>':''}<th scope="col">Erfasst</th></tr></thead><tbody id="assessmentListBody" data-kind="${fixedKind}">${A.assessmentRows(list,selected,filter!=='all')}</tbody></table></div></div>`+workspace,fixedKind?A.kindLabels[fixedKind]:'Leistungen');
  }
  if(selected){delete A.rendered[selected.kind];A.renderKind(selected.kind);}
 };

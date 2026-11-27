@@ -2,9 +2,9 @@
 
 Mit Notenblick verwaltest du Klassen, Fächer und Noten unter Windows. Du kannst offline arbeiten. Deine Schülerdaten bleiben auf deinem Rechner.
 
-**[Notenblick 1.28.0 für Windows herunterladen (ZIP)](https://github.com/sappelmueller/Notenblick/releases/download/v1.28.0/Notenblick_1.28.0_Windows.zip)**
+**[Notenblick 1.29.0 für Windows herunterladen (ZIP)](https://github.com/sappelmueller/Notenblick/releases/download/v1.29.0/Notenblick_1.29.0_Windows.zip)**
 
-[Was ist neu in Notenblick 1.28.0?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.28.0)
+[Was ist neu in Notenblick 1.29.0?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.29.0)
 
 ## Herunterladen und starten
 

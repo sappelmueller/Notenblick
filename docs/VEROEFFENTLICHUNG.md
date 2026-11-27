@@ -1,8 +1,8 @@
 # Versionen veröffentlichen
 
-Aktuell offiziell veröffentlicht ist **1.28.0** seit dem **27. November 2026**. Der freigegebene Aktualisierungsdeskriptor und alle sechs Release-Dateien liegen auf GitHub. Der Versionsbericht dokumentiert die bestandenen Prüfungen und den offenen Windows-Praxisstand. [Release 1.28.0](https://github.com/sappelmueller/Notenblick/releases/tag/v1.28.0) · [Versionsbericht](PRUEFBERICHT-1.28.0.md)
+Aktuell offiziell veröffentlicht ist **1.29.0** seit dem **27. November 2026**. Die Praxisfreigabe und die technischen Prüfungen stehen im Versionsbericht. [Release 1.29.0](https://github.com/sappelmueller/Notenblick/releases/tag/v1.29.0) · [Versionsbericht](PRUEFBERICHT-1.29.0.md)
 
-**Pakete ab 1.28.0:** Das vollständige Windows-ZIP (`_Windows.zip`) enthält den eigenständigen Notfallzugriff neben dem Hauptprogramm. Das ZIP für den Updater enthält das Hauptprogramm und `Programm`. Beim ersten Start stellt die aktualisierte Haupt-EXE den eingebetteten Notfallzugriff bereit. Prüfe den Übergang aus der Vorgängerversion, dass `Daten` unverändert bleibt, und die Übereinstimmung der Programmdateien in den Paketen. [Prüfumfang für 1.28.0](PRUEFBERICHT-1.28.0.md)
+**Pakete ab 1.28.0:** Das vollständige Windows-ZIP (`_Windows.zip`) enthält den eigenständigen Notfallzugriff neben dem Hauptprogramm. Das ZIP für den Updater enthält das Hauptprogramm und `Programm`. Beim ersten Start stellt die aktualisierte Haupt-EXE den eingebetteten Notfallzugriff bereit. Prüfe den Übergang aus der Vorgängerversion, dass `Daten` unverändert bleibt, und die Übereinstimmung der Programmdateien in den Paketen. [Prüfbericht der aktuellen Version](PRUEFBERICHT-1.29.0.md)
 
 1. Ausschließlich `sappelmueller/Notenblick`, ID `1432518047`, auf einem Entwicklungsbranch bearbeiten. Das Repository ist öffentlich. Name, ID, Sichtbarkeit und deaktivierte Actions vor entfernten Änderungen live prüfen. Keine Daten oder Zugangsdaten einchecken.
 2. Änderungen, Versionsnummer und Hilfe abschließen. `package.json` enthält `releaseNotes`: drei bis fünf ausdrücklich gepflegte Aussagen zur jeweiligen Version. Aus Sicht einer Lehrkraft, kurz und freundlich; keine Dateinamen, Commits, Prüfsummen oder Teststatistiken. Keine automatisch erzeugten GitHub-Änderungslisten verwenden.
@@ -71,7 +71,7 @@ Für genau diese Freigabe werden die vier Dateien zunächst regulär mit `dev/pa
 
 ## Texte
 
-Release-Titel: **Notenblick X.Y.Z**. Unter **Was ist neu?** ausschließlich die gepflegten kurzen Aussagen verwenden. Unter **Download** Windows-ZIP, Quellcode und Prüfsummen verlinken. Unter **Hinweise** nur notwendige Voraussetzungen und bekannte Einschränkungen nennen. Technische Prüfergebnisse separat verlinken. Auf `main` nennt die README immer die freigegebene Version und bietet direkt nach der Vorstellung „Aktuelle Version herunterladen“ mit `/releases/latest` an.
+Release-Titel: **Notenblick X.Y.Z**. Unter **Was ist neu?** ausschließlich die gepflegten kurzen Aussagen verwenden. Unter **Download** Windows-ZIP, Quellcode und Prüfsummen verlinken. Unter **Hinweise** nur notwendige Voraussetzungen und bekannte Einschränkungen nennen. Technische Prüfergebnisse separat verlinken. Auf `main` nennt die README immer die freigegebene Version und verlinkt direkt nach der Vorstellung das vollständige Windows-ZIP des freigegebenen Tags.
 
 ## Quelle und Grenzen
 

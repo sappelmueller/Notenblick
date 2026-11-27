@@ -1,5 +1,9 @@
 # Prüfberichte
 
+**Notenblick 1.29.0** wurde am **27. November 2026** veröffentlicht. Der Prüfbericht dokumentiert die gezielten Prüfungen für die Noteneingabe und die Leistungsaktionen sowie die Praxisfreigabe mit Braillezeile und unter Windows auf ARM64. [Versionsbericht 1.29.0](docs/PRUEFBERICHT-1.29.0.md)
+
+## Prüfstand 1.28.0
+
 **Notenblick 1.28.0** wurde am **27. November 2026** veröffentlicht. Für diese Ausgabe sind 19 Speicherszenarien, 61 Prüfungen zum Notfallzugriff sowie gezielte Prüfungen der Oberfläche, Tastaturbedienung und Pakete dokumentiert. Praktische Prüfungen der nativen Oberfläche mit NVDA und Braille sowie auf nativem ARM64 stehen aus. [Versionsbericht 1.28.0](docs/PRUEFBERICHT-1.28.0.md)
 
 ## Prüfstand 1.27.0

@@ -338,7 +338,34 @@ A.discardAssessmentDraft=function(){
   A.remember();
  },'Verwerfen',{helpContext:'noten-entwurf-fortsetzen'});
 };
-A.finishPerformanceDraft=async function(){
+async function saveAssessmentEntry(trigger, complete){
+ const button=trigger?.isConnected?trigger:A.$('[data-action=assessment-done]');
+ const panel=button?.closest('.entry-workspace')||A.$('#assessmentWorkspace')||A.$('#hiddenAssessmentWorkspace');
+ A.entryFinishing=true;
+ if(panel)panel.inert=true;
+ if(button)button.disabled=true;
+ let finished=false;
+ try{
+  await A.save();
+  if(A.store&&A.dirty){
+   if(A.textPending&&A.jsonSavedSeq===A.seq){
+    const retry=button?.dataset.action==='assessment-finish-close'?'Speichern und schließen':'Fertig';
+    throw Error('Deine Noten sind gespeichert. Die Notenlisten konnten noch nicht aktualisiert werden. Wähle erneut „'+retry+'“.');
+   }
+   throw Error('Die Leistung konnte noch nicht vollständig gespeichert werden. Bitte versuche es erneut.');
+  }
+  if(!A.store&&A.mode!=='demo')await window.NRSession.load();
+  if(A.sessionFailed&&A.mode!=='demo')throw Error('Die Leistung konnte noch nicht vollständig gespeichert werden. Bitte versuche es erneut.');
+  if(complete)await complete();
+  finished=true;
+ }finally{
+  A.entryFinishing=false;
+  if(panel?.isConnected)panel.inert=false;
+  if(button?.isConnected){button.disabled=false;if(!finished)button.focus();}
+ }
+}
+
+A.finishPerformanceDraft=async function(trigger){
  const d=A.currentPerformanceDraft();
  if(!d)return false;
  if(A.entryFinishing)return true;
@@ -358,27 +385,22 @@ A.finishPerformanceDraft=async function(){
  syncHead(d);
  persist(d);
  if(!applyDraft(d,{finish:true,show:true}))return true;
- A.entryFinishing=true;
- const panel=A.$('#assessmentWorkspace')||A.$('#hiddenAssessmentWorkspace');
- if(panel)panel.inert=true;
- const button=A.$('[data-action=assessment-done]');
- if(button)button.disabled=true;
- let finished=false;
- try{
-  await A.save();
-  if(A.store&&A.dirty)throw Error('Die Leistung konnte noch nicht vollständig gespeichert werden. Bitte versuche es erneut.');
-  if(!A.store&&A.mode!=='demo')await window.NRSession.load();
-  if(A.sessionFailed&&A.mode!=='demo')throw Error('Die Leistung konnte noch nicht vollständig gespeichert werden. Bitte versuche es erneut.');
+ await saveAssessmentEntry(trigger,async()=>{
   A.performanceDrafts.delete(d.record.id);
   A.remember();
   await A.flushAssessmentDrafts();
   A.error();
-  finished=true;
- }finally{
-  A.entryFinishing=false;
-  if(panel?.isConnected)panel.inert=false;
-  if(button?.isConnected){button.disabled=false;if(!finished)button.focus();}
- }
+ });
  return false;
+};
+
+A.finishAndCloseAssessment=async function(trigger){
+ if(!A.entrySession?.editing||A.readonly()||!A.canLeave())return;
+ if(A.currentPerformanceDraft()){
+  if(await A.finishPerformanceDraft(trigger))return;
+ }else{
+  await saveAssessmentEntry(trigger);
+ }
+ A.returnToAssessmentList();
 };
 })(globalThis.Notenblick);

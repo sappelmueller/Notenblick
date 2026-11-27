@@ -1,6 +1,6 @@
 # Technischer Einstieg
 
-**Aktueller Stand:** Notenblick 1.28.0 wurde am 27. November 2026 veröffentlicht. Neue gemeinsame Leistungen öffnen direkt die Noteneingabe. Entwürfe fließen erst nach der Übernahme in Berechnungen und Berichte ein. Passwortschutz und Notfallzugriff verwenden dasselbe verschlüsselte Dateiformat. [Prüfstand 1.28.0](PRUEFBERICHT-1.28.0.md)
+**Aktueller Stand:** Notenblick 1.29.0 wurde am 27. November 2026 veröffentlicht. „Speichern und schließen“ führt nach erfolgreicher Speicherung zur vorherigen Ansicht. Die Notentabelle und die Leistungsliste nutzen dasselbe Leistungsmenü. Verschieben ordnet die vorhandene Leistung einem anderen Bereich desselben Fachs zu. [Prüfstand 1.29.0](PRUEFBERICHT-1.29.0.md)
 
 Die Ausgabe 1.27.0 vom 6. November 2026 wurde unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet. [Audit und Veröffentlichung 1.27.0](PRUEFBERICHT-1.27.0.md)
 
@@ -8,7 +8,7 @@ Qualitätsaudit von 1.27.0: Der gemeinsame Gewichtungseditor verwendet eine einh
 
 `domain/areas.js` liefert die geordneten fachbezogenen Leistungsbereiche und ihre stabilen Zuordnungen. `assessment.kind` verweist auf diese IDs; `oralEntry` beschreibt davon unabhängig die Erfassungsform. `evaluation.js` berechnet alle Bereiche mit derselben exakten Bruchrechnung. Der gemeinsame Gewichtungseditor wird in Fachdialog, Einstellungen und Einrichtung verwendet. Exporte/TXT verwenden dieselben Fachdefinitionen.
 
-Der Dateicontainer verwendet weiterhin `version: 1` und der Aktualisierungsdeskriptor `dataSchema: 1`. Das Updatearchiv von 1.28.0 wurde mit dem Updater aus 1.27.0 geprüft. Der Updater ersetzt die Haupt-EXE und den vollständigen Ordner `Programm` und lässt `Daten` unberührt.
+Der Dateicontainer verwendet weiterhin `version: 1` und der Aktualisierungsdeskriptor `dataSchema: 1`. Der Updater ersetzt die Haupt-EXE und den vollständigen Ordner `Programm` und lässt `Daten` unberührt.
 
 Technische Basis: Windows, .NET Framework 4.8, WinForms und WebView2. Ziel ausschließlich `sappelmueller/Notenblick`, ID `1432518047`; privat oder öffentlich. Actions aus. Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in LICENSE-EXCEPTION. Vor Änderungen [AGENTS.md](../AGENTS.md) beachten.
 

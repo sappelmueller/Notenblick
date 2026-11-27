@@ -79,7 +79,15 @@ const plain=value=>JSON.parse(JSON.stringify(value));
   assert.equal(B.currentPerformanceDraft().record.id,id);
   assert.equal(x.document.activeElement,finish);
   assert.equal(finish.disabled,false);
-  await Promise.all([B.action(find('[data-action=assessment-done]')),B.action(find('[data-action=assessment-done]'))]);
+  const saveAndClose=find('[data-action=assessment-finish-close]');
+  const {store,dirty,textPending,jsonSavedSeq}=B;
+  B.save=async()=>{Object.assign(B,{store:{},dirty:true,textPending:true,jsonSavedSeq:B.seq});};
+  try{await assert.rejects(()=>B.action(saveAndClose),/Noten sind gespeichert.*Notenlisten.*Speichern und schließen/);}
+  finally{Object.assign(B,{save,store,dirty,textPending,jsonSavedSeq});}
+  assert.equal(B.currentPerformanceDraft().record.id,id);
+  assert.equal(x.document.activeElement,saveAndClose);
+  await Promise.all([B.action(saveAndClose),B.action(saveAndClose)]);
+  assert.equal(B.W().assessmentWorkOpen,false);
   assert.equal(B.data.assessments.filter(a=>a.id===id).length,1);
   assert.equal(B.data.assessments.at(-1).weight,'2');
   assert.equal(B.performanceDrafts.size,0);

@@ -183,6 +183,16 @@ dialog[data-size=wide]{width:min(1120px,calc(100% - 24px))}
   font-size:.87rem;
   color:var(--muted)
 }
+#dialog[data-fit-viewport]{max-width:var(--dialog-viewport-width);max-height:var(--dialog-viewport-height);overflow:hidden}
+#dialog[data-fit-viewport] #dialogForm{display:flex;max-height:calc(var(--dialog-viewport-height) - 2px);overflow:hidden}
+#dialog[data-fit-viewport] #dialogContent{overflow:auto}
+#dialog[data-fit-viewport] .dialog-header{margin-bottom:12px}
+#dialog[data-fit-viewport] .dialog-header h2{min-width:0;overflow-wrap:anywhere}
+#dialog[data-fit-viewport] .dialog-header .close{flex-shrink:0}
+#dialog[data-fit-viewport] .dialog-actions{margin-top:12px;padding-top:12px}
+#dialog[data-fit-viewport][data-fit-scroll]{overflow:auto}
+#dialog[data-fit-viewport][data-fit-scroll] #dialogForm{display:block;max-height:none;overflow:visible}
+#dialog[data-fit-viewport][data-fit-scroll] #dialogContent{overflow:visible}
 /* The existing percentage form grows with the subject's area list. */
 .area-weight-list{display:grid;grid-template-columns:minmax(0,1fr);gap:0}.area-weight-row{min-width:0;padding:14px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent}.area-weight-row .button-row{gap:.5rem}.area-weight-row details{margin-top:.5rem}.area-weight-row summary{cursor:pointer}.area-weight-row details .field{margin-top:.8rem}.area-weight-row .hint{margin:.4rem 0}
 

@@ -13,6 +13,17 @@ Notenblick.origin = function origin(el) {
   };
 };
 Notenblick.setDialogSize=size=>{Notenblick.$('#dialog').dataset.size=['small','medium','wide'].includes(size)?size:'medium';};
+function fitDialogToViewport(){
+ const dialog=Notenblick.$('#dialog');
+ if(!dialog.open||!dialog.hasAttribute('data-fit-viewport'))return;
+ const scale=dialog.getBoundingClientRect().width/dialog.offsetWidth||1;
+ const width=Math.max(1,Math.floor((window.innerWidth-16)/scale));
+ const height=Math.max(1,Math.floor((window.innerHeight-16)/scale));
+ dialog.style.setProperty('--dialog-viewport-width',width+'px');
+ dialog.style.setProperty('--dialog-viewport-height',height+'px');
+ dialog.toggleAttribute('data-fit-scroll',height<275);
+}
+window.addEventListener('resize',fitDialogToViewport);
 Notenblick.modal = function modal(title, content, fn, label = 'Speichern', options = {}) {
   if(Notenblick.contextHelp)Notenblick.closeContextHelp();
   Notenblick.dialogHelpContext=options.helpContext??null;
@@ -34,17 +45,21 @@ Notenblick.modal = function modal(title, content, fn, label = 'Speichern', optio
   Notenblick.$('#dialog .dialog-header [data-action=close]').hidden = options.hideHeaderClose === true;
   Notenblick.$('#dialogContent').innerHTML = content;
   Notenblick.$('#dialogSave').textContent = label;
+  Notenblick.$('#dialogSave').classList.toggle('danger', options.danger === true);
+  Notenblick.$('#dialogSave').classList.toggle('primary', options.danger !== true);
   Notenblick.$('#dialogSave').hidden = !fn;
   Notenblick.$('#dialog .dialog-actions [data-action=close]').textContent = options.cancelLabel || (fn ? 'Abbrechen' : 'Schließen');
   Notenblick.$('#dialogError').hidden = true;
   Notenblick.submitDialog = fn;
   Notenblick.clearAnnouncement();
   const dialog=Notenblick.$('#dialog'),heading=Notenblick.$('#dialogTitle');heading.tabIndex=-1;
-  const initial=options.focus?document.getElementById(options.focus):heading;
+  dialog.toggleAttribute('data-fit-viewport', options.fitViewport===true);
+  const initial=typeof options.focus==='string'?document.getElementById(options.focus):options.focus||heading;
   const target=initial&&!initial.disabled&&!initial.closest('[hidden]')&&(dialog.contains(initial))?initial:heading;
   const autofocus=!target.hasAttribute('autofocus');if(autofocus)target.setAttribute('autofocus','');
   if(options.reuse){Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=false;Notenblick.$('#dialogNext').disabled=false;}
   if(!options.reuse||!dialog.open)dialog.showModal();
+  fitDialogToViewport();
   Notenblick.focusTarget(target);if(autofocus)target.removeAttribute('autofocus');
 };
 Notenblick.closeModal = function closeModal(options={}) {
@@ -85,7 +100,7 @@ Notenblick.submitModal=async function(next=false){
  Notenblick.$('#dialogSave').disabled=true;Notenblick.$('#dialogNext').disabled=true;Notenblick.$('#dialogError').hidden=true;
  try{result=await fn(next);if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open&&!result?.keepOpen)Notenblick.closeModal({submitted:true});}
  catch(e){if(Notenblick.submitDialog!==fn||!Notenblick.$('#dialog').open)return;const el=Notenblick.$('#dialogError');el.textContent=e.message;el.hidden=false;if(document.activeElement===Notenblick.$('#dialogTitle'))result={keepOpen:true,focus:'dialogSave'};}
- finally{if(result?.keepBusy&&Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open){Notenblick.dialogBusy=true;}else if(Notenblick.submitDialog===fn||!Notenblick.$('#dialog').open){Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=false;Notenblick.$('#dialogNext').disabled=false;Notenblick.updateOralNext?.();if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open){if(result?.focus)document.getElementById(result.focus)?.focus();else if(!Notenblick.$('#dialog').contains(document.activeElement))Notenblick.$('#dialogSave').focus();}}}
+ finally{if(result?.keepBusy&&Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open){Notenblick.dialogBusy=true;}else if(Notenblick.submitDialog===fn||!Notenblick.$('#dialog').open){Notenblick.dialogBusy=false;Notenblick.$('#dialogSave').disabled=result?.disableSubmit===true;Notenblick.$('#dialogNext').disabled=false;Notenblick.updateOralNext?.();if(Notenblick.submitDialog===fn&&Notenblick.$('#dialog').open){if(result?.focus)document.getElementById(result.focus)?.focus();else if(!Notenblick.$('#dialog').contains(document.activeElement))Notenblick.$('#dialogSave').focus();}}}
 };
 Notenblick.confirm = function confirm(title, text, fn, label = 'Bestätigen', options = {}) {
   Notenblick.modal(title, '<p>' + Notenblick.esc(text) + '</p>', fn, label,{size:'small',...options});

@@ -7,8 +7,8 @@ STORAGE=['view-storage','v150-storage','v160-storage','v170-storage','v180-stora
 BROWSER=['browser','v170-browser','v180-browser','v190-browser','v1100-browser','v1110-browser','v1120-browser','v1130-browser','v1140-browser','v1150-browser','v1160-browser','v1170-browser','v1180-browser','v1190-browser','v1200-browser','v1201-browser','v1202-browser','v1203-browser','v1210-browser','v1211-browser','v1220-browser','v1230-browser','v1260-browser','v1270-browser','update-browser']
 FILES=['export-files','office-schema','v1120-files','v1130-files','v1140-files','v1170-files','v1200-files','v1201-files','v1202-files','v1203-files','v1210-files','v1211-files','v1260-files']
 QUICK.insert(QUICK.index('update'),'v1280-entry')
-STORAGE.extend(['v1280-vault-storage','v1280-rescue-storage'])
-BROWSER.extend(['v1280-entry-browser','v1280-protection-browser'])
+STORAGE.extend(['v1280-vault-storage','v1280-rescue-storage','v1290-assessments-storage'])
+BROWSER.extend(['v1280-entry-browser','v1280-protection-browser','v1290-assessments-browser'])
 ALL=['infrastructure',*QUICK,'native-host',*STORAGE,'large','loader',*BROWSER,*FILES]
 DEPENDENCIES={name:['native-host'] for name in [*STORAGE,'large']}
 DEPENDENCIES.update({

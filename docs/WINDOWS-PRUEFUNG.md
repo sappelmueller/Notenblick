@@ -1,5 +1,11 @@
 # Windows-Praxisprüfung
 
+## Windows-Praxisstand 1.29.0
+
+Sebastian Müller hat die bereitgestellte Ausgabe 1.29.0 mit Braillezeile und unter Windows auf ARM64 praktisch getestet und zur Veröffentlichung freigegeben. [Prüfbericht 1.29.0](PRUEFBERICHT-1.29.0.md)
+
+## Historischer Praxisstand 1.28.0
+
 Für die veröffentlichte Version 1.28.0 stehen praktische Prüfungen der neuen Abläufe auf Windows x64 und ARM64 mit NVDA und Braille aus. [Checkliste für 1.28.0](PRUEFBERICHT-1.28.0.md#praktische-abnahme-auf-windows)
 
 ## Windows-Praxisstand 1.27.0
