@@ -478,20 +478,121 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 .admin-heading{margin:4px 0 22px}.admin-heading h2{margin:0 0 18px}.admin-heading .button-row{justify-content:flex-start}.admin-selection{display:flex;flex-wrap:wrap;gap:16px;margin:0 0 20px}.admin-selection .field{flex:0 1 19rem;min-width:0;max-width:100%}.admin-filters{align-items:end;gap:18px;margin:0 0 20px}.admin-filters .check{margin:0 0 10px}#classesDataTable th:first-child{min-width:7rem}#subjectsDataTable .weight-summary{min-width:10rem}.admin-heading+.table-panel{margin-top:20px}
 @media(max-width:640px){.admin-selection .field{flex:1 1 100%}.admin-filters{align-items:flex-start}.admin-heading .button-row{flex-wrap:wrap}}
 
-.welcome{max-width:50rem;margin:35px auto;padding:36px}.welcome h1{margin:0 0 22px}.welcome p{max-width:42rem;line-height:1.7}.welcome .button{margin-top:18px}.setup-progress{color:var(--muted);font-weight:600;margin:4px 0 10px}#setupStepTitle{margin-bottom:24px}.setup-list{display:grid;grid-template-columns:1fr;gap:16px;margin:16px 0 24px}.setup-item{display:flex;flex-wrap:wrap;gap:14px 18px;align-items:flex-end;border:1px solid var(--line);padding:18px;border-radius:8px;background:var(--soft)}.setup-item h3{flex:0 0 100%;margin:0}.setup-item .field{flex:1 1 18rem;max-width:100%;min-width:0;margin:0}.setup-item>.text-button{margin:0}.setup-course{display:flex;gap:12px;flex-wrap:wrap;align-items:end}.setup-course .field{flex:1;min-width:9rem}.setup-class-choice{max-width:22rem}.setup-import{border:1px solid var(--line);border-radius:8px;padding:16px;margin:20px 0}.setup-import>summary{cursor:pointer;font-weight:600}.setup-import[open]>summary{margin-bottom:18px}.setup-single{margin:24px 0}.setup-pupils{min-width:540px}.setup-pupils th:first-child{width:45%}.setup-pupils .field{margin-bottom:10px}.setup-pupils label{font-weight:400}.setup-pupils fieldset{border:0;padding:6px 0}.setup-navigation{margin-top:24px;border-top:1px solid var(--line);padding-top:18px}.setup-summary{padding-left:20px}.setup-summary li{margin-bottom:16px}.setup-summary p{margin:6px 0}.setup-pupils td{vertical-align:top}
-@media(max-width:600px){.welcome{padding:22px;margin:16px 0}.setup-item{padding:14px}.setup-item>.text-button{justify-self:start;margin:0}}
-
+.welcome{max-width:50rem;margin:35px auto;padding:36px}.welcome h1{margin:0 0 22px}.welcome p{max-width:42rem;line-height:1.7}.welcome .button{margin-top:18px}
 .home-grid .button,.welcome .button,.admin-heading .button{max-width:100%;white-space:normal;overflow-wrap:anywhere}
-/* 1.17: compact setup forms with one inline pupil editor. */
-.admin-heading .admin-selection{margin:0 0 20px}.setup-subjects{list-style:none;padding:0;margin:18px 0;max-width:42rem}.setup-subjects li{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-end;padding:12px 0;border-bottom:1px solid var(--line)}.setup-subjects .field{flex:1 1 18rem;max-width:100%;min-width:0;margin:0}.setup-subjects .text-button{margin:0}.setup-import h3{margin:0 0 18px}.setup-import .button.primary{margin-top:18px}.setup-single>summary{cursor:pointer;font-weight:600;padding:8px 0}.setup-single[open]>summary{margin-bottom:14px}.setup-pupils th,.setup-pupils td{white-space:normal;overflow-wrap:anywhere}.setup-pupil-editor td{padding:18px;background:var(--soft)}.setup-pupil-editor h4{margin:0 0 16px}.setup-pupils .actions{flex-wrap:wrap}.setup-pupils .text-button{white-space:normal}#setupWeightEditor{margin-top:20px;padding:18px;border:1px solid var(--line);border-radius:8px;background:var(--soft)}.setup-summary{list-style:none;padding:0}.setup-summary>li{padding:18px 0;border-bottom:1px solid var(--line)}.setup-summary h3{margin:0 0 12px}.setup-summary p{margin:7px 0}
-@media(max-width:480px){.setup-subjects li{gap:8px}.setup-subjects .text-button{justify-self:start;margin:0}.setup-pupil-editor td,#setupWeightEditor{padding:12px}}
-.setup-list,.setup-list>.setup-item{min-width:0}.setup-item input,.setup-item select{width:100%;min-width:0}
-/* Percentage bounds also respect effective viewport size with CSS zoom. */
-#dialog[data-setup]{max-height:calc(100% - 16px);overflow:auto}#dialog[data-setup] #dialogForm{display:block;max-height:none;overflow:visible}#dialog[data-setup] #dialogContent{overflow:visible}
-@media(max-width:420px){#dialog[data-setup] .dialog-header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}#dialog[data-setup] .dialog-header h2{grid-column:1/-1;grid-row:2}#dialog[data-setup] .dialog-header .close{grid-column:2;grid-row:1}}
+.admin-heading .admin-selection{margin:0 0 20px}
+@media(max-width:600px){.welcome{padding:22px;margin:16px 0}}
+
+#dialog[data-setup]{max-height:calc(100% - 16px);overflow:auto}
+#dialog[data-setup] #dialogForm{display:block;max-height:none;overflow:visible}
+#dialog[data-setup] #dialogContent{overflow:visible}
+#dialog[data-setup][data-size=wide]{
+  width:min(56rem,calc(100% - 24px));
+  height:min(42rem,calc(100% - 16px));
+  container-type:size;
+}
+#dialog[data-setup][data-size=wide] #dialogForm{
+  display:flex;
+  min-height:100%;
+}
+#dialog[data-setup][data-size=wide] #dialogContent{flex:1 0 auto}
+#dialog[data-setup][data-size=wide] .dialog-header{gap:var(--space-3);margin-block-end:var(--space-4)}
+#dialog[data-setup][data-size=wide] .dialog-header h2{min-width:0}
+#dialog[data-setup][data-size=wide] .close{flex-shrink:0}
+#dialog[data-setup][data-size=wide] .dialog-actions{
+  justify-content:flex-end;
+  margin-block-start:var(--space-4);
+  padding-block-start:var(--space-4);
+}
+@container (min-width:44rem) and (min-height:34rem){
+  #dialog[data-setup][data-size=wide] #dialogForm:not(:has(#contextHelp)){
+    height:100%;
+    overflow:hidden;
+  }
+  #dialog[data-setup][data-size=wide] #dialogContent{
+    overflow:auto;
+    flex:1 1 auto;
+    scroll-padding-block:var(--space-2);
+  }
+}
+.setup-progress{color:var(--muted);font-size:.9rem;font-weight:600;margin:0 0 var(--space-1)}
+#setupStepTitle{margin-block-end:var(--space-4)}
+.setup-compact{max-width:24rem}
+.setup-compact .field+.field,.setup-compact #setupStartField{margin-block-start:var(--space-3)}
+.setup-list{display:grid;gap:var(--space-3);margin-block:var(--space-4)}
+.setup-item{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  gap:var(--space-3);
+  min-width:0;
+  border:1px solid var(--line);
+  padding:var(--space-4);
+  border-radius:var(--radius);
+  background:var(--soft);
+}
+.setup-item h3{flex:0 0 100%;margin:0}
+.setup-item .field{flex:1 1 17rem;min-width:0;max-width:100%;margin:0}
+.setup-item .field:first-of-type{flex:1 1 8rem}
+.setup-item input,.setup-item select{width:100%}
+.setup-item>.text-button,.setup-subjects .text-button{margin:0}
+.setup-class-choice{max-width:24rem}
+.setup-subjects{list-style:none;padding:0;margin:var(--space-3) 0 var(--space-4);max-width:39rem}
+.setup-subjects li{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-end;
+  gap:var(--space-3);
+  padding:var(--space-3) 0;
+  border-bottom:1px solid var(--line);
+}
+.setup-subjects .field{flex:1 1 14rem;max-width:100%;min-width:0;margin:0}
+.setup-student-intro{display:flex;flex-wrap:wrap;gap:var(--space-2) var(--space-4);align-items:end}
+.setup-student-intro .field{flex:1 1 16rem}
+.setup-student-intro .hint{flex:0 1 26rem;margin:0 0 var(--space-2)}
+.setup-import{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  gap:var(--space-3);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:var(--space-4);
+  margin-block:var(--space-3) var(--space-4);
+}
+.setup-import h3,.setup-import>.field,#setup-names-preview{flex:0 0 100%;min-width:0;margin:0}
+.setup-import select{max-width:24rem}
+.setup-import textarea{height:6rem}
+#setup-names-preview:empty{display:none}
+.setup-single{margin-block:var(--space-3) var(--space-4)}
+.setup-single>summary{font-weight:650;cursor:pointer;padding-block:var(--space-2)}
+.setup-single[open]>summary,.setup-single .form-grid{margin-block-end:var(--space-3)}
+.setup-pupils{min-width:26rem}
+.setup-pupils th:first-child{width:42%}
+.setup-pupils th,.setup-pupils td{white-space:normal;overflow-wrap:anywhere;vertical-align:top}
+.setup-pupils fieldset{border:0;padding:var(--space-2) 0}
+.setup-pupils .actions{flex-wrap:wrap}
+.setup-pupil-editor td{padding:var(--space-4);background:var(--soft)}
+.setup-pupil-editor h4{margin-block-end:var(--space-3)}
+.setup-weight-summary,#setupWeightEditor{margin-block-start:var(--space-4)}
+.setup-weight-summary h4{margin-block-end:var(--space-2)}
+#setupWeightEditor{padding:var(--space-4);border:1px solid var(--line);border-radius:var(--radius);background:var(--soft)}
+.setup-summary{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));
+  gap:var(--space-3);
+  list-style:none;
+  padding:0;
+  margin-block:0 var(--space-4);
+}
+.setup-summary>li{min-width:0;padding:var(--space-3);border:1px solid var(--line);border-radius:var(--radius);background:var(--soft)}
+.setup-summary h3{margin:0 0 var(--space-2)}
+.setup-summary p{margin:var(--space-1) 0}
+#dialog[data-setup] .button,#dialog[data-setup] .text-button{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+@media(max-width:480px){.setup-item,.setup-import,.setup-pupil-editor td,#setupWeightEditor{padding:var(--space-3)}}
 
 /* Shared backup panes, readable help and a single setup footer. */
-#backup .backup-block{padding:0 0 24px;margin:24px 0;border-bottom:1px solid var(--line)}#backup .backup-block h3{margin:0 0 12px}#backup .button-row{justify-content:flex-start;flex-wrap:wrap}#backup p{max-width:55rem}#backup h2{margin:4px 0 22px}#backup h3{margin:28px 0 12px}.storage-details>div{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline}.storage-details dt{font-size:.92rem;flex:0 1 14rem}.storage-details dd{font-size:.95rem;margin:0;overflow-wrap:anywhere;min-width:0;max-width:100%}.help{max-width:60rem}.help p,.help li{line-height:1.7}.help h2{margin:30px 0 14px}#setupFooterSlot{margin-right:auto;min-width:0}#dialog[data-setup] .dialog-actions{align-items:stretch;flex-wrap:wrap;gap:12px}#dialog[data-setup] .dialog-actions button{min-height:44px;max-width:100%;white-space:normal;overflow-wrap:anywhere}#dialog[data-setup] .dialog-actions #dialogSave{margin-left:auto}#dialog[data-setup] .dialog-actions #setupBack{margin:0}#backupTabs a{overflow-wrap:anywhere;white-space:normal}
+#backup .backup-block{padding:0 0 24px;margin:24px 0;border-bottom:1px solid var(--line)}#backup .backup-block h3{margin:0 0 12px}#backup .button-row{justify-content:flex-start;flex-wrap:wrap}#backup p{max-width:55rem}#backup h2{margin:4px 0 22px}#backup h3{margin:28px 0 12px}.storage-details>div{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline}.storage-details dt{font-size:.92rem;flex:0 1 14rem}.storage-details dd{font-size:.95rem;margin:0;overflow-wrap:anywhere;min-width:0;max-width:100%}.help{max-width:60rem}.help p,.help li{line-height:1.7}.help h2{margin:30px 0 14px}#setupFooterSlot{margin-right:auto;min-width:0}#dialog[data-setup] .dialog-actions{align-items:stretch;flex-wrap:wrap;gap:12px}#dialog[data-setup] .dialog-actions button{min-height:44px;max-width:100%;white-space:normal;overflow-wrap:anywhere}#dialog[data-setup] .dialog-actions #setupBack{margin:0}#backupTabs a{overflow-wrap:anywhere;white-space:normal}
 #backup button,#backup a{max-width:100%;white-space:normal;overflow-wrap:anywhere;min-width:0}#backup .storage-details dt{max-width:100%;overflow-wrap:anywhere}.help h2{overflow-wrap:anywhere}
 
 #backup p,#backup h1,#backup h2,#backup h3,.help{overflow-wrap:anywhere}#dialog[data-context=backup]{max-height:calc(100% - 16px);overflow:auto}#dialog[data-context=backup] #dialogForm{display:block;max-height:none;overflow:visible}#dialog[data-context=backup] #dialogContent{overflow:visible}
@@ -580,3 +681,85 @@ ul.performance-areas .area-written,ul.performance-areas .area-exam,ul.performanc
 /* Keep the existing stacked export actions clear of their preceding fields. */
 #backupExportFields,#backup .backup-block>.field{margin-bottom:18px}
 #overviewZeroHint{margin:0;padding:12px 21px;border-bottom:1px solid var(--line)}
+
+/* Compact, accessible password controls and an opaque lock screen. */
+.vault-settings{max-width:780px;padding:clamp(12px,3vw,20px);margin-block:24px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.vault-settings-heading{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-2) var(--space-4)}
+.vault-settings-heading h3,.vault-settings-heading p{margin:0}
+#passwordProtectionState{font-weight:650;color:var(--muted)}
+.vault-settings-group{margin-block-start:var(--space-4);padding-block-start:var(--space-3);border-top:1px solid var(--line)}
+.vault-settings-group h4{margin:0 0 var(--space-2)}
+.vault-auth{margin-block:var(--space-3) var(--space-4)}
+.vault-password-fields{display:grid;gap:var(--space-3);justify-items:start}
+.vault-password-fields>.field{width:100%}
+.vault-new-password{padding-block-start:var(--space-4);border-top:1px solid var(--line)}
+.vault-auth .check{margin-block:var(--space-2)}
+.vault-auth #vaultAuthChoice{margin-block-start:var(--space-2)}
+#home .page-heading{flex-wrap:wrap;gap:var(--space-3);align-items:center}
+#home .page-heading #homeVaultAction{flex:0 0 auto;max-width:100%}
+#vaultLock{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+@media(max-width:520px){#home .page-heading #homeVaultAction{flex-basis:100%}}
+.vault-settings .button-row,.vault-key-actions,.vault-gate-actions{flex-wrap:wrap}
+.vault-settings button,.vault-key-actions button,.vault-gate-actions button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.vault-remaining{margin-block-start:16px;overflow-wrap:anywhere}
+#dialog[data-vault-setup] #dialogContent{min-height:min(300px,40vh)}
+#dialog[data-vault-setup] .dialog-header{margin-bottom:var(--space-3)}
+#vaultSetupStep{margin:0 0 var(--space-4);font-weight:600}
+#vaultKeyStatus{margin:var(--space-2) 0}
+#vaultKeyStatus:empty{display:none}
+#dialog[data-vault-setup] details{margin-block:var(--space-3)}
+#dialog[data-vault-setup] details[open]>summary{margin-bottom:var(--space-3)}
+#dialog[data-vault-setup] .dialog-actions{margin-top:var(--space-4);padding-top:var(--space-4)}
+@media(max-width:420px),(max-height:520px){
+ #dialog[data-vault-setup]{max-height:calc(100dvh - 16px);overflow:auto}
+ #dialog[data-vault-setup] #dialogForm{display:block;max-height:none;overflow:visible}
+ #dialog[data-vault-setup] #dialogContent{min-height:0;overflow:visible}
+ #dialog[data-vault-setup] #dialogSave{margin-inline-start:auto}
+}
+#vaultGate{width:min(480px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;overflow:auto}
+#vaultGate::backdrop{background:#f5f7f4;opacity:1}
+#vaultGate form{padding:clamp(14px,4vw,28px);display:grid;gap:14px}
+#vaultGate h2,#vaultGate p{margin:0}
+#vaultGateHint{max-width:36ch}
+#vaultGate .field{margin:0}
+#vaultGateWork:empty{position:absolute;inline-size:1px;block-size:1px;overflow:hidden}
+#vaultGateError:not([hidden]){border-inline-start:3px solid currentColor;padding-inline-start:var(--space-2)}
+#vaultGate .check{margin-block:8px 0}
+#vaultGate .text-button{justify-self:start}
+@media(max-width:480px){
+ #vaultGate .vault-gate-actions{flex-direction:column;align-items:stretch}
+ #vaultGate .vault-gate-actions button{text-align:center}
+}
+html[data-vault-locked] body>:not(#vaultGate){visibility:hidden}
+@media(forced-colors:active){#vaultGate::backdrop{background:Canvas} .vault-settings{border-color:CanvasText}}
+
+/* New assessments reuse the existing work area and form controls. */
+.entry-workspace:has(#newAssessmentFields) { container-type: inline-size; }
+.entry-workspace .entry-heading:has(> #newAssessmentFields) { gap: 10px; margin-bottom: 0; }
+.entry-heading:has(> #newAssessmentFields) > h3 { scroll-margin-top: 8px; }
+#newAssessmentFields { align-items: end; grid-template-columns: minmax(0,1fr) minmax(0,17rem); }
+#newAssessmentFields .date-field { display: block; margin: 0; }
+#newAssessmentFields .date-parts { grid-template-columns: repeat(auto-fit,minmax(min(100%,4.25rem),1fr)); }
+#newAssessmentFields .date-parts input { display: block; }
+.performance-draft-state { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.performance-draft-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); margin-block-start: var(--space-3); padding-block-start: var(--space-3); border-block-start: 1px solid var(--line); }
+.performance-draft-tools > * { min-width: 0; }
+.performance-draft-input:has(#pointConfiguration:not([hidden])),
+#draft-participation:has(#draft-participants:not([hidden])),
+.performance-draft-options[open] { flex: 1 0 100%; }
+.performance-draft-input .point-key-summary { margin: 0; }
+#draft-participation, #draft-participation > .field, .performance-draft-options { margin: 0; }
+#draft-participation > .field { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+#draft-participation > .field select { max-width: min(100%,17rem); }
+.performance-draft-options > summary { padding-block: 8px; }
+.performance-draft-options > .form-grid { margin-block: 8px; }
+.performance-draft-tools + .entry-tabs { margin-top: 12px; }
+.performance-draft-tools ~ .entry-result { margin-block: 6px 8px; }
+@container (max-width:34rem) {
+  #newAssessmentFields { grid-template-columns: minmax(0,1fr); gap: 12px; }
+  #newAssessmentFields .date-field { max-width: 17rem; }
+}
+.performance-drafts { margin-block: 10px; }
+#vaultGateHelp{padding:clamp(14px,4vw,28px)}
+#vaultGateHelp > * + *{margin-block-start:10px}
+#vaultGate form[hidden],#vaultGateHelp[hidden]{display:none}

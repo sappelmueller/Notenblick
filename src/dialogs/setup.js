@@ -6,12 +6,38 @@ const field=(id,label,value='',attrs='')=>A.field(id,label,value,attrs);
 const current=which=>{const d=A.setupDraft;return d.classes.find(c=>c.id===d[which])||d.classes[0];};
 const studentKey=s=>key(s.first)+'|'+key(s.last)+'|'+key(s.alias||'');
 function duplicate(cl){const seen=new Set();return cl.students.some(s=>{const k=studentKey(s);if(seen.has(k))return true;seen.add(k);return false;});}
-function readWeights(strict=false){const e=A.setupWeightEditor;if(!e||!A.$('#setupWeightEditor')?.isConnected)return true;try{if(e.pending())throw Error('Bitte zuerst über die umgerechneten Prozente entscheiden.');const next=e.collect();Object.assign(A.setupDraft.settings,{defaultAreas:N.clone(next.areas),defaultWrittenIds:[...next.writtenIds],defaultWrittenName:next.writtenName,defaultCalculationMode:next.calculationMode,defaultWeights:N.clone(next.weights),defaultPrecision:next.precision,defaultRounding:next.rounding});return true;}catch(err){if(strict)throw err;return false;}}
+function showWeights(open){
+ const d=A.setupDraft;
+ d.weightsOpen=open;
+ A.$('#setupWeightEditor').hidden=!open;
+ A.$('#setup-adjust-weights').setAttribute('aria-expanded',String(open));
+}
+function readWeights(strict=false){
+ const editor=A.setupWeightEditor,root=A.$('#setupWeightEditor');
+ if(!editor||!root)return true;
+ const open=A.setupDraft.weightsOpen;
+ try{
+  const next=editor.collect({focus:strict&&open});
+  Object.assign(A.setupDraft.settings,{
+   defaultAreas:N.clone(next.areas),defaultWrittenIds:[...next.writtenIds],defaultWrittenName:next.writtenName,
+   defaultCalculationMode:next.calculationMode,defaultWeights:N.clone(next.weights),
+   defaultPrecision:next.precision,defaultRounding:next.rounding
+  });
+  return true;
+ }catch(error){
+  if(!strict)return false;
+  if(!open){
+   showWeights(true);
+   try{editor.collect();}catch{ /* The shared editor points to the invalid entry. */ }
+  }
+  throw error;
+ }
+}
 function capture(){
  const d=A.setupDraft;if(!d||d.accepted||d.rendering)return;rememberView();
  if(d.step===1){d.year=A.val('setup-year');d.startYear=A.val('setup-start');for(const c of d.classes){c.name=A.val('setup-class-'+c.id);c.halfYearReport=A.val('setup-half-'+c.id);}}
  if(d.step===2){const cl=current('courseClass');for(const c of cl?.courses||[])c.name=A.val('setup-subject-'+c.id);}
- if(d.step===3){const cl=current('studentClass');if(!cl)return;cl.importDraft=A.captureNamesDraft('setup-names');cl.single={first:A.val('setup-first'),last:A.val('setup-last'),alias:A.val('setup-alias')};cl.allowDuplicate=!!A.$('#setupAllowDuplicate')?.checked;
+ if(d.step===3){const cl=current('studentClass');if(!cl)return;cl.singleOpen=A.$('.setup-single').open;cl.importDraft=A.captureNamesDraft('setup-names');cl.single={first:A.val('setup-first'),last:A.val('setup-last'),alias:A.val('setup-alias')};cl.allowDuplicate=!!A.$('#setupAllowDuplicate')?.checked;
   if(cl.editDraft){const s=cl.editDraft;s.first=A.val('setup-first-'+s.id);s.last=A.val('setup-last-'+s.id);s.alias=A.val('setup-alias-'+s.id);s.courses=cl.courses.filter(c=>A.$('#setup-member-'+s.id+'-'+c.id)?.checked).map(c=>c.id);}
  }
  if(d.step===4){d.settings.nameFormat=A.val('setup-name-format');readWeights();}
@@ -31,41 +57,149 @@ function validate(step){
  const d=A.setupDraft;
  if(step===1){if(!d.year||d.year.length>80)fail('Bitte ein Schuljahr eingeben.','setup-year');const range=N.schoolYearRange({label:d.year,startYear:Number(d.startYear)});if(!range)fail('Bitte den Beginn des Schuljahres als Kalenderjahr angeben.','setup-start');d.startYear=String(Number(range.start.slice(0,4)));if(!d.classes.length)fail('Bitte mindestens eine Klasse hinzufügen.','setup-add-class');const seen=new Set();for(const c of d.classes){if(!c.name||c.name.length>80)fail('Bitte einen Klassennamen eingeben.','setup-class-'+c.id);if(seen.has(key(c.name)))fail('Diese Klasse ist im Entwurf bereits vorhanden.','setup-class-'+c.id);seen.add(key(c.name));if(!['information','certificate'].includes(c.halfYearReport))fail('Bitte die Halbjahresausgabe wählen.','setup-half-'+c.id);}}
  if(step===2){for(const cl of d.classes){const seen=new Set();for(const c of cl.courses){if(!c.name||c.name.length>80||seen.has(key(c.name))){d.courseClass=cl.id;render();fail(!c.name?'Bitte einen Fachnamen eingeben.':'Dieses Fach ist in der Klasse bereits vorhanden.','setup-subject-'+c.id);}seen.add(key(c.name));}if(!cl.courses.length){d.courseClass=cl.id;render();fail('Bitte für '+cl.name+' mindestens ein Fach hinzufügen.','setup-add-course');}}}
- if(step===3){for(const cl of d.classes){if(cl.editDraft){d.studentClass=cl.id;render();applyEdit(cl);}if(cl.importDraft?.text||cl.single?.first||cl.single?.last||cl.single?.alias){d.studentClass=cl.id;render();fail('Bitte die eingegebenen Namen zunächst mit Schüler hinzufügen oder Schülerliste hinzufügen in den Entwurf übernehmen.',cl.importDraft?.text?'setup-names':'setup-first');}if(cl.students.some(s=>!s.first||!s.last||s.first.length>100||s.last.length>100||(s.alias||'').length>80)){d.studentClass=cl.id;cl.editDraft=N.clone(cl.students.find(s=>!s.first||!s.last||s.first.length>100||s.last.length>100||(s.alias||'').length>80));render();fail('Bitte Vor- und Nachnamen prüfen.','setup-first-'+cl.editDraft.id);}if(duplicate(cl)&&!cl.allowDuplicate){d.studentClass=cl.id;cl.showDuplicate=true;render();fail('In '+cl.name+' kommen gleiche Namen vor. Ergänze einen Namenszusatz oder bestätige die zusätzlichen Schüler.','setupAllowDuplicate');}}}
+ if(step===3){for(const cl of d.classes){if(cl.editDraft){d.studentClass=cl.id;render();applyEdit(cl);}if(cl.importDraft?.text||cl.single?.first||cl.single?.last||cl.single?.alias){d.studentClass=cl.id;render();fail('Füge die eingegebenen Schüler hinzu oder leere die Eingabefelder.',cl.importDraft?.text?'setup-names':'setup-first');}if(cl.students.some(s=>!s.first||!s.last||s.first.length>100||s.last.length>100||(s.alias||'').length>80)){d.studentClass=cl.id;cl.editDraft=N.clone(cl.students.find(s=>!s.first||!s.last||s.first.length>100||s.last.length>100||(s.alias||'').length>80));render();fail('Bitte Vor- und Nachnamen prüfen.','setup-first-'+cl.editDraft.id);}if(duplicate(cl)&&!cl.allowDuplicate){d.studentClass=cl.id;cl.showDuplicate=true;render();fail('In '+cl.name+' kommen gleiche Namen vor. Ergänze einen Namenszusatz oder bestätige die zusätzlichen Schüler.','setupAllowDuplicate');}}}
  if(step===4){readWeights(true);if(!['first-last','last-first'].includes(d.settings.nameFormat)||![0,1,2].includes(d.settings.defaultPrecision)||!['round','truncate'].includes(d.settings.defaultRounding))fail('Bitte gültige Einstellungen wählen.','setup-name-format');N.weightsValid(d.settings.defaultWeights,{mode:d.settings.defaultCalculationMode,course:A.newCourseConfig(d.settings)});}
 }
 function classSelect(id,selected){return `<div class="field setup-class-choice"><label for="${id}">Klasse</label><select id="${id}">${A.setupDraft.classes.map(c=>A.opt(c.id,c.name,selected)).join('')}</select></div>`;}
 function preferencesSummary(p){return (p.nameFormat==='first-last'?'Vorname Nachname':'Nachname, Vorname')+' · '+p.defaultPrecision+(p.defaultPrecision===1?' Nachkommastelle · ':' Nachkommastellen · ')+(p.defaultRounding==='round'?'Runden':'Kürzen');}
 function weightSummary(p){const c=A.newCourseConfig(p);return '<p>'+A.esc(A.weightsText(c))+'</p>'+(N.courseMode(c)==='grouped'?'<p>Innerhalb '+A.esc(N.areaLabel(c,'written'))+': '+N.groupIds(c).map(id=>A.esc(N.areaLabel(c,id)+' '+c.weights.written[id].replace('.',',')+' %')).join(' · ')+'</p>':'');}
-function pupilEditor(cl,s){return `<tr class="setup-pupil-editor"><td colspan="3"><h4>Schüler bearbeiten</h4><div class="form-grid">${field('setup-first-'+s.id,'Vorname',s.first,'maxlength="100"')}${field('setup-last-'+s.id,'Nachname',s.last,'maxlength="100"')}${field('setup-alias-'+s.id,'Namenszusatz',s.alias,'maxlength="80"')}</div><fieldset><legend>Fachteilnahmen</legend><div class="check-list">${cl.courses.map(c=>`<label class="check"><input type="checkbox" id="setup-member-${s.id}-${c.id}"${s.courses.includes(c.id)?' checked':''}>${A.esc(c.name)}</label>`).join('')}</div></fieldset><div class="button-row">${A.b('setup-save-student','Übernehmen',`data-id="${s.id}"`)}${A.b('setup-cancel-student','Abbrechen',`data-id="${s.id}"`,'text-button')}</div></td></tr>`;}
-function html(){
- const d=A.setupDraft,titles=['Schuljahr und Klassen','Fächer','Schülerlisten','Grundeinstellungen','Einrichtung überprüfen'];let content=`<p class="setup-progress" id="setupStepCount">Schritt ${d.step} von 5</p><h2 id="setupStepTitle" tabindex="-1" aria-describedby="setupStepCount">${titles[d.step-1]}</h2>`;
- if(d.step===1)content+=`${field('setup-year','Schuljahr',d.year,'required maxlength="80"')}<div id="setupStartField"${N.schoolYearRange({label:d.year})?' hidden':''}>${A.field('setup-start','Beginn des Schuljahres (Jahr)',d.startYear,'min="1900" max="9998"','number')}</div><div class="setup-list">${d.classes.map(c=>`<div class="setup-item"><h3 id="setup-heading-${c.id}">${A.esc(c.name?'Klasse '+c.name:'Neue Klasse')}</h3>${field('setup-class-'+c.id,'Klassenname',c.name,'required maxlength="80"')}<div class="field"><label for="setup-half-${c.id}">Ausgabe zum Halbjahr</label><select id="setup-half-${c.id}">${A.opt('information','Halbjahresinformation – Viertelnoten',c.halfYearReport)}${A.opt('certificate','Halbjahreszeugnis – ganze Noten',c.halfYearReport)}</select></div>${A.b('setup-remove-class','Entfernen',`data-id="${c.id}" aria-label="${A.esc(c.name?'Klasse '+c.name+' entfernen':'Neue Klasse entfernen')}"`,'text-button')}</div>`).join('')}</div>${A.b('setup-add-class','Weitere Klasse hinzufügen','id="setup-add-class"')}`;
- if(d.step===2){const cl=current('courseClass');content+=classSelect('setup-course-class',cl.id)+`<ul class="setup-subjects">${cl.courses.map((c,i)=>`<li>${field('setup-subject-'+c.id,'Fachname',c.name,'required maxlength="80"')}${A.b('setup-remove-course','Entfernen',`data-id="${c.id}" aria-label="${A.esc(c.name?c.name+' entfernen':'Leeren Facheintrag '+(i+1)+' entfernen')}"`,'text-button')}</li>`).join('')}</ul>${A.b('setup-add-course','Weiteres Fach hinzufügen','id="setup-add-course"')}<p class="hint">Für neue Fächer gelten zunächst die Standardgewichtungen.</p>`;}
- if(d.step===3){const cl=current('studentClass'),single=cl.single||{};content+=classSelect('setup-student-class',cl.id)+`<p class="hint">Schülerlisten sind optional. Du kannst sie später unter Verwaltung ergänzen.</p><div class="setup-import"><h3>Schülerliste einfügen</h3>${A.namesInput('setup-names','Schülerliste')}${A.b('setup-import-students','Schülerliste hinzufügen','','button primary')}</div><details class="setup-single"${single.first||single.last||single.alias?' open':''}><summary>Einzelnen Schüler hinzufügen</summary><div class="form-grid">${field('setup-first','Vorname',single.first,'maxlength="100"')}${field('setup-last','Nachname',single.last,'maxlength="100"')}${field('setup-alias','Namenszusatz',single.alias,'maxlength="80"')}</div>${A.b('setup-add-student','Schüler hinzufügen')}</details><label class="check" id="setupDuplicate"${cl.showDuplicate||duplicate(cl)?'':' hidden'}><input id="setupAllowDuplicate" type="checkbox"${cl.allowDuplicate?' checked':''}>Gleichnamige Schüler zusätzlich anlegen</label><h3 id="setupPupilsTitle">Schüler (${cl.students.length})</h3><div class="table-wrap"><table class="setup-pupils" aria-labelledby="setupPupilsTitle"><thead><tr><th scope="col">Schüler</th><th scope="col">Fächer</th><th scope="col">Aktionen</th></tr></thead><tbody>${cl.students.map(s=>`<tr><th scope="row">${A.esc(N.name(s,d.settings.nameFormat))}</th><td>${s.courses.length}</td><td><div class="actions">${A.b('setup-edit-student','Bearbeiten',`id="setup-edit-${s.id}" data-id="${s.id}" aria-label="${A.esc(N.name(s,d.settings.nameFormat)+' bearbeiten')}"`,'text-button')}${A.b('setup-remove-student','Entfernen',`data-id="${s.id}" aria-label="${A.esc(N.name(s,d.settings.nameFormat)+' entfernen')}"`,'text-button')}</div></td></tr>${cl.editDraft?.id===s.id?pupilEditor(cl,cl.editDraft):''}`).join('')||'<tr><td colspan="3">Noch keine Schüler erfasst.</td></tr>'}</tbody></table></div>`;}
- if(d.step===4){const p=d.settings;content+=`<div class="field"><label for="setup-name-format">Namensdarstellung</label><select id="setup-name-format">${A.opt('first-last','Vorname Nachname',p.nameFormat)}${A.opt('last-first','Nachname, Vorname',p.nameFormat)}</select></div><p class="hint">Die Vorgaben gelten für deine neuen Fächer. Jedes Fach kannst du später getrennt anpassen.</p><h3>Notengewichtung</h3><div id="setupWeightSummary">${weightSummary(p)}</div>${A.b('setup-adjust-weights','Gewichtung anpassen',`id="setup-adjust-weights" aria-expanded="${!!d.weightsOpen}" aria-controls="setupWeightEditor"`,'text-button')}<div id="setupWeightEditor"${d.weightsOpen?'':' hidden'}></div>`;}
- if(d.step===5){const p=d.settings;content+=`<h3>${A.esc(/^Schuljahr\b/i.test(d.year)?d.year:'Schuljahr '+d.year)}</h3><ul class="setup-summary">${d.classes.map(cl=>`<li><h3>Klasse ${A.esc(cl.name)}</h3><p>Fächer: ${cl.courses.map(c=>A.esc(c.name)).join(', ')}</p><p>Schüler: ${cl.students.length}</p><p>${A.esc(N.FINAL_TYPES[cl.halfYearReport])}</p></li>`).join('')}</ul><h3>Einstellungen</h3><p id="setupPreferencesSummary">${A.esc(preferencesSummary(p))}</p><h4>Standardgewichtung</h4><div id="setupWeightSummary">${weightSummary(p)}</div>`;}
- return content;
+const titles=['Schuljahr und Klassen','Fächer','Schülerlisten','Grundeinstellungen','Einrichtung überprüfen'];
+function pupilEditor(cl,s){
+ return `<tr class="setup-pupil-editor"><td colspan="3">
+  <h4>Schüler bearbeiten</h4>
+  <div class="form-grid">
+   ${field('setup-first-'+s.id,'Vorname',s.first,'maxlength="100"')}
+   ${field('setup-last-'+s.id,'Nachname',s.last,'maxlength="100"')}
+   ${field('setup-alias-'+s.id,'Namenszusatz',s.alias,'maxlength="80"')}
+  </div>
+  <fieldset><legend>Teilnahme an Fächern</legend><div class="check-list">${cl.courses.map(c=>`<label class="check"><input type="checkbox" id="setup-member-${s.id}-${c.id}"${s.courses.includes(c.id)?' checked':''}>${A.esc(c.name)}</label>`).join('')}</div></fieldset>
+  <div class="button-row">${A.b('setup-save-student','Übernehmen',`data-id="${s.id}"`)}${A.b('setup-cancel-student','Abbrechen',`data-id="${s.id}"`,'text-button')}</div>
+ </td></tr>`;
 }
-function wire(){const d=A.setupDraft;if(d.step===4){A.setupWeightEditor=A.mountWeightEditor(A.$('#setupWeightEditor'),A.newCourseConfig(d.settings),{prefix:'setup-',onChange:()=>{if(d.rendering)return;if(readWeights())A.$('#setupWeightSummary').innerHTML=weightSummary(d.settings);}});}const slot=A.$('#setupFooterSlot');slot.hidden=false;slot.innerHTML=A.b('setup-back','Zurück',`id="setupBack"${d.step===1||d.accepted?' disabled':''}`);A.$('#dialog .dialog-actions [data-action=close]').classList.add('text-button');
+function stepBody(){
+ const d=A.setupDraft;
+ if(d.step===1)return `<div class="setup-compact">
+  ${field('setup-year','Schuljahr',d.year,'required maxlength="80"')}
+  <div id="setupStartField"${N.schoolYearRange({label:d.year})?' hidden':''}>${A.field('setup-start','Erstes Kalenderjahr des Schuljahres',d.startYear,'min="1900" max="9998"','number')}</div>
+ </div>
+ <div class="setup-list">${d.classes.map(c=>`<div class="setup-item">
+  <h3 id="setup-heading-${c.id}">${A.esc(c.name?'Klasse '+c.name:'Neue Klasse')}</h3>
+  ${field('setup-class-'+c.id,'Klassenname',c.name,'required maxlength="80"')}
+  <div class="field"><label for="setup-half-${c.id}">Ausgabe zum Halbjahr</label><select id="setup-half-${c.id}">${A.opt('information','Halbjahresinformation – Viertelnoten',c.halfYearReport)}${A.opt('certificate','Halbjahreszeugnis – ganze Noten',c.halfYearReport)}</select></div>
+  ${A.b('setup-remove-class','Entfernen',`data-id="${c.id}" aria-label="${A.esc(c.name?'Klasse '+c.name+' entfernen':'Neue Klasse entfernen')}"`,'text-button')}
+ </div>`).join('')}</div>
+ ${A.b('setup-add-class','Weitere Klasse hinzufügen','id="setup-add-class"')}`;
+ if(d.step===2){
+  const cl=current('courseClass');
+  return classSelect('setup-course-class',cl.id)+`<ul class="setup-subjects">${cl.courses.map((c,i)=>`<li>
+   ${field('setup-subject-'+c.id,'Fachname',c.name,'required maxlength="80"')}
+   ${A.b('setup-remove-course','Entfernen',`data-id="${c.id}" aria-label="${A.esc(c.name?c.name+' entfernen':'Leeren Facheintrag '+(i+1)+' entfernen')}"`,'text-button')}
+  </li>`).join('')}</ul>
+  ${A.b('setup-add-course','Weiteres Fach hinzufügen','id="setup-add-course"')}`;
+ }
+ if(d.step===3){
+  const cl=current('studentClass'),single=cl.single||{};
+  return `<div class="setup-student-intro">
+   ${classSelect('setup-student-class',cl.id)}
+   <p class="hint">Du kannst Schüler auch später unter „Verwaltung“ hinzufügen.</p>
+  </div>
+  <div class="setup-import">
+   <h3>Schülerliste einfügen</h3>
+   ${A.namesInput('setup-names','Schülerliste')}
+   ${A.b('setup-import-students','Schülerliste hinzufügen')}
+  </div>
+  <details class="setup-single"${cl.singleOpen||single.first||single.last||single.alias?' open':''}>
+   <summary>Einzelnen Schüler hinzufügen</summary>
+   <div class="form-grid">${field('setup-first','Vorname',single.first,'maxlength="100"')}${field('setup-last','Nachname',single.last,'maxlength="100"')}${field('setup-alias','Namenszusatz',single.alias,'maxlength="80"')}</div>
+   ${A.b('setup-add-student','Schüler hinzufügen')}
+  </details>
+  <label class="check" id="setupDuplicate"${cl.showDuplicate||duplicate(cl)?'':' hidden'}><input id="setupAllowDuplicate" type="checkbox"${cl.allowDuplicate?' checked':''}>Gleichnamige Schüler zusätzlich anlegen</label>
+  <h3 id="setupPupilsTitle">Schüler (${cl.students.length})</h3>
+  <div class="table-wrap"><table class="setup-pupils" aria-labelledby="setupPupilsTitle">
+   <thead><tr><th scope="col">Schüler</th><th scope="col">Fächer</th><th scope="col">Aktionen</th></tr></thead>
+   <tbody>${cl.students.map(s=>`<tr><th scope="row">${A.esc(N.name(s,d.settings.nameFormat))}</th><td>${s.courses.length}</td><td><div class="actions">
+    ${A.b('setup-edit-student','Bearbeiten',`id="setup-edit-${s.id}" data-id="${s.id}" aria-label="${A.esc(N.name(s,d.settings.nameFormat)+' bearbeiten')}"`,'text-button')}
+    ${A.b('setup-remove-student','Entfernen',`data-id="${s.id}" aria-label="${A.esc(N.name(s,d.settings.nameFormat)+' entfernen')}"`,'text-button')}
+   </div></td></tr>${cl.editDraft?.id===s.id?pupilEditor(cl,cl.editDraft):''}`).join('')||'<tr><td colspan="3">Noch keine Schüler erfasst.</td></tr>'}</tbody>
+  </table></div>`;
+ }
+ const p=d.settings;
+ if(d.step===4)return `<div class="field setup-compact"><label for="setup-name-format">Namensdarstellung</label><select id="setup-name-format">${A.opt('first-last','Vorname Nachname',p.nameFormat)}${A.opt('last-first','Nachname, Vorname',p.nameFormat)}</select></div>
+ <div class="setup-weight-summary">
+  <h3>Notengewichtung</h3>
+  <p class="hint">Diese Gewichtung gilt für neue Fächer. Du kannst sie später für jedes Fach anpassen.</p>
+  <div id="setupWeightSummary">${weightSummary(p)}</div>
+  ${A.b('setup-adjust-weights','Gewichtung anpassen',`id="setup-adjust-weights" aria-expanded="${!!d.weightsOpen}" aria-controls="setupWeightEditor"`)}
+ </div>
+ <div id="setupWeightEditor"${d.weightsOpen?'':' hidden'}></div>`;
+ return `<h3>${A.esc(/^Schuljahr\b/i.test(d.year)?d.year:'Schuljahr '+d.year)}</h3>
+ <ul class="setup-summary">${d.classes.map(cl=>`<li>
+  <h3>Klasse ${A.esc(cl.name)}</h3>
+  <p>Fächer: ${cl.courses.map(c=>A.esc(c.name)).join(', ')}</p>
+  <p>Schüler: ${cl.students.length}</p>
+  <p>${A.esc(N.FINAL_TYPES[cl.halfYearReport])}</p>
+ </li>`).join('')}</ul>
+ <div class="setup-weight-summary">
+  <h3>Grundeinstellungen</h3>
+  <p id="setupPreferencesSummary">${A.esc(preferencesSummary(p))}</p>
+  <h4>Standardgewichtung</h4>
+  <div id="setupWeightSummary">${weightSummary(p)}</div>
+ </div>`;
+}
+function html(){
+ const step=A.setupDraft.step;
+ return `<p class="setup-progress" id="setupStepCount">Schritt ${step} von 5</p>
+ <h2 id="setupStepTitle" tabindex="-1" aria-describedby="setupStepCount">${titles[step-1]}</h2>
+ <div id="setupStepBody">${stepBody()}</div>`;
+}
+function wire(){
+ const d=A.setupDraft;
+ if(d.step===4){
+  const root=A.$('#setupWeightEditor');
+  if(d.weightEditorRoot&&d.weightEditorRoot!==root)root.replaceWith(d.weightEditorRoot);
+  if(!d.weightEditorRoot){
+   d.weightEditorRoot=root;
+   A.setupWeightEditor=A.mountWeightEditor(root,A.newCourseConfig(d.settings),{prefix:'setup-',onChange:()=>{
+    if(!d.rendering&&readWeights())A.$('#setupWeightSummary').innerHTML=weightSummary(d.settings);
+   }});
+  }
+ }
+ const slot=A.$('#setupFooterSlot');
+ slot.hidden=false;
+ slot.innerHTML=A.b('setup-back','Zurück',`id="setupBack"${d.step===1||d.accepted?' disabled':''}`);
+ A.$('#dialog .dialog-actions [data-action=close]').classList.add('text-button');
  if(d.step===1){A.$('#setup-year').addEventListener('input',()=>A.$('#setupStartField').hidden=!!N.schoolYearRange({label:A.val('setup-year')}));for(const c of d.classes){A.$('#setup-class-'+c.id).addEventListener('input',e=>{const name=e.target.value.trim();A.$('#setup-heading-'+c.id).textContent=name?'Klasse '+name:'Neue Klasse';A.$('[data-action=setup-remove-class][data-id="'+c.id+'"]').setAttribute('aria-label',name?'Klasse '+name+' entfernen':'Neue Klasse entfernen');});}}
  if(d.step===2)current('courseClass').courses.forEach((c,i)=>A.$('#setup-subject-'+c.id).addEventListener('input',e=>{const name=e.target.value.trim();A.$('[data-action=setup-remove-course][data-id="'+c.id+'"]').setAttribute('aria-label',name?name+' entfernen':'Leeren Facheintrag '+(i+1)+' entfernen');}));
- for(const[id,which]of [['setup-course-class','courseClass'],['setup-student-class','studentClass']])if(A.$('#'+id))A.$('#'+id).addEventListener('change',e=>{const value=e.target.value;capture();d[which]=value;render(id);});
+ for(const[id,which]of [['setup-course-class','courseClass'],['setup-student-class','studentClass']])A.$('#'+id)?.addEventListener('change',e=>{
+  if(d.rendering)return;
+  const value=e.target.value;
+  capture();d[which]=value;render(id);
+ });
  if(d.step===3)A.restoreNamesDraft('setup-names',current('studentClass').importDraft);
- if(d.step===4&&!d.accepted)for(const id of ['setup-name-format'])A.$('#'+id)?.addEventListener('input',()=>{if(d.rendering)return;capture();A.$('#setupWeightSummary').innerHTML=weightSummary(d.settings);if(A.$('#setupWeightError'))A.$('#setupWeightError').hidden=readWeights();});
- if(d.step===4&&!d.accepted)for(const id of ['setup-name-format'])A.$('#'+id)?.addEventListener('change',()=>{if(d.rendering)return;capture();A.$('#setupWeightSummary').innerHTML=weightSummary(d.settings);});
+ A.$('#setup-name-format')?.addEventListener('change',e=>{d.settings.nameFormat=e.target.value;});
  if(d.accepted)for(const el of A.$('#dialogContent').querySelectorAll('input,select,textarea,button'))el.disabled=true;
 }
 // View state is draft-only and deliberately excluded from the dirty snapshot.
 function viewKey(){const d=A.setupDraft;return d.step+':'+(d.step===2?d.courseClass:d.step===3?d.studentClass:'');}
 function rememberView(){const d=A.setupDraft;(d.views||={})[viewKey()]={dialog:A.$('#dialog').scrollTop,content:A.$('#dialogContent').scrollTop};}
 function render(focus='setupStepTitle'){
- const d=A.setupDraft;d.rendering=true;
- try{A.$('#setupStepTitle')?.focus({preventScroll:true});A.$('#dialogError').hidden=true;A.$('#dialogContent').innerHTML=html();A.$('#dialogSave').textContent=d.step===5?'Einrichtung abschließen':'Weiter';A.$('#dialog .dialog-actions [data-action=close]').textContent='Einrichtung beenden';wire();}finally{d.rendering=false;}
- A.$('#'+focus)?.focus({preventScroll:true});const pos=d.views?.[viewKey()];A.$('#dialog').scrollTop=pos?.dialog||0;A.$('#dialogContent').scrollTop=pos?.content||0;
- // Action focus must be visible; step headings announce the restored step
- // without moving its remembered reading position.
- if(focus!=='setupStepTitle')A.$('#'+focus)?.scrollIntoView?.({block:'nearest'});
+ const d=A.setupDraft,heading=A.$('#setupStepTitle');
+ d.rendering=true;
+ try{
+  const title=titles[d.step-1],count=`Schritt ${d.step} von 5`,progress=A.$('#setupStepCount');
+  if(heading.textContent!==title)heading.textContent=title;
+  if(progress.textContent!==count)progress.textContent=count;
+  A.$('#dialogError').hidden=true;
+  A.$('#setupStepBody').innerHTML=stepBody();
+  A.$('#dialogSave').textContent=d.step===5?'Einrichtung abschließen':'Weiter';
+  wire();
+ }finally{d.rendering=false;}
+ const target=A.$('#'+focus),pos=d.views?.[viewKey()];
+ target?.focus({preventScroll:true});
+ A.$('#dialog').scrollTop=pos?.dialog||0;
+ A.$('#dialogContent').scrollTop=pos?.content||0;
+ // The step heading announces the restored step without changing its reading position.
+ if(focus!=='setupStepTitle')target?.scrollIntoView?.({block:'nearest'});
 }
 function addRows(cl,rows){const keys=new Set(cl.students.map(studentKey));let repeated=false;for(const r of rows){const k=studentKey(r);if(keys.has(k))repeated=true;keys.add(k);}if(repeated&&!cl.allowDuplicate){cl.showDuplicate=true;render();fail('In der Liste kommen gleiche Namen vor. Bitte prüfen oder die zusätzlichen Schüler bestätigen.','setupAllowDuplicate');}for(const r of rows)cl.students.push({...r,id:N.id(),courses:cl.courses.map(c=>c.id)});}
 A.setupAction=async function(el){try{const d=A.setupDraft;if(!d||d.accepted||A.dialogBusy)return;capture();const id=el.dataset.id,a=el.dataset.action;
@@ -80,7 +214,7 @@ A.setupAction=async function(el){try{const d=A.setupDraft;if(!d||d.accepted||A.d
  if(a==='setup-save-student'){const cl=current('studentClass');applyEdit(cl);render('setup-edit-'+id);return;}
  if(a==='setup-cancel-student'){current('studentClass').editDraft=null;render('setup-edit-'+id);return;}
  if(a==='setup-remove-student'){const cl=current('studentClass'),at=cl.students.findIndex(s=>s.id===id);cl.students=cl.students.filter(s=>s.id!==id);if(cl.editDraft?.id===id)cl.editDraft=null;render(cl.students.length?'setup-edit-'+cl.students[Math.min(at,cl.students.length-1)].id:'setup-names');return;}
- if(a==='setup-adjust-weights'){d.weightsOpen=!d.weightsOpen;A.$('#setupWeightEditor').hidden=!d.weightsOpen;A.$('#setup-adjust-weights').setAttribute('aria-expanded',String(d.weightsOpen));if(d.weightsOpen)A.$('#setup-calculationMode').focus();return;}
+ if(a==='setup-adjust-weights'){showWeights(!d.weightsOpen);if(d.weightsOpen)A.$('#setup-calculationMode').focus();return;}
  }catch(e){A.$('#dialogError').textContent=e.message;A.$('#dialogError').hidden=false;}};
 A.setupHasChanges=function(){const d=A.setupDraft;if(!d||d.accepted)return false;if(A.dialogReturn)return true;capture();return snapshot(d)!==d.initialSnapshot;};
 function protectClose(){if(!A.setupHasChanges())return true;A.confirmInDialog('Einrichtung beenden?','Deine bisherigen Eingaben wurden noch nicht gespeichert. Möchtest du die Einrichtung wirklich beenden und alle Angaben verwerfen?',()=>A.closeModal({submitted:true}),'Eingaben verwerfen','Einrichtung fortsetzen');return false;}
@@ -89,9 +223,9 @@ async function finish(){const d=A.setupDraft;if(d.accepted){publishContext(d);aw
  capture();validate(4);const workspace={...A.getWorkspace(),settings:N.clone(d.settings),main:'notes',year:d.yearId,workingYear:d.yearId,historicalYear:'',class:d.classes[0].id,course:d.classes[0].courses[0].id,lastNotesCourse:d.classes[0].courses[0].id,adminYear:d.yearId,adminClass:d.classes[0].id};const before=A.data;
  try{await A.commitDraft(data=>{if(A.fatalStart||!A.firstRun||data.id!==d.baseId||['years','classes','courses','students','assessments','finals'].some(k=>data[k].length))throw Error('Es sind inzwischen Daten vorhanden. Die Einrichtung wurde nicht übernommen.');data.years.push({id:d.yearId,label:d.year,startYear:Number(d.startYear),archived:false});for(const cl of d.classes){data.classes.push({id:cl.id,yearId:d.yearId,name:cl.name,halfYearReport:cl.halfYearReport,archived:false});for(const s of cl.students)data.students.push({id:s.id,classId:cl.id,first:s.first,last:s.last,alias:s.alias||'',archived:false});for(const c of cl.courses)data.courses.push({id:c.id,classId:cl.id,name:c.name,studentIds:cl.students.map(s=>s.id),inactiveStudentIds:cl.students.filter(s=>!s.courses.includes(c.id)).map(s=>s.id),...A.newCourseConfig(d.settings),lockedPeriods:[],archived:false});}},{workspace,initialSetup:true});}
  finally{if(A.data!==before){d.accepted=true;publishContext(d);await A.workspacePromise;wire();}}
- if(A.workspaceFailed)throw Error('Alle Klassen und Noten sind gespeichert. Die Einstellungen konnten noch nicht vollständig gespeichert werden. Bitte erneut abschließen.');
+ if(A.workspaceFailed)throw Error('Deine Klassen und Fächer sind gespeichert. Wähle erneut „Einrichtung abschließen“, um auch die Einstellungen zu speichern.');
 }
 A.setupNext=async function(){const d=A.setupDraft;if(d.step<5){capture();validate(d.step);if(d.step===1){for(const c of d.classes)if(!c.courses.length)c.courses.push({id:N.id(),name:''});if(!d.classes.some(c=>c.id===d.courseClass))d.courseClass=d.classes[0].id;}if(d.step===2&&!d.classes.some(c=>c.id===d.studentClass))d.studentClass=d.classes[0].id;d.step++;render();return{keepOpen:true,focus:'setupStepTitle'};}
  await finish();A.afterClose=()=>{A.activateGroup('main','notes');A.activateGroup('notes','overview',true,true);A.feedback('setup','Einrichtung abgeschlossen. Deine Klassen und Fächer sind bereit.');};};
-A.setup=function(){if(A.setupDraft)return;if(A.fatalStart||!A.firstRun||['years','classes','courses','students','assessments','finals'].some(k=>A.data[k].length))throw Error('Die Ersteinrichtung ist nur ohne vorhandenen Datenbestand verfügbar. Ergänze weitere Einträge unter Verwaltung.');const cl={id:N.id(),name:'',halfYearReport:'information',courses:[],students:[]},settings=N.clone(A.prefs);A.setupDraft={step:1,baseId:A.data.id,yearId:N.id(),year:A.schoolYearLabel(),startYear:A.schoolYearLabel().slice(0,4),classes:[cl],settings,courseClass:cl.id,studentClass:cl.id};A.setupDraft.initialSnapshot=snapshot(A.setupDraft);A.$('#dialog').dataset.setup='true';A.modal('Notenverwaltung einrichten',html(),A.setupNext,'Weiter',{size:'wide',focus:'dialogTitle',beforeClose:protectClose,onClose:()=>{delete A.$('#dialog').dataset.setup;A.setupDraft=null;}});A.$('#dialog .dialog-actions [data-action=close]').textContent='Einrichtung beenden';wire();};
+A.setup=function(){if(A.setupDraft)return;if(A.fatalStart||!A.firstRun||['years','classes','courses','students','assessments','finals'].some(k=>A.data[k].length))throw Error('Die Ersteinrichtung ist nur ohne vorhandenen Datenbestand verfügbar. Ergänze weitere Einträge unter Verwaltung.');const cl={id:N.id(),name:'',halfYearReport:'information',courses:[],students:[]},settings=N.clone(A.prefs);A.setupDraft={step:1,baseId:A.data.id,yearId:N.id(),year:A.schoolYearLabel(),startYear:A.schoolYearLabel().slice(0,4),classes:[cl],settings,courseClass:cl.id,studentClass:cl.id};A.setupDraft.initialSnapshot=snapshot(A.setupDraft);A.$('#dialog').dataset.setup='true';A.modal('Notenverwaltung einrichten',html(),A.setupNext,'Weiter',{size:'wide',focus:'dialogTitle',beforeClose:protectClose,onClose:()=>{delete A.$('#dialog').dataset.setup;A.setupDraft=null;A.setupWeightEditor=null;}});A.$('#dialog .dialog-actions [data-action=close]').textContent='Einrichtung beenden';wire();};
 })(globalThis.Notenblick);

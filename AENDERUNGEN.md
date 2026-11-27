@@ -1,5 +1,14 @@
 # Änderungen
 
+## 1.28.0
+
+- Neue Leistungen führen direkt zur Eingabetabelle. Bezeichnung, Datum und Noten lassen sich dort in einem Durchgang erfassen. Eingaben mit offenen Pflichtangaben bleiben als Entwurf erhalten.
+- Ein freiwilliges Passwort schützt Noten, Sicherungen und automatische Notenlisten. Auf der Startseite kannst du Notenblick sperren. Mit dem getrennt aufbewahrten Notfallschlüssel kannst du deine Noten öffnen, wenn du das Passwort vergessen hast.
+- Wenn du den Passwortschutz ausschaltest, sind Noten und Notenlisten wieder direkt lesbar. Notenblick räumt seine Schutzdateien auf und bewahrt frühere Sicherungen im Sicherungsordner auf.
+- **Notfallzugriff für Notenblick** öffnet Notenlisten und kopiert Sicherungen auch ohne laufendes Hauptprogramm.
+
+[Prüfumfang und praktische Abnahme](docs/PRUEFBERICHT-1.28.0.md)
+
 ## 1.27.0 – 6. November 2026
 
 - Schutzsicherungen vor Änderungen an Leistungsbereichen auch unter Wiederherstellen auswählen.

@@ -48,7 +48,7 @@ document.addEventListener('focusin',e=>{if(e.target.dataset.entry){const s=Noten
 document.addEventListener('input', e => {
   const el = e.target;
   if (el.dataset.entry) {
-    Notenblick.pending.add(el.id);if(el.dataset.entry==='points')Notenblick.previewPoints(el);
+    Notenblick.captureDraftInput(el);Notenblick.pending.add(el.id);if(el.dataset.entry==='points')Notenblick.previewPoints(el);
     return;
   }
   if (el.dataset.filter === 'search') {
@@ -56,7 +56,7 @@ document.addEventListener('input', e => {
     Notenblick.remember();
     Notenblick.refreshTable(el.dataset.kind);
   }
-  if(el.dataset.entrySearch){if(!Notenblick.canLeave()){el.value=Notenblick.W().entrySearch;return;}const kind=el.dataset.entrySearch;Notenblick.W().entrySearch=el.value;const a=Notenblick.data.assessments.find(x=>x.id===Notenblick.W().selected[kind]);Notenblick.$('#entryBody-'+kind).innerHTML=Notenblick.entryRows(a,kind);Notenblick.remember();return;}
+  if(el.dataset.entrySearch){if(!Notenblick.canLeave()){el.value=Notenblick.W().entrySearch;return;}const kind=el.dataset.entrySearch;Notenblick.W().entrySearch=el.value;const a=Notenblick.assessmentById(Notenblick.W().selected[kind]);Notenblick.$('#entryBody-'+kind).innerHTML=Notenblick.entryRows(a,kind);Notenblick.remember();return;}
   if(el.id==='oral-search'){Notenblick.W().oralSearch=el.value;Notenblick.W().oralPage=0;Notenblick.refreshOralTable();Notenblick.remember();return;}
   if(el.id==='assessmentSearch'){Notenblick.W()[el.dataset.scope==='oral'?'oralListSearch':'assessmentSearch']=el.value;Notenblick.refreshAssessmentList();Notenblick.remember();return;}
   if (el.id === 'adminSearch') {
@@ -69,7 +69,7 @@ document.addEventListener('change', e => {
   const el = e.target;
   try {
     if(el.dataset.setting){const key=el.dataset.setting,value=key==='visibleKinds'?[...document.querySelectorAll('[data-setting=visibleKinds]:checked')].map(x=>x.value):el.value;if(!Notenblick.setPreference(key,value)){if(key==='visibleKinds')el.checked=Notenblick.prefs.visibleKinds.includes(el.value);else el.value=String(Notenblick.prefs[key]);}return;}
-    if(el.dataset.entryPupil){if(!Notenblick.canLeave())return;const kind=el.dataset.entryPupil,a=Notenblick.data.assessments.find(x=>x.id===Notenblick.W().selected[kind]);Notenblick.W().studentIndex=Notenblick.pointEntryList(a).findIndex(s=>s.id===el.value);Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.$('#entryPupil-'+kind).focus();return;}
+    if(el.dataset.entryPupil){if(!Notenblick.canLeave())return;const kind=el.dataset.entryPupil,a=Notenblick.assessmentById(Notenblick.W().selected[kind]);Notenblick.W().studentIndex=Notenblick.pointEntryList(a).findIndex(s=>s.id===el.value);Notenblick.renderEntry(kind,'single');Notenblick.remember();Notenblick.$('#entryPupil-'+kind).focus();return;}
     if(el.id==='oralAreaView'){const w=Notenblick.W();if(!Notenblick.canLeave()){el.value=w.oralAreaView;return;}w.oralAreaView=el.value;w.assessmentWorkOpen=false;Notenblick.renderAssessments(Notenblick.kinds.includes(w.view)?w.view:'');Notenblick.$('#oralSettings').open=true;Notenblick.$('#oralAreaView').focus();Notenblick.remember();return;}
     if(el.id==='oralView'){if(Notenblick.canLeave()){Notenblick.showOral(el.value);Notenblick.$('#oralView').focus();}else el.value=Notenblick.W().oralView;return;}
     if(['oralStudentFilter','oralSort'].includes(el.id)){Notenblick.W()[el.id==='oralSort'?'oralSort':'oralStudent']=el.value;Notenblick.W().oralPage=0;Notenblick.refreshOralTable();Notenblick.remember();return;}
@@ -115,7 +115,7 @@ document.addEventListener('change', e => {
 document.addEventListener('keydown', e => {
   const el = e.target;
   if(e.defaultPrevented)return;
-  if(e.key==='Escape'){const details=el.closest('details[open]');if(details&&(details.hasAttribute('data-view-options')||details.id==='oralSettings'||details.id==='pupilHistory'||details.classList.contains('result-note'))){details.open=false;details.querySelector('summary').focus();e.preventDefault();return;}}
+  if(e.key==='Escape'){const details=el.closest('details[open]');if(details&&(details.hasAttribute('data-view-options')||details.id==='oralSettings'||details.id==='pupilHistory'||details.id==='newAssessmentMore'||details.id==='draft-participation'||details.classList.contains('result-note'))){details.open=false;details.querySelector('summary').focus();e.preventDefault();return;}}
   // A modal owns Escape and its own input keys. Background details must not
   // consume the native cancel event while a dialog is open.
   if(Notenblick.$('#dialog').open)return;
@@ -125,15 +125,15 @@ document.addEventListener('keydown', e => {
     if (el.getAttribute('aria-invalid') === 'true') {el.focus();return;}
     const {kind,mode:type,entry}=el.dataset;
     if(type==='single'){
-      const w=Notenblick.W(),list=Notenblick.pointEntryList(Notenblick.data.assessments.find(a=>a.id===el.dataset.assessment)),next=w.studentIndex+(e.shiftKey?-1:1);
+      const w=Notenblick.W(),list=Notenblick.pointEntryList(Notenblick.assessmentById(el.dataset.assessment)),next=w.studentIndex+(e.shiftKey?-1:1);
       if(next>=0&&next<list.length){w.studentIndex=next;Notenblick.renderEntry(kind,type);Notenblick.remember();Notenblick.$('#entry-'+kind+'-single [data-entry='+entry+']')?.focus();}
     }else{
       const inputs=[...document.querySelectorAll('#entry-'+kind+'-table [data-entry='+entry+']')],at=inputs.indexOf(el);inputs[at+(e.shiftKey?-1:1)]?.focus();
     }
     if(entry==='points'&&result?.changed)Notenblick.announcePoints(result.assessment,result.result);
   }
-  if(e.key==='Escape'){for(const[id,summary]of [['allSelection','allSelectionSummary'],['adminViewDetails','adminViewSummary']])if(Notenblick.$('#'+id)?.open&&!Notenblick.$('#'+summary)?.hidden){Notenblick.$('#'+id).open=false;Notenblick.$('#'+summary).focus();e.preventDefault();return;}}
-  if (e.key === 'Escape' && Notenblick.$('#viewDetails')?.open) {
+  if(e.key==='Escape'&&!Notenblick.currentPerformanceDraft?.()){for(const[id,summary]of [['allSelection','allSelectionSummary'],['adminViewDetails','adminViewSummary']])if(Notenblick.$('#'+id)?.open&&!Notenblick.$('#'+summary)?.hidden){Notenblick.$('#'+id).open=false;Notenblick.$('#'+summary).focus();e.preventDefault();return;}}
+  if (e.key === 'Escape' && !Notenblick.currentPerformanceDraft?.() && Notenblick.$('#viewDetails')?.open) {
     Notenblick.$('#viewDetails').open = false;
     Notenblick.$('#viewSummary').focus();
   }
@@ -149,7 +149,7 @@ Notenblick.$('#importFile').addEventListener('change', async e => {
   }
 });
 window.addEventListener('beforeunload', e => {
-  if (Notenblick.mode !== 'demo' && (Notenblick.setupHasChanges?.() || Notenblick.pending.size || (Notenblick.$('#defaultWeightEditor')?.isConnected&&Notenblick.settingsWeights?.dirty()) || (Notenblick.store ? Notenblick.dirty || Notenblick.saving : Notenblick.sessionWrites > 0))) {
+  if (Notenblick.mode !== 'demo' && (Notenblick.setupHasChanges?.() || Notenblick.assessmentDraftPending?.() || Notenblick.pending.size || (Notenblick.$('#defaultWeightEditor')?.isConnected&&Notenblick.settingsWeights?.dirty()) || (Notenblick.store ? Notenblick.dirty || Notenblick.saving : Notenblick.sessionWrites > 0))) {
     e.preventDefault();
     e.returnValue = '';
   }

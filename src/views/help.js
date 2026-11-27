@@ -74,6 +74,12 @@ A.helpContext=function(el=document.activeElement){
  }
  if(A.ui.main==='help')return 48;
  const action=el?.closest?.('[data-action]')?.dataset.action,menu=el?.closest?.('[data-menu-key]')?.dataset.menuKey;
+ if(within('#passwordProtection,#vaultGate,#vaultLock'))return 'sicherung-passwortschutz-verwenden';
+ if(['resume-assessment-draft','discard-assessment-draft'].includes(action)||within('#newAssessmentStatus'))return 'noten-entwurf-fortsetzen';
+ if(within('#newAssessmentFields [data-date-part]'))return 'noten-ein-datum-eingeben';
+ if(within('#newAssessmentFields')||(['assessment-done','assessment-list'].includes(action)||within('#assessmentWorkTitle'))&&A.currentPerformanceDraft?.())return 12;
+ if(within('#draft-participation'))return 13;
+ if(within('#newAssessmentMore'))return 14;
  if(action?.startsWith('update-')||within('#updateAuto,#updateHide'))return 43;
  if(menu==='add-performance'||['new-assessment','quick-oral'].includes(action))return 12;
  if(menu==='finals'||['final-dialog','finals-class'].includes(action))return 30;
@@ -115,10 +121,10 @@ A.openContextHelp=function(index=A.helpContext()){
  A.closeMenu?.(false,true);
  if(dialog.open){
   if(A.dialogBusy)return;
-  const form=A.$('#dialogForm'),nodes=[...form.children].map(el=>({el,hidden:el.hidden,inert:el.inert})),label=dialog.getAttribute('aria-labelledby'),description=dialog.getAttribute('aria-describedby'),scroll=dialog.scrollTop;
+  const form=A.$('#dialogForm'),nodes=[...form.children].map(el=>({el,hidden:el.hidden,inert:el.inert})),label=dialog.getAttribute('aria-labelledby'),description=dialog.getAttribute('aria-describedby'),scroll=dialog.scrollTop,contentScroll=A.$('#dialogContent').scrollTop;
   const pane=document.createElement('div');pane.id='contextHelp';pane.className='help-context';pane.innerHTML=`<h2 id="contextHelpTitle" tabindex="-1">${A.esc(section.heading)}</h2>${A.helpParagraphs(section)}<button type="button" class="button" data-action="help-close">Zurück</button>`;
   // Keep all controls and listeners connected. Hiding does not blur/reparse/save them.
-  A.contextHelp={index,focus,dialog:true,pane,nodes,label,description,scroll};
+  A.contextHelp={index,focus,dialog:true,pane,nodes,label,description,scroll,contentScroll};
   for(const {el}of nodes){el.hidden=true;el.inert=true;}form.append(pane);dialog.setAttribute('aria-labelledby','contextHelpTitle');dialog.removeAttribute('aria-describedby');A.focusTarget('contextHelpTitle');
  }else{
   const state={index,focus,menuToggle,dialog:false,main:A.ui.main,helpView:A.ui.helpView,scrollX:window.scrollX,scrollY:window.scrollY};
@@ -128,7 +134,7 @@ A.openContextHelp=function(index=A.helpContext()){
 };
 A.closeContextHelp=function(){
  const state=A.contextHelp;if(!state)return false;A.contextHelp=null;state.pane.remove();
- if(state.dialog){for(const {el,hidden,inert}of state.nodes){el.hidden=hidden;el.inert=inert;}const d=A.$('#dialog');d.setAttribute('aria-labelledby',state.label);if(state.description)d.setAttribute('aria-describedby',state.description);else d.removeAttribute('aria-describedby');d.scrollTop=state.scroll;}
+ if(state.dialog){for(const {el,hidden,inert}of state.nodes){el.hidden=hidden;el.inert=inert;}const d=A.$('#dialog');d.setAttribute('aria-labelledby',state.label);if(state.description)d.setAttribute('aria-describedby',state.description);else d.removeAttribute('aria-describedby');d.scrollTop=state.scroll;A.$('#dialogContent').scrollTop=state.contentScroll;}
  else{A.ui.helpView=state.helpView;A.activateGroup('main',state.main,false,false);window.scrollTo?.(state.scrollX,state.scrollY);}
  if(state.menuToggle?.isConnected)A.openMenu(state.menuToggle,false,false);
  if(!A.focusTarget(state.focus,{preventScroll:true}))A.focusTarget(state.dialog?'dialogTitle':A.$('#mainTabs [aria-current=page]'));

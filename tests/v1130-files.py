@@ -97,7 +97,7 @@ run=subprocess.run([validator,'--flavour','ua1','--format','json',*[str(OUT/(nam
 assert run.returncode==0,run.stderr
 validation=json.loads(run.stdout);jobs=validation['report']['jobs'];assert len(jobs)==len(names)
 assert all(j['validationResult'][0]['compliant'] for j in jobs),run.stdout
-checks.append(f'veraPDF 1.30.3 PDF/UA-1: {len(jobs)} native PDFs ohne verletzte maschinelle Regeln; Ergebniszeile als TH/TD im bestehenden Tabellenbaum')
+checks.append(f'veraPDF PDF/UA-1: {len(jobs)} native PDFs ohne verletzte maschinelle Regeln; Ergebniszeile als TH/TD im bestehenden Tabellenbaum')
 (OUT/'verapdf.json').write_text(run.stdout)
 (ROOT/'tests/v1130-files-results.json').write_text(json.dumps({'checks':checks,'pages':pages,'continuations':continuations,'windows':False,'webview2Live':False,'office':False,'nvda':False},ensure_ascii=False,indent=2))
 print('1.13 Dateiprüfung:',len(names),'Fälle;',pages,'Seiten;',continuations,'Tabellenfortsetzungen;',len(targets),'Office-Pakete;',len(jobs),'PDF/UA')

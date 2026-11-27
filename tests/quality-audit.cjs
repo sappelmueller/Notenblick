@@ -74,9 +74,20 @@ exports.browser=async function(page,{scan,out,checks}){
   await page.keyboard.press('Escape');assert.equal(await button.evaluate(el=>document.activeElement===el),true);
  }
  await page.setViewportSize({width:1280,height:900});await page.evaluate(()=>document.documentElement.style.zoom='1');
- await page.evaluate(()=>prepareContext(12));await page.locator('#dialogSave').click();
+ await page.evaluate(()=>prepareContext(12));await page.locator('#a-title').fill('');await page.locator('#dialogSave').click();
  assert.equal(await page.evaluate(()=>document.activeElement.id),'a-title');assert.equal(await page.locator('#dialogError').isVisible(),true);
  await scan();await page.keyboard.press('Escape');
+ await page.evaluate(()=>prepareContext(21));
+ const add=page.locator('#notes-test [data-action=new-assessment]');
+ await add.press('Enter');
+ assert.equal(await page.evaluate(()=>document.activeElement.id),'assessmentWorkTitle');
+ await page.locator('[data-action=assessment-done]').click();
+ const title=page.locator('#draft-title');
+ assert.equal(await title.getAttribute('aria-invalid'),'true');
+ assert.equal(await title.evaluate(el=>document.activeElement===el),true);
+ await title.fill('Entwurf für die Tastaturprüfung');await page.keyboard.press('F1');await page.keyboard.press('Escape');
+ assert.equal(await title.evaluate(el=>document.activeElement===el&&el.value==='Entwurf für die Tastaturprüfung'),true);
+ await scan();await page.keyboard.press('Escape');assert.equal(await add.evaluate(el=>document.activeElement===el),true);
  // Forced-color mode uses the same controls, visible state and keyboard ring.
  await page.emulateMedia({forcedColors:'active'});
  for(const index of [11,12,13,15,22,30,44,47]){await page.evaluate(i=>prepareContext(i),index);await scan();await layout('forced colors '+index);}

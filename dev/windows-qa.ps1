@@ -1,6 +1,7 @@
 param(
     [Parameter(Mandatory=$true)][string]$Archive,
-    [switch]$Launch
+    [switch]$Launch,
+    [switch]$LaunchRescue
 )
 $ErrorActionPreference = 'Stop'
 if ($env:OS -ne 'Windows_NT') { throw 'Diese Prüfung benötigt Windows.' }
@@ -10,13 +11,13 @@ New-Item -ItemType Directory -Path $target | Out-Null
 Expand-Archive -LiteralPath $archivePath -DestinationPath $target
 $app = Join-Path $target 'Notenblick'
 $names = @(Get-ChildItem -LiteralPath $app | Select-Object -ExpandProperty Name)
-if ($names.Count -ne 2 -or $names -notcontains 'Notenblick.exe' -or $names -notcontains 'Programm') {
+if ($names.Count -ne 3 -or $names -notcontains 'Notenblick.exe' -or $names -notcontains 'Programm' -or $names -notcontains 'Notenblick-Notfallzugriff.exe') {
     throw 'Unerwarteter Inhalt der portablen Ausgabe.'
 }
-$required = @('Notenblick.exe', 'Programm/Notenblick.html',
+$required = @('Notenblick.exe', 'Notenblick-Notfallzugriff.exe', 'Programm/Notenblick.html',
     'Programm/Windows/Notenblick.Fenster.dll', 'Programm/Windows/Notenblick.Speicherung.dll',
     'Programm/Windows/Notenblick.Aktualisierung.exe',
-    'Programm/Windows/Newtonsoft.Json.dll', 'Programm/Windows/Microsoft.Web.WebView2.Core.dll',
+    'Programm/Windows/Newtonsoft.Json.dll', 'Programm/Windows/BouncyCastle.Cryptography.dll', 'Programm/Windows/Microsoft.Web.WebView2.Core.dll',
     'Programm/Windows/Microsoft.Web.WebView2.WinForms.dll',
     'Programm/Windows/x86/WebView2Loader.dll', 'Programm/Windows/x64/WebView2Loader.dll',
     'Programm/Windows/arm64/WebView2Loader.dll')
@@ -43,6 +44,17 @@ $report = [ordered]@{
     nvda_tested = $false
 }
 if ($webview.Count -eq 0) { Write-Warning 'Keine registrierte WebView2-Laufzeit gefunden. Ein tatsächlicher Programmstart muss die Verfügbarkeit prüfen.' }
+$rescueFolder = Join-Path $target 'Nur-Notfallzugriff'
+New-Item -ItemType Directory -Path $rescueFolder | Out-Null
+$rescue = Join-Path $rescueFolder 'Notenblick-Notfallzugriff.exe'
+Copy-Item -LiteralPath (Join-Path $app 'Notenblick-Notfallzugriff.exe') -Destination $rescue
+$reader = Start-Process -FilePath $rescue -ArgumentList '--verify-readers' -WorkingDirectory $rescueFolder -Wait -PassThru
+if ($reader.ExitCode -ne 0) { throw 'Der unabhängige Notfallzugriff konnte die Leseprüfung nicht abschließen.' }
+$report['independent_rescue_reader_tested'] = $true
+if ($LaunchRescue) {
+    Start-Process -FilePath $rescue -WorkingDirectory $rescueFolder | Out-Null
+    Write-Host 'Der Notfallzugriff ist aus einer Kopie ohne Notenblick und Programmordner geöffnet.'
+}
 if ($Launch) {
     if (-not [Environment]::Is64BitProcess) { throw 'Für die Prozessprüfung bitte 64-Bit-PowerShell verwenden.' }
     Add-Type -TypeDefinition @'

@@ -2,9 +2,9 @@
 
 Notenblick ist eine portable Offline-Notenverwaltung für Windows. Du verwaltest Klassen und Fächer, erfasst Noten oder Punkte und erstellst Berichte für den Schulalltag. Alle Schülerdaten bleiben auf deinem Rechner.
 
-[**Notenblick 1.27.0 für Windows herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.27.0/Notenblick_1.27.0.zip) · [Was ist neu?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.27.0)
+[**Notenblick 1.28.0 für Windows herunterladen**](https://github.com/sappelmueller/Notenblick/releases/download/v1.28.0/Notenblick_1.28.0_Windows.zip) · [Was ist neu?](https://github.com/sappelmueller/Notenblick/releases/tag/v1.28.0)
 
-Aktuelle Version: **1.27.0**, veröffentlicht am **6. November 2026**. Der Qualitätsaudit verbessert Schutzsicherungen, Notengewichtung, Fokusführung und die Darstellung in kleinen Fenstern. Das vertraute Design und die bisherigen Abläufe bleiben erhalten.
+In **1.28.0** kannst du eine Leistung anlegen und gleich die Noten dazu eingeben. Auf Wunsch schützt ein Passwort deine Noten und Sicherungen. Der mitgelieferte **Notfallzugriff** hilft dir, wenn du Notenblick nicht starten kannst.
 
 ## Das kann Notenblick
 
@@ -19,21 +19,21 @@ Aktuelle Version: **1.27.0**, veröffentlicht am **6. November 2026**. Der Quali
 2. **Notenblick.exe** starten. Der vollständige Ordner **Programm** muss daneben liegen; **Daten** entsteht beim ersten Start.
 3. Dem Einrichtungsassistenten folgen oder eine eigene Sicherung wiederherstellen.
 
-Eine Installation von Notenblick ist nicht nötig. Die EXE ist bisher nicht digital signiert; Windows kann deshalb einen Sicherheitshinweis anzeigen. Quellcode und Prüfsummen findest du beim [Release](https://github.com/sappelmueller/Notenblick/releases/tag/v1.27.0).
+Notenblick läuft direkt aus dem entpackten Ordner. Windows kann beim Start einen Sicherheitshinweis anzeigen, da die EXE noch keine digitale Signatur hat. Quellcode und Prüfsummen findest du beim [Release](https://github.com/sappelmueller/Notenblick/releases/tag/v1.28.0).
 
 **Voraussetzungen:** Windows x86/x64 mit .NET Framework 4.8 oder neuer und Microsoft Edge WebView2 Runtime. Für native ARM64-Ausführung: Windows 11 ab 24H2, .NET Framework 4.8.1 und ARM64-WebView2. Dieselbe EXE unterstützt beide Prozessorfamilien; die erforderlichen Programm-Bibliotheken liegen bei. Node.js, Python und Office brauchst du für die Anwendung nicht.
 
 ## Tastatur und Hilfe
 
-Notenblick ist für Tastatur, NVDA und Braille entwickelt. **F1** erklärt den aktuellen Arbeitsschritt; Eingabe und Umschalt+Eingabe führen durch die schnelle Noteneingabe. Der Herausgeber hat 1.27.0 unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und freigegeben.
+Notenblick ist für Tastatur, NVDA und Braille entwickelt. **F1** erklärt den aktuellen Arbeitsschritt. Mit Eingabe und Umschalt+Eingabe wechselst du bei der schnellen Noteneingabe zwischen Schülern.
 
-[Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe](docs/HILFE-1.26.0-QUELLE.md) · [Prüfstand](docs/PRUEFBERICHT-1.27.0.md)
+[Bedienkonzept und Barrierefreiheit](BARRIEREFREIHEIT.md) · [Hilfe](docs/HILFE-QUELLE.md) · [Prüfstand](docs/PRUEFBERICHT-1.28.0.md)
 
 ## Daten und Aktualisierungen
 
 Schülerdaten bleiben ausschließlich im Ordner **Daten** und werden nicht an externe Dienste übertragen. Sichere diesen Ordner regelmäßig zusätzlich auf einem anderen Datenträger. TXT-Notfalllisten helfen beim Nachlesen; zur vollständigen Wiederherstellung dient eine Sicherung.
 
-Unter **Einstellungen → Allgemein → Aktualisierungen** kannst du nach freigegebenen Versionen suchen. Die Prüfung beim Start ist freiwillig und zunächst ausgeschaltet. Download und Installation beginnen erst nach deiner Zustimmung. Der direkte Wechsel von **1.26.0 auf 1.27.0** ist ohne Zwischenversion möglich.
+Unter **Einstellungen → Allgemein → Aktualisierungen** kannst du nach freigegebenen Versionen suchen. Die Prüfung beim Start ist freiwillig und zunächst ausgeschaltet. Download und Installation beginnen erst nach deiner Zustimmung.
 
 Beim Update werden ausschließlich **Notenblick.exe** und der vollständige Ordner **Programm** ersetzt. **Daten bleibt unangetastet.** Auch beim manuellen Aktualisieren: Notenblick schließen, Daten sichern und nur EXE und Programmordner ersetzen.
 

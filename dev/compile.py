@@ -10,19 +10,30 @@ for name in ['Launcher.cs','ProgramLibraries.cs','app.manifest']:
 compiler=resolve_compiler()+['-nologo','-noconfig','-nostdlib+','-deterministic+','-optimize+','-langversion:latest','-pathmap:'+str(r)+'=/notenblick']
 ref=['-r:'+str(refs/(x+'.dll')) for x in ['mscorlib','System','System.Core','System.Drawing','System.Windows.Forms','System.IO.Compression','System.Xml']]
 newton=dev/'newtonsoft.json/lib/net45/Newtonsoft.Json.dll'
+crypto=r/'.tools/bouncycastle/lib/net461/BouncyCastle.Cryptography.dll'
 def compile(name,files,extra=[],exe=False):
  dest=(r/'dist'/name) if exe else dll/name
  executable=exe or name.endswith('.exe')
- args=compiler+ref+['-target:'+('winexe' if executable else 'library'),'-out:'+str(dest)]+(['-win32manifest:'+str(generated_root/'app.manifest'),'-win32icon:'+str(r/'native/Notenblick.ico'),'-platform:anycpu'] if executable else [])+extra+[str((generated_root if x.startswith('Release') or x in ['Launcher.cs','ProgramLibraries.cs'] else r/'native')/x) for x in files]
+ args=compiler+ref+['-target:'+('winexe' if executable else 'library'),'-out:'+str(dest)]+(['-win32manifest:'+str(generated_root/'app.manifest'),'-win32icon:'+str(r/'native/Notenblick.ico'),'-platform:anycpu'] if executable else [])+extra+[str((generated_root if x.endswith('.g.cs') or x in ['Launcher.cs','ProgramLibraries.cs'] else r/'native')/x) for x in files]
  inputs=[dev/'compile.py',dev/'toolchain.py',dev/'evidence.py',dev/'sdk-lock.json',r/'global.json',refs,newton,wv/'lib/net462',*[Path(x[3:]) for x in args if x.startswith('-r:')],*[Path(x[len('-resource:'):].split(',')[0]) for x in args if x.startswith('-resource:')],r/'native/Notenblick.ico',generated_root/'app.manifest',Path(compiler[0]).parent/'shared',Path(compiler[1]).parent,*[Path(x) for x in args if x.endswith(('.cs','.manifest','.ico'))]]
  reused=component(name,inputs,[dest],lambda:subprocess.run(args,check=True))
  print(('Reused ' if reused else 'Compiled ')+name)
-compile('Notenblick.Speicherung.dll',['Storage.cs','Migration.cs','ExportFiles.cs','OfficePackage.cs'],['-r:'+str(newton)])
+vault_sources=['VaultCrypto.cs','VaultStore.cs']
+vault_refs=['-r:'+str(newton),'-r:'+str(crypto)]
+compile('Notenblick.Speicherung.dll',['Storage.cs','Migration.cs','ExportFiles.cs','OfficePackage.cs',*vault_sources],vault_refs)
+(generated_root/'ReleaseRescueAssembly.g.cs').write_text('using System.Reflection;[assembly:AssemblyTitle("Notfallzugriff für Notenblick")][assembly:AssemblyProduct("Notenblick")][assembly:AssemblyVersion("'+version+'.0")][assembly:AssemblyFileVersion("'+version+'.0")][assembly:System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]')
+rescue='Notenblick-Notfallzugriff.exe'
+compile(rescue,['RescueProgram.cs','RescueWindow.cs','RescueData.cs',*vault_sources,'ReleaseRescueAssembly.g.cs'],vault_refs+['-resource:'+str(newton)+',Notenblick.Newtonsoft.Json.dll','-resource:'+str(crypto)+',Notenblick.BouncyCastle.Cryptography.dll'],exe=True)
+rescue_file=r/'dist'/rescue
+rescue_hash=hashlib.sha256(rescue_file.read_bytes()).hexdigest().upper()
+previous_rescue_hashes=json.loads((dev/'rescue-upgrade-hashes.json').read_text())
+assert isinstance(previous_rescue_hashes,list) and all(len(h)==64 and all(c in '0123456789ABCDEF' for c in h) for h in previous_rescue_hashes)
+(generated_root/'ReleaseRescueVersion.g.cs').write_text('namespace Notenblick.Native { internal static partial class ReleaseRescue { internal const string Hash = "'+rescue_hash+'"; internal const long Bytes = '+str(rescue_file.stat().st_size)+'; private static readonly string[] PreviousHashes = new string[] {'+','.join('"'+h+'"' for h in previous_rescue_hashes)+'}; } }')
 (generated_root/'ReleaseHelperVersion.g.cs').write_text('using System.Reflection;[assembly:AssemblyTitle("Notenblick Aktualisierung")][assembly:AssemblyVersion("'+version+'.0")][assembly:AssemblyFileVersion("'+version+'.0")]')
 compile('Notenblick.Aktualisierung.exe',['UpdateHelper.cs','UpdateTransaction.cs','ReleaseHelperVersion.g.cs'])
-compile('Notenblick.Fenster.dll',['Window.cs','UpdateTransaction.cs','UpdateClient.cs'],['-r:'+str(newton),'-r:'+str(dll/'Notenblick.Speicherung.dll')]+['-r:'+str(wv/'lib/net462'/x) for x in ['Microsoft.Web.WebView2.Core.dll','Microsoft.Web.WebView2.WinForms.dll']])
-names=['Newtonsoft.Json','Microsoft.Web.WebView2.Core','Microsoft.Web.WebView2.WinForms','Notenblick.Speicherung','Notenblick.Fenster']
-for f in [newton,wv/'lib/net462/Microsoft.Web.WebView2.Core.dll',wv/'lib/net462/Microsoft.Web.WebView2.WinForms.dll']:shutil.copy2(f,dll/f.name)
+compile('Notenblick.Fenster.dll',['Window.cs','UpdateTransaction.cs','UpdateClient.cs','ReleaseRescue.cs','ReleaseRescueVersion.g.cs'],['-r:'+str(newton),'-r:'+str(dll/'Notenblick.Speicherung.dll')]+['-r:'+str(wv/'lib/net462'/x) for x in ['Microsoft.Web.WebView2.Core.dll','Microsoft.Web.WebView2.WinForms.dll']])
+names=['Newtonsoft.Json','BouncyCastle.Cryptography','Microsoft.Web.WebView2.Core','Microsoft.Web.WebView2.WinForms','Notenblick.Speicherung','Notenblick.Fenster']
+for f in [newton,crypto,wv/'lib/net462/Microsoft.Web.WebView2.Core.dll',wv/'lib/net462/Microsoft.Web.WebView2.WinForms.dll']:shutil.copy2(f,dll/f.name)
 generated='// Generated by dev/compile.py after compiling the release DLLs.\nnamespace Notenblick.Native { internal static class ReleaseLibraries {\n internal static readonly ProgramLibraries.LibrarySpec[] Files = {\n'
 for name in names:
  generated+='  new ProgramLibraries.LibrarySpec("'+name+'", "'+hashlib.sha256((dll/(name+'.dll')).read_bytes()).hexdigest().upper()+'"),\n'
@@ -31,10 +42,10 @@ generated+=' };\n} }\n'
 for arch in ['x86','x64','arm64']:
  (dll/arch).mkdir(exist_ok=True);shutil.copy2(wv/'build/native'/arch/'WebView2Loader.dll',dll/arch/'WebView2Loader.dll')
 lic=dll/'Lizenzen';lic.mkdir(exist_ok=True)
-for source,name in [(wv/'LICENSE.txt','Microsoft-WebView2.txt'),(dev/'newtonsoft.json/LICENSE.md','Newtonsoft-Json.md')]:shutil.copy2(source,lic/name)
+for source,name in [(wv/'LICENSE.txt','Microsoft-WebView2.txt'),(dev/'newtonsoft.json/LICENSE.md','Newtonsoft-Json.md'),(dev/'BouncyCastle-LICENSE.md','BouncyCastle.md')]:shutil.copy2(source,lic/name)
 files=settled_files(r/'dist/Programm')
 generated='// Generated release file allowlist.\nnamespace Notenblick.Native {internal static class ReleaseFiles {internal static readonly ProgramLibraries.ProgramFileSpec[] Files={\n'
 for p in files:generated+='new ProgramLibraries.ProgramFileSpec("'+p.relative_to(r/'dist/Programm').as_posix()+'","'+hashlib.sha256(p.read_bytes()).hexdigest().upper()+'"),\n'
 generated+='};}}\n';(generated_root/'ReleaseFiles.g.cs').write_text(generated)
-compile('Notenblick.exe',['Launcher.cs','ProcessArchitecture.cs','ProgramLibraries.cs','UpdateTransaction.cs','ReleaseLibraries.g.cs','ReleaseFiles.g.cs'],['-resource:'+str(dll/'Notenblick.Aktualisierung.exe')+',Notenblick.Aktualisierung.exe'],exe=True)
+compile('Notenblick.exe',['Launcher.cs','ProcessArchitecture.cs','ProgramLibraries.cs','UpdateTransaction.cs','ReleaseLibraries.g.cs','ReleaseFiles.g.cs','ReleaseRescue.cs','ReleaseRescueVersion.g.cs'],['-resource:'+str(dll/'Notenblick.Aktualisierung.exe')+',Notenblick.Aktualisierung.exe','-resource:'+str(rescue_file)+',Notenblick.Notfallzugriff.exe'],exe=True)
 print('Windows launcher, complete release file verification and storage compiled.')

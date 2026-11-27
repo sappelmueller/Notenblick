@@ -34,7 +34,7 @@ def check_paths(paths, staged=False):
         assert not parts.intersection({'daten','datensicherung','sicherungen','notenlisten'}), 'Private Daten: '+name
         assert not name.startswith('.github/workflows/'), 'GitHub Actions sind verboten'
         assert path.name.casefold() not in {'ansicht.json','notenverwaltung.json'}, 'Private Datei: '+name
-        assert path.suffix.casefold() not in {'.zip','.bak','.pfx','.p12','.key','.pem'}, 'Unzulässige Datei: '+name
+        assert path.suffix.casefold() not in {'.zip','.bak','.pfx','.p12','.key','.pem','.nbvault','.nbbackup','.nbkey','.nbx'}, 'Unzulässige Datei: '+name
         assert path.name != '.env' and not path.name.startswith('.env.'), 'Zugangsdaten: '+name
         p = ROOT/path
         if not p.is_file():

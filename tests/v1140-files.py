@@ -64,5 +64,5 @@ checks.append('Open XML SDK 3.3.0: 16 vollständige Word-/Excel-Pakete ohne Sche
 validator=os.environ.get('NOTENBLICK_VERAPDF') or str(ROOT/'.tools/verapdf/verapdf')
 r=subprocess.run([validator,'--flavour','ua1','--format','json',*[str(OUT/(name+'.pdf')) for name in names]],capture_output=True,text=True,timeout=180);assert r.returncode==0,r.stderr
 jobs=json.loads(r.stdout)['report']['jobs'];assert len(jobs)==8 and all(j['validationResult'][0]['compliant'] for j in jobs),r.stdout
-checks.append('veraPDF 1.30.3: acht native PDF/UA-1-Dateien ohne verletzte maschinelle Regeln')
+checks.append('veraPDF: acht native PDF/UA-1-Dateien ohne verletzte maschinelle Regeln')
 (OUT/'verapdf.json').write_text(r.stdout);(ROOT/'tests/v1140-files-results.json').write_text(json.dumps({'checks':checks,'pages':pages,'windows':False,'nvda':False,'officeLive':False},ensure_ascii=False,indent=2));print('1.14 Dateien:',len(checks),'Prüfgruppen;',pages,'gerenderte Seiten; 16 Office-Pakete; 8 PDF/UA')

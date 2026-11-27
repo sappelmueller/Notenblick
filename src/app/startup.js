@@ -6,10 +6,11 @@ Notenblick.boot = async function boot() {
   Notenblick.status('Wird geöffnet …');
   try {
     if(window.NRDesktop.available){
-      const next=new Notenblick.S.FolderStore(new window.NRDesktop.Directory(''));
+      await Notenblick.openVaultBeforeData();
+      const next=new Notenblick.S.FolderStore(new window.NRDesktop.Directory(''),{protected:Notenblick.vault.enabled});
       Notenblick.store=next;
       let raw,loadError;try{raw=await next.load();}catch(e){loadError=e;}
-      if(!raw||!Notenblick.N.isCurrentData(raw)){
+      if(!Notenblick.vault.enabled&&(!raw||!Notenblick.N.isCurrentData(raw))){
         const sources=await window.NRDesktop.call('migration-sources');
         const selected=await Notenblick.chooseMigration(raw,sources,loadError);
         if(selected&&selected.key!=='current'){
@@ -106,6 +107,10 @@ Notenblick.folder = async function folder() {
   await connect();
 };
 Notenblick.requestClose = async function requestClose() {
+  if(Notenblick.vault?.locked||Notenblick.vaultLocking||document.documentElement.hasAttribute('data-vault-locked')){
+    await Notenblick.closeVault();
+    return;
+  }
   if (Notenblick.starting || Notenblick.saving) {
     await Notenblick.savingPromise;
     if (Notenblick.starting) return;
@@ -124,6 +129,7 @@ Notenblick.requestClose = async function requestClose() {
   await window.NRDesktop.call('close-ready');
 };
 Notenblick.flushForClose=async function(){
+  if(Notenblick.flushAssessmentDrafts&&!await Notenblick.flushAssessmentDrafts())return false;
   await Notenblick.save();
   if (Notenblick.dirty && Notenblick.store) {
     Notenblick.error('Bitte erstelle eine Sicherung, bevor du das Programm schließt. Die letzten Änderungen sind noch nicht vollständig gespeichert.');

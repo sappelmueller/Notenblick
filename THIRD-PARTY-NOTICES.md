@@ -5,6 +5,7 @@ Die GPLv3 gilt für die eigenen Notenblick-Quellen. Unverändert übernommene Be
 | Bestandteil | Version | Lizenz und vollständiger Text |
 | --- | --- | --- |
 | Newtonsoft.Json | 13.0.3 | MIT, James Newton-King; `dev/newtonsoft.json/LICENSE.md` |
+| Bouncy Castle Cryptography | 2.7.0 | MIT, Legion of the Bouncy Castle Inc. und Mitwirkende. Vollständiger Text in `dev/BouncyCastle-LICENSE.md`. Paket und Bibliotheksdateien sind in `dev/crypto-lock.json` festgelegt. |
 | WebView2 SDK und Loader | 1.0.2903.40 | BSD-3-Clause, Microsoft; `dev/webview2/LICENSE.txt` |
 | PDFKit einschließlich eingebundener Module | 0.20.2 | MIT, BSD und Apache-2.0; `src/vendor/PDFKit-LICENSE.txt` und `src/vendor/THIRD-PARTY-NOTICES.txt` |
 | DejaVu Sans, normal und fett | mitgelieferte Dateien | Bitstream-Vera-/DejaVu-Hinweise einschließlich ergänzender Schriftvermerke; `src/fonts/LICENSE.txt` |

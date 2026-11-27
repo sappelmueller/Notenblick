@@ -68,7 +68,7 @@ A.handleShortcut=function(e){
  if(key==='s'&&!e.shiftKey){consume();if(A.canLeave()){if(A.store){A.remember();A.save();}else if(A.mode!=='none')A.backup().catch(err=>A.error(err.message,'storage'));}return true;}
  if(e.shiftKey&&['k','t','m'].includes(key)){
   consume();if(A.ui.main!=='notes'||!A.getCourse()||A.readonly()||!A.canLeave())return true;
-  A.assessmentDialog(null,{k:'exam',t:'test',m:'oral'}[key],true);return true;
+  A.openPerformanceDraft({k:'exam',t:'test',m:'oral'}[key],{trigger:document.activeElement});return true;
  }
  if(e.shiftKey)return false;
  if(key==='n'){

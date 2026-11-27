@@ -41,6 +41,7 @@ Notenblick.classAverages = function(c,data=Notenblick.data) {
 };
 const assessmentStats = new WeakMap();
 Notenblick.assessmentStats = function(a,c=Notenblick.getCourse(),data=Notenblick.data) {
+ if(Notenblick.performanceDrafts?.has(a.id))return Notenblick.N.assessmentProgress(data,c,a);
  let cache=assessmentStats.get(data);if(!cache){cache=new Map();assessmentStats.set(data,cache);}
  if(!cache.has(a.id)){
   cache.set(a.id,Notenblick.N.assessmentProgress(data,c,a));

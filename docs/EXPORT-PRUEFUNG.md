@@ -6,7 +6,7 @@ Alle Ausgaben werden im Programm lokal erzeugt. Für die Dateierstellung braucht
 
 1. `python3 dev/manage.py setup` einrichten.
 2. `python3 -m pip install -r dev/export-qa-requirements.txt` in der vorgesehenen Entwicklungsumgebung ausführen.
-3. Java ab 11 und veraPDF 1.30.3 CLI lokal bereitstellen. Offizielle Quelle: https://software.verapdf.org/rel/ ; Installer: https://software.verapdf.org/rel/verapdf-installer.zip . Version mit `verapdf --version` prüfen. Nicht in das Repository aufnehmen.
+3. Java ab 11 und veraPDF CLI (1.30.3 oder neuer) lokal bereitstellen. Offizielle Quelle: https://software.verapdf.org/rel/ ; Installer: https://software.verapdf.org/rel/verapdf-installer.zip . Version mit `verapdf --version` prüfen. Nicht in das Repository aufnehmen.
 4. `NOTENBLICK_VERAPDF` auf das lokale veraPDF-Startskript setzen; alternativ `.tools/verapdf/verapdf` verwenden.
 5. `python3 dev/manage.py release` ausführen. Fehlende Prüfwerkzeuge oder verletzte PDF/UA-Regeln stoppen den vollständigen Ablauf.
 

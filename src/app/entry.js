@@ -13,7 +13,7 @@ Notenblick.entryChange = function entryChange(el,{announce=true}={}) {
   if (!entry) return;
   try {
     Notenblick.ensureEdit();
-    const a = Notenblick.data.assessments.find(a => a.id === assessment);
+    const a = Notenblick.assessmentById(assessment);
     if (!a) throw Error('Diese Leistung ist nicht mehr vorhanden.');
     const old = a.results[student] || {
         grade: null,
@@ -53,11 +53,7 @@ Notenblick.entryChange = function entryChange(el,{announce=true}={}) {
     }
     if (entry === 'note') r.note = el.value;
     const changed=JSON.stringify(old)!==JSON.stringify(r);
-    if (changed) Notenblick.mutate(d => {
-      d.assessments.find(a => a.id === assessment).results[student] = r;
-    }, {
-      refresh: false
-    });
+    Notenblick.saveAssessmentResult(a,student,r,changed,entry);
     Notenblick.pending.delete(el.id);
     el.removeAttribute('aria-invalid');
     Notenblick.entryDescription(el);
@@ -71,6 +67,7 @@ Notenblick.entryChange = function entryChange(el,{announce=true}={}) {
   } catch (e) {
     el.setAttribute('aria-invalid', 'true');
     Notenblick.entryDescription(el,true);
+    Notenblick.captureDraftInput(el);
     Notenblick.pending.add(el.id);
     Notenblick.error(e.message);
     if(entry==='points')el.focus();

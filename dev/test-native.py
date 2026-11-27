@@ -4,11 +4,16 @@ from toolchain import compiler, DOTNET
 import json,shutil,subprocess
 from evidence import component
 r=Path(__file__).resolve().parents[1];refs=r/'dev/microsoft.netframework.referenceassemblies.net48/build/.NETFramework/v4.8';out=r/'tests/native';out.mkdir(exist_ok=True)
-compile_args=compiler()+['-nologo','-nostdlib+','-target:exe','-out:'+str(out/'StorageCli.dll')]+['-r:'+str(refs/(n+'.dll')) for n in ['mscorlib','System','System.Core','System.IO.Compression','System.Xml']]+['-r:'+str(r/'dev/newtonsoft.json/lib/net45/Newtonsoft.Json.dll'),str(r/'native/Storage.cs'),str(r/'native/Migration.cs'),str(r/'native/ExportFiles.cs'),str(r/'native/OfficePackage.cs'),str(r/'tests/StorageCli.cs')]
-inputs=[r/'dev/test-native.py',r/'dev/toolchain.py',r/'dev/evidence.py',refs,Path(DOTNET).parent/'shared',Path(compiler()[1]).parent,r/'native',r/'dev/newtonsoft.json']
+crypto=r/'.tools/bouncycastle/lib/net461/BouncyCastle.Cryptography.dll'
+compiler_refs=['-r:'+str(refs/(n+'.dll')) for n in ['mscorlib','System','System.Core','System.IO.Compression','System.Xml']]
+vault_refs=['-r:'+str(r/'dev/newtonsoft.json/lib/net45/Newtonsoft.Json.dll'),'-r:'+str(crypto)]
+vault_sources=[str(r/'native'/f) for f in ['VaultCrypto.cs','VaultStore.cs']]
+compile_args=compiler()+['-nologo','-nostdlib+','-target:exe','-out:'+str(out/'StorageCli.dll')]+compiler_refs+vault_refs+vault_sources+[str(r/'native'/f) for f in ['Storage.cs','Migration.cs','ExportFiles.cs','OfficePackage.cs']]+[str(r/'tests/StorageCli.cs')]
+inputs=[r/'dev/test-native.py',r/'dev/toolchain.py',r/'dev/evidence.py',refs,Path(DOTNET).parent/'shared',Path(compiler()[1]).parent,r/'native',r/'dev/newtonsoft.json',r/'dev/crypto-lock.json',r/'.tools/bouncycastle']
 component('StorageCli',inputs+[r/'tests/StorageCli.cs'],[out/'StorageCli.dll'],lambda:subprocess.run(compile_args,check=True))
 # On Linux use the .NET 6 build of the same JSON dependency. Windows ships its net45 build.
 shutil.copy2(r/'dev/newtonsoft.json/lib/net6.0/Newtonsoft.Json.dll',out/'Newtonsoft.Json.dll')
+shutil.copy2(r/'.tools/bouncycastle/lib/net6.0/BouncyCastle.Cryptography.dll',out/crypto.name)
 (out/'StorageCli.runtimeconfig.json').write_text(json.dumps({'runtimeOptions':{'tfm':'net8.0','framework':{'name':'Microsoft.NETCore.App','version':'8.0.15'}}}))
 probe_args=compiler()+['-nologo','-nostdlib+','-target:exe','-out:'+str(out/'ExportFilesProbe.dll')]+['-r:'+str(refs/(n+'.dll')) for n in ['mscorlib','System','System.Core','System.IO.Compression','System.Xml']]+['-r:'+str(r/'dev/newtonsoft.json/lib/net45/Newtonsoft.Json.dll'),str(r/'native/ExportFiles.cs'),str(r/'native/OfficePackage.cs'),str(r/'tests/ExportFilesProbe.cs')]
 component('ExportFilesProbe',inputs+[r/'tests/ExportFilesProbe.cs'],[out/'ExportFilesProbe.dll'],lambda:subprocess.run(probe_args,check=True))

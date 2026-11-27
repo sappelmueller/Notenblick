@@ -95,7 +95,7 @@ for count in [7,8,9,10,20]:
 checks.append('Tatsächlich gerenderter Chromium-Druck mit 7/8/9/10/20 Spalten: A4 quer und vollständiger Text, keine Bildschirmbegrenzung')
 # PDF/UA machine rules, including every generated report and the real browser PDF.
 validator=os.environ.get('NOTENBLICK_VERAPDF') or str(ROOT/'.tools/verapdf/verapdf')
-if not Path(validator).is_file():raise RuntimeError('veraPDF 1.30.3 fehlt. Siehe docs/EXPORT-PRUEFUNG.md; NOTENBLICK_VERAPDF setzen.')
+if not Path(validator).is_file():raise RuntimeError('veraPDF fehlt. Siehe docs/EXPORT-PRUEFUNG.md; NOTENBLICK_VERAPDF setzen.')
 targets=[str(p.with_suffix('.pdf')) for p in reports]+[str(OUT/'browser-oral.pdf'),str(OUT/'v1110-browser-overview.pdf')]
 result=subprocess.run([validator,'--flavour','ua1','--format','json',*targets],capture_output=True,text=True,timeout=240)
 assert result.returncode==0,result.stderr

@@ -1,14 +1,16 @@
 # Entwicklung und Erstellung
 
+**Entwicklung 1.28.0:** Schnelle Leistungserfassung, optionale Verschlüsselung und unabhängiger Notfallzugriff werden gemeinsam auf `entwicklung/1.28.0` vorbereitet. [Prüfumfang](docs/PRUEFBERICHT-1.28.0.md)
+
 Aktueller offizieller Stand: **Notenblick 1.27.0**, veröffentlicht am 6. November 2026. Der geprüfte Entwicklungscommit `345c293ff09f5695038beb06187bfd98ab501188` und das Windows-ZIP werden unverändert übernommen. Sebastian Müller hat Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und ausdrücklich freigegeben. [Audit und Freigabe](docs/PRUEFBERICHT-1.27.0.md).
 
-Vorhandene Nachweise: 95 erfolgreiche Pflichtgruppen, 180.000 Noteneinträge, zwei bytegleiche Builds und vollständige Paketprüfung. Der Veröffentlichungsabschluss ändert nur Dokumentation und externe Freigabedateien; keine erneuten Programmtests oder Builds. Der Entwicklungsbranch wird nach Veröffentlichung und Downloadkontrolle gelöscht.
+Veröffentlichungsnachweise von 1.27.0: 95 erfolgreiche Pflichtgruppen, 180.000 Noteneinträge, zwei bytegleiche Builds und vollständige Paketprüfung. Die erneute Prüfung für 1.28.0 folgt dem regulären Entwicklungsablauf unten.
 
 Historischer Abschluss 1.25.0: Der vollständige Audit und die ressourcenschonende Testverwaltung sind abgeschlossen. Das Release übernimmt das getestete Programm unverändert; sein Entwicklungsbranch wird nach Veröffentlichung und Downloadkontrolle gelöscht. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
 
 ## Werkzeuge
 
-Benötigt werden Python ab 3.12, Git und Node.js gemäß `.node-version`. `setup` richtet das gesperrte .NET SDK 8.0.426, npm-Testpakete, Chromium und den Open-XML-Prüfer lokal ein. Die Bibliotheksdateien sind über Prüfsummen gesperrt. Für vollständige Exportprüfungen kommen die festgelegten Python-Pakete, Java, veraPDF 1.30.3 und LibreOffice hinzu; siehe [Exportprüfung](docs/EXPORT-PRUEFUNG.md).
+Benötigt werden Python ab 3.12, Git und Node.js gemäß `.node-version`. `setup` richtet das gesperrte .NET SDK 8.0.426, npm-Testpakete, Chromium und den Open-XML-Prüfer lokal ein. Die Bibliotheksdateien sind über Prüfsummen gesperrt. Für vollständige Exportprüfungen kommen die festgelegten Python-Pakete, Java, veraPDF ab 1.30.3 und LibreOffice hinzu; siehe [Exportprüfung](docs/EXPORT-PRUEFUNG.md).
 
 Das SDK dient nur der Entwicklung. Die Windows-Anwendung verwendet .NET Framework und WebView2; Node.js, Python, Office und Java werden dort nicht benötigt. Anwender-Voraussetzungen und ARM64-Grenzen stehen in der [README](README.md).
 

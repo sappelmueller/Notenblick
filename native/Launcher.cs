@@ -30,6 +30,7 @@ public static class Launcher
             var root = AppDomain.CurrentDomain.BaseDirectory;
             bool probe = args.Length == 1 && args[0] == "--verify-update";
             if (!probe && Notenblick.Native.UpdateBootstrap.RecoverBeforeStart(root)) return;
+            if (!probe) Notenblick.Native.ReleaseRescue.Provision(root);
             var libraries = new Notenblick.Native.ProgramLibraries(root);
             AppDomain.CurrentDomain.AssemblyResolve += libraries.Resolve;
 
