@@ -1,6 +1,6 @@
 # Entwicklung und Erstellung
 
-**Aktueller Stand:** Notenblick 1.28.0 wurde am 27. November 2026 veröffentlicht. Die Ausgabe enthält die direkte Leistungserfassung, den optionalen Passwortschutz und den eigenständigen Notfallzugriff. [Prüfstand 1.28.0](docs/PRUEFBERICHT-1.28.0.md)
+**Aktueller Stand:** Notenblick 1.29.0 wurde am 27. November 2026 veröffentlicht. Die Ausgabe vereinfacht das Abschließen der Noteneingabe und die Verwaltung von Leistungen. [Prüfbericht 1.29.0](docs/PRUEFBERICHT-1.29.0.md)
 
 Die Veröffentlichung und praktische Abnahme von 1.27.0 sind im [damaligen Versionsbericht](docs/PRUEFBERICHT-1.27.0.md) dokumentiert.
 

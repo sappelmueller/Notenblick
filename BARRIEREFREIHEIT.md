@@ -2,6 +2,8 @@
 
 Notenblick wird für blinde und sehende Lehrkräfte entwickelt. Tastatur, NVDA und Braille gehören zum Bedienkonzept.
 
+**Version 1.29.0.** Der Leistungsname öffnet ein per Tastatur erreichbares Menü. Nach „Speichern und schließen“ kehrt der Fokus zur vorherigen Ansicht zurück. Beim Löschen steht der Fokus zuerst auf „Abbrechen“. Die Bedienung mit Braillezeile und unter Windows auf ARM64 wurde praktisch bestätigt. [Prüfstand 1.29.0](docs/PRUEFBERICHT-1.29.0.md)
+
 **Version 1.28.0.** Neue Leistungen öffnen die Noteneingabe direkt mit Fokus auf ihrer Überschrift. Der Notfallzugriff verwendet native Windows-Bedienelemente und eine markierbare Textansicht. Entsperren, Fehlerkorrektur, F1-Rückkehr, Kopieren und Skalierung sind Teil der noch ausstehenden praktischen Windows-Abnahme. [Prüfumfang für 1.28.0](docs/PRUEFBERICHT-1.28.0.md)
 
 **Version 1.27.0:** Gezielter Fokus beim Übertragen von Leistungen, bei fehlerhaften Bereichsnamen und fehlenden Einzelnoten. Bestehende Registerkarten, Kurzbefehle und F1-Rückkehr bleiben erhalten. Sebastian Müller hat die unveränderte Ausgabe unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und freigegeben. [Prüfbericht 1.27.0](docs/PRUEFBERICHT-1.27.0.md).
@@ -36,7 +38,7 @@ Dabei wurden teilweise fehlende Ansagen bei wiederholten Strg-/Alt-Ziffern sowie
 
 Chromium-, Tastatur-, Fokus-, Layout-, Accessibility-Baum- und axe-Prüfungen ergänzen die Praxistests. Sie prüfen technische Zustände und Abläufe, nicht die tatsächlich gesprochene NVDA-Ausgabe oder die Darstellung auf einer Braillezeile.
 
-Die Nutzerabnahme ist keine vollständige Barrierefreiheitszertifizierung. Nicht ausdrücklich bestätigte Einzelprüfungen – etwa mit Microsoft Office, physischem Druck oder allen Windows-Skalierungsstufen – bleiben offen. [Prüfstand 1.28.0](docs/PRUEFBERICHT-1.28.0.md) · [Windows-Prüfplan](docs/WINDOWS-PRUEFUNG.md)
+Die Nutzerabnahme ist keine vollständige Barrierefreiheitszertifizierung. Nicht ausdrücklich bestätigte Einzelprüfungen – etwa mit Microsoft Office, physischem Druck oder allen Windows-Skalierungsstufen – bleiben offen. [Prüfstand 1.29.0](docs/PRUEFBERICHT-1.29.0.md) · [Windows-Prüfplan](docs/WINDOWS-PRUEFUNG.md)
 
 Probleme bitte mit Version, Tastenschritten und erwartetem Verhalten als Issue melden. Keine echten Schülerdaten hochladen.
 
