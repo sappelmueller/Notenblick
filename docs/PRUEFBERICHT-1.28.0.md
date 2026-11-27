@@ -1,6 +1,6 @@
 # Notenblick 1.28.0 – Prüfumfang und Abnahme
 
-Entwicklungsstand auf `entwicklung/1.28.0`, ausgehend vom offiziellen 1.27.0. Für alle folgenden Prüfungen werden erfundene Schülerdaten verwendet.
+Notenblick 1.28.0 wurde am **27. November 2026** veröffentlicht. Für alle folgenden Prüfungen wurden erfundene Schülerdaten verwendet. Die praktischen Prüfungen der nativen Oberfläche auf Windows x64 und ARM64 mit NVDA und Braille stehen für diese Ausgabe aus.
 
 ## Automatischer Prüfumfang
 
@@ -47,11 +47,15 @@ Die vollständige Testausgabe `Notenblick_1.28.0_Windows_Testbuild_3.zip` hat 10
 - **Notfallzugriff.** Hinweise stehen bei den zugehörigen Aktionen. Fehlen Notenlisten, ist „Datenkopie erstellen“ direkt erreichbar.
 - **Leistung hinzufügen.** Die Anordnung führt von „Fertig“ und „Schließen“ über die Angaben zur Leistung bis zur Eingabe. Die Felder und Aktionen brechen bei wenig Platz um.
 
-Die Prüfung im festgelegten Chromium umfasste 15 Ansichten zum Passwortschutz mit axe und sechs Darstellungen der Leistungseingabe, darunter schmale Fenster und Browserzoom. Die Leistungserfassung wurde zusätzlich in beiden Notenlayouts mit Entwürfen, Teilnehmerauswahl, Punkten, Fehlerfokus und Abschluss geprüft. Browserzoom und Browser-Bedienung ergänzen die praktische Windows-Prüfung.
+Die Prüfung im festgelegten Chromium umfasste 15 Ansichten zum Passwortschutz mit axe und sechs Darstellungen der Leistungseingabe, darunter schmale Fenster und Browserzoom. Die Leistungserfassung wurde zusätzlich in beiden Notenlayouts mit Entwürfen, Teilnehmerauswahl, Punkten, Fehlerfokus und Abschluss geprüft. Die praktische Prüfung unter Windows ist separat aufgeführt.
 
 Der Notfallzugriff bestand 61 gezielte Datei-, Sicherungs- und Schutzprüfungen. Darunter waren komprimierte Notenlisten und Archive aus früheren, unterbrochenen Schutzwechseln. Praktische Prüfungen der nativen Oberfläche, mit NVDA und Braille sowie auf ARM64 sind davon getrennt.
 
 Die 19 Speicherszenarien sind bestanden, einschließlich des gezielten Wiederholungslaufs mit dem unveränderten Speicherprogramm aus 1.27.0. Geprüft wurden der regelmäßige Schutzwechsel, die Bereinigung nach einem Abbruch und der Erhalt fremder Dateien bei Konflikten.
+
+## Veröffentlichung am 27. November 2026
+
+Der Tag `v1.28.0` verweist auf den geprüften Entwicklungsstand `9506897`. Der Quellbaum auf `main` entsprach bei der Veröffentlichung dem Quellbaum des Tags. Alle sechs Release-Dateien wurden anhand ihrer Größen und SHA-256-Prüfsummen abgeglichen. Das vollständige Windows-ZIP wurde über den öffentlichen Direktlink heruntergeladen und erneut geprüft. Der Updater-Deskriptor trägt `approved: true`. [Release und Downloads](https://github.com/sappelmueller/Notenblick/releases/tag/v1.28.0)
 
 ## Praktische Abnahme auf Windows
 
@@ -64,4 +68,4 @@ Teste auf **Windows x64 und ARM64** mit NVDA und Braille. Entpacke das vollstän
 5. **Sicherung und Zugänge prüfen.** Erstelle eine Sicherung, ändere Passwort und Notfallschlüssel und öffne jeweils den passenden alten und neuen Stand. Prüfe den Hinweis bei einer falschen Eingabe und bei einer beschädigten Kopie. Deaktiviere den Schutz an einer Übungskopie und öffne sie erneut. Frühere geschützte Sicherungen bleiben lesbar, solange ihre Zugangsdaten vorhanden sind.
 6. **Aktualisierung und Darstellung prüfen.** Aktualisiere 1.27.0 in einer kontrollierten Testumgebung direkt auf 1.28.0. Vergleiche den Datenordner vor und nach der Aktualisierung und starte den bereitgestellten Notfallzugriff. Bediene beide Programme per Tastatur bei 100, 150 und 200 Prozent Skalierung. Prüfe Fokus, erreichbare Aktionen, Lesereihenfolge, verständliche Meldungen und die Brailleausgabe.
 
-Halte Windows-Version, Architektur, NVDA-Version und die beobachteten Ergebnisse fest. Linux-, Browser- und simulierte Prüfungen sind getrennt vom Windows-Praxisnachweis zu dokumentieren. Die öffentliche Freigabe folgt erst nach der praktischen Abnahme.
+Halte Windows-Version, Architektur, NVDA-Version und die beobachteten Ergebnisse fest. Dokumentiere Linux-, Browser- und simulierte Prüfungen getrennt vom Windows-Praxisnachweis.

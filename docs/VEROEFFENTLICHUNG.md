@@ -1,6 +1,6 @@
 # Versionen veröffentlichen
 
-Aktuell offiziell veröffentlicht: **1.27.0** am **6. November 2026**. Sebastian Müller hat den unveränderten Entwicklungsstand unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und ausdrücklich freigegeben. Windows-ZIP bytegleich, direkter Updateweg aus 1.26.0 freigegeben. [Audit und Veröffentlichungsnachweis](PRUEFBERICHT-1.27.0.md).
+Aktuell offiziell veröffentlicht ist **1.28.0** seit dem **27. November 2026**. Der freigegebene Aktualisierungsdeskriptor und alle sechs Release-Dateien liegen auf GitHub. Der Versionsbericht dokumentiert die bestandenen Prüfungen und den offenen Windows-Praxisstand. [Release 1.28.0](https://github.com/sappelmueller/Notenblick/releases/tag/v1.28.0) · [Versionsbericht](PRUEFBERICHT-1.28.0.md)
 
 **Pakete ab 1.28.0:** Das vollständige Windows-ZIP (`_Windows.zip`) enthält den eigenständigen Notfallzugriff neben dem Hauptprogramm. Das ZIP für den Updater enthält das Hauptprogramm und `Programm`. Beim ersten Start stellt die aktualisierte Haupt-EXE den eingebetteten Notfallzugriff bereit. Prüfe den Übergang aus der Vorgängerversion, dass `Daten` unverändert bleibt, und die Übereinstimmung der Programmdateien in den Paketen. [Prüfumfang für 1.28.0](PRUEFBERICHT-1.28.0.md)
 

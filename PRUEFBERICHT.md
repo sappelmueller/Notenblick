@@ -1,8 +1,10 @@
 # Prüfberichte
 
-Für die Entwicklung von **Notenblick 1.28.0** sind schnelle Leistungserfassung, optionale Verschlüsselung und der Notfallzugriff gemeinsam zu prüfen. Die praktische Windows-Abnahme steht separat aus. [Prüfumfang für 1.28.0](docs/PRUEFBERICHT-1.28.0.md)
+**Notenblick 1.28.0** wurde am **27. November 2026** veröffentlicht. Für diese Ausgabe sind 19 Speicherszenarien, 61 Prüfungen zum Notfallzugriff sowie gezielte Prüfungen der Oberfläche, Tastaturbedienung und Pakete dokumentiert. Praktische Prüfungen der nativen Oberfläche mit NVDA und Braille sowie auf nativem ARM64 stehen aus. [Versionsbericht 1.28.0](docs/PRUEFBERICHT-1.28.0.md)
 
-Aktuelle offizielle Version: **Notenblick 1.27.0**, veröffentlicht am **6. November 2026**. Sebastian Müller hat die unveränderte Testversion unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und ausdrücklich freigegeben. [Versionsbericht](docs/PRUEFBERICHT-1.27.0.md).
+## Prüfstand 1.27.0
+
+Notenblick 1.27.0 wurde am **6. November 2026** veröffentlicht. Sebastian Müller hat die unveränderte Testversion unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und ausdrücklich freigegeben. [Versionsbericht](docs/PRUEFBERICHT-1.27.0.md).
 
 Der vorhandene technische Abschluss dokumentiert **95 von 95 erfolgreiche Pflichtgruppen**, 180.000 synthetische Noteneinträge, zwei bytegleiche Builds und die vollständige Paketprüfung. Zum gerenderten Audit gehören 155 Aufnahmen und 98 axe-Prüfungen. Die [kompakten Nachweise](docs/qa-1.27.0.json) bleiben unverändert als historischer Prüfstand vor der praktischen Freigabe erhalten; ihre damaligen Testversions- und Praxisstatusfelder beschreiben den Zeitpunkt des automatischen Abschlusses.
 

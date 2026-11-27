@@ -1,12 +1,10 @@
 # Entwicklung und Erstellung
 
-**Entwicklung 1.28.0:** Schnelle Leistungserfassung, optionale Verschlüsselung und unabhängiger Notfallzugriff werden gemeinsam auf `entwicklung/1.28.0` vorbereitet. [Prüfumfang](docs/PRUEFBERICHT-1.28.0.md)
+**Aktueller Stand:** Notenblick 1.28.0 wurde am 27. November 2026 veröffentlicht. Die Ausgabe enthält die direkte Leistungserfassung, den optionalen Passwortschutz und den eigenständigen Notfallzugriff. [Prüfstand 1.28.0](docs/PRUEFBERICHT-1.28.0.md)
 
-Aktueller offizieller Stand: **Notenblick 1.27.0**, veröffentlicht am 6. November 2026. Der geprüfte Entwicklungscommit `345c293ff09f5695038beb06187bfd98ab501188` und das Windows-ZIP werden unverändert übernommen. Sebastian Müller hat Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet und ausdrücklich freigegeben. [Audit und Freigabe](docs/PRUEFBERICHT-1.27.0.md).
+Die Veröffentlichung und praktische Abnahme von 1.27.0 sind im [damaligen Versionsbericht](docs/PRUEFBERICHT-1.27.0.md) dokumentiert.
 
-Veröffentlichungsnachweise von 1.27.0: 95 erfolgreiche Pflichtgruppen, 180.000 Noteneinträge, zwei bytegleiche Builds und vollständige Paketprüfung. Die erneute Prüfung für 1.28.0 folgt dem regulären Entwicklungsablauf unten.
-
-Historischer Abschluss 1.25.0: Der vollständige Audit und die ressourcenschonende Testverwaltung sind abgeschlossen. Das Release übernimmt das getestete Programm unverändert; sein Entwicklungsbranch wird nach Veröffentlichung und Downloadkontrolle gelöscht. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
+Historischer Abschluss 1.25.0: Der vollständige Audit und die ressourcenschonende Testverwaltung sind abgeschlossen. Das Release übernahm das getestete Programm unverändert. Aufbau und kritische Verträge stehen in der [Projektübersicht](docs/PROJEKTUEBERSICHT.md), verbindliche Regeln in [AGENTS.md](AGENTS.md).
 
 ## Werkzeuge
 
@@ -21,15 +19,12 @@ python3 dev/manage.py setup
 python3 dev/manage.py doctor
 python3 dev/manage.py plan --base main
 python3 dev/manage.py test changed --base main
-python3 dev/manage.py test changed --stage integration --base main
 python3 dev/manage.py build
-python3 dev/manage.py release
-python3 dev/manage.py release --retry reports/<Lauf>
 ```
 
-Die Ausgangsbasis während einer Aufgabe nicht wechseln. Vor einer unmittelbar folgenden vollständigen Release-Prüfung ist kein doppelter Integrationslauf nötig. Unbekannte gemeinsame Änderungen werden konservativ vollständig geprüft. Fehler nicht überspringen.
+Die Ausgangsbasis während einer Aufgabe beibehalten. Den Prüfplan anhand der betroffenen Funktionen prüfen und die passenden Gruppen gezielt ausführen. Erfolgreiche Prüfungen mit gültigen Nachweisen übernehmen.
 
-`release` führt sämtliche Tests, große Datenbestände, Exportvalidatoren, zwei saubere bytegleiche Builds und ZIP-/Entpackprüfungen zusammen. Gültige Einzelbelege werden wiederverwendet; nur betroffene oder offene Prüfungen laufen neu. Der Doppelbuild-Nachweis bleibt für unveränderte Build-Voraussetzungen gültig. Einzelheiten zur Wiederaufnahme und zu kleinen Infrastrukturtests: [Effizient entwickeln](docs/ENTWICKLUNGSOPTIMIERUNG.md). `release --check-only` prüft denselben Umfang mit temporären Archiven. Quellen und Dokumente vorher abschließen und stagen; den aktuellen Nachweis mit `status --report reports/<Lauf>/summary.json` bestätigen.
+Der vorhandene Vollprüflauf `release` und sein Wiederaufnahmebefehl `release --retry reports/<Lauf>` fallen unter die Regeln für ausdrücklich beauftragte Vollprüfungen. Für reguläre Veröffentlichungen gelten [AGENTS.md](AGENTS.md) und der [Veröffentlichungsablauf](docs/VEROEFFENTLICHUNG.md).
 
 ## Ausgabe und Zusammenarbeit
 
