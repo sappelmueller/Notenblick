@@ -1,16 +1,16 @@
 # Technischer Einstieg
 
-**1.28.0 in Entwicklung.** Neue gemeinsame Leistungen verwenden die vorhandene Noteneingabe. Entwürfe bleiben bis zur regulären Übernahme von Berechnung und Berichten getrennt. Passwortschutz und Notfallzugriff teilen das verschlüsselte Dateiformat. Sie müssen alte Daten weiterhin lesen können. [Prüfumfang und Abnahme](PRUEFBERICHT-1.28.0.md)
+**Aktueller Stand:** Notenblick 1.28.0 wurde am 27. November 2026 veröffentlicht. Neue gemeinsame Leistungen öffnen direkt die Noteneingabe. Entwürfe fließen erst nach der Übernahme in Berechnungen und Berichte ein. Passwortschutz und Notfallzugriff verwenden dasselbe verschlüsselte Dateiformat. [Prüfstand 1.28.0](PRUEFBERICHT-1.28.0.md)
 
-Offizieller Stand: **Notenblick 1.27.0**, veröffentlicht am 6. November 2026. Geprüfter Entwicklungscommit `345c293ff09f5695038beb06187bfd98ab501188`; 95 Pflichtgruppen und zwei bytegleiche Builds. Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung wurden von Sebastian Müller praktisch getestet und freigegeben. Programm und Windows-ZIP bleiben unverändert. [Audit und Veröffentlichung](PRUEFBERICHT-1.27.0.md).
+Die Ausgabe 1.27.0 vom 6. November 2026 wurde unter Windows x64 und ARM64 einschließlich NVDA, Braille und Aktualisierung praktisch getestet. [Audit und Veröffentlichung 1.27.0](PRUEFBERICHT-1.27.0.md)
 
-Qualitätsaudit: Der gemeinsame Gewichtungseditor verwendet eine einheitliche Sichtbarkeit bei der Verteilung und gezielten Fokus beim Übertragen und bei Namensfehlern. Wiederherstellung bietet auch `Vor_Leistungsbereichen_` an. Keine neuen Abhängigkeiten, Datenformate oder Berechnungswege.
+Qualitätsaudit von 1.27.0: Der gemeinsame Gewichtungseditor verwendet eine einheitliche Sichtbarkeit bei der Verteilung und gezielten Fokus beim Übertragen und bei Namensfehlern. Wiederherstellung bietet auch `Vor_Leistungsbereichen_` an. Keine neuen Abhängigkeiten, Datenformate oder Berechnungswege.
 
 `domain/areas.js` liefert die geordneten fachbezogenen Leistungsbereiche und ihre stabilen Zuordnungen. `assessment.kind` verweist auf diese IDs; `oralEntry` beschreibt davon unabhängig die Erfassungsform. `evaluation.js` berechnet alle Bereiche mit derselben exakten Bruchrechnung. Der gemeinsame Gewichtungseditor wird in Fachdialog, Einstellungen und Einrichtung verwendet. Exporte/TXT verwenden dieselben Fachdefinitionen.
 
-Der Dateicontainer bleibt `version: 1`, Aktualisierungsdeskriptor `dataSchema: 1`. Damit akzeptiert der unveränderte Updater aus 1.26.0 die ausdrücklich freigegebene Ausgabe 1.27.0 direkt. Es gibt keine Format-2-Migration und keine zusätzliche Zwischenversion. Neue Programmfunktionen setzen 1.26 voraus; eine Rückkehr zu älterer Software verwendet eine passende ältere Sicherung. Der Updater ersetzt weiterhin ausschließlich EXE und vollständigen Programmordner und schreibt niemals nach Daten.
+Der Dateicontainer verwendet weiterhin `version: 1` und der Aktualisierungsdeskriptor `dataSchema: 1`. Das Updatearchiv von 1.28.0 wurde mit dem Updater aus 1.27.0 geprüft. Der Updater ersetzt die Haupt-EXE und den vollständigen Ordner `Programm` und lässt `Daten` unberührt.
 
-Notenblick 1.27.0: Windows, .NET Framework 4.8, WinForms und WebView2. Ziel ausschließlich `sappelmueller/Notenblick`, ID `1432518047`; privat oder öffentlich. Actions aus. Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in LICENSE-EXCEPTION. Vor Änderungen [AGENTS.md](../AGENTS.md) beachten.
+Technische Basis: Windows, .NET Framework 4.8, WinForms und WebView2. Ziel ausschließlich `sappelmueller/Notenblick`, ID `1432518047`; privat oder öffentlich. Actions aus. Eigene Quellen: GPLv3 mit der Bibliotheksausnahme in LICENSE-EXCEPTION. Vor Änderungen [AGENTS.md](../AGENTS.md) beachten.
 
 Bedienungsüberarbeitung vom 6. November: `weight-editor.js` trennt die gemeinsame schriftliche Note und Gesamtnote innerhalb desselben Editors. Fachdialog, Standardvorgaben und Einrichtung verwenden ihn unverändert gemeinsam. Die Hilfedaten behalten neun Themen, 77 Abschnittskennungen und dieselben F1-Zuordnungen; `helpParagraphs` stellt den begrenzten Markdown-Umfang der Hilfe zentral als Absätze, Listen und Tabellen dar. Keine zusätzliche Bibliothek, keine zweite Hilfequelle zur Laufzeit. Berechnung, Dateiformat, Speicherung, native Aktualisierung und Exportrenderer wurden bei dieser Überarbeitung nicht verändert.
 
@@ -47,9 +47,9 @@ Letzter Feinschliff: `weighting.js` verteilt automatisch in ganzzahligen Hundert
 
 ## Arbeitsablauf
 
-Passende Arbeitskopie und Werkzeuge wiederverwenden. GitHub-Kopf und lokalen Kopf/Baum vergleichen. `plan --base <Ausgangsstand>`, dann `test changed --base <Ausgangsstand>`. `dev/testplan.py` ist die einzige Testzuordnung; unbekannte Auswirkungen werden breit geprüft.
+Passende Arbeitskopien und Werkzeuge wiederverwenden. GitHub-Kopf und lokalen Quellbaum vergleichen. Für gezielte Prüfungen die betroffenen Funktionen und ihre Abhängigkeiten anhand von `dev/testplan.py` auswählen.
 
-Vor Programmveröffentlichungen `release`; mit `release --retry reports/<Lauf>` nach Fehlern/Unterbrechungen fortsetzen. Der vollständige Katalog einschließlich Lasttests, Exportvalidatoren, Doppelbuild und ZIP-/Entpackprüfungen bleibt erforderlich; gültige unveränderte Einzelbelege werden übernommen. Für reine Änderungen an der Testverwaltung kleine kontrollierte Infrastrukturtests verwenden. `release --check-only` bedeutet vollständige Release-Anforderungen mit temporärer Verpackung, keine verkürzte Infrastrukturprüfung. Quellen und Dokumente vorher abschließen und stagen; danach `status --report reports/<Lauf>/summary.json` prüfen. Ein unmittelbar folgender Release-Lauf ersetzt eine doppelte Integrationsprüfung.
+Vor Veröffentlichungen gelten die gezielte Teststrategie in [AGENTS.md](../AGENTS.md) und der [Veröffentlichungsablauf](VEROEFFENTLICHUNG.md). Gültige Nachweise können wiederverwendet werden.
 
 `dev/evidence.py` prüft Inhalte, Dateimodi, Werkzeuge und Ausgaben. Wiederverwendung in allen Profilen nur mit gültigem Nachweis. Erfolge werden sofort atomar samt unveränderlichen Ausgabekopien gesichert. Ein neuer Gesamtbericht bindet alle Belege an den endgültigen Quellstand. Logs bleiben unter `reports/`; im Chat nur Status, Anzahl, Dauer und konkrete Fehler.
 

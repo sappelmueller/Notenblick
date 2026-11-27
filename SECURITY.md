@@ -10,7 +10,7 @@ Nenne betroffene Version, Auswirkung und ein erfundenes Beispiel. Zugangsdaten n
 
 ## Daten schützen
 
-Notenblick speichert lokal. In der offiziellen Version 1.27.0 schützt du den Datenordner über Windows und geschützte Sicherungen. Die Entwicklungsversion 1.28.0 ergänzt einen freiwilligen Passwortschutz für abgelegte Noten, Notenlisten und Sicherungen. Bewahre den Notfallschlüssel getrennt von diesen Daten auf und prüfe regelmäßig eine Sicherung.
+Notenblick speichert lokal. Seit Version 1.28.0 kannst du deine gespeicherten Noten, Notenlisten und Sicherungen mit einem Passwort schützen. Bewahre den Notfallschlüssel getrennt von diesen Daten auf und prüfe regelmäßig eine Sicherung.
 
 Dateiverschlüsselung schützt gespeicherte Inhalte. Beim Arbeiten sind geöffnete Noten im Programm lesbar. Bereits vorhandene externe Kopien und bewusst unverschlüsselte Exporte brauchen einen eigenen geschützten Speicherort. Fehlerberichte und Screenshots dürfen keine echten Schülerdaten enthalten.
 

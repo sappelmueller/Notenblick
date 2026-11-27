@@ -1,6 +1,6 @@
 # Windows-Praxisprüfung
 
-Die neuen Abläufe für 1.28.0 werden auf Windows x64 und ARM64 mit NVDA und Braille praktisch abgenommen. [Checkliste zur Testversion](PRUEFBERICHT-1.28.0.md#praktische-abnahme-auf-windows)
+Für die veröffentlichte Version 1.28.0 stehen praktische Prüfungen der neuen Abläufe auf Windows x64 und ARM64 mit NVDA und Braille aus. [Checkliste für 1.28.0](PRUEFBERICHT-1.28.0.md#praktische-abnahme-auf-windows)
 
 ## Windows-Praxisstand 1.27.0
 
@@ -8,7 +8,7 @@ Sebastian Müller hat 1.27.0 unter Windows x64 und ARM64 einschließlich NVDA, B
 
 ## Historischer Praxisstand 1.26.0
 
-Am 6. November 2026 hat Sebastian Müller bestätigt, dass die fertig entwickelte Testversion 1.26.0 unter Windows praktisch getestet und freigegeben ist. Seit dieser Prüfung wurden keine Programmänderungen vorgenommen. Für die Veröffentlichung werden keine neuen Funktions-, NVDA-, ARM64- oder Regressionstests ausgeführt. Gesonderte UIA-/NVDA-/Braille-, Office-, Druck- oder Update-Störfallprüfungen werden aus der allgemeinen Praxisfreigabe nicht abgeleitet. [Aktueller Prüfbericht](PRUEFBERICHT-1.26.0.md).
+Am 6. November 2026 hat Sebastian Müller bestätigt, dass die fertig entwickelte Testversion 1.26.0 unter Windows praktisch getestet und freigegeben ist. Seit dieser Prüfung wurden keine Programmänderungen vorgenommen. Für die Veröffentlichung werden keine neuen Funktions-, NVDA-, ARM64- oder Regressionstests ausgeführt. Gesonderte UIA-/NVDA-/Braille-, Office-, Druck- oder Update-Störfallprüfungen werden aus der allgemeinen Praxisfreigabe nicht abgeleitet. [Prüfbericht 1.26.0](PRUEFBERICHT-1.26.0.md).
 
 ## Historischer Praxisstand 1.25.1
 
