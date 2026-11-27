@@ -457,17 +457,20 @@ test('Unveränderte Speicherung aus 1.27 kann geschützten Bestand nicht ersetze
   const recovery = await a.ok('vault-key');
   await a.ok('vault-enable', { password, recovery, verification: recovery });
   await a.close();
-  const old = host(base, null, await oldNativeHost(base));
-  t.after(() => old.close());
   await fs.writeFile(path.join(base, primary), JSON.stringify({ id: 'external-old-fixture', secret: 'Alte Kopie' }));
   const before = new Map();
   for (const file of await allFiles(data)) before.set(file, sha256(await fs.readFile(file)));
-  const [source] = await old.ok('migration-sources');
-  assert.equal(source.key, 'old-root');
-  const incoming = await old.ok('migration-read', { key: 'old-root' });
-  assert.equal(await old.ok('current-hash'), null);
-  await old.fails('migration-commit', { key: 'old-root', sha256: incoming.sha256, currentSha256: null });
-  await old.fails('write', { path: primary, text: '{}' });
+  const old = host(base, null, await oldNativeHost(base));
+  try {
+    const [source] = await old.ok('migration-sources');
+    assert.equal(source.key, 'old-root');
+    const incoming = await old.ok('migration-read', { key: 'old-root' });
+    assert.equal(await old.ok('current-hash'), null);
+    await old.fails('migration-commit', { key: 'old-root', sha256: incoming.sha256, currentSha256: null });
+    await old.fails('write', { path: primary, text: '{}' });
+  } finally {
+    await old.close();
+  }
   const after = new Map();
   for (const file of await allFiles(data)) after.set(file, sha256(await fs.readFile(file)));
   assert.deepEqual(after, before);

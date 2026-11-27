@@ -51,6 +51,8 @@ Die Prüfung im festgelegten Chromium umfasste 15 Ansichten zum Passwortschutz m
 
 Der Notfallzugriff bestand 61 gezielte Datei-, Sicherungs- und Schutzprüfungen. Darunter waren komprimierte Notenlisten und Archive aus früheren, unterbrochenen Schutzwechseln. Praktische Prüfungen der nativen Oberfläche, mit NVDA und Braille sowie auf ARM64 sind davon getrennt.
 
+Die 19 Speicherszenarien sind bestanden, einschließlich des gezielten Wiederholungslaufs mit dem unveränderten Speicherprogramm aus 1.27.0. Geprüft wurden der regelmäßige Schutzwechsel, die Bereinigung nach einem Abbruch und der Erhalt fremder Dateien bei Konflikten.
+
 ## Praktische Abnahme auf Windows
 
 Teste auf **Windows x64 und ARM64** mit NVDA und Braille. Entpacke das vollständige Paket in einen neuen Ordner. Verwende in sämtlichen Schritten einen Übungsbestand mit erfundenen Namen.
